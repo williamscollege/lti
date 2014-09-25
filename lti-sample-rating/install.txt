@@ -1,0 +1,17 @@
+Rating 1.1.00
+=============
+
+Installation Guide
+------------------
+
+Follow these steps when using the application with a MySQL or SQLite database:
+
+1.  Unzip the php-rating distribution file and copy the src.zip file onto your web server and extract its contents.
+2.  Edit the config.php file to enter the database connection details.
+3.  Add some restriction to prevent unauthorised access to the admin directory; for example, using Apache an .htaccess file.
+4.  Open the admin/index.php page in a web browser and configure a tool consumer (enter a key, secret and ensure it is enabled).
+5.  Use an LTI Tool Consumer to launch the application as an instructor using the tool consumer credentials entered in step 4 and the launch.php page as the launch URL.  If the launch fails try including a custom parameter named "debug" with a value of "true" in the launch request for a more detailed explanation.
+6.  Add one or more items for the resource link.
+7.  Launch the application as a student from the same link in the tool consumer to rate one or more of the items.
+
+For other types of database connection, create the database tables manually (see the definitions in the db.php file); for non-PDO connections check the LTI_Tool_Provider site (http://www.spvsoftwareproducts.com/php/lti_tool_provider/) for a suitable data connector.

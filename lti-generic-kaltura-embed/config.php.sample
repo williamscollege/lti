@@ -1,0 +1,47 @@
+<?php
+
+	# copy this file to config.php and replace the example values
+	# below with the ones appropriate for your institution
+
+	/***********************************************
+	 ** LTI: "CourseMail"
+	 ** Purpose: Configuration Settings
+	 ** Author: Williams College OIT, David Keiser-Clark
+	 ***********************************************/
+
+	define('TOOL_PROVIDER_SERVER_NAME', $_SERVER["SERVER_NAME"]);
+
+	if ((TOOL_PROVIDER_SERVER_NAME == "localhost") OR (TOOL_PROVIDER_SERVER_NAME == "127.0.0.1")) {
+
+		###  LOCAL: Application settings
+		define('APP_NAME', 'CourseMail');
+		define('SESSION_NAME', 'PHP-CourseMail');
+		define('LTI_FOLDER', 'lti');
+		define('TOOL_CONSUMER_URL', 'https://williams.instructure.com/');
+		define('TOOL_CONSUMER_AUTH_TOKEN', 'none');
+
+		###  LOCAL: Database connection settings
+		define('DB_NAME', 'mysql:dbname=rating;host=localhost'); // e.g. 'mysql:dbname=MyDb;host=localhost'
+		define('DB_USERNAME', 'yourusername');
+		define('DB_PASSWORD', 'yourlocalfancypassword');
+		define('DB_TABLENAME_PREFIX', '');
+
+	}
+	else {
+
+		###  LIVE: Application settings
+		define('APP_NAME', 'CourseMail');
+		define('SESSION_NAME', 'PHP-CourseMail');
+		define('LTI_FOLDER', 'lti/');
+		define('TOOL_CONSUMER_URL', 'https://williams.instructure.com/');
+		define('TOOL_CONSUMER_AUTH_TOKEN', 'Authorization: Bearer 1~TOKEN_HERE');
+
+		###  LIVE: Database connection settings
+		# TODO: Change or eliminate 'rating' DB
+		define('DB_NAME', 'mysql:dbname=rating;host=127.0.0.1');
+		define('DB_USERNAME', 'yourusername');
+		define('DB_PASSWORD', 'yourlivefancypassword');
+		define('DB_TABLENAME_PREFIX', '');
+
+	}
+
