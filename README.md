@@ -10,7 +10,7 @@
 
 ## APPLICATIONS
 
- - [Course Email: Easily email course participants using your preferred email client](https://github.com/williamscollege/lti/tree/master/lti-coursemail) - [view screenshot](http://www.screencast.com/t/j3QFNbUpcYC "Course Email")
+ - [Course Email: Easily email course participants using your preferred email client](https://github.com/williamscollege/lti/tree/master/lti-coursemail) - [view screenshot](http://www.screencast.com/t/62zect7a "Course Email (LTI application)")
  - [Generic Kaltura Embed: a reverse hack that enables linking to LMS based videos from websites without making the videos public to the world](https://github.com/williamscollege/lti/tree/master/lti-generic-kaltura-embed)
  - [Sample Rating: A demo sample LTI app that uses a database to create, update, delete information shared within the resultant iframe used by the LTI app](https://github.com/williamscollege/lti/tree/master/lti-sample-rating)
 

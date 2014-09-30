@@ -6,7 +6,7 @@
 
 ## SCREENSHOT
 
- - [Course Email: view screenshot](http://www.screencast.com/t/j3QFNbUpcYC "Course Email")
+ - [Course Email: view screenshot](http://www.screencast.com/t/62zect7a "Course Email (LTI application)")
 
 ## COURSE EMAIL
 
