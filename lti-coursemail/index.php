@@ -68,7 +68,9 @@
 					<div class="col-sm-6"><label class="text-primary">Select Recipient(s)</label></div>
 					<div class="col-sm-6">
 						<!-- display X recipients selected -->
-						<div id="displayCkBoxCounter" class="text-right text-muted small">(<strong><span id="displayCkBoxInteger">0</span></strong>) recipients selected</div>
+						<div id="displayCkBoxCounter" class="text-right text-muted small">(<strong><span id="displayCkBoxInteger">0</span></strong>) recipients
+							selected
+						</div>
 					</div>
 				</div>
 				<div class="wms-ckbox-container">
@@ -324,7 +326,7 @@
 						$("#warning_ajax_failure").fadeIn("fast").removeClass("hide");
 
 						// change initial "fetching data" message
-						$("#messageFetchingData").text("Oops... please call OIT ITech.");
+						$("#messageFetchingData").text("Oops, please call OIT ITech.");
 
 						return false;
 					}

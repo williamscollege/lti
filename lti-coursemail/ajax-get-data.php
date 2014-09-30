@@ -84,15 +84,27 @@
 		// close curl resource to free up system resources
 		curl_close($ch);
 
-		// trim out cruft; save only the desired indices
+		// trim out cruft: remove incomplete enrollments
+		foreach ($curl_results_combined as $i => $row) {
+			if ($row['enrollment_state'] == "invited") {
+				// remove 'invited' (i.e. pending) enrollments
+				unset($curl_results_combined[$i]);
+			}
+			elseif (isset($row['user']['login_id']) == FALSE) {
+				// remove objects for which 'login_id' is null
+				unset($curl_results_combined[$i]);
+			}
+		}
+
+		// trim out cruft; save a smaller subset of object indices
 		$trimmed_array = array_map(function ($elt) {
-			// create email address
+			// create consistent email address
 			if (strchr($elt['user']['login_id'], "@")) {
-				// 'login_id': is an already formed email address
+				// 'login_id' is an already formed email address
 				$email = $elt['user']['login_id'];
 			}
 			else {
-				// 'login_id': is a unix short name (email prefix)
+				// 'login_id' is a unix short name (use prefix to create email address)
 				$email = $elt['user']['login_id'] . '@williams.edu';
 			}
 			return array(
