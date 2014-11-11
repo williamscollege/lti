@@ -27,7 +27,7 @@
 	 ***********************************************/
 
 
-	require_once('lib.php');
+	require_once('lti_lib.php');
 	require_once('util.php');
 
 	// Initialise database
@@ -35,7 +35,7 @@
 	init($db);
 
 	/* TEST OUTPUT:
-		echo '<p>Tool Provider: ' . TOOL_PROVIDER_SERVER_NAME . '</p>';
+		echo '<p>Tool Provider: ' . LTI_TOOL_PROVIDER_SERVER_NAME . '</p>';
 	*/
 ?>
 <!DOCTYPE html>
@@ -237,7 +237,7 @@
 		// use AJAX to get enrollments for this course via API call; append to DOM
 		function getEnrollments() {
 			$.ajax({
-				url: 'ajax-get-data.php',
+				url: 'lti_ajax_get_data.php',
 				type: 'GET',
 				data: {
 					ajaxVal_Course: <?php if (isset($_SESSION['custom_canvas_course_id'])){echo $_SESSION['custom_canvas_course_id'];}else{echo "0";} ?>

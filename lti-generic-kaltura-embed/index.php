@@ -68,7 +68,7 @@
 	/* TEST OUTPUT:
 	echo '<br /><br /><strong>Debugging:</strong>';
 	echo "<br />HTTP_REFERER : " . $_SERVER['HTTP_REFERER'];
-	echo '<br />Tool Provider: ' . TOOL_PROVIDER_SERVER_NAME;
+	echo '<br />Tool Provider: ' . LTI_TOOL_PROVIDER_SERVER_NAME;
 	echo "<br />URL: " . $url;
 	echo "<br />Querystring: " . $querystring;
 	echo "<br />Querystring (array of values):";

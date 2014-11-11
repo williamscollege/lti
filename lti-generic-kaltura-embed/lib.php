@@ -47,7 +47,7 @@
 		ini_set('session.cookie_path', getAppPath());
 
 		// Open session
-		session_name(SESSION_NAME);
+		session_name(LTI_SESSION_NAME);
 		session_start();
 
 		if (!is_null($checkSession) && $checkSession) {
@@ -89,7 +89,7 @@
 	###
 	function getNumItems($db, $consumer_key, $resource_id) {
 
-		$prefix = DB_TABLENAME_PREFIX;
+		$prefix = LTI_DB_TABLENAME_PREFIX;
 		$sql    = <<< EOD
 SELECT COUNT(i.item_id)
 FROM {$prefix}item i
@@ -119,7 +119,7 @@ EOD;
 	###
 	function getItems($db, $consumer_key, $resource_id) {
 
-		$prefix = DB_TABLENAME_PREFIX;
+		$prefix = LTI_DB_TABLENAME_PREFIX;
 		$sql    = <<< EOD
 SELECT i.item_id, i.item_title, i.item_text, i.item_url, i.max_rating mr, i.step st, i.visible vis, i.sequence seq,
    i.created cr, i.updated upd, COUNT(r.user_id) num, SUM(r.rating) total
@@ -149,7 +149,7 @@ EOD;
 	###
 	function getUserRated($db, $consumer_key, $resource_id, $user_consumer_key, $user_id) {
 
-		$prefix = DB_TABLENAME_PREFIX;
+		$prefix = LTI_DB_TABLENAME_PREFIX;
 		$sql    = <<< EOD
 SELECT r.item_id
 FROM {$prefix}item i INNER JOIN {$prefix}rating r ON i.item_id = r.item_id
@@ -184,7 +184,7 @@ EOD;
 		$item = new Item();
 
 		if (!empty($item_id)) {
-			$prefix = DB_TABLENAME_PREFIX;
+			$prefix = LTI_DB_TABLENAME_PREFIX;
 			$sql    = <<< EOD
 SELECT i.item_id, i.item_title, i.item_text, i.item_url, i.max_rating mr, i.step st, i.visible vis, i.sequence seq, i.created cr, i.updated upd
 FROM {$prefix}item i
@@ -214,7 +214,7 @@ EOD;
 	###
 	function saveItem($db, $consumer_key, $resource_id, $item) {
 
-		$prefix = DB_TABLENAME_PREFIX;
+		$prefix = LTI_DB_TABLENAME_PREFIX;
 		if (!isset($item->item_id)) {
 			$sql = <<< EOD
 INSERT INTO {$prefix}item (consumer_key, resource_id, item_title, item_text, item_url, max_rating, step, visible, sequence, created, updated)
@@ -261,7 +261,7 @@ EOD;
 	###
 	function deleteRatings($db, $item_id) {
 
-		$prefix = DB_TABLENAME_PREFIX;
+		$prefix = LTI_DB_TABLENAME_PREFIX;
 		$sql    = <<< EOD
 DELETE FROM {$prefix}rating
 WHERE item_id = :item_id
@@ -286,7 +286,7 @@ EOD;
 		deleteRatings($db, $item_id);
 
 		// Delete the item
-		$prefix = DB_TABLENAME_PREFIX;
+		$prefix = LTI_DB_TABLENAME_PREFIX;
 		$sql    = <<< EOD
 DELETE FROM {$prefix}item
 WHERE (item_id = :item_id) AND (consumer_key = :consumer_key) AND (resource_id = :resource_id)
@@ -316,7 +316,7 @@ EOD;
 			$ok      = ($old_pos != $new_pos);
 		}
 		if ($ok) {
-			$prefix = DB_TABLENAME_PREFIX;
+			$prefix = LTI_DB_TABLENAME_PREFIX;
 			if ($new_pos <= 0) {
 				$sql = <<< EOD
 UPDATE {$prefix}item
@@ -368,7 +368,7 @@ EOD;
 	###
 	function saveRating($db, $user_consumer_key, $user_id, $item_id, $rating) {
 
-		$prefix = DB_TABLENAME_PREFIX;
+		$prefix = LTI_DB_TABLENAME_PREFIX;
 		$sql    = <<< EOD
 INSERT INTO {$prefix}rating (item_id, consumer_key, user_id, rating)
 VALUES (:item_id, :consumer_key, :user_id, :rating)
@@ -392,7 +392,7 @@ EOD;
 	###
 	function updateGradebook($db, $user_consumer_key = NULL, $user_user_id = NULL) {
 
-		$data_connector = LTI_Data_Connector::getDataConnector(DB_TABLENAME_PREFIX, $db);
+		$data_connector = LTI_Data_Connector::getDataConnector(LTI_DB_TABLENAME_PREFIX, $db);
 		$consumer       = new LTI_Tool_Consumer($_SESSION['consumer_key'], $data_connector);
 		$resource_link  = new LTI_Resource_Link($consumer, $_SESSION['resource_id']);
 
@@ -427,7 +427,7 @@ EOD;
 	###
 	function getVisibleItemsCount($db, $consumer_key, $resource_id) {
 
-		$prefix = DB_TABLENAME_PREFIX;
+		$prefix = LTI_DB_TABLENAME_PREFIX;
 		$sql    = <<< EOD
 SELECT COUNT(i.item_id) count
 FROM {$prefix}item i
@@ -457,7 +457,7 @@ EOD;
 	###
 	function getVisibleRatingsCounts($db, $consumer_key, $resource_id) {
 
-		$prefix = DB_TABLENAME_PREFIX;
+		$prefix = LTI_DB_TABLENAME_PREFIX;
 		$sql    = <<< EOD
 SELECT r.consumer_key, r.user_id, COUNT(r.item_id) count
 FROM {$prefix}item i INNER JOIN {$prefix}rating r ON i.item_id = r.item_id

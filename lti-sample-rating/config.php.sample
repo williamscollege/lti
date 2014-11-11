@@ -13,14 +13,16 @@
 
 	if ((TOOL_PROVIDER_SERVER_NAME == "localhost") OR (TOOL_PROVIDER_SERVER_NAME == "127.0.0.1")) {
 
-		###  LOCAL: Application settings
-		define('APP_NAME', 'Rating');
-		define('SESSION_NAME', 'PHP-Rating');
+		### LOCAL ###
+
+		# LTI Application Settings
+		define('APP_NAME', 'LTIYourAppName');
+		define('SESSION_NAME', 'PHPYourAppName');
 		define('LTI_FOLDER', 'lti');
-		define('TOOL_CONSUMER_URL', 'https://williams.instructure.com/');
+		define('TOOL_CONSUMER_URL', 'https://institution.instructure.com/');
 		define('TOOL_CONSUMER_AUTH_TOKEN', 'none');
 
-		###  LOCAL: Database connection settings
+		# LTI Database Connection
 		define('DB_NAME', 'mysql:dbname=rating;host=localhost'); // e.g. 'mysql:dbname=MyDb;host=localhost'
 		define('DB_USERNAME', 'yourusername');
 		define('DB_PASSWORD', 'yourlocalfancypassword');
@@ -29,14 +31,22 @@
 	}
 	else {
 
-		###  LIVE: Application settings
-		define('APP_NAME', 'Rating');
-		define('SESSION_NAME', 'PHP-Rating');
+		### LIVE ###
+
+		# LTI LMS app settings
+		# LTI Name:		pretty name
+		# LTI Key:		your-key-name
+		# LTI Secret:		your-big-secret
+		# Configuration Type:	XML
+
+		# LTI Application Settings
+		define('APP_NAME', 'LTIYourAppName');
+		define('SESSION_NAME', 'PHPYourAppName');
 		define('LTI_FOLDER', 'lti/');
-		define('TOOL_CONSUMER_URL', 'https://williams.instructure.com/');
+		define('TOOL_CONSUMER_URL', 'https://institution.instructure.com/');
 		define('TOOL_CONSUMER_AUTH_TOKEN', 'Authorization: Bearer 1~TOKEN_HERE');
 
-		###  LIVE: Database connection settings
+		# LTI Database Connection
 		# TODO: Change or eliminate 'rating' DB
 		define('DB_NAME', 'mysql:dbname=rating;host=127.0.0.1');
 		define('DB_USERNAME', 'yourusername');

@@ -38,10 +38,10 @@
 
 	# echo (dirname(__FILE__) . '\\' . LTI_FOLDER . '\LTI_Tool_Provider.php<br />');
 	# original:
-	# require_once('../lib.php');
+	# require_once('../lti_lib.php');
 	# DKC-Modification: set working path up one level for admin folder
 	chdir("..");
-	require_once('lib.php');
+	require_once('lti_lib.php');
 
 
 	// Initialise session and database

@@ -12,7 +12,7 @@
 	require_once('lib.php');
 
 	// Cancel any existing session
-	session_name(SESSION_NAME);
+	session_name(LTI_SESSION_NAME);
 	session_start();
 	$_SESSION = array();
 	session_destroy();
@@ -24,7 +24,7 @@
 	# Modification needed for local development work
 	# init($db, FALSE);
 
-	$data_connector = LTI_Data_Connector::getDataConnector(DB_TABLENAME_PREFIX, $db);
+	$data_connector = LTI_Data_Connector::getDataConnector(LTI_DB_TABLENAME_PREFIX, $db);
 	$tool = new LTI_Tool_Provider('doLaunch', $data_connector);
 	$tool->setParameterConstraint('oauth_consumer_key', TRUE, 50);
 	$tool->setParameterConstraint('resource_link_id', TRUE, 50);

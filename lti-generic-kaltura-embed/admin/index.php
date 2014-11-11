@@ -51,7 +51,7 @@
 	$key = '';
 	if ($ok) {
 		// Create LTI Tool Provider instance
-		$data_connector = LTI_Data_Connector::getDataConnector(DB_TABLENAME_PREFIX, $db);
+		$data_connector = LTI_Data_Connector::getDataConnector(LTI_DB_TABLENAME_PREFIX, $db);
 		$tool           = new LTI_Tool_Provider(NULL, $data_connector);
 		// Check for consumer key and action parameters
 		$action = '';
@@ -122,7 +122,7 @@
 	}
 
 	// Page header
-	$title = APP_NAME . ': Manage tool consumers';
+	$title = LTI_APP_NAME . ': Manage tool consumers';
 	$page = <<< EOD
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">

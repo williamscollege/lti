@@ -29,7 +29,7 @@
 	 * This page processes an AJAX request to save a user rating for an item.
 	 */
 
-	require_once('lib.php');
+	require_once('lti_lib.php');
 
 	// Initialise session and database
 	$db = NULL;

@@ -1,0 +1,46 @@
+<?php
+
+
+	# copy this file to auth.cfg.php and replace the example values
+	# below with the appropriate authentication mode and specific values for your institution
+
+	# the default setup uses the Auth_Base class to authenticate the already defined test user (see instituion.cfg.php)
+	# it is VERY IMPORTANT that you extend the Auth_Base class with your institution's preferred authentication flavor (ldap, kerberos, etc.)
+	# we have provided the Auth_LDAP class, which extends the Auth_Base class for authenticating against an LDAP server
+	# feel free to write a similar extension for other authentication modes (and send it to us for inclusion in our github repository)
+
+
+	# ---------------------------
+	# authentication mode: example values (e.g. test user without specific authentication mode)
+	# ---------------------------
+	# require_once('classes/auth_base.class.php');
+	# define('AUTH_SERVER',	'');
+	# $AUTH = new Auth_Base();
+
+
+	# ---------------------------
+	# authentication mode: LDAP
+	# ---------------------------
+	require_once('classes/auth_LDAP.class.php');
+	define('AUTH_SERVER',	'ldap.institution.edu');	// e.g. ldap.acme.edu (TODO: or https://ldap.acme.edu)
+	define('AUTH_PORT', '123');
+
+	define('AUTH_LDAP_SEARCH_DN',	'o=institution');
+
+	define('AUTH_LDAP_USERNAME_ATTR_LABEL',         'cn');
+	define('AUTH_LDAP_USER_DN_ATTR_LABEL',          'dn');
+	define('AUTH_LDAP_FIRSTNAME_ATTR_LABEL',        'fn');
+	define('AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL',   'mi');
+	define('AUTH_LDAP_LASTNAME_ATTR_LABEL',         'sn');
+	define('AUTH_LDAP_FULLNAME_ATTR_LABEL',         'fullname');
+	define('AUTH_LDAP_EMAIL_ATTR_LABEL',            'mail');
+	define('AUTH_LDAP_GROUPMEMBERSHIP_ATTR_LABEL',  'groups');    // institutional groups
+
+	$AUTH = new Auth_LDAP();
+
+	# ---------------------------
+	# authentication mode: Kerberos
+	# ---------------------------
+	# placeholder of class extension for another authentication mode
+
+?>

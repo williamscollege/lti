@@ -30,7 +30,7 @@
 	 * each item; staff may add, edit, re-order and delete items.
 	 */
 
-	require_once('lib.php');
+	require_once('lti_lib.php');
 
 	// Initialise session and database
 	$db = NULL;

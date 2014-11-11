@@ -1,0 +1,17 @@
+<?php
+
+
+	# copy this file to lang.cfg.php and replace the example values
+	# below with the ones appropriate for your institution
+
+	define('LANG_INSTITUTION_NAME', 'Your Institution');
+	define('LANG_APP_NAME', 'Your Application');
+
+    # language set (see lang.cfg.php)
+    $LANGUAGE = []; // NOTE: this is filled in by including the appropriate language file
+
+    $CUR_LANG_SET = 'en'; // NOTE: not defined as a constant so that the current language set can be altered programatically if need be
+    require_once('lang/'.$CUR_LANG_SET.'.php');
+
+    // NOTE: language elements are accesses as $LANGUAGE[$set][$label] where $set the language set (e.g. 'en') and $label is the particular item desired (e.g. 'greeting')
+    // NOTE: the $LANGUAGE array may be accessed directly, but the prefered method is to use util_lang($label)
