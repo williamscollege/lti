@@ -201,9 +201,9 @@
 		public static function checkStmtError($stmt) {
 			if ($stmt->errorInfo()[0] != '0000') {
 				$traceAr = debug_backtrace();
-				//            echo "<pre>\n";
-				//            print_r($traceAr);
-				//            exit;
+				            echo "<pre>\n";
+				            print_r($traceAr);
+				            exit;
 				$msg = "PDO statement error:\n\t" . $stmt->errorInfo()[0] . "\n\t" . $stmt->errorInfo()[1] . "\n\t" . $stmt->errorInfo()[2] . "\n";
 				for ($i = 1, $lmt = count($traceAr); $i < $lmt; ++$i) {
 					$msg .= $traceAr[$i]['function'];
