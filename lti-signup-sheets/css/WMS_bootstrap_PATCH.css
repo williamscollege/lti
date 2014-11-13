@@ -15,7 +15,7 @@ LABEL.valid
 LABEL.error
 {
 	font-weight: bold;
-	color: #FF0000;
+	color: #ff0000;
 	padding: 2px 8px;
 	margin-top: 2px;
 }
@@ -38,7 +38,7 @@ H1,H2,H3,H4,H5 {
 }
 .btn.btn-link.btn-cancel, .btn-link.btn-cancel
 {
-	color: #D15545 !important;
+	color: #d15545 !important;
 /*red-orange*/
 }
 /*remove annoying margin-left:0 from core bootstrap.css*/
@@ -160,7 +160,6 @@ a.show-hide-control {
 }
 
 /***********************************************************************************/
-transient alert*/
 .transient_alert
 {
 	position: absolute;

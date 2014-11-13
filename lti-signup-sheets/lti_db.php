@@ -29,7 +29,7 @@
 	 * This page provides functions for accessing the database.
 	 */
 
-	require_once('config.php');
+	require_once('institution.cfg.php');
 	require_once(dirname(__FILE__) . '/' . LTI_FOLDER . 'LTI_Tool_Provider.php');
 
 	# Modification needed for local development work

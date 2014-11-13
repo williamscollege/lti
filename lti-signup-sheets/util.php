@@ -398,8 +398,8 @@
         $controls = '';
 
         $controls .= '<div class="ordering-controls-up-down">';
-        $controls .= '<a href="#" class="btn ordering-button-earlier" data-for-dom-id="'.$target_dom_id.'"><i class="icon-arrow-up"></i></a>';
-        $controls .= '<a href="#" class="btn ordering-button-later" data-for-dom-id="'.$target_dom_id.'"><i class="icon-arrow-down"></i></a>';
+        $controls .= '<a href="#" class="btn ordering-button-earlier" data-for-dom-id="'.$target_dom_id.'"><i class="glyphicon glyphicon-arrow-up"></i></a>';
+        $controls .= '<a href="#" class="btn ordering-button-later" data-for-dom-id="'.$target_dom_id.'"><i class="glyphicon glyphicon-arrow-down"></i></a>';
         $controls .= '</div>';
 
         return $controls;

@@ -103,27 +103,27 @@
 //            util_prePrintR($USER);
 
             $rendered = $n->renderAsListItem();
-            $canonical = '<li class="owned-object" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id=1001">testnotebook1</a><span class="icon-pencil"></span>'.' '.util_lang('attribution').' '.$n->getUser()->renderMinimal(true).'</li>';
+            $canonical = '<li class="owned-object" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id=1001">testnotebook1</a><span class="glyphicon glyphicon-pencil"></span>'.' '.util_lang('attribution').' '.$n->getUser()->renderMinimal(true).'</li>';
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);
 
 //            exit;
 
             $rendered = $n->renderAsListItem('testid');
-            $canonical = '<li id="testid" class="owned-object" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id=1001">testnotebook1</a><span class="icon-pencil"></span>'.' '.util_lang('attribution').' '.$n->getUser()->renderMinimal(true).'</li>';
+            $canonical = '<li id="testid" class="owned-object" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id=1001">testnotebook1</a><span class="glyphicon glyphicon-pencil"></span>'.' '.util_lang('attribution').' '.$n->getUser()->renderMinimal(true).'</li>';
             $this->assertEqual($canonical,$rendered);
 
             $rendered = $n->renderAsListItem('',['testclass']);
-            $canonical = '<li class="testclass owned-object" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id=1001">testnotebook1</a><span class="icon-pencil"></span>'.' '.util_lang('attribution').' '.$n->getUser()->renderMinimal(true).'</li>';
+            $canonical = '<li class="testclass owned-object" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id=1001">testnotebook1</a><span class="glyphicon glyphicon-pencil"></span>'.' '.util_lang('attribution').' '.$n->getUser()->renderMinimal(true).'</li>';
             $this->assertEqual($canonical,$rendered);
 
             $rendered = $n->renderAsListItem('',[],['data-first-arbitrary'=>'testarbitrary1','data-second-arbitrary'=>'testarbitrary2']);
-            $canonical = '<li class="owned-object" data-first-arbitrary="testarbitrary1" data-second-arbitrary="testarbitrary2" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id=1001">testnotebook1</a><span class="icon-pencil"></span>'.' '.util_lang('attribution').' '.$n->getUser()->renderMinimal(true).'</li>';
+            $canonical = '<li class="owned-object" data-first-arbitrary="testarbitrary1" data-second-arbitrary="testarbitrary2" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id=1001">testnotebook1</a><span class="glyphicon glyphicon-pencil"></span>'.' '.util_lang('attribution').' '.$n->getUser()->renderMinimal(true).'</li>';
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);
 
             $rendered = $n->renderAsListItem('',[],['data-second-arbitrary'=>'testarbitrary2','data-first-arbitrary'=>'testarbitrary1']);
-            $canonical = '<li class="owned-object" data-first-arbitrary="testarbitrary1" data-second-arbitrary="testarbitrary2" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id=1001">testnotebook1</a><span class="icon-pencil"></span>'.' '.util_lang('attribution').' '.$n->getUser()->renderMinimal(true).'</li>';
+            $canonical = '<li class="owned-object" data-first-arbitrary="testarbitrary1" data-second-arbitrary="testarbitrary2" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id=1001">testnotebook1</a><span class="glyphicon glyphicon-pencil"></span>'.' '.util_lang('attribution').' '.$n->getUser()->renderMinimal(true).'</li>';
             $this->assertEqual($canonical,$rendered);
 
             unset($USER);
@@ -162,7 +162,7 @@
 //            util_prePrintR($USER);
 
             $rendered = $n->renderAsListItem();
-            $canonical = '<li class="editable-object" data-notebook_id="1003" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="102" data-name="testnotebook3" data-notes="this is testnotebook3, owned by user 102" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id=1003">testnotebook3</a><span class="icon-pencil"></span> '.util_lang('attribution').' '.$n->getUser()->renderMinimal(true).'</li>';
+            $canonical = '<li class="editable-object" data-notebook_id="1003" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="102" data-name="testnotebook3" data-notes="this is testnotebook3, owned by user 102" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id=1003">testnotebook3</a><span class="glyphicon glyphicon-pencil"></span> '.util_lang('attribution').' '.$n->getUser()->renderMinimal(true).'</li>';
 
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);
@@ -177,7 +177,7 @@
             $USER = User::getOneFromDb(['user_id'=>110], $this->DB);
 
             $rendered = $n->renderAsListItem();
-            $canonical = '<li class="editable-object" data-notebook_id="1003" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="102" data-name="testnotebook3" data-notes="this is testnotebook3, owned by user 102" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id=1003">testnotebook3</a><span class="icon-pencil"></span> '.util_lang('attribution').' '.$n->getUser()->renderMinimal(true).'</li>';
+            $canonical = '<li class="editable-object" data-notebook_id="1003" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="102" data-name="testnotebook3" data-notes="this is testnotebook3, owned by user 102" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id=1003">testnotebook3</a><span class="glyphicon glyphicon-pencil"></span> '.util_lang('attribution').' '.$n->getUser()->renderMinimal(true).'</li>';
 
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);
@@ -188,7 +188,7 @@
         function testRenderAsButtonEdit() {
             $n = Notebook::getOneFromDb(['notebook_id' => 1001], $this->DB);
 
-            $canonical = '<a id="notebook-btn-edit-1001" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id='.$n->notebook_id.'" class="edit_link btn"><i class="icon-edit"></i> '.util_lang('edit').'</a>';
+            $canonical = '<a id="notebook-btn-edit-1001" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id='.$n->notebook_id.'" class="edit_link btn"><i class="glyphicon glyphicon-edit"></i> '.util_lang('edit').'</a>';
             $rendered = $n->renderAsButtonEdit();
 
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
@@ -247,8 +247,8 @@
             $canonical = '<div id="edit_rendered_notebook_1001" class="edit_rendered_notebook" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1">
 <form action="'.APP_ROOT_PATH.'/app_code/notebook.php">
 <div id="actions">
-  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="icon-ok-sign icon-white"></i> '.util_lang('update','properize').'</button>
-  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id=1001"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>
+  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign icon-white"></i> '.util_lang('update','properize').'</button>
+  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id=1001"><i class="glyphicon glyphicon-remove"></i> '.util_lang('cancel','properize').'</a>
 </div>
   <input type="hidden" name="action" value="update"/>
   <input type="hidden" name="notebook_id" value="1001"/>
@@ -303,8 +303,8 @@
             $canonical = '<div id="edit_rendered_notebook_NEW" class="edit_rendered_notebook" data-notebook_id="NEW" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="'.htmlentities($n->name).'" data-notes="'.htmlentities(util_lang('new_notebook_notes')).'" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1">
 <form action="'.APP_ROOT_PATH.'/app_code/notebook.php">
 <div id="actions">
-  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="icon-ok-sign icon-white"></i> '.util_lang('save','properize').'</button>
-  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>
+  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign icon-white"></i> '.util_lang('save','properize').'</button>
+  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list"><i class="glyphicon glyphicon-remove"></i> '.util_lang('cancel','properize').'</a>
 </div>
   <input type="hidden" name="action" value="update"/>
   <input type="hidden" name="notebook_id" value="NEW"/>

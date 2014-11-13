@@ -41,8 +41,8 @@
 	###
 	function doLaunch($tool_provider) {
 
-		// Check the user has an appropriate role
-		if ($tool_provider->user->isLearner() || $tool_provider->user->isStaff()) {
+		// Check that the user has a valid user_id
+		if ($tool_provider->user->getId()) {
 
 			// Initialise the user session
 			$_SESSION['consumer_key']      = $tool_provider->consumer->getKey();
@@ -51,8 +51,7 @@
 			$_SESSION['user_id']           = $tool_provider->user->getId();
 			$_SESSION['isStudent']         = $tool_provider->user->isLearner();
 			// Store Canvas Course ID value
-			$_SESSION['custom_canvas_course_id'] = $tool_provider->resource_link->getSetting('custom_canvas_course_id', '');
-
+			// OBSOLETE EXAMPLE: $_SESSION['custom_canvas_course_id'] = $tool_provider->resource_link->getSetting('custom_canvas_course_id', '');
 
 			// Success: Redirect the user to display the list of items for the resource link
 			return getAppUrl();

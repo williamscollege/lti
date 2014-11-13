@@ -20,14 +20,14 @@ function dfnUtil_setTransientAlert(alertType,alertMessage,optionalReferenceElt) 
     $('#page_alert').removeClass("error_alert");
     if (alertType == 'progress') {
         $('#page_alert').css("display",'block');
-        $('#page_alert').html('<i class="icon-time"></i> '+alertMessage);
+        $('#page_alert').html('<i class="glyphicon glyphicon-time"></i> '+alertMessage);
         $('#page_alert').addClass("in_progress_alert");
         $('#page_alert').stop();
         $('#page_alert').css("opacity",1);
     }
     else if (alertType == 'success') {
         $('#page_alert').css("display",'block');
-        $('#page_alert').html('<i class="icon-ok"></i> '+alertMessage);
+        $('#page_alert').html('<i class="glyphicon glyphicon-ok"></i> '+alertMessage);
         $('#page_alert').addClass("success_alert");
         $('#page_alert').stop();
         $('#page_alert').css("opacity",1);
@@ -37,7 +37,7 @@ function dfnUtil_setTransientAlert(alertType,alertMessage,optionalReferenceElt) 
     else if (alertType == 'error') {
 //        console.log("alert position top is "+$('#page_alert').css("top"));
         $('#page_alert').css("display",'block');
-        $('#page_alert').html('<i class="icon-exclamation-sign"></i> '+alertMessage);
+        $('#page_alert').html('<i class="glyphicon glyphicon-exclamation-sign"></i> '+alertMessage);
         $('#page_alert').addClass("error_alert");
         $('#page_alert').stop();
         $('#page_alert').css("opacity",1);

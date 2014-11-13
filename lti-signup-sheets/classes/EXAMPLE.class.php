@@ -85,7 +85,7 @@
             $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
             $li_elt .= '<a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id='.$this->notebook_id.'">'.htmlentities($this->name).'</a>';
             if ($is_editable) {
-                $li_elt .= '<span class="icon-pencil"></span>';
+                $li_elt .= '<span class="glyphicon glyphicon-pencil"></span>';
             }
             $li_elt .= ' '.util_lang('attribution').' '.$owner->renderMinimal(true);
             $li_elt .= '</li>';
@@ -93,7 +93,7 @@
         }
 
         public function renderAsButtonEdit() {
-            $btn = '<a id="notebook-btn-edit-'.$this->notebook_id.'" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id='.$this->notebook_id.'" class="edit_link btn"><i class="icon-edit"></i> '.util_lang('edit').'</a>';
+            $btn = '<a id="notebook-btn-edit-'.$this->notebook_id.'" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id='.$this->notebook_id.'" class="edit_link btn"><i class="glyphicon glyphicon-edit"></i> '.util_lang('edit').'</a>';
             return $btn;
         }
 
@@ -179,12 +179,12 @@
             $rendered .= '<div id="actions">'."\n";
             if ($this->notebook_id == 'NEW') {
 //                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>'."\n";
-                $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="icon-ok-sign icon-white"></i> '.util_lang('save','properize').'</button>'."\n";
-                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
+                $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign icon-white"></i> '.util_lang('save','properize').'</button>'."\n";
+                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list"><i class="glyphicon glyphicon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
             } else {
 //                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>'."\n";
-                $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="icon-ok-sign icon-white"></i> '.util_lang('update','properize').'</button>'."\n";
-                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$this->notebook_id.'"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
+                $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign icon-white"></i> '.util_lang('update','properize').'</button>'."\n";
+                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$this->notebook_id.'"><i class="glyphicon glyphicon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
             }
             $rendered .= "</div>\n";
             $rendered .= '  <input type="hidden" name="action" value="update"/>'."\n".

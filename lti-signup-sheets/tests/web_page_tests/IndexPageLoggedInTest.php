@@ -69,7 +69,7 @@ class IndexPageLoggedInTest extends WMSWebTestCase {
 //        $this->assertEltByIdHasAttrOfValue('btn-add-notebook','value',util_lang('add_notebook'));
 
         // link to main/front page
-        $this->assertEltByIdHasAttrOfValue('home-link','href',APP_ROOT_PATH);
+        $this->assertEltByIdHasAttrOfValue('link-available-openings','href',APP_ROOT_PATH);
     }
 
 //    function testIndexBasicNoCreate() {
@@ -108,7 +108,7 @@ class IndexPageLoggedInTest extends WMSWebTestCase {
 //        $this->assertNoPattern("/btn-add-notebook/");
 //        ///////////////////////////////////////////
 //
-//        $this->assertEltByIdHasAttrOfValue('home-link','href',APP_FOLDER);
+//        $this->assertEltByIdHasAttrOfValue('link-available-openings','href',APP_FOLDER);
 //    }
 
     function testIndexAdmin() {
@@ -157,7 +157,7 @@ class IndexPageLoggedInTest extends WMSWebTestCase {
 //        $this->assertEltByIdHasAttrOfValue('btn-add-notebook','value',util_lang('add_notebook'));
 
         // link to main/front page
-        $this->assertEltByIdHasAttrOfValue('home-link','href',APP_ROOT_PATH);
+        $this->assertEltByIdHasAttrOfValue('link-available-openings','href',APP_ROOT_PATH);
     }
 
 }
