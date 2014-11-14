@@ -323,7 +323,7 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
 
         # BELOW: TESTS FOR STATIC METHODS
 
-    function testCheckStatementError() {
+    function aside_testCheckStatementError() {
         $badSql = "INSERT INTO dblinktest VALUES ('a')";
         $badStmt = $this->DB->prepare($badSql);
         $badStmt->execute();

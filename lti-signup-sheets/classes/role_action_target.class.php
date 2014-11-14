@@ -5,7 +5,7 @@
 		public static $fields = array('role_action_target_link_id', 'created_at', 'updated_at', 'last_user_id', 'role_id', 'action_id', 'target_type', 'target_id', 'flag_delete');
 		public static $primaryKeyField = 'role_action_target_link_id';
 		public static $dbTable = 'role_action_target_links';
-        public static $entity_type_label = 'role_action_target';
+		public static $entity_type_label = 'role_action_target';
 
 
         public static $VALID_TARGET_TYPES =  ['global_notebook', 'global_metadata', 'global_plant', 'global_specimen', 'notebook', 'metadata_structure', 'plant', 'specimen'];

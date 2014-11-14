@@ -34,6 +34,7 @@ function createTestData_XXXX($dbConn) {
     $ACTIONS = array();
 
 
+
     function createTestData_Role_Action_Targets($dbConn) {
         // 200 series ids
         // Role_Action_Target: 'role_action_target_link_id', 'created_at', 'updated_at', 'last_user_id', 'role_id', 'action_id', 'target_type', 'target_id', 'flag_delete'
@@ -71,26 +72,25 @@ function createTestData_XXXX($dbConn) {
         }
     }
 
-    function createTestData_Users($dbConn) {
+    function createTestData_LMS_Users($dbConn) {
         // 100 series ids
-        # user: user_id, created_at, updated_at, username, screen_name, flag_is_system_admin, flag_is_banned, flag_delete
+        # user: user_id, username, email, first_name, last_name, screen_name, created_at, updated_at, flag_is_system_admin, flag_is_banned, flag_delete
         // 101-104 are field user
         // 105 is assistant
         // 106-108 are field user
         // 109 has no roles (implicit 'public' role)
         // 110 is manager
-        // 111 is field user
         $addTestSql  = "INSERT INTO " . User::$dbTable . " VALUES
-            (101,NOW(),NOW(),'" . Auth_Base::$TEST_USERNAME . "','" . Auth_Base::$TEST_LNAME . ", " . Auth_Base::$TEST_FNAME . "',0,0,0),
-            (102,NOW(),NOW(),'testUser2','tu2L, tu2F',0,0,0),
-            (103,NOW(),NOW(),'testUser3','tu3L, tu3F',0,0,0),
-            (104,NOW(),NOW(),'testUser4','tu4L, tu4F',0,0,0),
-            (105,NOW(),NOW(),'testUser5','tu5L, tu5F',0,0,0),
-            (106,NOW(),NOW(),'testUser6','tu6L, tu6F',1,0,0),
-            (107,NOW(),NOW(),'testUser7','tu7L, tu7F',0,1,0),
-            (108,NOW(),NOW(),'testUser8','tu8L, tu8F',0,0,1),
-            (110,NOW(),NOW(),'testUser9','tu9L, tu9F',0,0,0),
-            (109,NOW(),NOW(),'testUser10','tu10L, tu10F',0,0,0)
+            (101,'" . Auth_Base::$TEST_USERNAME . "','" . Auth_Base::$TEST_LNAME . ", " . Auth_Base::$TEST_FNAME . "',0,0,0),
+            (102,'testUser2','tusr2@williams.edu','tu2F','tu2L','tu2L, tu2F',NOW(),NOW(),0,0,0),
+            (103,'testUser3','tusr3@williams.edu','tu3F','tu3L','tu3L, tu3F',NOW(),NOW(),0,0,0),
+            (104,'testUser4','tusr4@williams.edu','tu4F','tu4L','tu4L, tu4F',NOW(),NOW(),0,0,0),
+            (105,'testUser5','tusr5@williams.edu','tu5F','tu5L','tu5L, tu5F',NOW(),NOW(),0,0,0),
+            (106,'testUser6','tusr6@williams.edu','tu6F','tu6L','tu6L, tu6F',NOW(),NOW(),1,0,0),
+            (107,'testUser7','tusr7@williams.edu','tu7F','tu7L','tu7L, tu7F',NOW(),NOW(),0,1,0),
+            (108,'testUser8','tusr8@williams.edu','tu8F','tu8L','tu8L, tu8F',NOW(),NOW(),0,0,1),
+            (109,'testUser9','tusr9@williams.edu','tu9F','tu9L','tu9L, tu9F',NOW(),NOW(),0,0,0),
+            (110,'testUser10','tusr10@williams.edu','tu10F','tuL','tu10L, tu10F',NOW(),NOW(),0,0,0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();

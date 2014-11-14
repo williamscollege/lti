@@ -16,8 +16,8 @@ FOR TESTING ONLY:
 # ----------------------------
 # IMPORTANT: Select which database you wish to run this script against
 # ----------------------------
--- USE lti_signup_sheets_TEST;
-USE lti_signup_sheets;
+USE lti_signup_sheets_test;
+-- USE lti_signup_sheets;
 
 
 CREATE TABLE IF NOT EXISTS `dblinktest` (

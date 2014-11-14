@@ -5,34 +5,80 @@ SAVE:
 PROJECT:
 	Signup Sheets (lti-signup-sheets)
 
-TODO:
-	schedules
-	all TODO items
-
 NOTES:
-
+	For testing, create 'dblinktest' table by executing: "db_setup/testing_schema.sql"
 
 FOR TESTING ONLY:
-	DROP TABLE `lms_sus_access`;
-	DROP TABLE `lms_sus_openings`;
-	DROP TABLE `lms_sus_sheetgroups`;
-	DROP TABLE `lms_sus_sheets`;
-	DROP TABLE `lms_sus_signups`;
+	USE lti_signup_sheets_test;
+
+	DROP TABLE `lms_users`;
+	DROP TABLE `lms_terms`;
+	DROP TABLE `lms_enrollments`;
+	DROP TABLE `lms_courses`;
+
+	DROP TABLE `sus_access`;
+	DROP TABLE `sus_openings`;
+	DROP TABLE `sus_sheetgroups`;
+	DROP TABLE `sus_sheets`;
+	DROP TABLE `sus_signups`;
+
+	DROP TABLE `roles`;
 */
 
 # ----------------------------
 # IMPORTANT: Select which database you wish to run this script against
 # ----------------------------
-CREATE SCHEMA IF NOT EXISTS `lti_signup_sheets`;
+CREATE SCHEMA IF NOT EXISTS `lti_signup_sheets_test`;
+USE lti_signup_sheets_test;
 
--- USE lti_signup_sheets_TEST;
-USE lti_signup_sheets;
-
+-- CREATE SCHEMA IF NOT EXISTS `lti_signup_sheets`;
+-- USE lti_signup_sheets;
 
 # ----------------------------
 # basic application infrastructure
+# ----------------------------
 
-CREATE TABLE IF NOT EXISTS `lms_sus_access` (
+CREATE TABLE IF NOT EXISTS `lms_users` (
+    `user_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `username` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) NULL,
+    `first_name` VARCHAR(255) NULL,
+    `last_name` VARCHAR(255) NULL,
+    `screen_name` VARCHAR(255) NULL,
+    `created_at` TIMESTAMP,
+    `updated_at` TIMESTAMP,
+    `flag_is_system_admin` BIT(1) NOT NULL DEFAULT 0,
+    `flag_is_banned` BIT(1) NOT NULL DEFAULT 0,
+    `flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
+/* field 'username' corresponds to Canvas LMS field called 'login_id' */
+
+CREATE TABLE IF NOT EXISTS `lms_terms` (
+    `term_id` VARCHAR(255) NULL,
+    `name` VARCHAR(255) NULL,
+    `start_date` TIMESTAMP,
+    `end_date` TIMESTAMP,
+    `flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
+
+CREATE TABLE IF NOT EXISTS `lms_enrollments` (
+    `course_id` VARCHAR(255) NOT NULL,
+    `user_id` INT NOT NULL,
+    `role` VARCHAR(255) NULL,
+    `section_id` VARCHAR(255) NULL,
+    `flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
+
+CREATE TABLE IF NOT EXISTS `lms_courses` (
+    `course_id` VARCHAR(255) NOT NULL,
+    `short_name` VARCHAR(255) NOT NULL,
+    `long_name` VARCHAR(255) NOT NULL,
+    `account_id` VARCHAR(255) NULL,
+    `term_id` VARCHAR(255) NULL,
+    `flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
+
+CREATE TABLE IF NOT EXISTS `sus_access` (
     `id` bigint(10) unsigned NOT NULL auto_increment,
     `created_at` bigint(10) unsigned default NULL,
     `updated_at` bigint(10) unsigned default NULL,
@@ -50,8 +96,7 @@ CREATE TABLE IF NOT EXISTS `lms_sus_access` (
     KEY `broadness` (`broadness`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='which users can signup on which sheets';
 
-
-CREATE TABLE IF NOT EXISTS `lms_sus_openings` (
+CREATE TABLE IF NOT EXISTS `sus_openings` (
     `id` bigint(10) unsigned NOT NULL auto_increment,
     `created_at` bigint(10) unsigned default NULL,
     `updated_at` bigint(10) unsigned default NULL,
@@ -77,8 +122,7 @@ CREATE TABLE IF NOT EXISTS `lms_sus_openings` (
     KEY `last_user_id` (`last_user_id`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Places users can sign up - a single sheet may have multiple ';
 
-
-CREATE TABLE IF NOT EXISTS `lms_sus_sheetgroups` (
+CREATE TABLE IF NOT EXISTS `sus_sheetgroups` (
     `id` bigint(10) unsigned NOT NULL auto_increment,
     `created_at` bigint(10) unsigned default NULL,
     `updated_at` bigint(10) unsigned default NULL,
@@ -96,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `lms_sus_sheetgroups` (
     KEY `name` (`name`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='For managing collections of related sheets';
 
-CREATE TABLE IF NOT EXISTS `lms_sus_sheets` (
+CREATE TABLE IF NOT EXISTS `sus_sheets` (
     `id` bigint(10) unsigned NOT NULL auto_increment,
     `created_at` bigint(10) unsigned default NULL,
     `updated_at` bigint(10) unsigned default NULL,
@@ -135,8 +179,7 @@ CREATE TABLE IF NOT EXISTS `lms_sus_sheets` (
     KEY `flag_private_signups` (`flag_private_signups`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Contains the high-level sheet data (name, descr, etc.)';
 
-
-CREATE TABLE IF NOT EXISTS `lms_sus_signups` (
+CREATE TABLE IF NOT EXISTS `sus_signups` (
     `id` bigint(10) unsigned NOT NULL auto_increment,
     `created_at` bigint(10) unsigned default NULL,
     `updated_at` bigint(10) unsigned default NULL,
@@ -152,49 +195,138 @@ CREATE TABLE IF NOT EXISTS `lms_sus_signups` (
     KEY `signup_user_id` (`signup_user_id`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Users signing up for openings - analogous to a list of times and dates on a piece of paper that is passed around or posted on a door and on which people would put their name';
 
+CREATE TABLE IF NOT EXISTS `roles` (
+    `role_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `priority` INT NOT NULL,
+    `name` VARCHAR(255) NULL,
+    `flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
+/* priority: Highest admin role is priority = 1; lowest anonymous/guest priority is > 1 */
 
-
-
-#####################
-# Required: The Absolute Minimalist Approach to Initial Data Population
-#####################
 
 /*
--- Values for ...
+CREATE TABLE IF NOT EXISTS `user_role_links` (
+    `user_role_link_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `created_at` TIMESTAMP,
+    `updated_at` TIMESTAMP,
+    `last_user_id` INT NOT NULL,
+    `user_id` INT NOT NULL,
+    `role_id` INT NOT NULL
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='determines allowable actions within the digitalfieldnotebooks system';
+*//* FK: users.user_id *//*
+CREATE TABLE IF NOT EXISTS `actions` (
+    `action_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NULL,
+    `ordering` DECIMAL(10 , 5 ),
+    `flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='actions that users can take - together with roles are used to define permissions';
+
+CREATE TABLE IF NOT EXISTS `role_action_target_links` (
+    `role_action_target_link_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `created_at` TIMESTAMP,
+    `updated_at` TIMESTAMP,
+    `last_user_id` INT NOT NULL,
+    `role_id` INT NOT NULL,
+    `action_id` INT NOT NULL,
+    `target_type` VARCHAR(255) NOT NULL,
+    `target_id` INT NOT NULL,
+    `flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='';
+*/
+/* This is single inheritance table, meaning it is a linking table that links dependant upon the value of target_type */
+/* FK: roles.role_id */
+/* FK: actions.action_id */
+/* FK: target_id: this is the FK that will link this roles record with objects to which permissions are being granted (value is 0 for global permissions) */
+/* NOTE: action permissions are hardcoded into the application - a fully fleshed out action control system is outside the scope of this project */
+
+
+# ----------------------------
+# Required: The Absolute Minimalist Approach to Initial Data Population
+# ----------------------------
+
+# Required constant values for roles table
 INSERT INTO
-	lms_sus_access
+	roles
 VALUES
-(741,NOW(),NOW(),123,310,'bycourse',5193,'',20),
-(742,NOW(),NOW(),1054,317,'bycourse',5145,'',20),
-(743,NOW(),NOW(),1054,317,'byhasaccount',0,'all',70),
-(744,NOW(),NOW(),1054,317,'byrole',0,'student',60),
-(745,NOW(),NOW(),1054,317,'byrole',0,'teacher',60),;
+(1,10,'teacher',0),
+(2,15,'student',0),
+(3,20,'user',0),
+(4,30,'public',0);
 
--- Values for ...
+/*
+# Required constant values for actions table
 INSERT INTO
-lms_sus_openings
+actions
 VALUES
--- TODO
+(1,'view',1,0),
+(2,'edit',2,0),
+(3,'update',3,0),
+(4,'create',4,0),
+(5,'delete',5,0),
+(6,'publish',6,0),
+(7,'verify',7,0),
+(8,'list',8,0);
+
+# Required constant values for role_action_target_links table (managers can do everything)
+# 		public static $fields = array('role_action_target_link_id', 'created_at', 'updated_at', 'last_user_id', 'role_id', 'action_id', 'target_type', 'target_id', 'flag_delete');
+INSERT INTO
+  role_action_target_links
+  VALUES
+  (1,NOW(),NOW(),0,1,1,'global_notebook',0,0),
+  (2,NOW(),NOW(),0,1,2,'global_notebook',0,0),
+  (3,NOW(),NOW(),0,1,3,'global_notebook',0,0),
+  (4,NOW(),NOW(),0,1,4,'global_notebook',0,0),
+  (5,NOW(),NOW(),0,1,5,'global_notebook',0,0),
+  (6,NOW(),NOW(),0,1,6,'global_notebook',0,0),
+  (7,NOW(),NOW(),0,1,7,'global_notebook',0,0),
+  (8,NOW(),NOW(),0,1,1,'global_metadata',0,0),
+  (9,NOW(),NOW(),0,1,2,'global_metadata',0,0),
+  (10,NOW(),NOW(),0,1,3,'global_metadata',0,0),
+  (11,NOW(),NOW(),0,1,4,'global_metadata',0,0),
+  (12,NOW(),NOW(),0,1,5,'global_metadata',0,0),
+  (13,NOW(),NOW(),0,1,6,'global_metadata',0,0),
+  (14,NOW(),NOW(),0,1,7,'global_metadata',0,0),
+  (15,NOW(),NOW(),0,1,1,'global_plant',0,0),
+  (16,NOW(),NOW(),0,1,2,'global_plant',0,0),
+  (17,NOW(),NOW(),0,1,3,'global_plant',0,0),
+  (18,NOW(),NOW(),0,1,4,'global_plant',0,0),
+  (19,NOW(),NOW(),0,1,5,'global_plant',0,0),
+  (20,NOW(),NOW(),0,1,6,'global_plant',0,0),
+  (21,NOW(),NOW(),0,1,7,'global_plant',0,0),
+  (22,NOW(),NOW(),0,1,1,'global_specimen',0,0),
+  (23,NOW(),NOW(),0,1,2,'global_specimen',0,0),
+  (24,NOW(),NOW(),0,1,3,'global_specimen',0,0),
+  (25,NOW(),NOW(),0,1,4,'global_specimen',0,0),
+  (26,NOW(),NOW(),0,1,5,'global_specimen',0,0),
+  (27,NOW(),NOW(),0,1,6,'global_specimen',0,0),
+  (28,NOW(),NOW(),0,1,7,'global_specimen',0,0),
+  (29,NOW(),NOW(),0,1,8,'global_notebook',0,0),
+  (30,NOW(),NOW(),0,1,8,'global_metadata',0,0),
+  (31,NOW(),NOW(),0,1,8,'global_plant',0,0),
+  (32,NOW(),NOW(),0,1,8,'global_specimen',0,0),
+  (33,NOW(),NOW(),0,2,8,'global_notebook',0,0),
+  (34,NOW(),NOW(),0,2,8,'global_metadata',0,0),
+  (35,NOW(),NOW(),0,2,8,'global_plant',0,0),
+  (36,NOW(),NOW(),0,2,8,'global_specimen',0,0),
+  (37,NOW(),NOW(),0,3,8,'global_notebook',0,0),
+  (38,NOW(),NOW(),0,3,8,'global_metadata',0,0),
+  (39,NOW(),NOW(),0,3,8,'global_plant',0,0),
+  (40,NOW(),NOW(),0,3,8,'global_specimen',0,0),
+  (41,NOW(),NOW(),0,4,8,'global_notebook',0,0),
+  (42,NOW(),NOW(),0,4,8,'global_metadata',0,0),
+  (43,NOW(),NOW(),0,4,8,'global_plant',0,0),
+  (44,NOW(),NOW(),0,4,8,'global_specimen',0,0)
 ;
 
--- Values for ...
+# a canonical public user
 INSERT INTO
-  lms_sus_sheetgroups
+  users
   VALUES
--- TODO
-;
+ (1,NOW(),NOW(),'canonical_public','reserved_public_user',0,0,0);
 
--- Values for ...
 INSERT INTO
-  lms_sus_sheets
+  user_role_links
   VALUES
- -- TODO
- ;
+  (1,NOW(),NOW(),0,1,4);
 
--- Values for ...
-INSERT INTO
-  lms_sus_signups
-  VALUES
- -- TODO
-;
 */
