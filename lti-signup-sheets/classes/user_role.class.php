@@ -11,7 +11,7 @@
         public $role = '';
         public $user = '';
 
-        // NOTE: roles are basically fixed; role_id of 1 corresponds to manager, 2 to assistant, 3 to field user, and 4 to public
+        // NOTE: roles are basically fixed; role_id of 1 corresponds to teacher, 2 to student, 3 to observer, and 4 to alumni
 		public function loadRole() {
 			$this->role = Role::getOneFromDb(['role_id' => $this->role_id, 'flag_delete' => FALSE], $this->dbConnection);
 		}

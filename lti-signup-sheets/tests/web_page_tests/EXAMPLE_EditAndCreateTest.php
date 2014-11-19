@@ -160,7 +160,7 @@ class NotebookEditAndCreateTest extends WMSWebTestCase {
         $this->checkBasicAsserts();
 
 //        $this->todo('owner name has link to user page');
-        $this->assertLink(htmlentities($u->screen_name));
+        $this->assertLink(htmlentities($u->last_name));
 
 //        $this->todo('notebook pages are listed and linked');
         $this->assertLink($pages[0]->getAuthoritativePlant()->renderAsShortText());

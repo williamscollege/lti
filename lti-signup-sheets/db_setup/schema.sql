@@ -11,18 +11,38 @@ NOTES:
 FOR TESTING ONLY:
 	USE lti_signup_sheets_test;
 
-	DROP TABLE `lms_users`;
-	DROP TABLE `lms_terms`;
-	DROP TABLE `lms_enrollments`;
-	DROP TABLE `lms_courses`;
-
+	DROP TABLE `users`;
+	DROP TABLE `terms`;
+	DROP TABLE `courses`;
+	DROP TABLE `enrollments`;
+	-- DROP TABLE `course_roles`;
 	DROP TABLE `sus_access`;
 	DROP TABLE `sus_openings`;
 	DROP TABLE `sus_sheetgroups`;
 	DROP TABLE `sus_sheets`;
 	DROP TABLE `sus_signups`;
 
-	DROP TABLE `roles`;
+	DELETE FROM `users`;
+	DELETE FROM `terms`;
+	DELETE FROM `courses`;
+	DELETE FROM `enrollments`;
+	DELETE FROM `course_roles`;
+	DELETE FROM `sus_access`;
+	DELETE FROM `sus_openings`;
+	DELETE FROM `sus_sheetgroups`;
+	DELETE FROM `sus_sheets`;
+	DELETE FROM `sus_signups`;
+
+	Select * From `users`;
+	Select * From `terms`;
+	Select * From `courses`;
+	Select * From `enrollments`;
+	Select * From `course_roles`;
+	Select * From `sus_access`;
+	Select * From `sus_openings`;
+	Select * From `sus_sheetgroups`;
+	Select * From `sus_sheets`;
+	Select * From `sus_signups`;
 */
 
 # ----------------------------
@@ -31,6 +51,9 @@ FOR TESTING ONLY:
 CREATE SCHEMA IF NOT EXISTS `lti_signup_sheets_test`;
 USE lti_signup_sheets_test;
 
+-- CREATE USER 'usrname' IDENTIFIED BY 'usrpwd';
+-- GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE lti_signup_sheets_test.* TO 'usrname';
+
 -- CREATE SCHEMA IF NOT EXISTS `lti_signup_sheets`;
 -- USE lti_signup_sheets;
 
@@ -38,13 +61,12 @@ USE lti_signup_sheets_test;
 # basic application infrastructure
 # ----------------------------
 
-CREATE TABLE IF NOT EXISTS `lms_users` (
+CREATE TABLE IF NOT EXISTS `users` (
     `user_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `username` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) NULL,
     `first_name` VARCHAR(255) NULL,
     `last_name` VARCHAR(255) NULL,
-    `screen_name` VARCHAR(255) NULL,
     `created_at` TIMESTAMP,
     `updated_at` TIMESTAMP,
     `flag_is_system_admin` BIT(1) NOT NULL DEFAULT 0,
@@ -53,24 +75,18 @@ CREATE TABLE IF NOT EXISTS `lms_users` (
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
 /* field 'username' corresponds to Canvas LMS field called 'login_id' */
 
-CREATE TABLE IF NOT EXISTS `lms_terms` (
-    `term_id` VARCHAR(255) NULL,
+CREATE TABLE IF NOT EXISTS `terms` (
+    `term_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `term_idstr` VARCHAR(255) NOT NULL,
     `name` VARCHAR(255) NULL,
     `start_date` TIMESTAMP,
     `end_date` TIMESTAMP,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
 
-CREATE TABLE IF NOT EXISTS `lms_enrollments` (
-    `course_id` VARCHAR(255) NOT NULL,
-    `user_id` INT NOT NULL,
-    `role` VARCHAR(255) NULL,
-    `section_id` VARCHAR(255) NULL,
-    `flag_delete` BIT(1) NOT NULL DEFAULT 0
-)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
-
-CREATE TABLE IF NOT EXISTS `lms_courses` (
-    `course_id` VARCHAR(255) NOT NULL,
+CREATE TABLE IF NOT EXISTS `courses` (
+    `course_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `course_idstr` VARCHAR(255) NOT NULL,
     `short_name` VARCHAR(255) NOT NULL,
     `long_name` VARCHAR(255) NOT NULL,
     `account_id` VARCHAR(255) NULL,
@@ -78,8 +94,25 @@ CREATE TABLE IF NOT EXISTS `lms_courses` (
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
 
+CREATE TABLE IF NOT EXISTS `enrollments` (
+    `enrollment_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `course_idstr` VARCHAR(255) NOT NULL,
+    `user_id` INT NOT NULL,
+    `course_role_name` VARCHAR(255) NOT NULL,
+    `section_id` VARCHAR(255) NULL,
+    `flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
+
+CREATE TABLE IF NOT EXISTS `course_roles` (
+    `course_role_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `priority` INT NOT NULL,
+    `course_role_name` VARCHAR(255) NOT NULL,
+    `flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
+/* priority: Highest teacher role is priority = 10; lowest alumni priority is > 30 */
+
 CREATE TABLE IF NOT EXISTS `sus_access` (
-    `id` bigint(10) unsigned NOT NULL auto_increment,
+    `access_id` bigint(10) unsigned NOT NULL auto_increment,
     `created_at` bigint(10) unsigned default NULL,
     `updated_at` bigint(10) unsigned default NULL,
     `last_user_id` bigint(10) unsigned default NULL,
@@ -88,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `sus_access` (
     `constraint_id` bigint(10) unsigned default NULL,
     `constraint_data` varchar(32) default NULL,
     `broadness` int(11) default NULL,
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`access_id`),
     KEY `sheet_id` (`sheet_id`),
     KEY `type` (`type`),
     KEY `constraint_id` (`constraint_id`),
@@ -97,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `sus_access` (
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='which users can signup on which sheets';
 
 CREATE TABLE IF NOT EXISTS `sus_openings` (
-    `id` bigint(10) unsigned NOT NULL auto_increment,
+    `opening_id` bigint(10) unsigned NOT NULL auto_increment,
     `created_at` bigint(10) unsigned default NULL,
     `updated_at` bigint(10) unsigned default NULL,
     `flag_deleted` tinyint(1) unsigned default NULL,
@@ -111,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `sus_openings` (
     `begin_datetime` bigint(10) unsigned default NULL,
     `end_datetime` bigint(10) unsigned default NULL,
     `location` varchar(255) default NULL,
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`opening_id`),
     KEY `flag_deleted` (`flag_deleted`),
     KEY `sus_sheet_id` (`sus_sheet_id`),
     KEY `opening_set_id` (`opening_set_id`),
@@ -123,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `sus_openings` (
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Places users can sign up - a single sheet may have multiple ';
 
 CREATE TABLE IF NOT EXISTS `sus_sheetgroups` (
-    `id` bigint(10) unsigned NOT NULL auto_increment,
+    `sheetgroup_id` bigint(10) unsigned NOT NULL auto_increment,
     `created_at` bigint(10) unsigned default NULL,
     `updated_at` bigint(10) unsigned default NULL,
     `flag_deleted` tinyint(1) unsigned default NULL,
@@ -133,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `sus_sheetgroups` (
     `description` text,
     `max_g_total_user_signups` smallint(3) default NULL,
     `max_g_pending_user_signups` smallint(3) default NULL,
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`sheetgroup_id`),
     KEY `flag_deleted` (`flag_deleted`),
     KEY `owner_user_id` (`owner_user_id`),
     KEY `flag_is_default` (`flag_is_default`),
@@ -141,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `sus_sheetgroups` (
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='For managing collections of related sheets';
 
 CREATE TABLE IF NOT EXISTS `sus_sheets` (
-    `id` bigint(10) unsigned NOT NULL auto_increment,
+    `sheet_id` bigint(10) unsigned NOT NULL auto_increment,
     `created_at` bigint(10) unsigned default NULL,
     `updated_at` bigint(10) unsigned default NULL,
     `flag_deleted` tinyint(1) unsigned default NULL,
@@ -162,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `sus_sheets` (
     `flag_alert_admin_signup` tinyint(1) unsigned default NULL,
     `flag_alert_admin_imminent` tinyint(1) unsigned default NULL,
     `flag_private_signups` int(1) default '1',
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`sheet_id`),
     KEY `flag_deleted` (`flag_deleted`),
     KEY `owner_user_id` (`owner_user_id`),
     KEY `sus_sheetgroup_id` (`sus_sheetgroup_id`),
@@ -180,7 +213,7 @@ CREATE TABLE IF NOT EXISTS `sus_sheets` (
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Contains the high-level sheet data (name, descr, etc.)';
 
 CREATE TABLE IF NOT EXISTS `sus_signups` (
-    `id` bigint(10) unsigned NOT NULL auto_increment,
+    `signup_id` bigint(10) unsigned NOT NULL auto_increment,
     `created_at` bigint(10) unsigned default NULL,
     `updated_at` bigint(10) unsigned default NULL,
     `flag_deleted` tinyint(1) unsigned default NULL,
@@ -188,20 +221,12 @@ CREATE TABLE IF NOT EXISTS `sus_signups` (
     `sus_opening_id` bigint(10) unsigned default NULL,
     `signup_user_id` bigint(10) unsigned default NULL,
     `admin_comment` varchar(255) default NULL,
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`signup_id`),
     KEY `flag_deleted` (`flag_deleted`),
     KEY `last_user_id` (`last_user_id`),
     KEY `sus_opening_id` (`sus_opening_id`),
     KEY `signup_user_id` (`signup_user_id`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Users signing up for openings - analogous to a list of times and dates on a piece of paper that is passed around or posted on a door and on which people would put their name';
-
-CREATE TABLE IF NOT EXISTS `roles` (
-    `role_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `priority` INT NOT NULL,
-    `name` VARCHAR(255) NULL,
-    `flag_delete` BIT(1) NOT NULL DEFAULT 0
-)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
-/* priority: Highest admin role is priority = 1; lowest anonymous/guest priority is > 1 */
 
 
 /*
@@ -244,14 +269,14 @@ CREATE TABLE IF NOT EXISTS `role_action_target_links` (
 # Required: The Absolute Minimalist Approach to Initial Data Population
 # ----------------------------
 
-# Required constant values for roles table
+# Required constant values for 'course_roles' table
 INSERT INTO
-	roles
+	course_roles
 VALUES
-(1,10,'teacher',0),
-(2,15,'student',0),
-(3,20,'user',0),
-(4,30,'public',0);
+	(1,10,'teacher',0),
+	(2,20,'student',0),
+	(3,30,'observer',0),
+	(4,40,'alumni',0);
 
 /*
 # Required constant values for actions table
@@ -274,48 +299,8 @@ INSERT INTO
   VALUES
   (1,NOW(),NOW(),0,1,1,'global_notebook',0,0),
   (2,NOW(),NOW(),0,1,2,'global_notebook',0,0),
-  (3,NOW(),NOW(),0,1,3,'global_notebook',0,0),
-  (4,NOW(),NOW(),0,1,4,'global_notebook',0,0),
-  (5,NOW(),NOW(),0,1,5,'global_notebook',0,0),
-  (6,NOW(),NOW(),0,1,6,'global_notebook',0,0),
-  (7,NOW(),NOW(),0,1,7,'global_notebook',0,0),
-  (8,NOW(),NOW(),0,1,1,'global_metadata',0,0),
-  (9,NOW(),NOW(),0,1,2,'global_metadata',0,0),
-  (10,NOW(),NOW(),0,1,3,'global_metadata',0,0),
-  (11,NOW(),NOW(),0,1,4,'global_metadata',0,0),
-  (12,NOW(),NOW(),0,1,5,'global_metadata',0,0),
-  (13,NOW(),NOW(),0,1,6,'global_metadata',0,0),
-  (14,NOW(),NOW(),0,1,7,'global_metadata',0,0),
-  (15,NOW(),NOW(),0,1,1,'global_plant',0,0),
-  (16,NOW(),NOW(),0,1,2,'global_plant',0,0),
-  (17,NOW(),NOW(),0,1,3,'global_plant',0,0),
-  (18,NOW(),NOW(),0,1,4,'global_plant',0,0),
-  (19,NOW(),NOW(),0,1,5,'global_plant',0,0),
-  (20,NOW(),NOW(),0,1,6,'global_plant',0,0),
-  (21,NOW(),NOW(),0,1,7,'global_plant',0,0),
-  (22,NOW(),NOW(),0,1,1,'global_specimen',0,0),
-  (23,NOW(),NOW(),0,1,2,'global_specimen',0,0),
-  (24,NOW(),NOW(),0,1,3,'global_specimen',0,0),
-  (25,NOW(),NOW(),0,1,4,'global_specimen',0,0),
-  (26,NOW(),NOW(),0,1,5,'global_specimen',0,0),
-  (27,NOW(),NOW(),0,1,6,'global_specimen',0,0),
-  (28,NOW(),NOW(),0,1,7,'global_specimen',0,0),
-  (29,NOW(),NOW(),0,1,8,'global_notebook',0,0),
-  (30,NOW(),NOW(),0,1,8,'global_metadata',0,0),
-  (31,NOW(),NOW(),0,1,8,'global_plant',0,0),
-  (32,NOW(),NOW(),0,1,8,'global_specimen',0,0),
-  (33,NOW(),NOW(),0,2,8,'global_notebook',0,0),
-  (34,NOW(),NOW(),0,2,8,'global_metadata',0,0),
-  (35,NOW(),NOW(),0,2,8,'global_plant',0,0),
-  (36,NOW(),NOW(),0,2,8,'global_specimen',0,0),
-  (37,NOW(),NOW(),0,3,8,'global_notebook',0,0),
-  (38,NOW(),NOW(),0,3,8,'global_metadata',0,0),
-  (39,NOW(),NOW(),0,3,8,'global_plant',0,0),
-  (40,NOW(),NOW(),0,3,8,'global_specimen',0,0),
-  (41,NOW(),NOW(),0,4,8,'global_notebook',0,0),
-  (42,NOW(),NOW(),0,4,8,'global_metadata',0,0),
-  (43,NOW(),NOW(),0,4,8,'global_plant',0,0),
-  (44,NOW(),NOW(),0,4,8,'global_specimen',0,0)
+  (3,NOW(),NOW(),0,1,3,'global_metadata',0,0),
+  (4,NOW(),NOW(),0,1,1,'global_metadata',0,0)
 ;
 
 # a canonical public user

@@ -38,7 +38,6 @@ class TestOfAuth_Base extends UnitTestCase {
         $this->assertEqual($AUTH->lname,Auth_Base::$TEST_LNAME);
         $this->assertEqual($AUTH->sortname,Auth_Base::$TEST_SORTNAME);
         $this->assertEqual($AUTH->email,Auth_Base::$TEST_EMAIL);
-        $this->assertEqual($AUTH->inst_groups,Auth_Base::$TEST_INST_GROUPS);
     }
 
 }

@@ -22,7 +22,6 @@
             $this->addFile('app_infrastructure_tests/TestOfUserRole.class.php');
 
             $this->addFile('app_infrastructure_tests/TestOfAction.class.php');
-            $this->addFile('app_infrastructure_tests/TestOfRoleActionTarget.class.php');
 
 			# Sound Effect
 			$this->addFile('soundForTesting.php');

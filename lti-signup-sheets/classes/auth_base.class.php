@@ -4,21 +4,20 @@
 		# define attributes of object
 		# authenticate
 		public $username;
+		public $email;
 		public $fname;
 		public $lname;
 		public $sortname;
-		public $email;
-		public $inst_groups;
 
 		public $msg;
 		public $debug;
 
 		public static $TEST_USERNAME = TESTINGUSER;
-		public static $TEST_FNAME = 'Violet';
-		public static $TEST_LNAME = 'Bovine';
-		public static $TEST_SORTNAME = 'Bovine, Violet C.';
-		public static $TEST_EMAIL = 'vbovine@institution.edu';
-		public static $TEST_INST_GROUPS = ['Everyone', 'STUDENT', 'helpdesk-staff', 'BIOL-710', '13S-BIOL-710-01', 'testInstGroup1'];
+		public static $TEST_EMAIL = 'jbond@institution.edu';
+		public static $TEST_FNAME = 'James';
+		public static $TEST_LNAME = 'Bond';
+		public static $TEST_SORTNAME = 'Bond, James';
+
 
 		// TAKES: this function takes two parameters, a username and a password, both strings
 		// DOES: checks the username and password against an authentication source (details implemented by subclass); if the authentication checks out, the various attributes of this object are populated with the appropriate user data
@@ -28,23 +27,23 @@
 			$this->email       = '';
 			$this->fname       = '';
 			$this->lname       = '';
-			$this->inst_groups = array();
 
 			$this->msg   = '';
 			$this->debug = '';
 
-			//echo "authenticating...\n";
-			//echo 'user='.$user."\n";
-			//echo 'TESTINGUSER='.TESTINGUSER."\n";
-			//echo 'pass='.$pass."\n";
-			//echo 'TESTINGPASSWORD='.TESTINGPASSWORD."\n";
+//			echo "<pre>";
+//			echo "authenticating...\n";
+//			echo 'user='.$username."\n";
+//			echo 'TESTINGUSER='.TESTINGUSER."\n";
+//			echo 'pass='.$pass."\n";
+//			echo 'TESTINGPASSWORD='.TESTINGPASSWORD."\n";
+//			echo "</pre>";
 
 			if (($username == TESTINGUSER) && ($pass == TESTINGPASSWORD)) {
+				$this->email       = self::$TEST_EMAIL;
 				$this->fname       = self::$TEST_FNAME;
 				$this->lname       = self::$TEST_LNAME;
 				$this->sortname    = self::$TEST_SORTNAME;
-				$this->email       = self::$TEST_EMAIL;
-				$this->inst_groups = array_slice(self::$TEST_INST_GROUPS, 0);
 				return TRUE;
 			}
 		}
@@ -58,10 +57,10 @@
         // TAKES: a string that is someone's username
         // RETURNS: a data structure containing info about that user, fetched from the auth source
         //        'username'
+		//        'email'
         //        'fname'
         //        'lname'
         //        'sortname'
-        //        'email'
         //        'inst_group_data'
         //        'auth_identifier'
         public function findOneUserByUsername($username) {
@@ -71,10 +70,10 @@
         // TAKES: a string that is a search term - either with out spaces, or with a single space
         // RETURNS: an array of data structures containing info about the users that have data that matches the search term, fetched from the auth source
         //        'username'
+		//        'email'
         //        'fname'
         //        'lname'
         //        'sortname'
-        //        'email'
         //        'inst_group_data'
         //        'auth_identifier'
         public function findAllUsersBySearchTerm($searchTerm) {
@@ -87,10 +86,10 @@
             echo "You must override convertAuthInfoToUserDataStructure in your auth class<br/>\n";
             $res = [
                 'username'=> '',
+				'email'=> '',
                 'fname'=> '',
                 'lname'=> '',
                 'sortname'=> '',
-                'email'=> '',
                 'inst_group_data' => '',
                 'auth_identifier' => ''
             ];

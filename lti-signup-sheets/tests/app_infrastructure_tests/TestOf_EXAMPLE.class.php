@@ -214,7 +214,7 @@
             $canonical = '<div id="rendered_notebook_1001" class="rendered_notebook" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1">
   <h3 class="notebook_title"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list">'.ucfirst(util_lang('notebook')).'</a>: testnotebook1</h3>
   <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($n->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($n->updated_at).'</span></div>
-  <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$USER->user_id.'">'.$USER->screen_name.'</a></div>
+  <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$USER->user_id.'">'.$USER->first_name.'</a></div>
   <div class="info-workflow"><span class="published_state">'.util_lang('published_false').'</span>, <span class="verified_state verified_state_false">'.util_lang('verified_false').'</span></div>
   <div class="notebook-notes">this is testnotebook1, owned by user 101</div>
   <h4>'.ucfirst(util_lang('pages')).'</h4>
@@ -254,7 +254,7 @@
   <input type="hidden" name="notebook_id" value="1001"/>
   <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': <input id="notebook-name" type="text" name="name" value="testnotebook1"/></h3>
   <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($n->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($n->updated_at).'</span></div>
-  <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->screen_name.'</a></div>
+  <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->first_name.'</a></div>
 <div class="control-workflows">  <span class="published_state workflow-control"><input id="notebook-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1" /> '.util_lang('publish').'</span>, <span class="verified_state verified_state_false workflow-info">'.util_lang('verified_false').'</span></div>
   <div class="notebook_notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">this is testnotebook1, owned by user 101</textarea></div>
 </form>
@@ -291,7 +291,7 @@
 //  <input type="hidden" name="notebook_id" value="NEW"/>
 //  <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': <input id="notebook-name" type="text" name="name" value="'.htmlentities($n->name).'"/></h3>
 //  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($n->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($n->updated_at).'</span><br/>
-//  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->screen_name.'</a></span><br/>
+//  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->first_name.'</a></span><br/>
 //  <div class="notebook-notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">'.htmlentities(util_lang('new_notebook_notes')).'</textarea></div>
 //  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>
 //  <a id="edit-cancel-control" class="btn" href="/digitalfieldnotebooks/app_code/notebook.php?action=list">'.util_lang('cancel','properize').'</a>
@@ -310,7 +310,7 @@
   <input type="hidden" name="notebook_id" value="NEW"/>
   <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': <input id="notebook-name" type="text" name="name" value="'.htmlentities($n->name).'"/></h3>
   <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($n->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($n->updated_at).'</span></div>
-  <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->screen_name.'</a></div>
+  <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->first_name.'</a></div>
 <div class="control-workflows"></div>
   <div class="notebook_notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">'.htmlentities(util_lang('new_notebook_notes')).'</textarea></div>
 </form>

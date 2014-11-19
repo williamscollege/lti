@@ -50,23 +50,23 @@
             $this->assertEqual(107,$us[5]->user_id);
         }
 
-        public function testGetRoleActionTargets() {
-            $r = Role::getOneFromDb(['role_id'=>3],$this->DB);
-
-            $ats = $r->getRoleActionTargets();
-
-            $this->assertEqual(9,count($ats));
-
-            $this->assertEqual(207,$ats[0]->role_action_target_link_id);
-            $this->assertEqual(210,$ats[1]->role_action_target_link_id);
-            $this->assertEqual(212,$ats[2]->role_action_target_link_id);
-            $this->assertEqual(220,$ats[3]->role_action_target_link_id);
-            $this->assertEqual(221,$ats[4]->role_action_target_link_id);
-            $this->assertEqual(37,$ats[5]->role_action_target_link_id);
-            $this->assertEqual(38,$ats[6]->role_action_target_link_id);
-            $this->assertEqual(39,$ats[7]->role_action_target_link_id);
-            $this->assertEqual(40,$ats[8]->role_action_target_link_id);
-        }
+//        public function testGetRoleActionTargets() {
+//            $r = Role::getOneFromDb(['role_id'=>3],$this->DB);
+//
+//            $ats = $r->getRoleActionTargets();
+//
+//            $this->assertEqual(9,count($ats));
+//
+//            $this->assertEqual(207,$ats[0]->role_action_target_link_id);
+//            $this->assertEqual(210,$ats[1]->role_action_target_link_id);
+//            $this->assertEqual(212,$ats[2]->role_action_target_link_id);
+//            $this->assertEqual(220,$ats[3]->role_action_target_link_id);
+//            $this->assertEqual(221,$ats[4]->role_action_target_link_id);
+//            $this->assertEqual(37,$ats[5]->role_action_target_link_id);
+//            $this->assertEqual(38,$ats[6]->role_action_target_link_id);
+//            $this->assertEqual(39,$ats[7]->role_action_target_link_id);
+//            $this->assertEqual(40,$ats[8]->role_action_target_link_id);
+//        }
 	}
 
 ?>

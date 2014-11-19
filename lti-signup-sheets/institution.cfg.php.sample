@@ -7,22 +7,22 @@
 
 define('INSTITUTION_DOMAIN', 'institution.edu');
 
-# used for session security
+# Used for session security
 define('FINGERPRINT_SALT', 'yoursalthere');
 
-# application folder path
+# Application folder path
 define('APP_STR',       'lti-signup-sheets');
 define('APP_FOLDER',       'http://localhost/'.APP_STR);
 define('APP_ROOT_PATH',       '/'.APP_STR);
 
-# database connection
+# Database connection
 define('DB_SERVER', 'liver_server_address');
 define('DB_NAME',   'database_name');
 define('DB_USER',   'db_user');
 define('DB_PASS',   'db_user_password');
 
 # ---------------------------
-# LTI LMS app settings
+# LTI LMS App Settings
 # ---------------------------
 # LTI Name:				pretty name
 # LTI Key:				your-key-name
@@ -44,7 +44,7 @@ define('LTI_DB_PASSWORD', 'yourlivefancypassword');
 define('LTI_DB_TABLENAME_PREFIX', '');
 
 # ---------------------------
-# external Content Delivery Network
+# External Content Delivery Network
 # ---------------------------
 # ***** Google CDN: https://developers.google.com/speed/libraries/devguide#jquery
 define('PATH_JQUERY_JS', '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js');
@@ -52,7 +52,7 @@ define('PATH_JQUERYUI_JS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jque
 define('PATH_JQUERYUI_CSS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/dot-luv/jquery-ui.min.css');
 
 # ---------------------------
-# local file paths
+# Local File Paths
 # ---------------------------
 # ***** Bootstrap: http://getbootstrap.com/
 define('PATH_BOOTSTRAP_JS', APP_ROOT_PATH.'/js/bootstrap/js/bootstrap.min.js?rel=3.3.1');
@@ -62,13 +62,13 @@ define('PATH_BOOTSTRAP_BOOTBOX_JS', APP_ROOT_PATH.'/js/jquery/plugins/bootstrap-
 # ***** jQuery-Validation: http://jqueryvalidation.org/
 define('PATH_JQUERY_VALIDATION_JS', 'js/jquery/plugins/jquery-validation/dist/jquery.validate.min.js?rel=1.13.1');
 
-# these are used in the automated tests.
+# These are used in the automated tests.
 define('TESTING_DB_SERVER','localhost');
 define('TESTING_DB_NAME',  'testing_database_name');
 define('TESTING_DB_USER',  'testing_db_user'); // this user (whatever you call it) should have only basic SELECT, INSERT, UPDATE, DELETE privileges
 define('TESTING_DB_PASS',  'testing_db_user_password');
 
-# NOTE: it's VERY IMPORTANT to change the password (and possibly the username) for these as this user will always be authenticated!
+# NOTE: It's VERY IMPORTANT to change the password (and possibly the username) for these as this user will always be authenticated!
 define('TESTINGUSER','testing_user');
 define('TESTINGPASSWORD','testing_password');
 
