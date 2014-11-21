@@ -89,8 +89,8 @@ CREATE TABLE IF NOT EXISTS `courses` (
     `course_idstr` VARCHAR(255) NOT NULL,
     `short_name` VARCHAR(255) NOT NULL,
     `long_name` VARCHAR(255) NOT NULL,
-    `account_id` VARCHAR(255) NULL,
-    `term_id` VARCHAR(255) NULL,
+    `account_idstr` VARCHAR(255) NULL,
+    `term_idstr` VARCHAR(255) NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
 

@@ -122,7 +122,7 @@
 			$this->assertEqual($u->username, Auth_Base::$TEST_USERNAME);
 			$this->assertTrue($u->matchesDb);
 
-			$this->auth->lname       = 'Newlastname';
+			$this->auth->lname = 'Newlastname';
 
 			$u->updateDbFromAuth($this->auth);
 

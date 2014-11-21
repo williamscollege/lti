@@ -14,7 +14,7 @@
 			parent::__construct($initsHash);
 
 			// now do custom stuff
-			// e.g. automatically load all accessibility info associated with the user
+			// e.g. automatically load all accessibility info associated with this object
 
 			//		$this->flag_is_system_admin = false;
 			//		$this->flag_is_banned = false;
@@ -22,10 +22,10 @@
 			$this->enrollments  = array();
 		}
 
-		//		public function clearCaches() {
-		//			$this->$cached_course_roles = array();
-		//			$this->$cached_enrollments = array();
-		//		}
+		public function clearCaches() {
+			$this->$cached_course_roles = array();
+			$this->$cached_enrollments  = array();
+		}
 
 		public static function cmp($a, $b) {
 			if ($a->last_name == $b->last_name) {
@@ -37,7 +37,7 @@
 			return ($a->last_name < $b->last_name) ? -1 : 1;
 		}
 
-		// returns: a very basic HTML representation of the user
+		// returns: a very basic HTML representation of the object
 		public function renderMinimal($flag_linked = FALSE) {
 
 			$enclosed = htmlentities($this->last_name) . ', ' . htmlentities($this->first_name);

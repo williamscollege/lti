@@ -2,8 +2,8 @@
 	require_once('simpletest/autorun.php');
 	SimpleTest::prefer(new TextReporter());
 
-    require_once('../institution.cfg.php');
-    require_once('../lang.cfg.php');
+	require_once('../institution.cfg.php');
+	require_once('../lang.cfg.php');
 
 	class TestOfAllSuite extends TestSuite {
 		function TestOfAllSuite() {
