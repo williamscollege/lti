@@ -8,7 +8,8 @@
 		public static $dbTable = 'course_roles';
         public static $entity_type_label = 'course_role';
 
-        public static $VALID_COURSE_ROLE_NAMES = ['teacher','student','observer','alumni'];
+        # this matches hardcoded DB values
+		public static $VALID_COURSE_ROLE_NAMES = ['teacher','student','observer','alumni'];
         public static $SORT_BY_COURSE_ROLE_NAMES = ['teacher'=>10,'student'=>20,'observer'=>30,'alumni'=>40];
 
 		public static function cmp($a, $b) {
@@ -17,27 +18,10 @@
                 if ($a->course_role_name == $b->course_role_name) {
     				return 0;
                 }
-                return (Role::$SORT_BY_COURSE_ROLE_NAMES[$a->course_role_name] < Role::$SORT_BY_COURSE_ROLE_NAMES[$b->course_role_name]) ? -1 : 1;
+                return (Course_Role::$SORT_BY_COURSE_ROLE_NAMES[$a->course_role_name] < Course_Role::$SORT_BY_COURSE_ROLE_NAMES[$b->course_role_name]) ? -1 : 1;
 			}
 			return ($a->priority < $b->priority) ? -1 : 1;
 		}
 
-//        public function getUsers() {
-//            $urs = User_Role::getAllFromDb(['course_role_id'=>$this->course_role_id],$this->dbConnection);
-//
-//            $user_ids = Db_Linked::arrayOfAttrValues($urs,'user_id');
-//
-//            $users = User::getAllFromDb(['user_id'=>$user_ids],$this->dbConnection);
-//
-//            usort($users,'User::cmp');
-//
-//            return $users;
-//        }
-//
-//        public function getRoleActionTargets() {
-//            $rats = Role_Action_Target::getAllFromDb(['course_role_id'=>$this->course_role_id],$this->dbConnection);
-//            usort($rats,'Role_Action_Target::cmp');
-//            return $rats;
-//        }
 
     }

@@ -23,6 +23,7 @@
 			$this->$cached_enrollments = array();
 		}
 
+
 		public static function cmp($a, $b) {
 			if ($a->course_idstr == $b->course_idstr) {
 				if ($a->course_idstr == $b->course_idstr) {
@@ -32,6 +33,7 @@
 			}
 			return ($a->course_idstr < $b->course_idstr) ? -1 : 1;
 		}
+
 
 		// returns: a very basic HTML representation of the object
 		public function renderMinimal($flag_linked = FALSE) {
@@ -43,6 +45,7 @@
 
 			return '<div class="rendered-object course-render course-render-minimal course-render-' . $this->course_id . '" data-for-course="' . $this->course_id . '" data-course_idstr="' . htmlentities($this->course_idstr) . '">' . $enclosed . '</div>';
 		}
+
 
 		// load enrollments for user object
 		public function loadEnrollments() {

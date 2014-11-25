@@ -67,8 +67,8 @@ CREATE TABLE IF NOT EXISTS `users` (
     `email` VARCHAR(255) NULL,
     `first_name` VARCHAR(255) NULL,
     `last_name` VARCHAR(255) NULL,
-    `created_at` TIMESTAMP,
-    `updated_at` TIMESTAMP,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL,
     `flag_is_system_admin` BIT(1) NOT NULL DEFAULT 0,
     `flag_is_banned` BIT(1) NOT NULL DEFAULT 0,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
@@ -113,8 +113,8 @@ CREATE TABLE IF NOT EXISTS `course_roles` (
 
 CREATE TABLE IF NOT EXISTS `sus_access` (
     `access_id` bigint(10) unsigned NOT NULL auto_increment,
-    `created_at` bigint(10) unsigned default NULL,
-    `updated_at` bigint(10) unsigned default NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL,
     `last_user_id` bigint(10) unsigned default NULL,
     `sheet_id` bigint(10) unsigned default NULL,
     `type` varchar(48) default NULL,
@@ -131,8 +131,8 @@ CREATE TABLE IF NOT EXISTS `sus_access` (
 
 CREATE TABLE IF NOT EXISTS `sus_openings` (
     `opening_id` bigint(10) unsigned NOT NULL auto_increment,
-    `created_at` bigint(10) unsigned default NULL,
-    `updated_at` bigint(10) unsigned default NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL,
     `flag_deleted` tinyint(1) unsigned default NULL,
     `last_user_id` bigint(10) unsigned default NULL,
     `sus_sheet_id` bigint(10) unsigned default NULL,
@@ -141,8 +141,8 @@ CREATE TABLE IF NOT EXISTS `sus_openings` (
     `description` text,
     `max_signups` mediumint(6) unsigned default NULL,
     `admin_comment` varchar(255) default NULL,
-    `begin_datetime` bigint(10) unsigned default NULL,
-    `end_datetime` bigint(10) unsigned default NULL,
+    `begin_datetime` TIMESTAMP NULL,
+    `end_datetime` TIMESTAMP NULL,
     `location` varchar(255) default NULL,
     PRIMARY KEY (`opening_id`),
     KEY `flag_deleted` (`flag_deleted`),
@@ -157,8 +157,8 @@ CREATE TABLE IF NOT EXISTS `sus_openings` (
 
 CREATE TABLE IF NOT EXISTS `sus_sheetgroups` (
     `sheetgroup_id` bigint(10) unsigned NOT NULL auto_increment,
-    `created_at` bigint(10) unsigned default NULL,
-    `updated_at` bigint(10) unsigned default NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL,
     `flag_deleted` tinyint(1) unsigned default NULL,
     `owner_user_id` bigint(10) unsigned default NULL,
     `flag_is_default` int(1) NOT NULL default '0',
@@ -175,8 +175,8 @@ CREATE TABLE IF NOT EXISTS `sus_sheetgroups` (
 
 CREATE TABLE IF NOT EXISTS `sus_sheets` (
     `sheet_id` bigint(10) unsigned NOT NULL auto_increment,
-    `created_at` bigint(10) unsigned default NULL,
-    `updated_at` bigint(10) unsigned default NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL,
     `flag_deleted` tinyint(1) unsigned default NULL,
     `owner_user_id` bigint(10) unsigned default NULL,
     `last_user_id` bigint(10) unsigned default NULL,
@@ -184,8 +184,8 @@ CREATE TABLE IF NOT EXISTS `sus_sheets` (
     `name` varchar(255) default NULL,
     `description` text,
     `type` varchar(32) default NULL,
-    `date_opens` bigint(10) unsigned default NULL,
-    `date_closes` bigint(10) unsigned default NULL,
+    `date_opens` TIMESTAMP NULL,
+    `date_closes` TIMESTAMP NULL,
     `max_total_user_signups` smallint(3) unsigned default NULL,
     `max_pending_user_signups` smallint(3) unsigned default NULL,
     `flag_alert_owner_change` tinyint(1) unsigned default NULL,
@@ -214,8 +214,8 @@ CREATE TABLE IF NOT EXISTS `sus_sheets` (
 
 CREATE TABLE IF NOT EXISTS `sus_signups` (
     `signup_id` bigint(10) unsigned NOT NULL auto_increment,
-    `created_at` bigint(10) unsigned default NULL,
-    `updated_at` bigint(10) unsigned default NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL,
     `flag_deleted` tinyint(1) unsigned default NULL,
     `last_user_id` bigint(10) unsigned default NULL,
     `sus_opening_id` bigint(10) unsigned default NULL,
@@ -232,8 +232,8 @@ CREATE TABLE IF NOT EXISTS `sus_signups` (
 /*
 CREATE TABLE IF NOT EXISTS `user_role_links` (
     `user_role_link_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `created_at` TIMESTAMP,
-    `updated_at` TIMESTAMP,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL,
     `last_user_id` INT NOT NULL,
     `user_id` INT NOT NULL,
     `role_id` INT NOT NULL
@@ -248,8 +248,8 @@ CREATE TABLE IF NOT EXISTS `actions` (
 
 CREATE TABLE IF NOT EXISTS `role_action_target_links` (
     `role_action_target_link_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `created_at` TIMESTAMP,
-    `updated_at` TIMESTAMP,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL,
     `last_user_id` INT NOT NULL,
     `role_id` INT NOT NULL,
     `action_id` INT NOT NULL,

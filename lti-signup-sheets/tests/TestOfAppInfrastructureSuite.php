@@ -18,8 +18,7 @@
 			$this->addFile('app_infrastructure_tests/TestOfAuth_LDAP.class.php');
 
 			$this->addFile('app_infrastructure_tests/TestOfUser.class.php');
-			$this->addFile('app_infrastructure_tests/TestOfRole.class.php');
-			$this->addFile('app_infrastructure_tests/TestOfUserRole.class.php');
+			$this->addFile('app_infrastructure_tests/TestOfCourseRole.class.php');
 
 			$this->addFile('app_infrastructure_tests/TestOfAction.class.php');
 

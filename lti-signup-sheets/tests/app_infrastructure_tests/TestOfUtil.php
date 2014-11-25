@@ -144,7 +144,4 @@
 			$this->assertEqual('http://maps.google.com/maps?q=42.7118454,-73.2054918+(point)&z=12&ll=42.7118454,-73.2054918', util_coordsMapLink(-73.2054918, 42.7118454, 12));
 		}
 
-		function testOrderingControls() {
-			$this->todo();
-		}
 	}

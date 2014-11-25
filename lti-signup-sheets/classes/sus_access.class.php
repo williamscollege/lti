@@ -7,4 +7,6 @@
 		public static $dbTable = 'sus_access';
 		public static $entity_type_label = 'sus_access';
 
+
+
 	}

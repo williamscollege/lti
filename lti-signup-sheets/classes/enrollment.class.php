@@ -5,8 +5,7 @@
 		public static $fields = array('enrollment_id', 'course_idstr', 'user_id', 'course_role_name', 'section_id', 'flag_delete');
 		public static $primaryKeyField = 'enrollment_id';
 		public static $dbTable = 'enrollments';
-        public static $entity_type_label = 'enrollment';
-
+		public static $entity_type_label = 'enrollment';
 
 
 		public function __construct($initsHash) {
@@ -23,8 +22,9 @@
 			$this->$cached_xxxxxxx = array();
 		}
 
+
 		public static function cmp($a, $b) {
-			if ($a->course_role_name == $b->course_idstr) {
+			if ($a->course_idstr == $b->course_idstr) {
 				if ($a->course_idstr == $b->course_idstr) {
 					return 0;
 				}
@@ -33,4 +33,17 @@
 			return ($a->course_idstr < $b->course_idstr) ? -1 : 1;
 		}
 
-    }
+
+		// returns: a very basic HTML representation of the object
+		public function renderMinimal($flag_linked = FALSE) {
+
+			$enclosed = htmlentities($this->course_idstr);
+			if ($flag_linked) {
+				$enclosed = '<a href="' . APP_ROOT_PATH . '/app_code/enrollment.php?enrollment_id=' . $this->enrollment_id . '">' . $enclosed . '</a>';
+			}
+
+			return '<div class="rendered-object enrollment-render enrollment-render-minimal enrollment-render-' . $this->enrollment_id . '" data-for-enrollment="' . $this->enrollment_id . '" data-course_idstr="' . htmlentities($this->course_idstr) . '">' . $enclosed . '</div>';
+		}
+
+
+	}

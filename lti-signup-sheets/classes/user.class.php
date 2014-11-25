@@ -27,6 +27,8 @@
 			$this->$cached_enrollments  = array();
 		}
 
+		/* static functions */
+
 		public static function cmp($a, $b) {
 			if ($a->last_name == $b->last_name) {
 				if ($a->first_name == $b->first_name) {
@@ -36,6 +38,26 @@
 			}
 			return ($a->last_name < $b->last_name) ? -1 : 1;
 		}
+
+		public static function getUsersByCourseRole($role, $dbconn) {
+			$users = User::getAllFromDb(['flag_is_banned' => FALSE, 'flag_delete' => FALSE], $dbconn);
+
+			$usersByRole = [];
+
+			foreach ($users as $u) {
+				$u->loadCourseRoles();
+				foreach ($u->course_roles as $cr) {
+
+					if ($cr->course_role_name == $role) {
+						array_push($usersByRole, $u->user_id);
+					}
+
+				}
+			}
+			return $usersByRole;
+		}
+
+		/* public functions */
 
 		// returns: a very basic HTML representation of the object
 		public function renderMinimal($flag_linked = FALSE) {
@@ -124,5 +146,6 @@
 				$this->loadEnrollments();
 			}
 		}
+
 
 	}

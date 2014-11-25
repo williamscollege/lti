@@ -157,6 +157,58 @@
 		}
 	}
 
+	function createTestData_SUS_Sheetgroups($dbConn) {
+		// series ids
+		# SUS_Sheetgroup: 'sheetgroup_id', 'created_at', 'updated_at', 'flag_deleted', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
+		$addTestSql  = "INSERT INTO " . SUS_Sheetgroup::$dbTable . " VALUES
+			(1, NOW(), NOW(), 0, 101, 1, 'Demo Sheetgroup 1', 'Something to organize my math sheets', 1, 0),
+			(2, NOW(), NOW(), 0, 101, 1, 'Demo Sheetgroup 2', 'Something to organize my english sheets', 1, 0),
+			(3, NOW(), NOW(), 0, 101, 1, 'Demo Sheetgroup 3', 'Something to organize my spanish sheets', 1, 0),
+			(4, NOW(), NOW(), 0, 102, 1, 'Demo Sheetgroup 4', 'Help me keep track of so many sheets', 1, 0),
+			(5, NOW(), NOW(), 0, 102, 1, 'Demo Sheetgroup 5', 'Something to help me organize', 1, 0),
+			(6, NOW(), NOW(), 0, 103, 1, 'Demo Sheetgroup 6', 'Something to help me organize', 1, 0),
+			(7, NOW(), NOW(), 0, 104, 1, 'Demo Sheetgroup 7', 'Something to help me organize', 1, 0),
+			(8, NOW(), NOW(), 0, 105, 0, 'Demo Sheetgroup 8', 'Something to help me organize', 1, 0),
+			(9, NOW(), NOW(), 0, 106, 1, 'Demo Sheetgroup 9', 'Something to help me organize', 1, 0),
+			(10, NOW(), NOW(), 0, 109, 1, 'Demo Sheetgroup 10', 'Something to help me organize', 1, 0)
+    ";
+		$addTestStmt = $dbConn->prepare($addTestSql);
+		$addTestStmt->execute();
+		if ($addTestStmt->errorInfo()[0] != '0000') {
+			echo "<pre>error adding test SUS_Sheetgroups data to the DB\n";
+			print_r($addTestStmt->errorInfo());
+			debug_print_backtrace();
+			exit;
+		}
+	}
+
+	function createTestData_SUS_Sheets($dbConn) {
+		// series ids
+		# SUS_Sheet: 'sheet_id', 'created_at', 'updated_at', 'flag_deleted', 'owner_user_id', 'last_user_id', 'sus_sheetgroup_id', 'name', 'description',
+		# 'type', 'date_opens', 'date_closes', 'max_total_user_signups', 'max_pending_user_signups', 'flag_alert_owner_change', 'flag_alert_owner_signup',
+		# 'flag_alert_owner_imminent', 'flag_alert_admin_change', 'flag_alert_admin_signup', 'flag_alert_admin_imminent', 'flag_private_signups'
+		$addTestSql  = "INSERT INTO " . SUS_Sheet::$dbTable . " VALUES
+			(1, NOW(), NOW(), 0, 101, 101, 1, 'Demo sheet 1', 'Sheet 1, Group 1', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 0),
+			(2, NOW(), NOW(), 0, 101, 102, 1, 'Demo sheet 2', 'Sheet 2, Group 1', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 1, 0, 0, 0, 0, 0, 0, 0),
+			(3, NOW(), NOW(), 0, 101, 102, 1, 'Demo sheet 3', 'Sheet 3, Group 1', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 1, 0, 0, 0, 0, 0, 0),
+			(4, NOW(), NOW(), 0, 101, 103, 2, 'Demo sheet 4', 'Sheet 4, Group 2', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 1, 0, 0, 0, 0, 0),
+			(5, NOW(), NOW(), 0, 101, 104, 3, 'Demo sheet 5', 'Sheet 5, Group 3', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 1, 0, 0, 0, 0),
+			(6, NOW(), NOW(), 0, 102, 103, 4, 'Demo sheet 6', 'Sheet 6, Group 4', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 1, 0, 0, 0),
+			(7, NOW(), NOW(), 0, 102, 103, 4, 'Demo sheet 7', 'Sheet 7, Group 4', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 1, 0, 0),
+			(8, NOW(), NOW(), 0, 103, 110, 6, 'Demo sheet 8', 'Sheet 8, Group 6', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 1, 0),
+			(9, NOW(), NOW(), 0, 104, 110, 7, 'Demo sheet 9', 'Sheet 9, Group 6', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 1),
+			(10, NOW(), NOW(), 0, 109, 110, 10, 'Demo sheet 10', 'Sheet 10, Group 10', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 0)
+    ";
+		$addTestStmt = $dbConn->prepare($addTestSql);
+		$addTestStmt->execute();
+		if ($addTestStmt->errorInfo()[0] != '0000') {
+			echo "<pre>error adding test SUS_Sheet data to the DB\n";
+			print_r($addTestStmt->errorInfo());
+			debug_print_backtrace();
+			exit;
+		}
+	}
+
 	function makeAuthedTestUserAdmin($dbConn) {
 		$u1                       = User::getOneFromDb(['username' => TESTINGUSER], $dbConn);
 		$u1->flag_is_system_admin = TRUE;
@@ -171,6 +223,8 @@
 		createTestData_Terms($dbConn);
 		createTestData_Courses($dbConn);
 		createTestData_Enrollments($dbConn);
+		createTestData_SUS_Sheetgroups($dbConn);
+		createTestData_SUS_Sheets($dbConn);
 
 		//        $all_actions = Action::getAllFromDb([],$dbConn);
 		//        global $ACTIONS;
@@ -210,6 +264,13 @@
 		_removeTestDataFromTable($dbConn, Enrollment::$dbTable);
 	}
 
+	function removeTestData_SUS_Sheetgroups($dbConn) {
+		_removeTestDataFromTable($dbConn, SUS_Sheetgroup::$dbTable);
+	}
+
+	function removeTestData_SUS_Sheets($dbConn) {
+		_removeTestDataFromTable($dbConn, SUS_Sheet::$dbTable);
+	}
 	function removeTestData_EXAMPLE($dbConn) {
 		_removeTestDataFromTable($dbConn, Metadata_Structure::$dbTable);
 	}
@@ -221,5 +282,6 @@
 		removeTestData_Terms($dbConn);
 		removeTestData_Courses($dbConn);
 		removeTestData_Enrollments($dbConn);
-
+		removeTestData_SUS_Sheetgroups($dbConn);
+		removeTestData_SUS_Sheets($dbConn);
 	}

@@ -7,4 +7,17 @@
 		public static $dbTable = 'sus_sheets';
 		public static $entity_type_label = 'sus_sheet';
 
+
+
+		//// static methods
+
+		public static function cmp($a, $b) {
+			if ($a->name == $b->name) {
+				return 0;
+			}
+			return ($a->name < $b->name) ? -1 : 1;
+		}
+
+
+
 	}

@@ -152,4 +152,12 @@
 			$this->assertFalse($status);
 		}
 
+		function testGetUsersByCourseRole() {
+			$allStudents = User::getUsersByCourseRole('student', $this->DB);
+			$this->assertEqual(7, count($allStudents));
+
+			$allTeachers = User::getUsersByCourseRole('teacher', $this->DB);
+			$this->assertEqual(2, count($allTeachers));
+		}
+
 	}
