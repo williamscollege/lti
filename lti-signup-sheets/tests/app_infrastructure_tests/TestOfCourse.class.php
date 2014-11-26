@@ -56,7 +56,7 @@
 		}
 
 		function testCourseRetrievedFromDb() {
-			$c = new Course(['course_id' => 5, 'DB' => $this->DB]);
+			$c = new Course(['course_id' => 205, 'DB' => $this->DB]);
 			$this->assertNull($c->course_idstr);
 
 			$c->refreshFromDb();
@@ -66,14 +66,14 @@
 		//// instance methods - object itself
 
 		function testCourseRenderMinimal() {
-			$c = Course::getOneFromDb(['course_id' => 5], $this->DB);
+			$c = Course::getOneFromDb(['course_id' => 205], $this->DB);
 
-			$canonical = '<div class="rendered-object course-render course-render-minimal course-render-5" data-for-course="5" data-course_idstr="15F-ECON-201-01">15F-ECON-201-01 - Economy: Depression Era to WW II</div>';
+			$canonical = '<div class="rendered-object course-render course-render-minimal course-render-205" data-for-course="205" data-course_idstr="15F-ECON-201-01">15F-ECON-201-01 - Economy: Depression Era to WW II</div>';
 			$rendered  = $c->renderMinimal();
 			//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
 			$this->assertEqual($canonical, $rendered);
 
-			$canonical = '<div class="rendered-object course-render course-render-minimal course-render-5" data-for-course="5" data-course_idstr="15F-ECON-201-01"><a href="' . APP_ROOT_PATH . '/app_code/course.php?course_id=5">15F-ECON-201-01 - Economy: Depression Era to WW II</a></div>';
+			$canonical = '<div class="rendered-object course-render course-render-minimal course-render-205" data-for-course="205" data-course_idstr="15F-ECON-201-01"><a href="' . APP_ROOT_PATH . '/app_code/course.php?course_id=205">15F-ECON-201-01 - Economy: Depression Era to WW II</a></div>';
 			$rendered  = $c->renderMinimal(TRUE);
 			//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
 			$this->assertEqual($canonical, $rendered);

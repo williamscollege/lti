@@ -28,8 +28,8 @@
 		//// static methods
 
 		public function testOfCmp() {
-			$s1 = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => 1], $this->DB);
-			$s2 = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => 2], $this->DB);
+			$s1 = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => 501], $this->DB);
+			$s2 = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => 502], $this->DB);
 
 			$this->assertEqual(SUS_Sheetgroup::cmp($s1, $s2), -1);
 			$this->assertEqual(SUS_Sheetgroup::cmp($s1, $s1), 0);

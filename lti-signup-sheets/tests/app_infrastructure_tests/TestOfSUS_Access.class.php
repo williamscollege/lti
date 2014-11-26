@@ -27,8 +27,8 @@
 		//// static methods
 
 		public function testOfCmp() {
-			$s1 = SUS_Access::getOneFromDb(['access_id' => 1], $this->DB);
-			$s2 = SUS_Access::getOneFromDb(['access_id' => 2], $this->DB);
+			$s1 = SUS_Access::getOneFromDb(['access_id' => 901], $this->DB);
+			$s2 = SUS_Access::getOneFromDb(['access_id' => 902], $this->DB);
 
 			$this->assertEqual(SUS_Access::cmp($s1, $s2), -1);
 			$this->assertEqual(SUS_Access::cmp($s1, $s1), 0);
