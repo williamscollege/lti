@@ -7,4 +7,15 @@
 		public static $dbTable = 'sus_signups';
 		public static $entity_type_label = 'sus_signup';
 
+
+
+		public static function cmp($a, $b) {
+			if ($a->created_at == $b->created_at) {
+				if ($a->created_at == $b->created_at) {
+					return 0;
+				}
+				return ($a->created_at < $b->created_at) ? -1 : 1;
+			}
+			return ($a->created_at < $b->created_at) ? -1 : 1;
+		}
 	}

@@ -23,17 +23,17 @@
 			$this->assertTrue(in_array('course_idstr', Enrollment::$fields));
 			$this->assertTrue(in_array('user_id', Enrollment::$fields));
 			$this->assertTrue(in_array('course_role_name', Enrollment::$fields));
-			$this->assertTrue(in_array('section_id', Enrollment::$fields));
+			$this->assertTrue(in_array('section_idstr', Enrollment::$fields));
 			$this->assertTrue(in_array('flag_delete', Enrollment::$fields));
 		}
 
 		//// static methods
 
 		function testCmp() {
-			$e1 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-ROCK-101-01', 'user_id' => 200, 'course_role_name' => 'teacher', 'section_id' => '25F-ROCK-101-01', 'DB' => $this->DB]);
-			$e2 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-SCISSORS-101-01', 'user_id' => 200, 'course_role_name' => 'student', 'section_id' => '25F-SCISSORS-101-01', 'DB' => $this->DB]);
-			$e3 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-ROCK-101-01', 'user_id' => 200, 'course_role_name' => 'student', 'section_id' => '25F-ROCK-101-01', 'DB' => $this->DB]);
-			$e4 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-PAPER-101-01', 'user_id' => 200, 'course_role_name' => 'student', 'section_id' => '25F-PAPER-101-01', 'DB' => $this->DB]);
+			$e1 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-ROCK-101-01', 'user_id' => 200, 'course_role_name' => 'teacher', 'section_idstr' => '25F-ROCK-101-01', 'DB' => $this->DB]);
+			$e2 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-SCISSORS-101-01', 'user_id' => 200, 'course_role_name' => 'student', 'section_idstr' => '25F-SCISSORS-101-01', 'DB' => $this->DB]);
+			$e3 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-ROCK-101-01', 'user_id' => 200, 'course_role_name' => 'student', 'section_idstr' => '25F-ROCK-101-01', 'DB' => $this->DB]);
+			$e4 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-PAPER-101-01', 'user_id' => 200, 'course_role_name' => 'student', 'section_idstr' => '25F-PAPER-101-01', 'DB' => $this->DB]);
 
 			$this->assertEqual(Enrollment::cmp($e1, $e2), -1);
 			$this->assertEqual(Enrollment::cmp($e1, $e1), 0);
@@ -44,7 +44,7 @@
 		//// DB interaction tests
 
 		function testEnrollmentDBInsert() {
-			$e = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-ROCK-101-01', 'user_id' => 200, 'course_role_name' => 'teacher', 'section_id' => '25F-ROCK-101-01', 'DB' => $this->DB]);
+			$e = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-ROCK-101-01', 'user_id' => 200, 'course_role_name' => 'teacher', 'section_idstr' => '25F-ROCK-101-01', 'DB' => $this->DB]);
 
 			$e->updateDb();
 
@@ -55,7 +55,7 @@
 		}
 
 		function testEnrollmentRetrievedFromDb() {
-			$e = new Enrollment(['enrollment_id' => 5, 'DB' => $this->DB]);
+			$e = new Enrollment(['enrollment_id' => 405, 'DB' => $this->DB]);
 			$this->assertNull($e->course_idstr);
 
 			$e->refreshFromDb();
@@ -66,14 +66,14 @@
 		//// instance methods - object itself
 
 		function testEnrollmentRenderMinimal() {
-			$e = Enrollment::getOneFromDb(['enrollment_id' => 5], $this->DB);
+			$e = Enrollment::getOneFromDb(['enrollment_id' => 405], $this->DB);
 
-			$canonical = '<div class="rendered-object enrollment-render enrollment-render-minimal enrollment-render-5" data-for-enrollment="5" data-course_idstr="15F-ARTH-101-01">15F-ARTH-101-01</div>';
+			$canonical = '<div class="rendered-object enrollment-render enrollment-render-minimal enrollment-render-405" data-for-enrollment="405" data-course_idstr="15F-ARTH-101-01">15F-ARTH-101-01</div>';
 			$rendered  = $e->renderMinimal();
 			//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
 			$this->assertEqual($canonical, $rendered);
 
-			$canonical = '<div class="rendered-object enrollment-render enrollment-render-minimal enrollment-render-5" data-for-enrollment="5" data-course_idstr="15F-ARTH-101-01"><a href="' . APP_ROOT_PATH . '/app_code/enrollment.php?enrollment_id=5">15F-ARTH-101-01</a></div>';
+			$canonical = '<div class="rendered-object enrollment-render enrollment-render-minimal enrollment-render-405" data-for-enrollment="405" data-course_idstr="15F-ARTH-101-01"><a href="' . APP_ROOT_PATH . '/app_code/enrollment.php?enrollment_id=405">15F-ARTH-101-01</a></div>';
 			$rendered  = $e->renderMinimal(TRUE);
 			//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
 			$this->assertEqual($canonical, $rendered);

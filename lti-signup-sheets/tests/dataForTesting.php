@@ -30,6 +30,36 @@
 	$ACTIONS = array();
 
 
+	function createTestData_Terms($dbConn) {
+		// 1-20 series ids
+		# term: 'term_id', 'term_idstr', 'name', 'start_date', 'end_date', 'flag_delete'
+		$addTestSql  = "INSERT INTO " . Term::$dbTable . " VALUES
+			(1, '14F', 'Fall 2013', '2013-09-05T00:00:00-05:00', '2013-12-16T00:00:00-05:00', 0),
+			(2, '14W', 'Winter Study 2014', '2014-01-06T00:00:00-05:00', '2014-01-30T00:00:00-05:00', 0),
+			(3, '14S', 'Spring 2014', '2014-02-06T00:00:00-05:00', '2014-05-26T00:00:00-05:00', 0),
+			(4, '15F', 'Fall 2014', '2014-09-04T00:00:00-05:00', '2014-12-15T00:00:00-05:00', 0),
+			(5, '15W', 'Winter Study 2015', '2015-01-05T00:00:00-05:00', '2015-01-29T00:00:00-05:00', 0),
+			(6, '15S', 'Spring 2015', '2015-02-05T00:00:00-05:00', '2015-05-25T00:00:00-05:00', 0),
+			(7, '16F', 'Fall 2015', '2015-09-10T00:00:00-05:00', '2015-12-21T00:00:00-05:00', 0),
+			(8, '16W', 'Winter Study 2016', '2016-01-04T00:00:00-05:00', '2016-01-28T00:00:00-05:00', 0),
+			(9, '16S', 'Spring 2016', '2016-02-04T00:00:00-05:00', '2016-05-23T00:00:00-05:00', 0),
+			(10, '17F', 'Fall 2016', '2016-09-08T00:00:00-05:00', '2016-12-19T00:00:00-05:00', 0),
+			(11, '17S', 'Spring 2017', '2017-02-02T00:00:00-05:00', '2017-05-22T00:00:00-05:00', 0),
+			(12, '18F', 'Fall 2017', '2017-09-07T00:00:00-05:00', '2017-12-18T00:00:00-05:00', 0),
+			(13, '18S', 'Spring 2018', '2018-02-01T00:00:00-05:00', '2018-05-21T00:00:00-05:00', 0),
+			(14, '19F', 'Fall 2018', '2018-09-06T00:00:00-05:00', '2018-12-17T00:00:00-05:00', 0),
+			(15, '19S', 'Spring 2019', '2019-01-31T00:00:00-05:00', '2019-05-20T00:00:00-05:00', 0)
+        ";
+		$addTestStmt = $dbConn->prepare($addTestSql);
+		$addTestStmt->execute();
+		if ($addTestStmt->errorInfo()[0] != '0000') {
+			echo "<pre>error adding test Terms data to the DB\n";
+			print_r($addTestStmt->errorInfo());
+			debug_print_backtrace();
+			exit;
+		}
+	}
+
 	function createTestData_Users($dbConn) {
 		// 100 series ids
 		# user: 'user_id', 'username', 'email', 'first_name', 'last_name', 'created_at', 'updated_at', 'flag_is_system_admin', 'flag_is_banned', 'flag_delete'
@@ -60,61 +90,33 @@
 		}
 	}
 
-	function createTestData_Terms($dbConn) {
-		# term: 'term_id', 'term_idstr', 'name', 'start_date', 'end_date', 'flag_delete'
-		$addTestSql  = "INSERT INTO " . Term::$dbTable . " VALUES
-			(1, '14F', 'Fall 2013', '2013-09-05T00:00:00-05:00', '2013-12-16T00:00:00-05:00', 0),
-			(2, '14W', 'Winter Study 2014', '2014-01-06T00:00:00-05:00', '2014-01-30T00:00:00-05:00', 0),
-			(3, '14S', 'Spring 2014', '2014-02-06T00:00:00-05:00', '2014-05-26T00:00:00-05:00', 0),
-			(4, '15F', 'Fall 2014', '2014-09-04T00:00:00-05:00', '2014-12-15T00:00:00-05:00', 0),
-			(5, '15W', 'Winter Study 2015', '2015-01-05T00:00:00-05:00', '2015-01-29T00:00:00-05:00', 0),
-			(6, '15S', 'Spring 2015', '2015-02-05T00:00:00-05:00', '2015-05-25T00:00:00-05:00', 0),
-			(7, '16F', 'Fall 2015', '2015-09-10T00:00:00-05:00', '2015-12-21T00:00:00-05:00', 0),
-			(8, '16W', 'Winter Study 2016', '2016-01-04T00:00:00-05:00', '2016-01-28T00:00:00-05:00', 0),
-			(9, '16S', 'Spring 2016', '2016-02-04T00:00:00-05:00', '2016-05-23T00:00:00-05:00', 0),
-			(10, '17F', 'Fall 2016', '2016-09-08T00:00:00-05:00', '2016-12-19T00:00:00-05:00', 0),
-			(11, '17S', 'Spring 2017', '2017-02-02T00:00:00-05:00', '2017-05-22T00:00:00-05:00', 0),
-			(12, '18F', 'Fall 2017', '2017-09-07T00:00:00-05:00', '2017-12-18T00:00:00-05:00', 0),
-			(13, '18S', 'Spring 2018', '2018-02-01T00:00:00-05:00', '2018-05-21T00:00:00-05:00', 0),
-			(14, '19F', 'Fall 2018', '2018-09-06T00:00:00-05:00', '2018-12-17T00:00:00-05:00', 0),
-			(15, '19S', 'Spring 2019', '2019-01-31T00:00:00-05:00', '2019-05-20T00:00:00-05:00', 0)
-        ";
-		$addTestStmt = $dbConn->prepare($addTestSql);
-		$addTestStmt->execute();
-		if ($addTestStmt->errorInfo()[0] != '0000') {
-			echo "<pre>error adding test Terms data to the DB\n";
-			print_r($addTestStmt->errorInfo());
-			debug_print_backtrace();
-			exit;
-		}
-	}
-
 	function createTestData_Courses($dbConn) {
+		// 200 series ids
 		# course: 'course_id', 'course_idstr', 'short_name', 'long_name', 'account_idstr', 'term_idstr', 'flag_delete'
 		$addTestSql  = "INSERT INTO " . Course::$dbTable . " VALUES
-			(1, '15F-ARTH-101-01', '15F-ARTH-101-01 - Art History (Degas)', '15F-ARTH-101-01 - Art History (Degas)', 'courses', '15F', 0),
-			(2, '15F-BIOL-101-01', '15F-BIOL-101-01 - Biology Intro (Fall Organisms)', '15F-BIOL-101-01 - Biology Intro (Fall Organisms)', 'courses', '15F', 0),
-			(3, '15F-CHEM-101-01', '15F-CHEM-101-01 - Chemistry Compounds', '15F-CHEM-101-01 - Chemistry Compounds', 'courses', '15F', 0),
-			(4, '15F-ECON-101-01', '15F-ECON-101-01 - Economy Introduction', '15F-ECON-101-01 - Economy Introduction', 'courses', '15F', 0),
-			(5, '15F-ECON-201-01', '15F-ECON-201-01 - Economy: Depression Era to WW II', '15F-ECON-201-01 - Economy: Depression Era to WW II', 'courses', '15F', 0),
-			(6, '15F-ECON-301-01', '15F-ECON-301-01 - Economy: Fed Chair Greenspan', '15F-ECON-301-01 - Economy: Fed Chair Greenspan', 'courses', '15F', 0),
-			(7, '15F-ECON-301-02', '15F-ECON-301-02 - Economy: Fed Chair Volcker', '15F-ECON-301-02 - Economy: Fed Chair Volcker', 'courses', '15F', 0),
-			(8, '15F-HIST-101-01', '15F-HIST-101-01 - History of the Revolutionary War', '15F-HIST-101-01 - History of the Revolutionary War', 'courses', '15F', 0),
-			(9, '15F-MATH-101-01', '15F-MATH-101-01 - Math - Calculus Intro', '15F-MATH-101-01 - Math - Calculus Intro', 'courses', '15F', 0),
-			(10, '15W-CHIN-101-01', '15W-CHIN-101-01 - Chinese in 30 Days', '15W-CHIN-101-01 - Chinese in 30 Days', 'courses', '15W', 0),
-			(11, '15W-CSCI-101-01', '15W-CSCI-101-01 - Learn Python in 30 Days', '15W-CSCI-101-01 - Learn Python in 30 Days', 'courses', '15W', 0),
-			(12, '15W-JAPN-101-01', '15W-JAPN-101-01 - Japanese in 30 Days', '15W-JAPN-101-01 - Japanese in 30 Days', 'courses', '15W', 0),
-			(13, '15W-RELI-101-01', '15W-RELI-101-01 - Non-violent Religious Groups', '15W-RELI-101-01 - Non-violent Religious Groups', 'courses', '15W', 0),
-			(14, '15W-UGDN-101-01', '15W-UGDN-101-01 - Trip to Uganda', '15W-UGDN-101-01 - Trip to Uganda', 'courses', '15W', 0),
-			(15, '15S-ARTH-101-01', '15S-ARTH-101-01 - Art History (Hopper)', '15S-ARTH-101-01 - Art History (Hopper)', 'courses', '15S', 0),
-			(16, '15S-BIOL-101-01', '15S-BIOL-101-01 - Biology Intro (Spring Organisms)', '15S-BIOL-101-01 - Biology Intro (Spring Organisms)', 'courses', '15S', 0),
-			(17, '15S-CHEM-101-01', '15S-CHEM-101-01 - Chemistry Compounds', '15S-CHEM-101-01 - Chemistry Compounds', 'courses', '15S', 0),
-			(18, '15S-ECON-101-01', '15S-ECON-101-01 - Economy Introduction', '15S-ECON-101-01 - Economy Introduction', 'courses', '15S', 0),
-			(19, '15S-ECON-201-01', '15S-ECON-201-01 - Economy: Post WW II', '15S-ECON-201-01 - Economy: Post WW II', 'courses', '15S', 0),
-			(20, '15S-ECON-301-01', '15S-ECON-301-01 - Economy: Fed Chair Yellen', '15S-ECON-301-01 - Economy: Fed Chair Yellen', 'courses', '15S', 0),
-			(21, '15S-ECON-301-02', '15S-ECON-301-02 - Economy: Fed Chair Bernanke', '15S-ECON-301-02 - Economy: Fed Chair Bernanke', 'courses', '15S', 0),
-			(22, '15S-HIST-101-01', '15S-HIST-201-01 - History of the Civil War', '15S-HIST-201-01 - History of the Civil War', 'courses', '15S', 0),
-			(23, '15S-MATH-101-01', '15S-MATH-201-01 - Math - Calculus Intermediate', '15S-MATH-201-01 - Math - Calculus Intermediate', 'courses', '15S', 0)
+			(201, '15F-ARTH-101-01', '15F-ARTH-101-01 - Art History (Degas)', '15F-ARTH-101-01 - Art History (Degas)', 'courses', '15F', 0),
+			(202, '15F-BIOL-101-01', '15F-BIOL-101-01 - Biology Intro (Fall Organisms)', '15F-BIOL-101-01 - Biology Intro (Fall Organisms)', 'courses', '15F', 0),
+			(203, '15F-CHEM-101-01', '15F-CHEM-101-01 - Chemistry Compounds', '15F-CHEM-101-01 - Chemistry Compounds', 'courses', '15F', 0),
+			(204, '15F-ECON-101-01', '15F-ECON-101-01 - Economy Introduction', '15F-ECON-101-01 - Economy Introduction', 'courses', '15F', 0),
+			(205, '15F-ECON-201-01', '15F-ECON-201-01 - Economy: Depression Era to WW II', '15F-ECON-201-01 - Economy: Depression Era to WW II', 'courses', '15F', 0),
+			(206, '15F-ECON-301-01', '15F-ECON-301-01 - Economy: Fed Chair Greenspan', '15F-ECON-301-01 - Economy: Fed Chair Greenspan', 'courses', '15F', 0),
+			(207, '15F-ECON-301-02', '15F-ECON-301-02 - Economy: Fed Chair Volcker', '15F-ECON-301-02 - Economy: Fed Chair Volcker', 'courses', '15F', 0),
+			(208, '15F-HIST-101-01', '15F-HIST-101-01 - History of the Revolutionary War', '15F-HIST-101-01 - History of the Revolutionary War', 'courses', '15F', 0),
+			(209, '15F-MATH-101-01', '15F-MATH-101-01 - Math - Calculus Intro', '15F-MATH-101-01 - Math - Calculus Intro', 'courses', '15F', 0),
+			(210, '15W-CHIN-101-01', '15W-CHIN-101-01 - Chinese in 30 Days', '15W-CHIN-101-01 - Chinese in 30 Days', 'courses', '15W', 0),
+			(211, '15W-CSCI-101-01', '15W-CSCI-101-01 - Learn Python in 30 Days', '15W-CSCI-101-01 - Learn Python in 30 Days', 'courses', '15W', 0),
+			(212, '15W-JAPN-101-01', '15W-JAPN-101-01 - Japanese in 30 Days', '15W-JAPN-101-01 - Japanese in 30 Days', 'courses', '15W', 0),
+			(213, '15W-RELI-101-01', '15W-RELI-101-01 - Non-violent Religious Groups', '15W-RELI-101-01 - Non-violent Religious Groups', 'courses', '15W', 0),
+			(214, '15W-UGDN-101-01', '15W-UGDN-101-01 - Trip to Uganda', '15W-UGDN-101-01 - Trip to Uganda', 'courses', '15W', 0),
+			(215, '15S-ARTH-101-01', '15S-ARTH-101-01 - Art History (Hopper)', '15S-ARTH-101-01 - Art History (Hopper)', 'courses', '15S', 0),
+			(216, '15S-BIOL-101-01', '15S-BIOL-101-01 - Biology Intro (Spring Organisms)', '15S-BIOL-101-01 - Biology Intro (Spring Organisms)', 'courses', '15S', 0),
+			(217, '15S-CHEM-101-01', '15S-CHEM-101-01 - Chemistry Compounds', '15S-CHEM-101-01 - Chemistry Compounds', 'courses', '15S', 0),
+			(218, '15S-ECON-101-01', '15S-ECON-101-01 - Economy Introduction', '15S-ECON-101-01 - Economy Introduction', 'courses', '15S', 0),
+			(219, '15S-ECON-201-01', '15S-ECON-201-01 - Economy: Post WW II', '15S-ECON-201-01 - Economy: Post WW II', 'courses', '15S', 0),
+			(220, '15S-ECON-301-01', '15S-ECON-301-01 - Economy: Fed Chair Yellen', '15S-ECON-301-01 - Economy: Fed Chair Yellen', 'courses', '15S', 0),
+			(221, '15S-ECON-301-02', '15S-ECON-301-02 - Economy: Fed Chair Bernanke', '15S-ECON-301-02 - Economy: Fed Chair Bernanke', 'courses', '15S', 0),
+			(222, '15S-HIST-101-01', '15S-HIST-201-01 - History of the Civil War', '15S-HIST-201-01 - History of the Civil War', 'courses', '15S', 0),
+			(223, '15S-MATH-101-01', '15S-MATH-201-01 - Math - Calculus Intermediate', '15S-MATH-201-01 - Math - Calculus Intermediate', 'courses', '15S', 0)
         ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
@@ -126,26 +128,28 @@
 		}
 	}
 
+	# TODO - need section data table and class definition
+
 	function createTestData_Enrollments($dbConn) {
-		// 1100 series ids
-		# enrollment: 'enrollment_id', 'course_idstr', 'user_id', 'course_role_name', 'section_id', 'flag_delete'
+		// 400 series ids
+		# enrollment: 'enrollment_id', 'course_idstr', 'user_id', 'course_role_name', 'section_idstr', 'flag_delete'
 		$addTestSql  = "INSERT INTO " . Enrollment::$dbTable . " VALUES
-			(1,'15F-ARTH-101-01', 101, 'teacher', '15F-ARTH-101-01', 0),
-			(2,'15F-ARTH-101-01', 102, 'teacher', '15F-ARTH-101-01', 0),
-			(3,'15F-ARTH-101-01', 103, 'student', '15F-ARTH-101-01', 0),
-			(4,'15F-ARTH-101-01', 104, 'student', '15F-ARTH-101-01', 0),
-			(5,'15F-ARTH-101-01', 105, 'student', '15F-ARTH-101-01', 0),
-			(6,'15F-ARTH-101-01', 106, 'student', '15F-ARTH-101-01', 0),
-			(7,'15F-ARTH-101-01', 107, 'student', '15F-ARTH-101-01', 1),
-			(8,'15F-ARTH-101-01', 108, 'student', '15F-ARTH-101-01', 1),
-			(9,'15F-ARTH-101-01', 109, 'student', '15F-ARTH-101-01', 0),
-			(10,'15F-ARTH-101-01', 110, 'student', '15F-ARTH-101-01', 0),
-			(11,'15F-BIOL-101-01', 101, 'teacher', '15F-BIOL-101-01', 0),
-			(12,'15F-BIOL-101-01', 102, 'student', '15F-BIOL-101-01', 0),
-			(13,'15F-BIOL-101-01', 103, 'student', '15F-BIOL-101-01', 0),
-			(14,'15F-BIOL-101-01', 104, 'student', '15F-BIOL-101-01', 0),
-			(15,'15F-CHEM-101-01', 104, 'student', '15F-CHEM-101-01', 0),
-			(16,'15F-CHEM-101-01', 104, 'student', '15F-CHEM-101-01', 0)
+			(401,'15F-ARTH-101-01', 101, 'teacher', '15F-ARTH-101-01', 0),
+			(402,'15F-ARTH-101-01', 102, 'teacher', '15F-ARTH-101-01', 0),
+			(403,'15F-ARTH-101-01', 103, 'student', '15F-ARTH-101-01', 0),
+			(404,'15F-ARTH-101-01', 104, 'student', '15F-ARTH-101-01', 0),
+			(405,'15F-ARTH-101-01', 105, 'student', '15F-ARTH-101-01', 0),
+			(406,'15F-ARTH-101-01', 106, 'student', '15F-ARTH-101-01', 0),
+			(407,'15F-ARTH-101-01', 107, 'student', '15F-ARTH-101-01', 1),
+			(408,'15F-ARTH-101-01', 108, 'student', '15F-ARTH-101-01', 1),
+			(409,'15F-ARTH-101-01', 109, 'student', '15F-ARTH-101-01', 0),
+			(410,'15F-ARTH-101-01', 110, 'student', '15F-ARTH-101-01', 0),
+			(411,'15F-BIOL-101-01', 101, 'teacher', '15F-BIOL-101-01', 0),
+			(412,'15F-BIOL-101-01', 102, 'student', '15F-BIOL-101-01', 0),
+			(413,'15F-BIOL-101-01', 103, 'student', '15F-BIOL-101-01', 0),
+			(414,'15F-BIOL-101-01', 104, 'student', '15F-BIOL-101-01', 0),
+			(415,'15F-CHEM-101-01', 104, 'student', '15F-CHEM-101-01', 0),
+			(416,'15F-CHEM-101-01', 104, 'student', '15F-CHEM-101-01', 0)
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
@@ -158,19 +162,19 @@
 	}
 
 	function createTestData_SUS_Sheetgroups($dbConn) {
-		// series ids
+		// 500 series ids
 		# SUS_Sheetgroup: 'sheetgroup_id', 'created_at', 'updated_at', 'flag_deleted', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheetgroup::$dbTable . " VALUES
-			(1, NOW(), NOW(), 0, 101, 1, 'Demo Sheetgroup 1', 'Something to organize my math sheets', 1, 0),
-			(2, NOW(), NOW(), 0, 101, 1, 'Demo Sheetgroup 2', 'Something to organize my english sheets', 1, 0),
-			(3, NOW(), NOW(), 0, 101, 1, 'Demo Sheetgroup 3', 'Something to organize my spanish sheets', 1, 0),
-			(4, NOW(), NOW(), 0, 102, 1, 'Demo Sheetgroup 4', 'Help me keep track of so many sheets', 1, 0),
-			(5, NOW(), NOW(), 0, 102, 1, 'Demo Sheetgroup 5', 'Something to help me organize', 1, 0),
-			(6, NOW(), NOW(), 0, 103, 1, 'Demo Sheetgroup 6', 'Something to help me organize', 1, 0),
-			(7, NOW(), NOW(), 0, 104, 1, 'Demo Sheetgroup 7', 'Something to help me organize', 1, 0),
-			(8, NOW(), NOW(), 0, 105, 0, 'Demo Sheetgroup 8', 'Something to help me organize', 1, 0),
-			(9, NOW(), NOW(), 0, 106, 1, 'Demo Sheetgroup 9', 'Something to help me organize', 1, 0),
-			(10, NOW(), NOW(), 0, 109, 1, 'Demo Sheetgroup 10', 'Something to help me organize', 1, 0)
+			(501, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 501', 'Something to organize my math sheets', 1, 0),
+			(502, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 502', 'Something to organize my english sheets', 1, 0),
+			(503, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 503', 'Something to organize my spanish sheets', 1, 0),
+			(504, NOW(), NOW(), 0, 102, 1, 'Sheetgroup 504', 'Help me keep track of so many sheets', 1, 0),
+			(505, NOW(), NOW(), 0, 102, 1, 'Sheetgroup 505', 'Something to help me organize', 1, 0),
+			(506, NOW(), NOW(), 0, 103, 1, 'Sheetgroup 506', 'Something to help me organize', 1, 0),
+			(507, NOW(), NOW(), 0, 104, 1, 'Sheetgroup 507', 'Something to help me organize', 1, 0),
+			(508, NOW(), NOW(), 0, 105, 0, 'Sheetgroup 508', 'Something to help me organize', 1, 0),
+			(509, NOW(), NOW(), 0, 106, 1, 'Sheetgroup 509', 'Something to help me organize', 1, 0),
+			(510, NOW(), NOW(), 0, 109, 1, 'Sheetgroup 510', 'Something to help me organize', 1, 0)
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
@@ -183,21 +187,21 @@
 	}
 
 	function createTestData_SUS_Sheets($dbConn) {
-		// series ids
+		// 600 series ids
 		# SUS_Sheet: 'sheet_id', 'created_at', 'updated_at', 'flag_deleted', 'owner_user_id', 'last_user_id', 'sus_sheetgroup_id', 'name', 'description',
 		# 'type', 'date_opens', 'date_closes', 'max_total_user_signups', 'max_pending_user_signups', 'flag_alert_owner_change', 'flag_alert_owner_signup',
 		# 'flag_alert_owner_imminent', 'flag_alert_admin_change', 'flag_alert_admin_signup', 'flag_alert_admin_imminent', 'flag_private_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheet::$dbTable . " VALUES
-			(1, NOW(), NOW(), 0, 101, 101, 1, 'Demo sheet 1', 'Sheet 1, Group 1', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 0),
-			(2, NOW(), NOW(), 0, 101, 102, 1, 'Demo sheet 2', 'Sheet 2, Group 1', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 1, 0, 0, 0, 0, 0, 0, 0),
-			(3, NOW(), NOW(), 0, 101, 102, 1, 'Demo sheet 3', 'Sheet 3, Group 1', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 1, 0, 0, 0, 0, 0, 0),
-			(4, NOW(), NOW(), 0, 101, 103, 2, 'Demo sheet 4', 'Sheet 4, Group 2', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 1, 0, 0, 0, 0, 0),
-			(5, NOW(), NOW(), 0, 101, 104, 3, 'Demo sheet 5', 'Sheet 5, Group 3', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 1, 0, 0, 0, 0),
-			(6, NOW(), NOW(), 0, 102, 103, 4, 'Demo sheet 6', 'Sheet 6, Group 4', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 1, 0, 0, 0),
-			(7, NOW(), NOW(), 0, 102, 103, 4, 'Demo sheet 7', 'Sheet 7, Group 4', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 1, 0, 0),
-			(8, NOW(), NOW(), 0, 103, 110, 6, 'Demo sheet 8', 'Sheet 8, Group 6', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 1, 0),
-			(9, NOW(), NOW(), 0, 104, 110, 7, 'Demo sheet 9', 'Sheet 9, Group 6', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 1),
-			(10, NOW(), NOW(), 0, 109, 110, 10, 'Demo sheet 10', 'Sheet 10, Group 10', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 0)
+			(601, NOW(), NOW(), 0, 101, 101, 1, 'Sheet 601', 'Sheet 601, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 0),
+			(602, NOW(), NOW(), 0, 101, 102, 1, 'Sheet 602', 'Sheet 602, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 1, 0, 0, 0, 0, 0, 0, 0),
+			(603, NOW(), NOW(), 0, 101, 102, 1, 'Sheet 603', 'Sheet 603, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 1, 0, 0, 0, 0, 0, 0),
+			(604, NOW(), NOW(), 0, 101, 103, 2, 'Sheet 604', 'Sheet 604, Sheetgroup 502', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 1, 0, 0, 0, 0, 0),
+			(605, NOW(), NOW(), 0, 101, 104, 3, 'Sheet 605', 'Sheet 605, Sheetgroup 503', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 1, 0, 0, 0, 0),
+			(606, NOW(), NOW(), 0, 102, 103, 4, 'Sheet 606', 'Sheet 606, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 1, 0, 0, 0),
+			(607, NOW(), NOW(), 0, 102, 103, 4, 'Sheet 607', 'Sheet 607, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 1, 0, 0),
+			(608, NOW(), NOW(), 0, 103, 110, 6, 'Sheet 608', 'Sheet 608, Sheetgroup 506', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 1, 0),
+			(609, NOW(), NOW(), 0, 104, 110, 7, 'Sheet 609', 'Sheet 609, Sheetgroup 506', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 1),
+			(610, NOW(), NOW(), 0, 109, 110, 10, 'Sheet 610', 'Sheet 610, Sheetgroup 510', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 0)
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
@@ -209,6 +213,69 @@
 		}
 	}
 
+	function createTestData_SUS_Openings($dbConn) {
+		// 700 series ids
+		# SUS_Opening: 'opening_id', 'created_at', 'updated_at', 'flag_deleted', 'last_user_id', 'sus_sheet_id', 'opening_set_id', 'name', 'description',
+		# 'max_signups', 'admin_comment', 'begin_datetime', 'end_datetime', 'location'
+		# TODO - Delete Confusing Moodle Fragment: 'opening_set_id' is current datetime concat-ed with the current user id
+		$addTestSql  = "INSERT INTO " . SUS_Opening::$dbTable . " VALUES
+			(701, NOW(), NOW(), 0, 101, 51, 0, 'Opening 701', 'Opening 701, Sheet 601, Sheetgroup 501', 2 , 'opening admin comment', NOW(),  TIMESTAMPADD(month,1,NOW()), 'opening location at CET 256'),
+			(702, NOW(), NOW(), 0, 101, 51, 0, 'Opening 702', 'Opening 702, Sheet 601, Sheetgroup 501', 1 , 'no comment', TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(month,1,NOW()), 'CET MakerSpace'),
+			(703, NOW(), NOW(), 0, 101, 52, 0, 'Opening 703', 'Opening 703, Sheet 602, Sheetgroup 501', 2 , 'no comment', TIMESTAMPADD(week,1,NOW()),  TIMESTAMPADD(month,1,NOW()), ''),
+			(704, NOW(), NOW(), 0, 102, 52, 0, 'Opening 704', 'Opening 704, Sheet 602, Sheetgroup 501', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), ''),
+			(705, NOW(), NOW(), 0, 102, 53, 0, 'Opening 705', 'Opening 705, Sheet 603, Sheetgroup 501', 4 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), ''),
+			(706, NOW(), NOW(), 0, 103, 54, 0, 'Opening 706', 'Opening 706, Sheet 604, Sheetgroup 502', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), 'Faculty House'),
+			(707, NOW(), NOW(), 1, 103, 55, 0, 'Opening 707', 'Opening 707, Sheet 605, Sheetgroup 503', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), 'Purple Pub'),
+			(708, NOW(), NOW(), 1, 104, 56, 0, 'Opening 708', 'Opening 708, Sheet 606, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), ''),
+			(709, NOW(), NOW(), 0, 105, 57, 0, 'Opening 709', 'Opening 709, Sheet 607, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), ''),
+			(710, NOW(), NOW(), 0, 109, 60, 0, 'Opening 710', 'Opening 710, Sheet 610, Sheetgroup 510', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), '')
+    ";
+		$addTestStmt = $dbConn->prepare($addTestSql);
+		$addTestStmt->execute();
+		if ($addTestStmt->errorInfo()[0] != '0000') {
+			echo "<pre>error adding test SUS_Opening data to the DB\n";
+			print_r($addTestStmt->errorInfo());
+			debug_print_backtrace();
+			exit;
+		}
+	}
+
+	function createTestData_SUS_Signups($dbConn) {
+		// 800 series ids
+		# SUS_Signup: 'signup_id', 'created_at', 'updated_at', 'flag_deleted', 'last_user_id', 'sus_opening_id', 'signup_user_id', 'admin_comment'
+		$addTestSql  = "INSERT INTO " . SUS_Signup::$dbTable . " VALUES
+			(801, NOW(), NOW(), 0, 101, 701, 101, 'signup admin comment'),
+			(802, TIMESTAMPADD(day,1,NOW()), TIMESTAMPADD(day,1,NOW()), 0, 101, 704, 101, 'no comment'),
+			(803, TIMESTAMPADD(day,2,NOW()), TIMESTAMPADD(day,3,NOW()), 0, 101, 705, 101, 'no comment'),
+			(804, NOW(), NOW(), 0, 102, 701, 102, ''),
+			(805, NOW(), NOW(), 0, 102, 702, 102, ''),
+			(806, NOW(), NOW(), 0, 103, 701, 103, ''),
+			(807, NOW(), NOW(), 1, 103, 708, 103, ''),
+			(808, NOW(), NOW(), 1, 104, 701, 104, ''),
+			(809, NOW(), NOW(), 0, 104, 702, 104, ''),
+			(810, NOW(), NOW(), 0, 104, 703, 104, ''),
+			(811, NOW(), NOW(), 0, 104, 704, 104, ''),
+			(812, NOW(), NOW(), 1, 104, 705, 104, ''),
+			(813, NOW(), NOW(), 0, 105, 701, 105, ''),
+			(814, NOW(), NOW(), 0, 105, 710, 105, ''),
+			(815, NOW(), NOW(), 0, 106, 707, 106, ''),
+			(816, NOW(), NOW(), 0, 106, 708, 106, ''),
+			(817, NOW(), NOW(), 1, 107, 705, 107, ''),
+			(818, NOW(), NOW(), 1, 107, 706, 107, ''),
+			(819, NOW(), NOW(), 0, 108, 709, 108, ''),
+			(820, NOW(), TIMESTAMPADD(day,1,NOW()), 0, 109, 710, 109, '')
+    ";
+		$addTestStmt = $dbConn->prepare($addTestSql);
+		$addTestStmt->execute();
+		if ($addTestStmt->errorInfo()[0] != '0000') {
+			echo "<pre>error adding test SUS_Signup data to the DB\n";
+			print_r($addTestStmt->errorInfo());
+			debug_print_backtrace();
+			exit;
+		}
+	}
+
+
 	function makeAuthedTestUserAdmin($dbConn) {
 		$u1                       = User::getOneFromDb(['username' => TESTINGUSER], $dbConn);
 		$u1->flag_is_system_admin = TRUE;
@@ -219,12 +286,14 @@
 	//--------------------------------------------------------------------------------------------------------------
 
 	function createAllTestData($dbConn) {
-		createTestData_Users($dbConn);
 		createTestData_Terms($dbConn);
+		createTestData_Users($dbConn);
 		createTestData_Courses($dbConn);
 		createTestData_Enrollments($dbConn);
 		createTestData_SUS_Sheetgroups($dbConn);
 		createTestData_SUS_Sheets($dbConn);
+		createTestData_SUS_Openings($dbConn);
+		createTestData_SUS_Signups($dbConn);
 
 		//        $all_actions = Action::getAllFromDb([],$dbConn);
 		//        global $ACTIONS;
@@ -271,6 +340,15 @@
 	function removeTestData_SUS_Sheets($dbConn) {
 		_removeTestDataFromTable($dbConn, SUS_Sheet::$dbTable);
 	}
+
+	function removeTestData_SUS_Openings($dbConn) {
+		_removeTestDataFromTable($dbConn, SUS_Opening::$dbTable);
+	}
+
+	function removeTestData_SUS_Signups($dbConn) {
+		_removeTestDataFromTable($dbConn, SUS_Signup::$dbTable);
+	}
+
 	function removeTestData_EXAMPLE($dbConn) {
 		_removeTestDataFromTable($dbConn, Metadata_Structure::$dbTable);
 	}
@@ -278,10 +356,12 @@
 	//--------------------------------------------------------------------------------------------------------------
 
 	function removeAllTestData($dbConn) {
-		removeTestData_Users($dbConn);
 		removeTestData_Terms($dbConn);
+		removeTestData_Users($dbConn);
 		removeTestData_Courses($dbConn);
 		removeTestData_Enrollments($dbConn);
 		removeTestData_SUS_Sheetgroups($dbConn);
 		removeTestData_SUS_Sheets($dbConn);
+		removeTestData_SUS_Openings($dbConn);
+		removeTestData_SUS_Signups($dbConn);
 	}

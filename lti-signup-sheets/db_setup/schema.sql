@@ -11,38 +11,38 @@ NOTES:
 FOR TESTING ONLY:
 	USE lti_signup_sheets_test;
 
-	DROP TABLE `users`;
 	DROP TABLE `terms`;
+	DROP TABLE `users`;
 	DROP TABLE `courses`;
 	DROP TABLE `enrollments`;
 	-- DROP TABLE `course_roles`;
-	DROP TABLE `sus_access`;
-	DROP TABLE `sus_openings`;
 	DROP TABLE `sus_sheetgroups`;
 	DROP TABLE `sus_sheets`;
+	DROP TABLE `sus_openings`;
 	DROP TABLE `sus_signups`;
+	DROP TABLE `sus_access`;
 
-	DELETE FROM `users`;
 	DELETE FROM `terms`;
+	DELETE FROM `users`;
 	DELETE FROM `courses`;
 	DELETE FROM `enrollments`;
 	DELETE FROM `course_roles`;
-	DELETE FROM `sus_access`;
-	DELETE FROM `sus_openings`;
 	DELETE FROM `sus_sheetgroups`;
 	DELETE FROM `sus_sheets`;
+	DELETE FROM `sus_openings`;
 	DELETE FROM `sus_signups`;
+	DELETE FROM `sus_access`;
 
-	Select * From `users`;
 	Select * From `terms`;
+	Select * From `users`;
 	Select * From `courses`;
 	Select * From `enrollments`;
 	Select * From `course_roles`;
-	Select * From `sus_access`;
-	Select * From `sus_openings`;
 	Select * From `sus_sheetgroups`;
 	Select * From `sus_sheets`;
+	Select * From `sus_openings`;
 	Select * From `sus_signups`;
+	Select * From `sus_access`;
 */
 
 # ----------------------------
@@ -61,6 +61,15 @@ USE lti_signup_sheets_test;
 # basic application infrastructure
 # ----------------------------
 
+CREATE TABLE IF NOT EXISTS `terms` (
+    `term_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `term_idstr` VARCHAR(255) NOT NULL,
+    `name` VARCHAR(255) NULL,
+    `start_date` TIMESTAMP,
+    `end_date` TIMESTAMP,
+    `flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
+
 CREATE TABLE IF NOT EXISTS `users` (
     `user_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `username` VARCHAR(255) NOT NULL,
@@ -74,15 +83,6 @@ CREATE TABLE IF NOT EXISTS `users` (
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
 /* field 'username' corresponds to Canvas LMS field called 'login_id' */
-
-CREATE TABLE IF NOT EXISTS `terms` (
-    `term_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `term_idstr` VARCHAR(255) NOT NULL,
-    `name` VARCHAR(255) NULL,
-    `start_date` TIMESTAMP,
-    `end_date` TIMESTAMP,
-    `flag_delete` BIT(1) NOT NULL DEFAULT 0
-)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
 
 CREATE TABLE IF NOT EXISTS `courses` (
     `course_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `enrollments` (
     `course_idstr` VARCHAR(255) NOT NULL,
     `user_id` INT NOT NULL,
     `course_role_name` VARCHAR(255) NOT NULL,
-    `section_id` VARCHAR(255) NULL,
+    `section_idstr` VARCHAR(255) NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
 
@@ -110,50 +110,6 @@ CREATE TABLE IF NOT EXISTS `course_roles` (
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
 /* priority: Highest teacher role is priority = 10; lowest alumni priority is > 30 */
-
-CREATE TABLE IF NOT EXISTS `sus_access` (
-    `access_id` bigint(10) unsigned NOT NULL auto_increment,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NULL,
-    `last_user_id` bigint(10) unsigned default NULL,
-    `sheet_id` bigint(10) unsigned default NULL,
-    `type` varchar(48) default NULL,
-    `constraint_id` bigint(10) unsigned default NULL,
-    `constraint_data` varchar(32) default NULL,
-    `broadness` int(11) default NULL,
-    PRIMARY KEY (`access_id`),
-    KEY `sheet_id` (`sheet_id`),
-    KEY `type` (`type`),
-    KEY `constraint_id` (`constraint_id`),
-    KEY `constraint_data` (`constraint_data`),
-    KEY `broadness` (`broadness`)
-)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='which users can signup on which sheets';
-
-CREATE TABLE IF NOT EXISTS `sus_openings` (
-    `opening_id` bigint(10) unsigned NOT NULL auto_increment,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NULL,
-    `flag_deleted` tinyint(1) unsigned default NULL,
-    `last_user_id` bigint(10) unsigned default NULL,
-    `sus_sheet_id` bigint(10) unsigned default NULL,
-    `opening_set_id` bigint(20) unsigned default NULL,
-    `name` varchar(255) default NULL,
-    `description` text,
-    `max_signups` mediumint(6) unsigned default NULL,
-    `admin_comment` varchar(255) default NULL,
-    `begin_datetime` TIMESTAMP NULL,
-    `end_datetime` TIMESTAMP NULL,
-    `location` varchar(255) default NULL,
-    PRIMARY KEY (`opening_id`),
-    KEY `flag_deleted` (`flag_deleted`),
-    KEY `sus_sheet_id` (`sus_sheet_id`),
-    KEY `opening_set_id` (`opening_set_id`),
-    KEY `begin_datetime` (`begin_datetime`),
-    KEY `end_datetime` (`end_datetime`),
-    KEY `location` (`location`),
-    KEY `name` (`name`),
-    KEY `last_user_id` (`last_user_id`)
-)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Places users can sign up - a single sheet may have multiple ';
 
 CREATE TABLE IF NOT EXISTS `sus_sheetgroups` (
     `sheetgroup_id` bigint(10) unsigned NOT NULL auto_increment,
@@ -212,6 +168,32 @@ CREATE TABLE IF NOT EXISTS `sus_sheets` (
     KEY `flag_private_signups` (`flag_private_signups`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Contains the high-level sheet data (name, descr, etc.)';
 
+CREATE TABLE IF NOT EXISTS `sus_openings` (
+    `opening_id` bigint(10) unsigned NOT NULL auto_increment,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL,
+    `flag_deleted` tinyint(1) unsigned default NULL,
+    `last_user_id` bigint(10) unsigned default NULL,
+    `sus_sheet_id` bigint(10) unsigned default NULL,
+    `opening_set_id` bigint(20) unsigned default NULL,
+    `name` varchar(255) default NULL,
+    `description` text,
+    `max_signups` mediumint(6) unsigned default NULL,
+    `admin_comment` varchar(255) default NULL,
+    `begin_datetime` TIMESTAMP NULL,
+    `end_datetime` TIMESTAMP NULL,
+    `location` varchar(255) default NULL,
+    PRIMARY KEY (`opening_id`),
+    KEY `flag_deleted` (`flag_deleted`),
+    KEY `sus_sheet_id` (`sus_sheet_id`),
+    KEY `opening_set_id` (`opening_set_id`),
+    KEY `begin_datetime` (`begin_datetime`),
+    KEY `end_datetime` (`end_datetime`),
+    KEY `location` (`location`),
+    KEY `name` (`name`),
+    KEY `last_user_id` (`last_user_id`)
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Places users can sign up - a single sheet may have multiple ';
+
 CREATE TABLE IF NOT EXISTS `sus_signups` (
     `signup_id` bigint(10) unsigned NOT NULL auto_increment,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -227,7 +209,25 @@ CREATE TABLE IF NOT EXISTS `sus_signups` (
     KEY `sus_opening_id` (`sus_opening_id`),
     KEY `signup_user_id` (`signup_user_id`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Users signing up for openings - analogous to a list of times and dates on a piece of paper that is passed around or posted on a door and on which people would put their name';
+-- TODO - Delete Confusing Moodle Fragment: 'opening_set_id' is current datetime concat-ed with the current user id
 
+CREATE TABLE IF NOT EXISTS `sus_access` (
+    `access_id` bigint(10) unsigned NOT NULL auto_increment,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL,
+    `last_user_id` bigint(10) unsigned default NULL,
+    `sheet_id` bigint(10) unsigned default NULL,
+    `type` varchar(48) default NULL,
+    `constraint_id` bigint(10) unsigned default NULL,
+    `constraint_data` varchar(32) default NULL,
+    `broadness` int(11) default NULL,
+    PRIMARY KEY (`access_id`),
+    KEY `sheet_id` (`sheet_id`),
+    KEY `type` (`type`),
+    KEY `constraint_id` (`constraint_id`),
+    KEY `constraint_data` (`constraint_data`),
+    KEY `broadness` (`broadness`)
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='which users can signup on which sheets';
 
 /*
 CREATE TABLE IF NOT EXISTS `user_role_links` (

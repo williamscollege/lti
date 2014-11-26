@@ -39,13 +39,12 @@
 		//// static methods
 
 		public function testOfCmp() {
-			$s1 = SUS_Sheet::getOneFromDb(['sheet_id' => 1], $this->DB);
-			$s2 = SUS_Sheet::getOneFromDb(['sheet_id' => 2], $this->DB);
+			$s1 = SUS_Sheet::getOneFromDb(['sheet_id' => 601], $this->DB);
+			$s2 = SUS_Sheet::getOneFromDb(['sheet_id' => 602], $this->DB);
 
 			$this->assertEqual(SUS_Sheet::cmp($s1, $s2), -1);
 			$this->assertEqual(SUS_Sheet::cmp($s1, $s1), 0);
 			$this->assertEqual(SUS_Sheet::cmp($s2, $s1), 1);
-			exit;
 		}
 
 	}

@@ -7,4 +7,15 @@
 		public static $dbTable = 'sus_openings';
 		public static $entity_type_label = 'sus_opening';
 
+
+
+		public static function cmp($a, $b) {
+			if ($a->begin_datetime == $b->begin_datetime) {
+				if ($a->begin_datetime == $b->begin_datetime) {
+					return 0;
+				}
+				return ($a->begin_datetime < $b->begin_datetime) ? -1 : 1;
+			}
+			return ($a->begin_datetime < $b->begin_datetime) ? -1 : 1;
+		}
 	}

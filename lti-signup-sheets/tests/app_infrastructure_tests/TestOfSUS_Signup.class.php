@@ -1,0 +1,37 @@
+<?php
+	require_once dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php';
+
+	class TestOfSUS_Signup extends WMSUnitTestCaseDB {
+		function setUp() {
+			createAllTestData($this->DB);
+		}
+
+		function tearDown() {
+			removeAllTestData($this->DB);
+		}
+
+		function testSUS_SignupAtributesExist() {
+			$this->assertEqual(count(SUS_Signup::$fields), 8);
+
+			$this->assertTrue(in_array('signup_id', SUS_Signup::$fields));
+			$this->assertTrue(in_array('created_at', SUS_Signup::$fields));
+			$this->assertTrue(in_array('updated_at', SUS_Signup::$fields));
+			$this->assertTrue(in_array('flag_deleted', SUS_Signup::$fields));
+			$this->assertTrue(in_array('last_user_id', SUS_Signup::$fields));
+			$this->assertTrue(in_array('sus_opening_id', SUS_Signup::$fields));
+			$this->assertTrue(in_array('signup_user_id', SUS_Signup::$fields));
+			$this->assertTrue(in_array('admin_comment', SUS_Signup::$fields));
+		}
+
+		//// static methods
+
+		public function testOfCmp() {
+			$s1 = SUS_Signup::getOneFromDb(['signup_id' => 801], $this->DB);
+			$s2 = SUS_Signup::getOneFromDb(['signup_id' => 802], $this->DB);
+
+			$this->assertEqual(SUS_Signup::cmp($s1, $s2), -1);
+			$this->assertEqual(SUS_Signup::cmp($s1, $s1), 0);
+			$this->assertEqual(SUS_Signup::cmp($s2, $s1), 1);
+		}
+
+	}
