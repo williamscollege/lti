@@ -19,20 +19,25 @@
 		}
 
 		public function clearCaches() {
-			$this->$cached_xxxxxxx = array();
+
 		}
 
 
+		/* static functions */
+
+		# TODO: How do we want to sort enrollments? by role_name? by last_name?
 		public static function cmp($a, $b) {
-			if ($a->course_idstr == $b->course_idstr) {
-				if ($a->course_idstr == $b->course_idstr) {
+			if ($a->user_id == $b->user_id) {
+				if ($a->user_id == $b->user_id) {
 					return 0;
 				}
-				return ($a->course_idstr < $b->course_idstr) ? -1 : 1;
+				return ($a->user_id < $b->user_id) ? -1 : 1;
 			}
-			return ($a->course_idstr < $b->course_idstr) ? -1 : 1;
+			return ($a->user_id < $b->user_id) ? -1 : 1;
 		}
 
+
+		/* public functions */
 
 		// returns: a very basic HTML representation of the object
 		public function renderMinimal($flag_linked = FALSE) {

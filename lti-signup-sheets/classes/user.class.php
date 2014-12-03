@@ -23,8 +23,8 @@
 		}
 
 		public function clearCaches() {
-			$this->$cached_course_roles = array();
-			$this->$cached_enrollments  = array();
+			$this->course_roles = array();
+			$this->enrollments  = array();
 		}
 
 		/* static functions */
@@ -46,6 +46,7 @@
 
 			foreach ($users as $u) {
 				$u->loadCourseRoles();
+
 				foreach ($u->course_roles as $cr) {
 
 					if ($cr->course_role_name == $role) {
@@ -61,7 +62,6 @@
 
 		// returns: a very basic HTML representation of the object
 		public function renderMinimal($flag_linked = FALSE) {
-
 			$enclosed = htmlentities($this->last_name) . ', ' . htmlentities($this->first_name);
 			if ($flag_linked) {
 				$enclosed = '<a href="' . APP_ROOT_PATH . '/app_code/user.php?user_id=' . $this->user_id . '">' . $enclosed . '</a>';
@@ -111,10 +111,18 @@
 			return TRUE;
 		}
 
-		//  load course roles for user object
+		// cache provides data while eliminating unnecessary DB calls
+		public function cacheCourseRoles() {
+			if (!$this->course_roles) {
+				$this->loadCourseRoles();
+			}
+		}
+
+		// load explicitly calls the DB (generally called indirectly from related cache fxn)
 		public function loadCourseRoles() {
 			$course_role_names = array();
 			$this->cacheEnrollments();
+
 			foreach ($this->enrollments as $enr) {
 				if (!in_array($enr->course_role_name, $course_role_names)) {
 					$course_role_names[] = $enr->course_role_name;
@@ -122,30 +130,24 @@
 			}
 
 			$this->course_roles = [];
-
 			foreach ($course_role_names as $crname) {
 				$this->course_roles[] = Course_Role::getOneFromDb(['course_role_name' => $crname], $this->dbConnection);
 			}
 			usort($this->course_roles, 'Course_Role::cmp');
 		}
 
-		public function cacheCourseRoles() {
-			if (!$this->course_roles) {
-				$this->loadCourseRoles();
-			}
-		}
-
-		// load enrollments for user object
-		public function loadEnrollments() {
-			$this->enrollments = [];
-			$this->enrollments = Enrollment::getAllFromDb(['user_id' => $this->user_id], $this->dbConnection);
-		}
-
+		// cache provides data while eliminating unnecessary DB calls
 		public function cacheEnrollments() {
 			if (!$this->enrollments) {
 				$this->loadEnrollments();
 			}
 		}
 
+		// load explicitly calls the DB (generally called indirectly from related cache fxn)
+		public function loadEnrollments() {
+			$this->enrollments = [];
+			$this->enrollments = Enrollment::getAllFromDb(['user_id' => $this->user_id], $this->dbConnection);
+			usort($this->enrollments, 'Enrollment::cmp');
+		}
 
 	}

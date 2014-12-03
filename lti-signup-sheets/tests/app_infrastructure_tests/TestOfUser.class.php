@@ -93,6 +93,44 @@
 
 		//// instance methods - related data
 
+		function testCacheEnrollments() {
+			$u1 = User::getOneFromDb(['user_id' => 104], $this->DB);
+			$u1->cacheEnrollments();
+			$this->assertTrue($u1->matchesDb);
+
+			$this->assertEqual(4, count($u1->enrollments));
+		}
+
+		function testLoadEnrollments() {
+			$u1 = User::getOneFromDb(['user_id' => 104], $this->DB);
+			$u1->loadEnrollments();
+			$this->assertTrue($u1->matchesDb);
+
+			$this->assertEqual(4, count($u1->enrollments));
+		}
+
+		function testCacheCourseRoles() {
+			$u1 = User::getOneFromDb(['user_id' => 101], $this->DB);
+			$u2 = User::getOneFromDb(['user_id' => 102], $this->DB);
+			$u3 = new User(['user_id' => 50, 'username' => 'falb1', 'first_name' => 'Fred', 'last_name' => 'Albertson', 'DB' => $this->DB]);
+			$u4 = User::getOneFromDb(['user_id' => 110], $this->DB);
+
+			$u1->cacheCourseRoles();
+			$this->assertEqual(1, count($u1->course_roles));
+			$this->assertEqual('teacher', $u1->course_roles[0]->course_role_name);
+
+			$u2->cacheCourseRoles();
+			$this->assertEqual(2, count($u2->course_roles));
+			$this->assertEqual('teacher', $u2->course_roles[0]->course_role_name);
+			$this->assertEqual('student', $u2->course_roles[1]->course_role_name);
+
+			$r3 = $u3->cacheCourseRoles();
+			$this->assertEqual(0, count($r3));
+
+			$r4 = $u4->cacheCourseRoles();
+			$this->assertEqual(0, count($r4));
+		}
+
 		function testLoadCourseRoles() {
 			$u1 = User::getOneFromDb(['user_id' => 101], $this->DB);
 			$u2 = User::getOneFromDb(['user_id' => 102], $this->DB);

@@ -81,6 +81,32 @@
 
 		//// instance methods - related data
 
+		function testCacheEnrollments() {
+			$c1 = Course::getOneFromDb(['course_idstr' => '15F-ARTH-101-01'], $this->DB);
+			$c2 = Course::getOneFromDb(['course_idstr' => '15F-BIOL-101-01'], $this->DB);
+			$c3 = new Course(['course_id' => 50, 'course_idstr' => '25F-BEEB-101-01', 'short_name' => '25F-BEEB-101-01 - Beeblebrox', 'long_name' => '25F-BEEB-101-01 - Beeblebrox', 'account_idstr' => 'courses', 'term_idstr' => '25F', 'DB' => $this->DB]);
+			$c4 = Course::getOneFromDb(['course_idstr' => '15F-CHEM-101-01'], $this->DB);
+
+			$c1->cacheEnrollments();
+			$this->assertEqual(8, count($c1->enrollments));
+			$this->assertEqual('15F-ARTH-101-01', $c1->enrollments[0]->course_idstr);
+			$this->assertEqual('teacher', $c1->enrollments[0]->course_role_name);
+
+			$c2->cacheEnrollments();
+			$this->assertEqual(4, count($c2->enrollments));
+			$this->assertEqual('15F-BIOL-101-01', $c2->enrollments[0]->course_idstr);
+			$this->assertEqual(104, $c2->enrollments[3]->user_id);
+
+			$c3->cacheEnrollments();
+			$this->assertEqual(0, count($c3->enrollments));
+
+			$c4->cacheEnrollments();
+			$this->assertEqual(1, count($c4->enrollments));
+			$this->assertEqual('15F-CHEM-101-01', $c4->enrollments[0]->course_idstr);
+			$this->assertEqual('student', $c4->enrollments[0]->course_role_name);
+		}
+
+
 		function testLoadEnrollments() {
 			$c1 = Course::getOneFromDb(['course_idstr' => '15F-ARTH-101-01'], $this->DB);
 			$c2 = Course::getOneFromDb(['course_idstr' => '15F-BIOL-101-01'], $this->DB);
@@ -101,9 +127,9 @@
 			$this->assertEqual(0, count($c3->enrollments));
 
 			$c4->loadEnrollments();
-			$this->assertEqual(2, count($c4->enrollments));
+			$this->assertEqual(1, count($c4->enrollments));
 			$this->assertEqual('15F-CHEM-101-01', $c4->enrollments[0]->course_idstr);
-			$this->assertEqual('student', $c4->enrollments[1]->course_role_name);
+			$this->assertEqual('student', $c4->enrollments[0]->course_role_name);
 		}
 
 

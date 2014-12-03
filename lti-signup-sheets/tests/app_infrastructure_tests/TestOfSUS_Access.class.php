@@ -11,12 +11,11 @@
 		}
 
 		function testSUS_AccessAtributesExist() {
-			$this->assertEqual(count(SUS_Access::$fields), 9);
+			$this->assertEqual(count(SUS_Access::$fields), 8);
 
 			$this->assertTrue(in_array('access_id', SUS_Access::$fields));
 			$this->assertTrue(in_array('created_at', SUS_Access::$fields));
 			$this->assertTrue(in_array('updated_at', SUS_Access::$fields));
-			$this->assertTrue(in_array('last_user_id', SUS_Access::$fields));
 			$this->assertTrue(in_array('sheet_id', SUS_Access::$fields));
 			$this->assertTrue(in_array('type', SUS_Access::$fields));
 			$this->assertTrue(in_array('constraint_id', SUS_Access::$fields));
@@ -34,5 +33,12 @@
 			$this->assertEqual(SUS_Access::cmp($s1, $s1), 0);
 			$this->assertEqual(SUS_Access::cmp($s2, $s1), 1);
 		}
+
+
+		//// instance methods - object itself
+
+		//// instance methods - related data
+
+
 
 	}

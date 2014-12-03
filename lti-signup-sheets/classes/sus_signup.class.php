@@ -2,12 +2,27 @@
 	require_once dirname(__FILE__) . '/db_linked.class.php';
 
 	class SUS_Signup extends Db_Linked {
-		public static $fields = array('signup_id', 'created_at', 'updated_at', 'flag_deleted', 'last_user_id', 'sus_opening_id', 'signup_user_id', 'admin_comment');
+		public static $fields = array('signup_id', 'created_at', 'updated_at', 'flag_deleted', 'opening_id', 'signup_user_id', 'admin_comment');
 		public static $primaryKeyField = 'signup_id';
 		public static $dbTable = 'sus_signups';
 		public static $entity_type_label = 'sus_signup';
 
 
+		public function __construct($initsHash) {
+			parent::__construct($initsHash);
+
+			// now do custom stuff
+			// e.g. automatically load all accessibility info associated with this object
+			//			$this->flag_workflow_published = false;
+			//			$this->flag_workflow_validated = false;
+
+		}
+
+		public function clearCaches() {
+
+		}
+
+		/* static functions */
 
 		public static function cmp($a, $b) {
 			if ($a->created_at == $b->created_at) {
@@ -18,4 +33,11 @@
 			}
 			return ($a->created_at < $b->created_at) ? -1 : 1;
 		}
+
+
+		/* public functions */
+
+
+
+
 	}

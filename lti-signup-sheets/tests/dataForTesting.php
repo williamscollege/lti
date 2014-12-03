@@ -128,8 +128,6 @@
 		}
 	}
 
-	# TODO - need section data table and class definition
-
 	function createTestData_Enrollments($dbConn) {
 		// 400 series ids
 		# enrollment: 'enrollment_id', 'course_idstr', 'user_id', 'course_role_name', 'section_idstr', 'flag_delete'
@@ -149,7 +147,7 @@
 			(413,'15F-BIOL-101-01', 103, 'student', '15F-BIOL-101-01', 0),
 			(414,'15F-BIOL-101-01', 104, 'student', '15F-BIOL-101-01', 0),
 			(415,'15F-CHEM-101-01', 104, 'student', '15F-CHEM-101-01', 0),
-			(416,'15F-CHEM-101-01', 104, 'student', '15F-CHEM-101-01', 0)
+			(416,'15F-MATH-101-01', 104, 'student', '15F-MATH-101-01', 0)
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
@@ -188,20 +186,20 @@
 
 	function createTestData_SUS_Sheets($dbConn) {
 		// 600 series ids
-		# SUS_Sheet: 'sheet_id', 'created_at', 'updated_at', 'flag_deleted', 'owner_user_id', 'last_user_id', 'sus_sheetgroup_id', 'name', 'description',
+		# SUS_Sheet: 'sheet_id', 'created_at', 'updated_at', 'flag_deleted', 'owner_user_id', 'sheetgroup_id', 'name', 'description',
 		# 'type', 'date_opens', 'date_closes', 'max_total_user_signups', 'max_pending_user_signups', 'flag_alert_owner_change', 'flag_alert_owner_signup',
 		# 'flag_alert_owner_imminent', 'flag_alert_admin_change', 'flag_alert_admin_signup', 'flag_alert_admin_imminent', 'flag_private_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheet::$dbTable . " VALUES
-			(601, NOW(), NOW(), 0, 101, 101, 1, 'Sheet 601', 'Sheet 601, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 0),
-			(602, NOW(), NOW(), 0, 101, 102, 1, 'Sheet 602', 'Sheet 602, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 1, 0, 0, 0, 0, 0, 0, 0),
-			(603, NOW(), NOW(), 0, 101, 102, 1, 'Sheet 603', 'Sheet 603, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 1, 0, 0, 0, 0, 0, 0),
-			(604, NOW(), NOW(), 0, 101, 103, 2, 'Sheet 604', 'Sheet 604, Sheetgroup 502', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 1, 0, 0, 0, 0, 0),
-			(605, NOW(), NOW(), 0, 101, 104, 3, 'Sheet 605', 'Sheet 605, Sheetgroup 503', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 1, 0, 0, 0, 0),
-			(606, NOW(), NOW(), 0, 102, 103, 4, 'Sheet 606', 'Sheet 606, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 1, 0, 0, 0),
-			(607, NOW(), NOW(), 0, 102, 103, 4, 'Sheet 607', 'Sheet 607, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 1, 0, 0),
-			(608, NOW(), NOW(), 0, 103, 110, 6, 'Sheet 608', 'Sheet 608, Sheetgroup 506', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 1, 0),
-			(609, NOW(), NOW(), 0, 104, 110, 7, 'Sheet 609', 'Sheet 609, Sheetgroup 506', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 1),
-			(610, NOW(), NOW(), 0, 109, 110, 10, 'Sheet 610', 'Sheet 610, Sheetgroup 510', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 0)
+			(601, NOW(), NOW(), 0, 101, 501, 'Sheet 601', 'Sheet 601, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 0),
+			(602, NOW(), NOW(), 0, 101, 501, 'Sheet 602', 'Sheet 602, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 1, 0, 0, 0, 0, 0, 0, 0),
+			(603, NOW(), NOW(), 0, 101, 501, 'Sheet 603', 'Sheet 603, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 1, 0, 0, 0, 0, 0, 0),
+			(604, NOW(), NOW(), 0, 101, 502, 'Sheet 604', 'Sheet 604, Sheetgroup 502', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 1, 0, 0, 0, 0, 0),
+			(605, NOW(), NOW(), 0, 101, 503, 'Sheet 605', 'Sheet 605, Sheetgroup 503', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 1, 0, 0, 0, 0),
+			(606, NOW(), NOW(), 0, 102, 504, 'Sheet 606', 'Sheet 606, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 1, 0, 0, 0),
+			(607, NOW(), NOW(), 0, 102, 504, 'Sheet 607', 'Sheet 607, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 1, 0, 0),
+			(608, NOW(), NOW(), 0, 103, 506, 'Sheet 608', 'Sheet 608, Sheetgroup 506', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 1, 0),
+			(609, NOW(), NOW(), 0, 104, 507, 'Sheet 609', 'Sheet 609, Sheetgroup 506', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 1),
+			(610, NOW(), NOW(), 0, 109, 510, 'Sheet 610', 'Sheet 610, Sheetgroup 510', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 0)
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
@@ -215,20 +213,20 @@
 
 	function createTestData_SUS_Openings($dbConn) {
 		// 700 series ids
-		# SUS_Opening: 'opening_id', 'created_at', 'updated_at', 'flag_deleted', 'last_user_id', 'sus_sheet_id', 'opening_set_id', 'name', 'description',
+		# SUS_Opening: 'opening_id', 'created_at', 'updated_at', 'flag_deleted', 'sheet_id', 'opening_set_id', 'name', 'description',
 		# 'max_signups', 'admin_comment', 'begin_datetime', 'end_datetime', 'location'
 		# TODO - Delete Confusing Moodle Fragment: 'opening_set_id' is current datetime concat-ed with the current user id
 		$addTestSql  = "INSERT INTO " . SUS_Opening::$dbTable . " VALUES
-			(701, NOW(), NOW(), 0, 101, 51, 0, 'Opening 701', 'Opening 701, Sheet 601, Sheetgroup 501', 2 , 'opening admin comment', NOW(),  TIMESTAMPADD(month,1,NOW()), 'opening location at CET 256'),
-			(702, NOW(), NOW(), 0, 101, 51, 0, 'Opening 702', 'Opening 702, Sheet 601, Sheetgroup 501', 1 , 'no comment', TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(month,1,NOW()), 'CET MakerSpace'),
-			(703, NOW(), NOW(), 0, 101, 52, 0, 'Opening 703', 'Opening 703, Sheet 602, Sheetgroup 501', 2 , 'no comment', TIMESTAMPADD(week,1,NOW()),  TIMESTAMPADD(month,1,NOW()), ''),
-			(704, NOW(), NOW(), 0, 102, 52, 0, 'Opening 704', 'Opening 704, Sheet 602, Sheetgroup 501', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), ''),
-			(705, NOW(), NOW(), 0, 102, 53, 0, 'Opening 705', 'Opening 705, Sheet 603, Sheetgroup 501', 4 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), ''),
-			(706, NOW(), NOW(), 0, 103, 54, 0, 'Opening 706', 'Opening 706, Sheet 604, Sheetgroup 502', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), 'Faculty House'),
-			(707, NOW(), NOW(), 1, 103, 55, 0, 'Opening 707', 'Opening 707, Sheet 605, Sheetgroup 503', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), 'Purple Pub'),
-			(708, NOW(), NOW(), 1, 104, 56, 0, 'Opening 708', 'Opening 708, Sheet 606, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), ''),
-			(709, NOW(), NOW(), 0, 105, 57, 0, 'Opening 709', 'Opening 709, Sheet 607, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), ''),
-			(710, NOW(), NOW(), 0, 109, 60, 0, 'Opening 710', 'Opening 710, Sheet 610, Sheetgroup 510', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), '')
+			(701, NOW(), NOW(), 0, 601, 0, 'Opening 701', 'Opening 701, Sheet 601, Sheetgroup 501', 2 , 'opening admin comment', NOW(),  TIMESTAMPADD(month,1,NOW()), 'opening location at CET 256'),
+			(702, NOW(), NOW(), 0, 601, 0, 'Opening 702', 'Opening 702, Sheet 601, Sheetgroup 501', 1 , 'no comment', TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(month,1,NOW()), 'CET MakerSpace'),
+			(703, NOW(), NOW(), 0, 602, 0, 'Opening 703', 'Opening 703, Sheet 602, Sheetgroup 501', 2 , 'no comment', TIMESTAMPADD(week,1,NOW()),  TIMESTAMPADD(month,1,NOW()), ''),
+			(704, NOW(), NOW(), 0, 602, 0, 'Opening 704', 'Opening 704, Sheet 602, Sheetgroup 501', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), ''),
+			(705, NOW(), NOW(), 0, 603, 0, 'Opening 705', 'Opening 705, Sheet 603, Sheetgroup 501', 4 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), ''),
+			(706, NOW(), NOW(), 0, 604, 0, 'Opening 706', 'Opening 706, Sheet 604, Sheetgroup 502', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), 'Faculty House'),
+			(707, NOW(), NOW(), 1, 605, 0, 'Opening 707', 'Opening 707, Sheet 605, Sheetgroup 503', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), 'Purple Pub'),
+			(708, NOW(), NOW(), 1, 606, 0, 'Opening 708', 'Opening 708, Sheet 606, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), ''),
+			(709, NOW(), NOW(), 0, 607, 0, 'Opening 709', 'Opening 709, Sheet 607, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), ''),
+			(710, NOW(), NOW(), 0, 610, 0, 'Opening 710', 'Opening 710, Sheet 610, Sheetgroup 510', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), '')
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
@@ -242,28 +240,28 @@
 
 	function createTestData_SUS_Signups($dbConn) {
 		// 800 series ids
-		# SUS_Signup: 'signup_id', 'created_at', 'updated_at', 'flag_deleted', 'last_user_id', 'sus_opening_id', 'signup_user_id', 'admin_comment'
+		# SUS_Signup: 'signup_id', 'created_at', 'updated_at', 'flag_deleted', 'opening_id', 'signup_user_id', 'admin_comment'
 		$addTestSql  = "INSERT INTO " . SUS_Signup::$dbTable . " VALUES
-			(801, NOW(), NOW(), 0, 101, 701, 101, 'signup admin comment'),
-			(802, TIMESTAMPADD(day,1,NOW()), TIMESTAMPADD(day,1,NOW()), 0, 101, 704, 101, 'no comment'),
-			(803, TIMESTAMPADD(day,2,NOW()), TIMESTAMPADD(day,3,NOW()), 0, 101, 705, 101, 'no comment'),
-			(804, NOW(), NOW(), 0, 102, 701, 102, ''),
-			(805, NOW(), NOW(), 0, 102, 702, 102, ''),
-			(806, NOW(), NOW(), 0, 103, 701, 103, ''),
-			(807, NOW(), NOW(), 1, 103, 708, 103, ''),
-			(808, NOW(), NOW(), 1, 104, 701, 104, ''),
-			(809, NOW(), NOW(), 0, 104, 702, 104, ''),
-			(810, NOW(), NOW(), 0, 104, 703, 104, ''),
-			(811, NOW(), NOW(), 0, 104, 704, 104, ''),
-			(812, NOW(), NOW(), 1, 104, 705, 104, ''),
-			(813, NOW(), NOW(), 0, 105, 701, 105, ''),
-			(814, NOW(), NOW(), 0, 105, 710, 105, ''),
-			(815, NOW(), NOW(), 0, 106, 707, 106, ''),
-			(816, NOW(), NOW(), 0, 106, 708, 106, ''),
-			(817, NOW(), NOW(), 1, 107, 705, 107, ''),
-			(818, NOW(), NOW(), 1, 107, 706, 107, ''),
-			(819, NOW(), NOW(), 0, 108, 709, 108, ''),
-			(820, NOW(), TIMESTAMPADD(day,1,NOW()), 0, 109, 710, 109, '')
+			(801, NOW(), NOW(), 0, 701, 101, 'signup admin comment'),
+			(802, TIMESTAMPADD(day,1,NOW()), TIMESTAMPADD(day,1,NOW()), 0, 704, 101, 'no comment'),
+			(803, TIMESTAMPADD(day,2,NOW()), TIMESTAMPADD(day,3,NOW()), 0, 705, 101, 'no comment'),
+			(804, NOW(), NOW(), 0, 701, 102, ''),
+			(805, NOW(), NOW(), 0, 702, 102, ''),
+			(806, NOW(), NOW(), 0, 701, 103, ''),
+			(807, NOW(), NOW(), 1, 708, 103, ''),
+			(808, NOW(), NOW(), 1, 701, 104, ''),
+			(809, NOW(), NOW(), 0, 702, 104, ''),
+			(810, NOW(), NOW(), 0, 703, 104, ''),
+			(811, NOW(), NOW(), 0, 704, 104, ''),
+			(812, NOW(), NOW(), 1, 705, 104, ''),
+			(813, NOW(), NOW(), 0, 701, 105, ''),
+			(814, NOW(), NOW(), 0, 710, 105, ''),
+			(815, NOW(), NOW(), 0, 707, 106, ''),
+			(816, NOW(), NOW(), 0, 708, 106, ''),
+			(817, NOW(), NOW(), 1, 705, 107, ''),
+			(818, NOW(), NOW(), 1, 706, 107, ''),
+			(819, NOW(), NOW(), 0, 709, 108, ''),
+			(820, NOW(), TIMESTAMPADD(day,1,NOW()), 0, 710, 109, '')
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
@@ -275,13 +273,34 @@
 		}
 	}
 
+	function createTestData_SUS_Access($dbConn) {
+		// 900 series ids
+		# SUS_Access: 'access_id', 'created_at', 'updated_at', 'sheet_id', 'type', 'constraint_id', 'constraint_data', 'broadness'
+		$addTestSql  = "INSERT INTO " . SUS_Access::$dbTable . " VALUES
+			(901, NOW(), NOW(), 601, 'adminbyuser', 0, '', 1),
+			(902, NOW(), NOW(), 601, 'byuser', 101, '', 10),
+			(903, NOW(), NOW(), 601, 'bycourse', 201, '', 20),
+			(904, NOW(), NOW(), 601, 'byinstr', 101, '', 30),
+			(905, NOW(), NOW(), 601, 'bydept', 0, 'ARTH', 40),
+			(906, NOW(), NOW(), 601, 'bygradyear', 18, '', 50),
+			(907, NOW(), NOW(), 601, 'byrole', 0, 'teacher', 60),
+			(908, NOW(), NOW(), 601, 'byhasaccount', 0, 'all', 60)
+    ";
+		$addTestStmt = $dbConn->prepare($addTestSql);
+		$addTestStmt->execute();
+		if ($addTestStmt->errorInfo()[0] != '0000') {
+			echo "<pre>error adding test SUS_Access data to the DB\n";
+			print_r($addTestStmt->errorInfo());
+			debug_print_backtrace();
+			exit;
+		}
+	}
 
 	function makeAuthedTestUserAdmin($dbConn) {
 		$u1                       = User::getOneFromDb(['username' => TESTINGUSER], $dbConn);
 		$u1->flag_is_system_admin = TRUE;
 		$u1->updateDb();
 	}
-
 
 	//--------------------------------------------------------------------------------------------------------------
 
@@ -294,6 +313,7 @@
 		createTestData_SUS_Sheets($dbConn);
 		createTestData_SUS_Openings($dbConn);
 		createTestData_SUS_Signups($dbConn);
+		createTestData_SUS_Access($dbConn);
 
 		//        $all_actions = Action::getAllFromDb([],$dbConn);
 		//        global $ACTIONS;
@@ -349,6 +369,10 @@
 		_removeTestDataFromTable($dbConn, SUS_Signup::$dbTable);
 	}
 
+	function removeTestData_SUS_Access($dbConn) {
+		_removeTestDataFromTable($dbConn, SUS_Access::$dbTable);
+	}
+
 	function removeTestData_EXAMPLE($dbConn) {
 		_removeTestDataFromTable($dbConn, Metadata_Structure::$dbTable);
 	}
@@ -364,4 +388,5 @@
 		removeTestData_SUS_Sheets($dbConn);
 		removeTestData_SUS_Openings($dbConn);
 		removeTestData_SUS_Signups($dbConn);
+		removeTestData_SUS_Access($dbConn);
 	}

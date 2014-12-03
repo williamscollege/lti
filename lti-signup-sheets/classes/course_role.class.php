@@ -12,6 +12,17 @@
 		public static $VALID_COURSE_ROLE_NAMES = ['teacher','student','observer','alumni'];
         public static $SORT_BY_COURSE_ROLE_NAMES = ['teacher'=>10,'student'=>20,'observer'=>30,'alumni'=>40];
 
+		public function __construct($initsHash) {
+			parent::__construct($initsHash);
+
+			// now do custom stuff
+			// e.g. automatically load all accessibility info associated with this object
+			//			$this->flag_workflow_published = false;
+			//			$this->flag_workflow_validated = false;
+		}
+
+		/* static functions */
+
 		public static function cmp($a, $b) {
 			# The most powerful system admin role is priority = 1; lowest anonymous/guest priority is X
 			if ($a->priority == $b->priority) {
@@ -22,6 +33,9 @@
 			}
 			return ($a->priority < $b->priority) ? -1 : 1;
 		}
+
+
+		/* public functions */
 
 
     }

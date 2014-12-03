@@ -11,14 +11,13 @@
 		}
 
 		function testSUS_OpeningAtributesExist() {
-			$this->assertEqual(count(SUS_Opening::$fields), 14);
+			$this->assertEqual(count(SUS_Opening::$fields), 13);
 
 			$this->assertTrue(in_array('opening_id', SUS_Opening::$fields));
 			$this->assertTrue(in_array('created_at', SUS_Opening::$fields));
 			$this->assertTrue(in_array('updated_at', SUS_Opening::$fields));
 			$this->assertTrue(in_array('flag_deleted', SUS_Opening::$fields));
-			$this->assertTrue(in_array('last_user_id', SUS_Opening::$fields));
-			$this->assertTrue(in_array('sus_sheet_id', SUS_Opening::$fields));
+			$this->assertTrue(in_array('sheet_id', SUS_Opening::$fields));
 			$this->assertTrue(in_array('opening_set_id', SUS_Opening::$fields));
 			$this->assertTrue(in_array('name', SUS_Opening::$fields));
 			$this->assertTrue(in_array('description', SUS_Opening::$fields));
@@ -38,6 +37,30 @@
 			$this->assertEqual(SUS_Opening::cmp($s1, $s2), -1);
 			$this->assertEqual(SUS_Opening::cmp($s1, $s1), 0);
 			$this->assertEqual(SUS_Opening::cmp($s2, $s1), 1);
+		}
+
+
+		//// instance methods - object itself
+
+		//// instance methods - related data
+
+		public function testCacheSignups() {
+			$s = SUS_Opening::getOneFromDb(['opening_id' => 701], $this->DB);
+			$this->assertTrue($s->matchesDb);
+
+			$s->cacheSignups();
+			$this->assertTrue($s->matchesDb);
+
+			$this->assertEqual(5, count($s->signups));
+		}
+
+		public function testLoadSignups() {
+			$s = SUS_Opening::getOneFromDb(['opening_id' => 701], $this->DB);
+			$this->assertTrue($s->matchesDb);
+
+			$s->loadSignups();
+			$this->assertTrue($s->matchesDb);
+			$this->assertEqual(5, count($s->signups));
 		}
 
 	}

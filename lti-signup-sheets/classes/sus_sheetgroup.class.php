@@ -7,9 +7,23 @@
 		public static $dbTable = 'sus_sheetgroups';
 		public static $entity_type_label = 'sus_sheetgroup';
 
+		public $sheets;
 
+		public function __construct($initsHash) {
+			parent::__construct($initsHash);
 
-		//// static methods
+			// now do custom stuff
+			// e.g. automatically load all accessibility info associated with this object
+			//			$this->flag_workflow_published = false;
+			//			$this->flag_workflow_validated = false;
+			$this->sheets = array();
+		}
+
+		public function clearCaches() {
+			$this->sheets = array();
+		}
+
+		/* static functions */
 
 		public static function cmp($a, $b) {
 			if ($a->name == $b->name) {
@@ -18,7 +32,21 @@
 			return ($a->name < $b->name) ? -1 : 1;
 		}
 
+		/* public functions */
 
+		// cache provides data while eliminating unnecessary DB calls
+		public function cacheSheets() {
+			if (! $this->sheets) {
+				$this->loadSheets();
+			}
+		}
+
+		// load explicitly calls the DB (generally called indirectly from related cache fxn)
+		public function loadSheets() {
+			$this->sheets = [];
+			$this->sheets = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $this->sheetgroup_id], $this->dbConnection);
+			usort($this->sheets, 'SUS_Sheet::cmp');
+		}
 
 
 	}

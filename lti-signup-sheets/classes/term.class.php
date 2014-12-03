@@ -21,8 +21,10 @@
 		}
 
 		public function clearCaches() {
-			$this->$cached_courses = array();
+			$this->courses = array();
 		}
+
+		/* static functions */
 
 		public static function cmp($a, $b) {
 			if ($a->start_date == $b->start_date) {
@@ -35,17 +37,20 @@
 		}
 
 
-		// load courses for term object
-		public function loadCourses() {
-			$this->courses = [];
-			$this->courses = Course::getAllFromDb(['term_idstr' => $this->term_idstr], $this->dbConnection);
-			usort($this->courses, 'Course::cmp');
-		}
+		/* public functions */
 
+		// cache provides data while eliminating unnecessary DB calls
 		public function cacheCourses() {
 			if (!$this->courses) {
 				$this->loadCourses();
 			}
+		}
+
+		// load explicitly calls the DB (generally called indirectly from related cache fxn)
+		public function loadCourses() {
+			$this->courses = [];
+			$this->courses = Course::getAllFromDb(['term_idstr' => $this->term_idstr], $this->dbConnection);
+			usort($this->courses, 'Course::cmp');
 		}
 
 	}

@@ -11,14 +11,13 @@
 		}
 
 		function testSUS_SignupAtributesExist() {
-			$this->assertEqual(count(SUS_Signup::$fields), 8);
+			$this->assertEqual(count(SUS_Signup::$fields), 7);
 
 			$this->assertTrue(in_array('signup_id', SUS_Signup::$fields));
 			$this->assertTrue(in_array('created_at', SUS_Signup::$fields));
 			$this->assertTrue(in_array('updated_at', SUS_Signup::$fields));
 			$this->assertTrue(in_array('flag_deleted', SUS_Signup::$fields));
-			$this->assertTrue(in_array('last_user_id', SUS_Signup::$fields));
-			$this->assertTrue(in_array('sus_opening_id', SUS_Signup::$fields));
+			$this->assertTrue(in_array('opening_id', SUS_Signup::$fields));
 			$this->assertTrue(in_array('signup_user_id', SUS_Signup::$fields));
 			$this->assertTrue(in_array('admin_comment', SUS_Signup::$fields));
 		}
@@ -33,5 +32,12 @@
 			$this->assertEqual(SUS_Signup::cmp($s1, $s1), 0);
 			$this->assertEqual(SUS_Signup::cmp($s2, $s1), 1);
 		}
+
+
+		//// instance methods - object itself
+
+		//// instance methods - related data
+
+
 
 	}

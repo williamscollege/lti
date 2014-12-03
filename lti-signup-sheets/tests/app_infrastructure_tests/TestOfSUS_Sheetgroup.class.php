@@ -36,4 +36,48 @@
 			$this->assertEqual(SUS_Sheetgroup::cmp($s2, $s1), 1);
 		}
 
+		//// DB interaction tests
+
+		function testSUS_SheetgroupDBInsert() {
+			$s = new SUS_Sheetgroup(['owner_user_id' => '5', 'DB' => $this->DB]);
+
+			$s->updateDb();
+			$this->assertTrue($s->matchesDb);
+
+			$s2 = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $s->sheetgroup_id], $this->DB);
+
+			$this->assertTrue($s2->matchesDb);
+			$this->assertEqual($s2->owner_user_id, 5);
+		}
+
+		function testSUS_SheetgroupRetrievedFromDb() {
+			$s = new SUS_Sheetgroup(['sheetgroup_id' => 501, 'DB' => $this->DB]);
+			$this->assertNull($s->owner_user_id);
+
+			$s->refreshFromDb();
+			$this->assertEqual($s->owner_user_id, 101);
+		}
+
+
+		//// instance methods - object itself
+
+		//// instance methods - related data
+
+		function testCacheSheets() {
+			$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id'=>501],$this->DB);
+			$this->assertTrue($sg->matchesDb);
+
+			$sg->cacheSheets();
+			$this->assertEqual(3, count($sg->sheets));
+		}
+
+		function testLoadSheets() {
+			$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id'=>501],$this->DB);
+			$this->assertTrue($sg->matchesDb);
+
+			$sg->loadSheets();
+			$this->assertEqual(3, count($sg->sheets));
+		}
+
+
 	}

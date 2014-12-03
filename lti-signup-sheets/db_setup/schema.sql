@@ -135,8 +135,7 @@ CREATE TABLE IF NOT EXISTS `sus_sheets` (
     `updated_at` TIMESTAMP NULL,
     `flag_deleted` tinyint(1) unsigned default NULL,
     `owner_user_id` bigint(10) unsigned default NULL,
-    `last_user_id` bigint(10) unsigned default NULL,
-    `sus_sheetgroup_id` bigint(10) unsigned default NULL,
+    `sheetgroup_id` bigint(10) unsigned default NULL,
     `name` varchar(255) default NULL,
     `description` text,
     `type` varchar(32) default NULL,
@@ -154,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `sus_sheets` (
     PRIMARY KEY (`sheet_id`),
     KEY `flag_deleted` (`flag_deleted`),
     KEY `owner_user_id` (`owner_user_id`),
-    KEY `sus_sheetgroup_id` (`sus_sheetgroup_id`),
+    KEY `sheetgroup_id` (`sheetgroup_id`),
     KEY `name` (`name`),
     KEY `type` (`type`),
     KEY `date_opens` (`date_opens`),
@@ -173,8 +172,7 @@ CREATE TABLE IF NOT EXISTS `sus_openings` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL,
     `flag_deleted` tinyint(1) unsigned default NULL,
-    `last_user_id` bigint(10) unsigned default NULL,
-    `sus_sheet_id` bigint(10) unsigned default NULL,
+    `sheet_id` bigint(10) unsigned default NULL,
     `opening_set_id` bigint(20) unsigned default NULL,
     `name` varchar(255) default NULL,
     `description` text,
@@ -185,13 +183,12 @@ CREATE TABLE IF NOT EXISTS `sus_openings` (
     `location` varchar(255) default NULL,
     PRIMARY KEY (`opening_id`),
     KEY `flag_deleted` (`flag_deleted`),
-    KEY `sus_sheet_id` (`sus_sheet_id`),
+    KEY `sheet_id` (`sheet_id`),
     KEY `opening_set_id` (`opening_set_id`),
     KEY `begin_datetime` (`begin_datetime`),
     KEY `end_datetime` (`end_datetime`),
     KEY `location` (`location`),
-    KEY `name` (`name`),
-    KEY `last_user_id` (`last_user_id`)
+    KEY `name` (`name`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Places users can sign up - a single sheet may have multiple ';
 
 CREATE TABLE IF NOT EXISTS `sus_signups` (
@@ -199,14 +196,12 @@ CREATE TABLE IF NOT EXISTS `sus_signups` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL,
     `flag_deleted` tinyint(1) unsigned default NULL,
-    `last_user_id` bigint(10) unsigned default NULL,
-    `sus_opening_id` bigint(10) unsigned default NULL,
+    `opening_id` bigint(10) unsigned default NULL,
     `signup_user_id` bigint(10) unsigned default NULL,
     `admin_comment` varchar(255) default NULL,
     PRIMARY KEY (`signup_id`),
     KEY `flag_deleted` (`flag_deleted`),
-    KEY `last_user_id` (`last_user_id`),
-    KEY `sus_opening_id` (`sus_opening_id`),
+    KEY `opening_id` (`opening_id`),
     KEY `signup_user_id` (`signup_user_id`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Users signing up for openings - analogous to a list of times and dates on a piece of paper that is passed around or posted on a door and on which people would put their name';
 -- TODO - Delete Confusing Moodle Fragment: 'opening_set_id' is current datetime concat-ed with the current user id
@@ -215,7 +210,6 @@ CREATE TABLE IF NOT EXISTS `sus_access` (
     `access_id` bigint(10) unsigned NOT NULL auto_increment,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL,
-    `last_user_id` bigint(10) unsigned default NULL,
     `sheet_id` bigint(10) unsigned default NULL,
     `type` varchar(48) default NULL,
     `constraint_id` bigint(10) unsigned default NULL,
@@ -234,7 +228,6 @@ CREATE TABLE IF NOT EXISTS `user_role_links` (
     `user_role_link_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL,
-    `last_user_id` INT NOT NULL,
     `user_id` INT NOT NULL,
     `role_id` INT NOT NULL
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='determines allowable actions within the digitalfieldnotebooks system';
@@ -250,7 +243,6 @@ CREATE TABLE IF NOT EXISTS `role_action_target_links` (
     `role_action_target_link_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL,
-    `last_user_id` INT NOT NULL,
     `role_id` INT NOT NULL,
     `action_id` INT NOT NULL,
     `target_type` VARCHAR(255) NOT NULL,
@@ -293,7 +285,7 @@ VALUES
 (8,'list',8,0);
 
 # Required constant values for role_action_target_links table (managers can do everything)
-# 		public static $fields = array('role_action_target_link_id', 'created_at', 'updated_at', 'last_user_id', 'role_id', 'action_id', 'target_type', 'target_id', 'flag_delete');
+# 		public static $fields = array('role_action_target_link_id', 'created_at', 'updated_at', 'role_id', 'action_id', 'target_type', 'target_id', 'flag_delete');
 INSERT INTO
   role_action_target_links
   VALUES

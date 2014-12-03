@@ -31,8 +31,8 @@
 
 		function testCmp() {
 			$e1 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-ROCK-101-01', 'user_id' => 200, 'course_role_name' => 'teacher', 'section_idstr' => '25F-ROCK-101-01', 'DB' => $this->DB]);
-			$e2 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-SCISSORS-101-01', 'user_id' => 200, 'course_role_name' => 'student', 'section_idstr' => '25F-SCISSORS-101-01', 'DB' => $this->DB]);
-			$e3 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-ROCK-101-01', 'user_id' => 200, 'course_role_name' => 'student', 'section_idstr' => '25F-ROCK-101-01', 'DB' => $this->DB]);
+			$e2 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-SCISSORS-101-01', 'user_id' => 201, 'course_role_name' => 'student', 'section_idstr' => '25F-SCISSORS-101-01', 'DB' => $this->DB]);
+			$e3 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-ROCK-101-01', 'user_id' => 202, 'course_role_name' => 'student', 'section_idstr' => '25F-ROCK-101-01', 'DB' => $this->DB]);
 			$e4 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-PAPER-101-01', 'user_id' => 200, 'course_role_name' => 'student', 'section_idstr' => '25F-PAPER-101-01', 'DB' => $this->DB]);
 
 			$this->assertEqual(Enrollment::cmp($e1, $e2), -1);
@@ -78,5 +78,9 @@
 			//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
 			$this->assertEqual($canonical, $rendered);
 		}
+
+		//// instance methods - related data
+
+
 
 	}

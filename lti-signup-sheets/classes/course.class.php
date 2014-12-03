@@ -16,13 +16,15 @@
 			// e.g. automatically load all accessibility info associated with this object
 			//			$this->flag_workflow_published = false;
 			//			$this->flag_workflow_validated = false;
-
+			$this->enrollments = array();
 		}
 
 		public function clearCaches() {
-			$this->$cached_enrollments = array();
+			$this->enrollments = array();
 		}
 
+
+		/* static functions */
 
 		public static function cmp($a, $b) {
 			if ($a->course_idstr == $b->course_idstr) {
@@ -35,6 +37,8 @@
 		}
 
 
+		/* public functions */
+
 		// returns: a very basic HTML representation of the object
 		public function renderMinimal($flag_linked = FALSE) {
 
@@ -46,17 +50,18 @@
 			return '<div class="rendered-object course-render course-render-minimal course-render-' . $this->course_id . '" data-for-course="' . $this->course_id . '" data-course_idstr="' . htmlentities($this->course_idstr) . '">' . $enclosed . '</div>';
 		}
 
-
-		// load enrollments for user object
-		public function loadEnrollments() {
-			$this->enrollments = [];
-			$this->enrollments = Enrollment::getAllFromDb(['course_idstr' => $this->course_idstr], $this->dbConnection);
-		}
-
+		// cache provides data while eliminating unnecessary DB calls
 		public function cacheEnrollments() {
 			if (!$this->enrollments) {
 				$this->loadEnrollments();
 			}
+		}
+
+		// load explicitly calls the DB (generally called indirectly from related cache fxn)
+		public function loadEnrollments() {
+			$this->enrollments = [];
+			$this->enrollments = Enrollment::getAllFromDb(['course_idstr' => $this->course_idstr], $this->dbConnection);
+			usort($this->enrollments, 'Enrollment::cmp');
 		}
 
 	}

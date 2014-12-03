@@ -30,4 +30,9 @@
 			$this->assertEqual(Course_Role::cmp($r2, $r1), 1);
 		}
 
+		//// instance methods - object itself
+
+		//// instance methods - related data
+
+
 	}
