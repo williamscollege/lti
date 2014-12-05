@@ -13,11 +13,11 @@
 
     $DB = util_createDbConnection();
 
-    $all_actions = Action::getAllFromDb(['flag_delete'=>false],$DB);
-    $ACTIONS = array();
-    foreach ($all_actions as $a) {
-        $ACTIONS[$a->name] = $a;
-    }
+//    $all_actions = Action::getAllFromDb(['flag_delete'=>false],$DB);
+//    $ACTIONS = array();
+//    foreach ($all_actions as $a) {
+//        $ACTIONS[$a->name] = $a;
+//    }
 
 	if ((!isset($_SESSION['isAuthenticated'])) || (!$_SESSION['isAuthenticated'])) {
 		if ((isset($_REQUEST['username'])) && (isset($_REQUEST['password']))) { // SECTION: not yet authenticated, wants to log in
@@ -66,16 +66,10 @@
 
 		// now create user object
 		$USER = new User(['username' => $_SESSION['userdata']['username'], 'DB' => $DB]);
-		//echo "<pre>"; print_r($USER); echo "</pre>";
 
-		// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
-		$USER->refreshFromDb();
-		//echo "<pre>"; print_r($USER); echo "</pre>";
-		//print_r($_SESSION['userdata']);
-		$USER->updateDbFromAuth($_SESSION['userdata']);
-		//echo "<pre>"; print_r($USER); echo "</pre>";
-
-		//echo "<pre>"; print_r($USER); echo "</pre>";
+		// util_prePrintR($USER);
+		//util_prePrintR($_SESSION['userdata']);
+		//$USER->updateDbFromAuth($_SESSION['userdata']);
 	} else {
         $USER = User::getOneFromDb(['username'=>'canonical_public'],$DB);
     }

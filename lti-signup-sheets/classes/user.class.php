@@ -9,6 +9,7 @@
 
 		public $course_roles;
 		public $enrollments;
+		public $sheetgroups;
 
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);
@@ -18,13 +19,26 @@
 
 			//		$this->flag_is_system_admin = false;
 			//		$this->flag_is_banned = false;
+
+			// ensure that user object is populated from DB
+			$this->refreshFromDb();
+# TODO - need to build check (on app_code app_head or setup maybe)
+//			if (!$this->matchesDb) {
+//				// This user does not exist in the database. Abort.
+//				//util_wipeSession();
+//				//util_redirectToAppHome();
+//				die("This user does not exist in the database. Abort.");
+//			}
+
 			$this->course_roles = array();
 			$this->enrollments  = array();
+			$this->sheetgroups  = array();
 		}
 
 		public function clearCaches() {
 			$this->course_roles = array();
 			$this->enrollments  = array();
+			$this->sheetgroups  = array();
 		}
 
 		/* static functions */
@@ -150,4 +164,15 @@
 			usort($this->enrollments, 'Enrollment::cmp');
 		}
 
+		public function cacheSheetgroups() {
+			if (!$this->sheetgroups) {
+				$this->loadSheetgroups();
+			}
+		}
+
+		public function loadSheetgroups() {
+			$this->sheetgroups = [];
+			$this->sheetgroups = SUS_Sheetgroup::getAllFromDb(['owner_user_id'=>$this->user_id], $this->dbConnection);
+			usort($this->sheetgroups, 'SUS_Sheetgroup::cmp');
+		}
 	}

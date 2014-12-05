@@ -168,11 +168,11 @@
 			(503, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 503', 'Something to organize my spanish sheets', 1, 0),
 			(504, NOW(), NOW(), 0, 102, 1, 'Sheetgroup 504', 'Help me keep track of so many sheets', 1, 0),
 			(505, NOW(), NOW(), 0, 102, 1, 'Sheetgroup 505', 'Something to help me organize', 1, 0),
-			(506, NOW(), NOW(), 0, 103, 1, 'Sheetgroup 506', 'Something to help me organize', 1, 0),
-			(507, NOW(), NOW(), 0, 104, 1, 'Sheetgroup 507', 'Something to help me organize', 1, 0),
-			(508, NOW(), NOW(), 0, 105, 0, 'Sheetgroup 508', 'Something to help me organize', 1, 0),
-			(509, NOW(), NOW(), 0, 106, 1, 'Sheetgroup 509', 'Something to help me organize', 1, 0),
-			(510, NOW(), NOW(), 0, 109, 1, 'Sheetgroup 510', 'Something to help me organize', 1, 0)
+			(506, NOW(), NOW(), 0, 103, 1, 'Sheetgroup 506', 'Something to help me organize', -1, -1),
+			(507, NOW(), NOW(), 0, 104, 1, 'Sheetgroup 507', 'Something to help me organize', -1, -1),
+			(508, NOW(), NOW(), 0, 105, 0, 'Sheetgroup 508', 'Something to help me organize', -1, -1),
+			(509, NOW(), NOW(), 0, 106, 1, 'Sheetgroup 509', 'Something to help me organize', -1, -1),
+			(510, NOW(), NOW(), 0, 109, 1, 'Sheetgroup 510', 'Something to help me organize', -1, -1)
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();

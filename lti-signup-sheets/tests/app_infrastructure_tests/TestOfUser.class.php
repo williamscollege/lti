@@ -68,11 +68,14 @@
 		}
 
 		function testUserRetrievedFromDb() {
-			$u = new User(['user_id' => 101, 'DB' => $this->DB]);
-			$this->assertNull($u->username);
+			$u1 = new User(['user_id' => 101, 'DB' => $this->DB]);
+			$u2 = new User(['user_id' => 102, 'DB' => $this->DB]);
 
-			$u->refreshFromDb();
-			$this->assertEqual($u->username, Auth_Base::$TEST_USERNAME);
+			$this->assertEqual('mockUserJBond', $u1->username);
+			$this->assertEqual('tusr2', $u2->username);
+
+			$u1->refreshFromDb();
+			$this->assertEqual($u1->username, Auth_Base::$TEST_USERNAME);
 		}
 
 		//// instance methods - object itself
@@ -124,11 +127,11 @@
 			$this->assertEqual('teacher', $u2->course_roles[0]->course_role_name);
 			$this->assertEqual('student', $u2->course_roles[1]->course_role_name);
 
-			$r3 = $u3->cacheCourseRoles();
-			$this->assertEqual(0, count($r3));
+			$u3->cacheCourseRoles();
+			$this->assertEqual(0, count($u3->course_roles));
 
-			$r4 = $u4->cacheCourseRoles();
-			$this->assertEqual(0, count($r4));
+			$u4->cacheCourseRoles();
+			$this->assertEqual(1, count($u4->course_roles));
 		}
 
 		function testLoadCourseRoles() {
@@ -146,11 +149,33 @@
 			$this->assertEqual('teacher', $u2->course_roles[0]->course_role_name);
 			$this->assertEqual('student', $u2->course_roles[1]->course_role_name);
 
-			$r3 = $u3->loadCourseRoles();
-			$this->assertEqual(0, count($r3));
+			$u3->loadCourseRoles();
+			$this->assertEqual(0, count($u3->course_roles));
 
-			$r4 = $u4->loadCourseRoles();
-			$this->assertEqual(0, count($r4));
+			$u4->loadCourseRoles();
+			$this->assertEqual(1, count($u4->course_roles));
+		}
+
+		function testCacheSheetgroups() {
+			$u1 = User::getOneFromDb(['user_id' => 101], $this->DB);
+			$u2 = User::getOneFromDb(['user_id' => 102], $this->DB);
+			$u3 = new User(['user_id' => 50, 'username' => 'falb1', 'first_name' => 'Fred', 'last_name' => 'Albertson', 'DB' => $this->DB]);
+			$u4 = User::getOneFromDb(['user_id' => 109], $this->DB);
+
+			$u1->cacheSheetgroups();
+			$this->assertEqual(3, count($u1->sheetgroups));
+			$this->assertEqual('Sheetgroup 501', $u1->sheetgroups[0]->name);
+
+			$u2->cacheSheetgroups();
+			$this->assertEqual(2, count($u2->sheetgroups));
+			$this->assertEqual('Sheetgroup 504', $u2->sheetgroups[0]->name);
+			$this->assertEqual('Sheetgroup 505', $u2->sheetgroups[1]->name);
+
+			$u3->cacheSheetgroups();
+			$this->assertEqual(0, count($u3->sheetgroups));
+
+			$u4->cacheSheetgroups();
+			$this->assertEqual(1, count($u4->sheetgroups));
 		}
 
 		//// auth-related tests

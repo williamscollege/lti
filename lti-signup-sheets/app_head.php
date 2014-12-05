@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title><?php echo LANG_APP_NAME . ': ' . $pageTitle; ?></title>
+	<title><?php echo $pageTitle . ' [' . LANG_APP_NAME . ']'; ?></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="<?php echo LANG_APP_NAME; ?>">
 	<meta name="author" content="OIT Project Group">
@@ -41,25 +41,25 @@
 		<div class="collapse navbar-collapse" id="wms-primary-navbar-1">
 			<ul class="nav navbar-nav">
 				<li class="active">
-					<a id="link-available-openings" href="<?php echo APP_ROOT_PATH; ?>">
+					<a id="link-available-openings" href="<?php echo APP_ROOT_PATH; ?>/app_code/available_openings.php">
 						<i class="glyphicon glyphicon-pencil icon-white"></i>
 						<b><?php echo ucfirst(util_lang('available_openings')); ?></b>
 					</a>
 				</li>
 				<li class="">
-					<a id="link-my-sign-ups" href="<?php echo APP_ROOT_PATH; ?>/app_code/my_sign_ups.php">
+					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/my_signups.php">
 						<i class="glyphicon glyphicon-list-alt icon-white"></i>
-						<b><?php echo ucfirst(util_lang('my_sign_ups')); ?></b>
+						<b><?php echo ucfirst(util_lang('my_signups')); ?></b>
 					</a>
 				</li>
 				<li class="">
-					<a id="link-my-sign-ups" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheet_admin.php">
+					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheet_admin.php">
 						<i class="glyphicon glyphicon-wrench icon-white"></i>
 						<b><?php echo ucfirst(util_lang('sheet_admin')); ?></b>
 					</a>
 				</li>
 				<li class="">
-					<a id="link-my-sign-ups" href="<?php echo APP_ROOT_PATH; ?>/app_code/help.php">
+					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/help.php">
 						<i class="glyphicon glyphicon-question-sign icon-white"></i>
 						<b><?php echo ucfirst(util_lang('help')); ?></b>
 					</a>

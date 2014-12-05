@@ -40,7 +40,7 @@
 			<a id="nav-notebooks" href="<?php echo APP_ROOT_PATH; ?>/app_code/notebook.php?action=list"><?php echo ucfirst(util_lang('available_openings')); ?></a>
 		</li>
 		<li>
-			<a id="nav-metadata-structures" href="<?php echo APP_ROOT_PATH; ?>/app_code/metadata_structure.php?action=list"><?php echo ucfirst(util_lang('my_sign_ups')); ?></a>
+			<a id="nav-metadata-structures" href="<?php echo APP_ROOT_PATH; ?>/app_code/metadata_structure.php?action=list"><?php echo ucfirst(util_lang('my_signups')); ?></a>
 		</li>
 		<li>
 			<a id="nav-metadata-values" href="<?php echo APP_ROOT_PATH; ?>/app_code/metadata_term_set.php?action=list"><?php echo ucfirst(util_lang('sheet_admin')); ?></a>

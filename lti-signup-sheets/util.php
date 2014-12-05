@@ -142,7 +142,7 @@
     }
 
     function util_currentDateTimeString_asMySQL() {
-        return date('Y-m-d H:i:ss');
+        return date('Y-m-d H:i:s');
     }
 
     /**
@@ -266,8 +266,8 @@
         $alert_type = 'alert-info';
         $alert_title = util_lang('alert_info');
         if ($type == 'error') {
-            $alert_type = 'alert-error';
-            $alert_title = util_lang('alert_error');
+			$alert_type = 'alert-danger';
+			$alert_title = util_lang('alert_error');
         } else
         if ($type == 'success') {
             $alert_type = 'alert-success';
@@ -279,8 +279,8 @@
             $msg_text = htmlentities($key_or_text);
         }
 
-        echo "<div class=\"alert $alert_type\">";
-        echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>";
+		echo "<div class=\"alert alert-dismissible $alert_type\" role=\"alert\">";
+        echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>";
         echo "<h4>$alert_title</h4>";
         echo $msg_text;
         echo "</div>";

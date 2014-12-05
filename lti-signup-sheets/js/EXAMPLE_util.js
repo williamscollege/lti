@@ -67,12 +67,16 @@ var GLOBAL_confirmHandlerData = -1;
 
 // NOTE: could put this directly in the HTML or in a footer file or some such, but doing it here consolidates the code
 $(document).ready(function () {
-    $('body').append('<div id="confirmModal" class="modal hide confirmationDialog" data-backdrop="false">' +
-        '<div class="modal-header"><a href="#" class="close" data-dismiss="modal">&times;</a><h3 class="confirmationTitle"></h3></div>' +
+    $('body').append('<div id="confirmModal" class="modal fade confirmationDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+        '<div class="modal-dialog">' +
+        '<div class="modal-content">' +
+        '<div class="modal-header"><button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><h4 class="modal-title"></h4></div>' +
         '<div class="modal-body"></div>' +
         '<div class="modal-footer">' +
-        '<input type="button" id="confirm-yes" class="btn btn-danger" data-dismiss="modal" value="Yes"/>' +
-        '<input type="button" id="confirm-no" class="btn btn-cancel" data-dismiss="modal" value="No"/>' +
+        '<button type="button" id="confirm-yes" class="btn btn-primary" data-dismiss="modal">Save</button>' +
+        '<button type="button" id="confirm-no" class="btn btn-default">Close</button>' +
+        '</div>' +
+        '</div>' +
         '</div>' +
         '</div>');
 });
