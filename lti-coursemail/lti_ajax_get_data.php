@@ -111,6 +111,7 @@
 				'user_id'       => $elt['user']['id'],
 				'login_id'      => $elt['user']['login_id'],
 				'email'         => $email,
+				'type'          => $elt['type'],
 				'role'          => $elt['role'],
 				'section_id'    => $elt['course_section_id'],
 				'section_name'  => ((isset($elt['sis_section_id'])) ? $elt['sis_section_id'] : $elt['course_section_id']), // if name is null, store id instead

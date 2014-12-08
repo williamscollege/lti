@@ -18,6 +18,7 @@
 	 **  - Instructions for configuring Chrome GMail as default email client
 	 **  - Application modified as per results of local stress testing; see comments in code
 	 **  - Fixed efficiency issues and maximum limits with courses used for large placement exams
+	 **  - Fixed: exclude Canvas' undocumented and mostly-hidden hack that silently includes a "Test Student, type=StudentViewEnrollment" in every section to enable the standard "StudentView" for course participants
 	 **  - This codebase utilizes (and slightly forks) Stephen P Vickers sample LTI "Rating" project (http://www.spvsoftwareproducts.com/php/rating/). Thank you Stephen.
 	 ** Dependencies:
 	 **  - Install: Apache, PHP 5.2 (or higher), MySQL 5x, phpMyAdmin, emacs
@@ -265,8 +266,8 @@
 							// build array of sections
 							addDistinctSections(data[key]["section_id"], data[key]["section_name"]);
 
-							// build checkbox list (exclude Canvas' undocumented and mostly-hidden section inclusion of "Test Student, role=StudentViewEnrollment" that is used to enable the standard "StudentView" for course participants)
-							if (data[key]["role"] != "StudentViewEnrollment") {
+							// build checkbox list (exclude Canvas' undocumented and mostly-hidden hack that silently includes a "Test Student, type=StudentViewEnrollment" in every section to enable the standard "StudentView" for course participants)
+							if (data[key]["type"] != "StudentViewEnrollment") {
 								populateCheckboxList += '<tr><td><label for="' + data[key]["user_id"] + '"><input type="checkbox" name="email_ckbox" id="' + data[key]["user_id"] + '" value="' + data[key]["email"] + '" data-role="' + data[key]["role"] + '" data-section-id="' + data[key]["section_id"] + '" />&nbsp;' + data[key]["full_name"] + '<span class="text-muted small"> (' + data[key]["email"] + ')</span></label></td></tr>';
 							}
 						}
