@@ -27,6 +27,7 @@
  - Instructions for configuring Chrome GMail as default email client
  - Application modified as per results of local stress testing; see comments in code
  - Fixed efficiency issues and maximum limits with courses used for large placement exams
+ - Fixed: exclude Canvas' undocumented and mostly-hidden hack that silently includes a "Test Student, type=StudentViewEnrollment" in every section to enable the standard "StudentView" for course participants
  - This codebase utilizes (and slightly forks) Stephen P Vickers sample LTI "Rating" project (http://www.spvsoftwareproducts.com/php/rating/). Thank you Stephen.
 
 **Dependencies: Install:**
