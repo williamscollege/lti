@@ -524,7 +524,7 @@
 				$updateSql = 'UPDATE ' . static::$dbTable . ' SET ' . static::$primaryKeyField . '=' . $this->fieldValues[static::$primaryKeyField];
 				foreach (static::$fields as $k) {
 					if ($k != static::$primaryKeyField) {
-						$updateSql .= ', ' . $k . ' = :' . $k;
+						$updateSql .= ', ' . $this->sanitizeFieldName($k) . ' = :' . $k;
 					}
 				}
 				$updateSql .= ' WHERE ' . static::$primaryKeyField . '= :' . static::$primaryKeyField;

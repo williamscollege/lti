@@ -10,6 +10,7 @@
 		public $course_roles;
 		public $enrollments;
 		public $sheetgroups;
+		public $managed_sheets;
 
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);
@@ -22,23 +23,25 @@
 
 			// ensure that user object is populated from DB
 			$this->refreshFromDb();
-# TODO - need to build check (on app_code app_head or setup maybe)
-//			if (!$this->matchesDb) {
-//				// This user does not exist in the database. Abort.
-//				//util_wipeSession();
-//				//util_redirectToAppHome();
-//				die("This user does not exist in the database. Abort.");
-//			}
+			# TODO - need to build check (on app_code app_head or setup maybe)
+			//			if (!$this->matchesDb) {
+			//				// This user does not exist in the database. Abort.
+			//				//util_wipeSession();
+			//				//util_redirectToAppHome();
+			//				die("This user does not exist in the database. Abort.");
+			//			}
 
-			$this->course_roles = array();
-			$this->enrollments  = array();
-			$this->sheetgroups  = array();
+			$this->course_roles   = array();
+			$this->enrollments    = array();
+			$this->sheetgroups    = array();
+			$this->managed_sheets = array();
 		}
 
 		public function clearCaches() {
-			$this->course_roles = array();
-			$this->enrollments  = array();
-			$this->sheetgroups  = array();
+			$this->course_roles   = array();
+			$this->enrollments    = array();
+			$this->sheetgroups    = array();
+			$this->managed_sheets = array();
 		}
 
 		/* static functions */
@@ -172,7 +175,25 @@
 
 		public function loadSheetgroups() {
 			$this->sheetgroups = [];
-			$this->sheetgroups = SUS_Sheetgroup::getAllFromDb(['owner_user_id'=>$this->user_id], $this->dbConnection);
+			$this->sheetgroups = SUS_Sheetgroup::getAllFromDb(['owner_user_id' => $this->user_id], $this->dbConnection);
 			usort($this->sheetgroups, 'SUS_Sheetgroup::cmp');
+		}
+
+		public function cacheManagedSheets() {
+			if (!$this->managed_sheets) {
+				$this->loadManagedSheets();
+			}
+		}
+
+		public function loadManagedSheets() {
+			$this->managed_sheets = [];
+
+			// get all sheets that have been shared with current user by type='adminbyuser'
+			$temp_managed_access = SUS_Access::getAllFromDb(['type' => 'adminbyuser', 'constraint_data' => $this->username], $this->dbConnection);
+
+			foreach ($temp_managed_access as $sheet) {
+				array_push($this->managed_sheets, SUS_Sheet::getOneFromDb(['sheet_id' => $sheet->sheet_id], $this->dbConnection));
+			}
+			usort($this->managed_sheets, 'SUS_Sheet::cmp');
 		}
 	}

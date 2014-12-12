@@ -164,9 +164,9 @@
 		# SUS_Sheetgroup: 'sheetgroup_id', 'created_at', 'updated_at', 'flag_deleted', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheetgroup::$dbTable . " VALUES
 			(501, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 501', 'Something to organize my math sheets', 1, 0),
-			(502, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 502', 'Something to organize my english sheets', 1, 0),
-			(503, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 503', 'Something to organize my spanish sheets', 1, 0),
-			(504, NOW(), NOW(), 0, 102, 1, 'Sheetgroup 504', 'Help me keep track of so many sheets', 1, 0),
+			(502, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 502', 'Something to organize my english sheets', 1, 0),
+			(503, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 503', 'Something to organize my spanish sheets', 1, 0),
+			(504, NOW(), NOW(), 0, 102, 0, 'Sheetgroup 504', 'Help me keep track of so many sheets', 1, 0),
 			(505, NOW(), NOW(), 0, 102, 1, 'Sheetgroup 505', 'Something to help me organize', 1, 0),
 			(506, NOW(), NOW(), 0, 103, 1, 'Sheetgroup 506', 'Something to help me organize', -1, -1),
 			(507, NOW(), NOW(), 0, 104, 1, 'Sheetgroup 507', 'Something to help me organize', -1, -1),
@@ -273,6 +273,8 @@
 		}
 	}
 
+	// remove test line
+	//(607, NOW(), NOW(), 0, 102, 504, 'Sheet 607', 'Sheet 607, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 1, 0, 0),
 	function createTestData_SUS_Access($dbConn) {
 		// 900 series ids
 		# SUS_Access: 'access_id', 'created_at', 'updated_at', 'sheet_id', 'type', 'constraint_id', 'constraint_data', 'broadness'
@@ -284,7 +286,9 @@
 			(905, NOW(), NOW(), 601, 'bydept', 0, 'ARTH', 40),
 			(906, NOW(), NOW(), 601, 'bygradyear', 18, '', 50),
 			(907, NOW(), NOW(), 601, 'byrole', 0, 'teacher', 60),
-			(908, NOW(), NOW(), 601, 'byhasaccount', 0, 'all', 60)
+			(908, NOW(), NOW(), 601, 'byhasaccount', 0, 'all', 60),
+			(909, NOW(), NOW(), 607, 'adminbyuser', 0, 'mockUserJBond', 10),
+			(910, NOW(), NOW(), 608, 'adminbyuser', 0, 'mockUserJBond', 10)
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();

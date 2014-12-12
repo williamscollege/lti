@@ -178,6 +178,16 @@
 			$this->assertEqual(1, count($u4->sheetgroups));
 		}
 
+		function testCacheManagedSheets() {
+			$u1 = User::getOneFromDb(['user_id' => 101], $this->DB);
+
+			$u1->cacheManagedSheets();
+			$this->assertEqual(2, count($u1->managed_sheets));
+			$this->assertEqual(607, $u1->managed_sheets[0]->sheet_id);
+			$this->assertEqual(608, $u1->managed_sheets[1]->sheet_id);
+		}
+
+
 		//// auth-related tests
 
 		function testUserUpdatesBaseDbWhenValidAuthDataIsDifferent() {
