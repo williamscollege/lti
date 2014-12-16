@@ -26,7 +26,7 @@
 	}
 
 	// Security: Expected http_referer must match the following
-	if (strpos($http_referer, "glow2.williams.edu") || (strpos($http_referer, "williams.instructure.com")) || (strpos($http_referer, "williams.test.instructure.com")) || (strpos($http_referer, "williams.beta.instructure.com"))) {
+	if ( (strpos($http_referer, "glow.williams.edu")) || (strpos($http_referer, "glow2.williams.edu")) || (strpos($http_referer, "williams.instructure.com")) || (strpos($http_referer, "williams.test.instructure.com")) || (strpos($http_referer, "williams.beta.instructure.com")) ) {
 		// get querystring
 		$querystring = substr($http_referer, strpos($http_referer, "?"));
 

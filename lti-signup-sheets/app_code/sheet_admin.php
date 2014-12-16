@@ -63,28 +63,30 @@
 			echo "</table>\n";
 		}
 
-		// add new sheetgroup
-		echo "<p>\n";
-		echo "<a href=\"add_sheetgroup.php\"  class=\"btn btn-sm btn-primary sus-add-sheetgroup\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new group</a>";
-		echo "</p>";
-
 		// fetch managed sheets
 		$USER->cacheManagedSheets();
 
 		// display managed sheets
 		if ($USER->managed_sheets) {
 			echo "<table class=\"table table-condensed table-bordered table-hover\">";
-			echo "<tr><th class=\"bg-warning\">Sheets I manage that are owned by others:</th></tr>";
+			echo "<tr><th class=\"bg-danger\">Sheets I manage that are owned by others:</th></tr>";
 			foreach ($USER->managed_sheets as $mgr_sheet) {
 				echo "<tr><td>";
 				echo "<a href=\"edit_sheet.php?sheetgroup=" . $mgr_sheet->sheetgroup_id . "&sheet=" . $mgr_sheet->sheet_id . "\">" . $mgr_sheet->name . "</a>";
 				$owner = User::getOneFromDb(['user_id'=>$mgr_sheet->owner_user_id], $DB);
-				echo " (owned by " . $owner->first_name . " " . $owner->last_name . ")";
+				echo " <small>(owned by " . $owner->first_name . " " . $owner->last_name . ")</small>";
 				echo "</td></tr>";
 			}
 			echo "</table>\n";
 		}
 
+
+		// add new sheetgroup
+		echo "<p>\n";
+		echo "<a href=\"add_sheetgroup.php\"  class=\"btn btn-primary sus-add-sheetgroup\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new group</a>";
+		echo "</p>";
+
+		// end parent div
 		echo "</div>";
 	}
 
