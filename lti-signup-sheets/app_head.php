@@ -17,8 +17,9 @@
 	<!-- jQuery: Plugins -->
 	<script src="<?php echo PATH_BOOTSTRAP_JS; ?>"></script>
 	<script src="<?php echo PATH_BOOTSTRAP_BOOTBOX_JS; ?>"></script>
+	<script src="<?php echo PATH_JQUERY_VALIDATION_JS; ?>"></script>
 	<!-- local JS -->
-	<script src="/digitalfieldnotebooks/js/digitalfieldnotebooks_util.js"></script>
+	<!-- <script src="js/util.js"></script>-->
 </head>
 <body>
 
@@ -38,29 +39,41 @@
 			<!--			</a>-->
 		</div>
 
+		<?php
+			// get parent referer url and querystring params
+			$http_referer = $_SERVER['REQUEST_URI'];
+		?>
 		<div class="collapse navbar-collapse" id="wms-primary-navbar-1">
 			<ul class="nav navbar-nav">
-				<li class="active">
+				<li class="<?php if (strpos($http_referer, "available_openings.php")) {
+					echo "active";
+				} ?>">
 					<a id="link-available-openings" href="<?php echo APP_ROOT_PATH; ?>/app_code/available_openings.php">
-						<i class="glyphicon glyphicon-pencil icon-white"></i>
+						<i class="glyphicon glyphicon-pencil"></i>
 						<b><?php echo ucfirst(util_lang('available_openings')); ?></b>
 					</a>
 				</li>
-				<li class="">
+				<li class="<?php if (strpos($http_referer, "my_signups.php")) {
+					echo "active";
+				} ?>">
 					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/my_signups.php">
-						<i class="glyphicon glyphicon-list-alt icon-white"></i>
+						<i class="glyphicon glyphicon-list-alt"></i>
 						<b><?php echo ucfirst(util_lang('my_signups')); ?></b>
 					</a>
 				</li>
-				<li class="">
+				<li class="<?php if (strpos($http_referer, "sheet_admin.php")) {
+					echo "active";
+				} ?>">
 					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheet_admin.php">
-						<i class="glyphicon glyphicon-wrench icon-white"></i>
+						<i class="glyphicon glyphicon-wrench"></i>
 						<b><?php echo ucfirst(util_lang('sheet_admin')); ?></b>
 					</a>
 				</li>
-				<li class="">
+				<li class="<?php if (strpos($http_referer, "help.php")) {
+					echo "active";
+				} ?>">
 					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/help.php">
-						<i class="glyphicon glyphicon-question-sign icon-white"></i>
+						<i class="glyphicon glyphicon-question-sign"></i>
 						<b><?php echo ucfirst(util_lang('help')); ?></b>
 					</a>
 				</li>
@@ -115,3 +128,4 @@
 			util_displayMessage('info', $_REQUEST["info"]);
 		}
 	?>
+</body>

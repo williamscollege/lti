@@ -246,7 +246,7 @@
 			$canonical    = '<div id="edit_rendered_notebook_1001" class="edit_rendered_notebook" data-notebook_id="1001" data-created_at="' . $n->created_at . '" data-updated_at="' . $n->updated_at . '" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1">
 <form action="' . APP_ROOT_PATH . '/app_code/notebook.php">
 <div id="actions">
-  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign icon-white"></i> ' . util_lang('update', 'properize') . '</button>
+  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign"></i> ' . util_lang('update', 'properize') . '</button>
   <a id="edit-cancel-control" class="btn" href="' . APP_ROOT_PATH . '/app_code/notebook.php?action=view&notebook_id=1001"><i class="glyphicon glyphicon-remove"></i> ' . util_lang('cancel', 'properize') . '</a>
 </div>
   <input type="hidden" name="action" value="update"/>
@@ -302,7 +302,7 @@
 			$canonical = '<div id="edit_rendered_notebook_NEW" class="edit_rendered_notebook" data-notebook_id="NEW" data-created_at="' . $n->created_at . '" data-updated_at="' . $n->updated_at . '" data-user_id="101" data-name="' . htmlentities($n->name) . '" data-notes="' . htmlentities(util_lang('new_notebook_notes')) . '" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1">
 <form action="' . APP_ROOT_PATH . '/app_code/notebook.php">
 <div id="actions">
-  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign icon-white"></i> ' . util_lang('save', 'properize') . '</button>
+  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign"></i> ' . util_lang('save', 'properize') . '</button>
   <a id="edit-cancel-control" class="btn" href="' . APP_ROOT_PATH . '/app_code/notebook.php?action=list"><i class="glyphicon glyphicon-remove"></i> ' . util_lang('cancel', 'properize') . '</a>
 </div>
   <input type="hidden" name="action" value="update"/>

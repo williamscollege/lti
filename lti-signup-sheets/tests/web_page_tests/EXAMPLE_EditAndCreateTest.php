@@ -177,7 +177,7 @@
 			//      NOTE: the identifier to use for setField is the value of the name attribute of the field
 			$this->setField('name', 'new name for testnotebook1');
 			//        NOTE: the identifier to use for form buttons is the value of the value attribute of the button, or the interior html of a button element
-			$this->click('<i class="glyphicon glyphicon-ok-sign icon-white"></i> ' . util_lang('update', 'properize'));
+			$this->click('<i class="glyphicon glyphicon-ok-sign"></i> ' . util_lang('update', 'properize'));
 
 
 			$this->checkBasicAsserts();

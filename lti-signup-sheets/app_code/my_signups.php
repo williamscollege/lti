@@ -5,8 +5,6 @@
 
 
 	if ($IS_AUTHENTICATED) {
-		echo 'hello world. page = my_signups.php';
-
 		/* --------------------------- */
 		/* START OLD CODE */
 		/* --------------------------- */

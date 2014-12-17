@@ -3,11 +3,8 @@
 	$pageTitle = ucfirst(util_lang('my_signups'));
 	require_once('../app_head.php');
 
-
+exit;
 	if ($IS_AUTHENTICATED) {
-		echo 'hello world. page = available_openings.php';
-
-
 		/* --------------------------- */
 		/* START OLD CODE */
 		/* --------------------------- */

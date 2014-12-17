@@ -8,7 +8,7 @@
 	</p>
 
 	<!-- Modal -->
-	<div id="modalHelp" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalHelpLabel" aria-hidden="true">
+	<div id="modalHelp" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalHelpLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -42,7 +42,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> <!-- /Modal -->
 </footer>
 
 </div> <!-- /container -->

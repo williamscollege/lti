@@ -35,11 +35,11 @@
 			// sheetgroup header
 			echo "<table class=\"table table-condensed table-bordered table-hover\">";
 			echo "<tr class=\"bg-info\"><th>";
-			echo "<a href=\"edit_sheetgroup.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "\">" . $sheetgroup->name . "</a>";
+			echo "<a href=\"#modalSheetgroup\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . $sheetgroup->name . "\" data-for-sheetgroup-description=\"" . $sheetgroup->description . "\" data-for-sheetgroup-max-total=\"" . $sheetgroup->max_g_total_user_signups . "\" data-for-sheetgroup-max-pending=\"" . $sheetgroup->max_g_pending_user_signups . "\" title=\"Edit group\">" . $sheetgroup->name . "</a>";
 			echo "</th><th class=\"text-right\">";
 			if (!$sheetgroup->flag_is_default) {
 				// TODO - jquery: confirm dialogue and action: confirm('Really delete this sheetgroup?')
-				echo "<a class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-sheetgroup-id=\"" . $sheet->sheetgroup_id . "\" title=\"Delete sheetgroup and all sheets in it\"><i class=\"glyphicon glyphicon-trash icon-white\"></i></a>&nbsp;";
+				echo "<a class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-for-sheetgroup-id=\"" . $sheet->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . $sheetgroup->name . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-trash\"></i></a>&nbsp;";
 			}
 			echo "</th></tr>";
 
@@ -47,16 +47,16 @@
 			$sheetgroup->cacheSheets();
 			foreach ($sheetgroup->sheets as $sheet) {
 				echo "<tr><td>";
-				echo "<a href=\"edit_sheet.php?sheetgroup=" . $sheet->sheetgroup_id . "&sheet=" . $sheet->sheet_id . "\">" . $sheet->name . "</a>";
+				echo "<a href=\"edit_sheet.php?sheetgroup=" . $sheet->sheetgroup_id . "&sheet=" . $sheet->sheet_id . "\" class=\"sus-edit-sheet\" title=\"Edit sheet\">" . $sheet->name . "</a>";
 				echo "</td><td class=\"text-right\">";
 				// TODO - jquery: confirm dialogue and action: confirm('Really delete this sheet?')
-				echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheet\" data-sheetgroup-id=\"" . $sheet->sheetgroup_id . "\" data-sheet-id=\"" . $sheet->sheet_id . "\" title=\"Delete sheet\"><i class=\"glyphicon glyphicon-trash icon-white\"></i></a>&nbsp;";
+				echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheet\" data-for-sheetgroup-id=\"" . $sheet->sheetgroup_id . "\" data-for-sheet-id=\"" . $sheet->sheet_id . "\" title=\"Delete sheet\"><i class=\"glyphicon glyphicon-trash\"></i></a>&nbsp;";
 				echo "</td></tr>";
 			}
 
 			// add new sheet
 			echo "<tr><td colspan=\"2\">";
-			echo "<a href=\"add_sheet.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "\" class=\"btn btn-xs btn-success sus-add-sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
+			echo "<a href=\"add_sheet.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "\" class=\"btn btn-xs btn-success sus-add-sheet\"  title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
 			echo "</td></tr>\n";
 
 			// complete sheetgroup
@@ -72,8 +72,8 @@
 			echo "<tr><th class=\"bg-danger\">Sheets I manage that are owned by others:</th></tr>";
 			foreach ($USER->managed_sheets as $mgr_sheet) {
 				echo "<tr><td>";
-				echo "<a href=\"edit_sheet.php?sheetgroup=" . $mgr_sheet->sheetgroup_id . "&sheet=" . $mgr_sheet->sheet_id . "\">" . $mgr_sheet->name . "</a>";
-				$owner = User::getOneFromDb(['user_id'=>$mgr_sheet->owner_user_id], $DB);
+				echo "<a href=\"edit_sheet.php?sheetgroup=" . $mgr_sheet->sheetgroup_id . "&sheet=" . $mgr_sheet->sheet_id . "\"  title=\"Edit sheet\">" . $mgr_sheet->name . "</a>";
+				$owner = User::getOneFromDb(['user_id' => $mgr_sheet->owner_user_id], $DB);
 				echo " <small>(owned by " . $owner->first_name . " " . $owner->last_name . ")</small>";
 				echo "</td></tr>";
 			}
@@ -83,7 +83,7 @@
 
 		// add new sheetgroup
 		echo "<p>\n";
-		echo "<a href=\"add_sheetgroup.php\"  class=\"btn btn-primary sus-add-sheetgroup\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new group</a>";
+		echo "<a href=\"#modalSheetgroup\" class=\"btn btn-primary sus-add-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" title=\"Add group\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new group</a>";
 		echo "</p>";
 
 		// end parent div
@@ -91,3 +91,76 @@
 	}
 
 	require_once('../foot.php');
+?>
+
+
+<!-- Modal: Add/Edit Sheetgroup -->
+<form action="ajax_sheetgroup.php" id="frmAjaxSheetgroup" name="frmAjaxSheetgroup" class="form-horizontal" role="form" method="post">
+	<input type="hidden" id="ajaxSubgroupAction" name="ajaxSheetgroupAction" value="" />
+	<input type="hidden" id="ajaxSheetgroupID" name="ajaxSheetgroupID" value="" />
+
+	<div id="modalSheetgroup" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ajaxSheetgroupLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header bg-info">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 id="ajaxSheetgroupLabel" class="modal-title">TBD</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">Name</label>
+
+						<div class="col-sm-10">
+							<input type="text" id="ajaxSheetgroupName" name="ajaxSheetgroupName" class="form-control" placeholder="Group name" value="" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="ajaxSheetgroupDescription" class="col-sm-2 control-label">Description</label>
+
+						<div class="col-sm-10">
+							<textarea id="ajaxSheetgroupDescription" name="ajaxSheetgroupDescription" class="form-control" placeholder="Group description" rows="3"></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12">
+							Users can have at most
+							<!-- TODO - add cehck DB to preselect value-->
+							<select id="ajaxSheetgroupMaxTotal" name="ajaxSheetgroupMaxTotal" class="">
+								<option selected="selected" value="0">unlimited</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+							</select>
+							signups across all sheets in this group, and
+							<!-- TODO - add cehck DB to preselect value-->
+							<select id="ajaxSheetgroupMaxPending" name="ajaxSheetgroupMaxPending" class="">
+								<option selected="selected" value="0">any</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+							</select>
+							may be for future openings.
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="btnAjaxSheetgroupSubmit" class="btn btn-success">Save</button>
+					<button type="button" id="btnAjaxItemCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+<!-- /Modal -->
+
+<script type="text/javascript" src="../js/sheet_admin.js"></script>

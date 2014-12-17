@@ -179,11 +179,11 @@
             $rendered .= '<div id="actions">'."\n";
             if ($this->notebook_id == 'NEW') {
 //                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>'."\n";
-                $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign icon-white"></i> '.util_lang('save','properize').'</button>'."\n";
+                $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign"></i> '.util_lang('save','properize').'</button>'."\n";
                 $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list"><i class="glyphicon glyphicon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
             } else {
 //                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>'."\n";
-                $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign icon-white"></i> '.util_lang('update','properize').'</button>'."\n";
+                $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign"></i> '.util_lang('update','properize').'</button>'."\n";
                 $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$this->notebook_id.'"><i class="glyphicon glyphicon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
             }
             $rendered .= "</div>\n";
