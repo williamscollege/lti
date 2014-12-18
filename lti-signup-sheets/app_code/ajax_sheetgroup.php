@@ -1,21 +1,25 @@
 <?php
-	require_once('../classes/eq_group.class.php');
-	require_once('../classes/eq_subgroup.class.php');
-	require_once('../classes/eq_item.class.php');
 
-	require_once('/head_ajax.php');
+	$results['status'] = 'success';
+	$results['test'] = 'json test value was returned';
+	echo json_encode($results);
+	exit;
+
+//	require_once('../classes/eq_group.class.php');
+//	require_once('../classes/eq_subgroup.class.php');
+//	require_once('../classes/eq_item.class.php');
+
+//	require_once('/head_ajax.php');
 
 	#------------------------------------------------#
 	# Fetch AJAX values
 	#------------------------------------------------#
 	$strAction        = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
-	$intDeleteID      = htmlentities((isset($_REQUEST["ajaxVal_Delete_ID"])) ? $_REQUEST["ajaxVal_Delete_ID"] : 0);
-	$intGroupID       = htmlentities((isset($_REQUEST["ajaxVal_GroupID"])) ? $_REQUEST["ajaxVal_GroupID"] : 0);
-	$intSubgroupID    = htmlentities((isset($_REQUEST["ajaxVal_SubgroupID"])) ? $_REQUEST["ajaxVal_SubgroupID"] : 0);
-	$intOrder         = htmlentities((isset($_REQUEST["ajaxVal_Order"])) ? $_REQUEST["ajaxVal_Order"] : 0);
-	$strName          = htmlentities((isset($_REQUEST["ajaxVal_Name"])) ? util_quoteSmart($_REQUEST["ajaxVal_Name"]) : 0);
-	$strDescription   = htmlentities((isset($_REQUEST["ajaxVal_Description"])) ? util_quoteSmart($_REQUEST["ajaxVal_Description"]) : 0);
-	$bitIsMultiSelect = htmlentities((isset($_REQUEST["ajaxVal_MultiSelect"])) ? util_quoteSmart($_REQUEST["ajaxVal_MultiSelect"]) : 0);
+	$intSheetgroupID      = htmlentities((isset($_REQUEST["ajaxVal_SheetgroupID"])) ? $_REQUEST["ajaxVal_SheetgroupID"] : 0);
+	$intName       = htmlentities((isset($_REQUEST["ajaxVal_Name"])) ? util_quoteSmart($_REQUEST["ajaxVal_Name"]) : 0);
+	$intDescription    = htmlentities((isset($_REQUEST["ajaxVal_Description"])) ? util_quoteSmart($_REQUEST["ajaxVal_Description"]) : 0);
+	$intMaxTotal         = htmlentities((isset($_REQUEST["ajaxVal_Max_Total"])) ? $_REQUEST["ajaxVal_Max_Total"] : 0);
+	$strMaxPending          = htmlentities((isset($_REQUEST["ajaxVal_Max_Pending"])) ? $_REQUEST["ajaxVal_Max_Pending"] : 0);
 
 
 	#------------------------------------------------#

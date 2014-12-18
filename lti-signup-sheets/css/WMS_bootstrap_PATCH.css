@@ -4,6 +4,15 @@ Patch For: bootstrap.css
 Purpose: New styles that add icons to validation plugin (jquery.validate.js)
 Source: http://alittlecode.com/jquery-form-validation-with-styles-from-twitter-bootstrap/
 ==========================================*/
+
+/*NEW 2014 Signup Sheet Specific CSS Tweaks*/
+/*validation.js hack: to eliminate extra space after dynamic validation occurs */
+div.form-group.success{
+	margin-bottom: 0px !important;
+}
+
+
+/*PRE 2014 EQR Historical CSS Tweaks*/
 LABEL.valid
 {
 	width: 24px;
@@ -18,6 +27,8 @@ LABEL.error
 	color: #ff0000;
 	padding: 2px 8px;
 	margin-top: 2px;
+	/*padding: 0px !important;*/
+	/*margin: 0px !important;*/
 }
 .text-warning
 {

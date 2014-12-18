@@ -61,12 +61,12 @@
 						<b><?php echo ucfirst(util_lang('my_signups')); ?></b>
 					</a>
 				</li>
-				<li class="<?php if (strpos($http_referer, "sheet_admin.php")) {
+				<li class="<?php if (strpos($http_referer, "my_sheets.php")) {
 					echo "active";
 				} ?>">
-					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheet_admin.php">
+					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/my_sheets.php">
 						<i class="glyphicon glyphicon-wrench"></i>
-						<b><?php echo ucfirst(util_lang('sheet_admin')); ?></b>
+						<b><?php echo ucfirst(util_lang('my_sheets')); ?></b>
 					</a>
 				</li>
 				<li class="<?php if (strpos($http_referer, "help.php")) {

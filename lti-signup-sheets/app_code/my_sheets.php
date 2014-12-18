@@ -5,6 +5,7 @@
 
 
 	if ($IS_AUTHENTICATED) {
+		echo "<div id='DKCTEST'>nothing yet</div>"; // debugging TODO REMOVE
 		echo "<div>";
 		echo "<h3>Sheet Groups</h3>";
 		echo "<p>Sheets are collected into groups. Group settings affect all sheets in the group. Sheet settings affect only that sheet.</p>";
@@ -35,7 +36,7 @@
 			// sheetgroup header
 			echo "<table class=\"table table-condensed table-bordered table-hover\">";
 			echo "<tr class=\"bg-info\"><th>";
-			echo "<a href=\"#modalSheetgroup\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . $sheetgroup->name . "\" data-for-sheetgroup-description=\"" . $sheetgroup->description . "\" data-for-sheetgroup-max-total=\"" . $sheetgroup->max_g_total_user_signups . "\" data-for-sheetgroup-max-pending=\"" . $sheetgroup->max_g_pending_user_signups . "\" title=\"Edit group\">" . $sheetgroup->name . "</a>";
+			echo "<a href=\"#modalSheetgroup\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . $sheetgroup->name . "\" data-for-sheetgroup-description=\"" . $sheetgroup->description . "\" data-for-sheetgroup-max-total=\"" . $sheetgroup->max_g_total_user_signups . "\" data-for-sheetgroup-max-pending=\"" . $sheetgroup->max_g_pending_user_signups . "\" data-for-flag-is-default=\"" . $sheetgroup->flag_is_default . "\" title=\"Edit group\">" . $sheetgroup->name . "</a>";
 			echo "</th><th class=\"text-right\">";
 			if (!$sheetgroup->flag_is_default) {
 				// TODO - jquery: confirm dialogue and action: confirm('Really delete this sheetgroup?')
@@ -96,8 +97,9 @@
 
 <!-- Modal: Add/Edit Sheetgroup -->
 <form action="ajax_sheetgroup.php" id="frmAjaxSheetgroup" name="frmAjaxSheetgroup" class="form-horizontal" role="form" method="post">
-	<input type="hidden" id="ajaxSubgroupAction" name="ajaxSheetgroupAction" value="" />
+	<input type="hidden" id="ajaxSheetgroupAction" name="ajaxSheetgroupAction" value="" />
 	<input type="hidden" id="ajaxSheetgroupID" name="ajaxSheetgroupID" value="" />
+	<input type="hidden" id="ajaxSheetgroupFlagIsDefault" name="ajaxSheetgroupFlagIsDefault" value="" />
 
 	<div id="modalSheetgroup" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ajaxSheetgroupLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -124,7 +126,6 @@
 					<div class="form-group">
 						<div class="col-sm-12">
 							Users can have at most
-							<!-- TODO - add cehck DB to preselect value-->
 							<select id="ajaxSheetgroupMaxTotal" name="ajaxSheetgroupMaxTotal" class="">
 								<option selected="selected" value="0">unlimited</option>
 								<option value="1">1</option>
@@ -137,7 +138,6 @@
 								<option value="8">8</option>
 							</select>
 							signups across all sheets in this group, and
-							<!-- TODO - add cehck DB to preselect value-->
 							<select id="ajaxSheetgroupMaxPending" name="ajaxSheetgroupMaxPending" class="">
 								<option selected="selected" value="0">any</option>
 								<option value="1">1</option>
@@ -154,8 +154,9 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="btnAjaxSheetgroupSubmit" class="btn btn-success">Save</button>
-					<button type="button" id="btnAjaxItemCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel</button>
+					<button type="submit" id="btnAjaxSheetgroupDelete" class="btn btn-danger pull-left hide" data-loading-text="Deleting...">Delete Group</button>
+					<button type="submit" id="btnAjaxSheetgroupSubmit" class="btn btn-success" data-loading-text="Saving...">Save</button>
+					<button type="cancel" id="btnAjaxSheetgroupCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel</button>
 				</div>
 			</div>
 		</div>
@@ -163,4 +164,4 @@
 </form>
 <!-- /Modal -->
 
-<script type="text/javascript" src="../js/sheet_admin.js"></script>
+<script type="text/javascript" src="../js/my_sheets.js"></script>

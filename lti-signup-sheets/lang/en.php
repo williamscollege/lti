@@ -74,7 +74,7 @@ $LANGUAGE['en'] = [
 	# Terms below are specific to this project: Signup Sheets
 	'available_openings' => 'Available Openings',
     'my_signups' => 'My Signups',
-    'sheet_admin' => 'Sheet Admin',
+    'my_sheets' => 'My Sheets',
     'help' => 'Help',
 
 
