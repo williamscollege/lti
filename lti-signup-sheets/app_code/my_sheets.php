@@ -35,28 +35,31 @@
 
 			// sheetgroup header
 			echo "<table class=\"table table-condensed table-bordered table-hover\">";
-			echo "<tr class=\"bg-info\"><th>";
-			echo "<a href=\"#modalSheetgroup\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . $sheetgroup->name . "\" data-for-sheetgroup-description=\"" . $sheetgroup->description . "\" data-for-sheetgroup-max-total=\"" . $sheetgroup->max_g_total_user_signups . "\" data-for-sheetgroup-max-pending=\"" . $sheetgroup->max_g_pending_user_signups . "\" data-for-flag-is-default=\"" . $sheetgroup->flag_is_default . "\" title=\"Edit group\">" . $sheetgroup->name . "</a>";
-			echo "</th><th class=\"text-right\">";
+			echo "<tr class=\"bg-info\"><th class=\"col-sm-11\">";
+			echo "<a href=\"#modalSheetgroup\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . $sheetgroup->name . "\" data-for-sheetgroup-description=\"" . $sheetgroup->description . "\" data-for-sheetgroup-max-total=\"" . $sheetgroup->max_g_total_user_signups . "\" data-for-sheetgroup-max-pending=\"" . $sheetgroup->max_g_pending_user_signups . "\" title=\"Edit group\">" . $sheetgroup->name . "</a>";
+			echo "</th><th class=\"col-sm-1 text-right\">";
 			if (!$sheetgroup->flag_is_default) {
 				// TODO - jquery: confirm dialogue and action: confirm('Really delete this sheetgroup?')
-				echo "<a class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-for-sheetgroup-id=\"" . $sheet->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . $sheetgroup->name . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-trash\"></i></a>&nbsp;";
+				echo "<a class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . $sheetgroup->name . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-trash\"></i> Group</a>&nbsp;";
+			} else {
+				// show placeholder icon (disabled)
+				echo "<a class=\"btn btn-xs btn-default disabled\" disabled=\"disabled\" title=\"Cannot delete default group\"><i class=\"glyphicon glyphicon-minus-sign\"></i> Default</a>&nbsp;";
 			}
 			echo "</th></tr>";
 
 			// list sheets
 			$sheetgroup->cacheSheets();
 			foreach ($sheetgroup->sheets as $sheet) {
-				echo "<tr><td>";
+				echo "<tr><td class=\"col-sm-11\">";
 				echo "<a href=\"edit_sheet.php?sheetgroup=" . $sheet->sheetgroup_id . "&sheet=" . $sheet->sheet_id . "\" class=\"sus-edit-sheet\" title=\"Edit sheet\">" . $sheet->name . "</a>";
-				echo "</td><td class=\"text-right\">";
-				// TODO - jquery: confirm dialogue and action: confirm('Really delete this sheet?')
-				echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheet\" data-for-sheetgroup-id=\"" . $sheet->sheetgroup_id . "\" data-for-sheet-id=\"" . $sheet->sheet_id . "\" title=\"Delete sheet\"><i class=\"glyphicon glyphicon-trash\"></i></a>&nbsp;";
+				echo "</td><td class=\"col-sm-1 text-right\">";
+					// TODO - jquery: confirm dialogue and action: confirm('Really delete this sheet?')
+					echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheet\" data-for-sheetgroup-id=\"" . $sheet->sheetgroup_id . "\" data-for-sheet-id=\"" . $sheet->sheet_id . "\" title=\"Delete sheet\"><i class=\"glyphicon glyphicon-trash\"></i></a>&nbsp;";
 				echo "</td></tr>";
 			}
 
 			// add new sheet
-			echo "<tr><td colspan=\"2\">";
+			echo "<tr><td class=\"col-sm-12\" colspan=\"2\">";
 			echo "<a href=\"add_sheet.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "\" class=\"btn btn-xs btn-success sus-add-sheet\"  title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
 			echo "</td></tr>\n";
 
@@ -70,17 +73,21 @@
 		// display managed sheets
 		if ($USER->managed_sheets) {
 			echo "<table class=\"table table-condensed table-bordered table-hover\">";
-			echo "<tr><th class=\"bg-danger\">Sheets I manage that are owned by others:</th></tr>";
+			echo "<tr class=\"bg-danger\"><th class=\"col-sm-11\">Sheets I manage that are owned by others:</th>";
+			// show placeholder icon (disabled)
+			echo "<th class=\"col-sm-1 text-right\"><a class=\"btn btn-xs btn-default disabled\" disabled=\"disabled\" title=\"Cannot delete\"><i class=\"glyphicon glyphicon-minus-sign\"></i></a>&nbsp;</th></tr>";
 			foreach ($USER->managed_sheets as $mgr_sheet) {
-				echo "<tr><td>";
+				echo "<tr><td class=\"col-sm-11\">";
 				echo "<a href=\"edit_sheet.php?sheetgroup=" . $mgr_sheet->sheetgroup_id . "&sheet=" . $mgr_sheet->sheet_id . "\"  title=\"Edit sheet\">" . $mgr_sheet->name . "</a>";
 				$owner = User::getOneFromDb(['user_id' => $mgr_sheet->owner_user_id], $DB);
 				echo " <small>(owned by " . $owner->first_name . " " . $owner->last_name . ")</small>";
+				echo "</td><td class=\"col-sm-1 text-right\">";
+				// show placeholder icon (disabled)
+				echo "<a class=\"btn btn-xs btn-default disabled\" disabled=\"disabled\" title=\"Cannot delete\"><i class=\"glyphicon glyphicon-minus-sign\"></i></a>&nbsp;";
 				echo "</td></tr>";
 			}
 			echo "</table>\n";
 		}
-
 
 		// add new sheetgroup
 		echo "<p>\n";
@@ -96,7 +103,7 @@
 
 
 <!-- Modal: Add/Edit Sheetgroup -->
-<form action="ajax_sheetgroup.php" id="frmAjaxSheetgroup" name="frmAjaxSheetgroup" class="form-horizontal" role="form" method="post">
+<form action="../ajax_actions/ajax_sheetgroup.php" id="frmAjaxSheetgroup" name="frmAjaxSheetgroup" class="form-horizontal" role="form" method="post">
 	<input type="hidden" id="ajaxSheetgroupAction" name="ajaxSheetgroupAction" value="" />
 	<input type="hidden" id="ajaxSheetgroupID" name="ajaxSheetgroupID" value="" />
 	<input type="hidden" id="ajaxSheetgroupFlagIsDefault" name="ajaxSheetgroupFlagIsDefault" value="" />
@@ -154,9 +161,8 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="submit" id="btnAjaxSheetgroupDelete" class="btn btn-danger pull-left hide" data-loading-text="Deleting...">Delete Group</button>
 					<button type="submit" id="btnAjaxSheetgroupSubmit" class="btn btn-success" data-loading-text="Saving...">Save</button>
-					<button type="cancel" id="btnAjaxSheetgroupCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel</button>
+					<button type="reset" id="btnAjaxSheetgroupCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel</button>
 				</div>
 			</div>
 		</div>

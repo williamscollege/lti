@@ -1,21 +1,28 @@
 $(document).ready(function () {
 
+	// ***************************
+	// Modal listeners
+	// ***************************
+
+	// ***************************
+	// Dynamic Modal listeners
+	// ***************************
+
+
 	// Add sheetgroup
-	$(".sus-add-sheetgroup").on("click", function () {
+	$(".sus-add-sheetgroup").click(function () {
 		// update modal values
 		$("#ajaxSheetgroupLabel").text("Add Group");
 		$("INPUT#ajaxSheetgroupAction").val("add-sheetgroup");
 	});
 
-
-	// Edit sheetgroup
+	// Edit sheetgroup (dynamic: .on gets values changed by ajax)
 	$(".sus-edit-sheetgroup").on("click", function () {
 		var sheetgroup_id = $(this).attr("data-for-sheetgroup-id");
 		var sheetgroup_name = $(this).attr("data-for-sheetgroup-name");
 		var sheetgroup_description = $(this).attr("data-for-sheetgroup-description");
 		var sheetgroup_max_total = $(this).attr("data-for-sheetgroup-max-total");
 		var sheetgroup_max_pending = $(this).attr("data-for-sheetgroup-max-pending");
-		var sheetgroup_flag_is_default = $(this).attr("data-for-flag-is-default");
 		// update modal values
 		$("#ajaxSheetgroupLabel").text("Edit Group");
 		$("INPUT#ajaxSheetgroupAction").val("edit-sheetgroup");
@@ -24,13 +31,9 @@ $(document).ready(function () {
 		$("TEXTAREA#ajaxSheetgroupDescription").val(sheetgroup_description);
 		$("#ajaxSheetgroupMaxTotal").val(sheetgroup_max_total);
 		$("#ajaxSheetgroupMaxPending").val(sheetgroup_max_pending);
-		// show delete button on all groups except for the 'default' group
-		if (sheetgroup_flag_is_default == 0) {
-			$("#btnAjaxSheetgroupDelete").removeClass('hide');
-		}
-		else {
-			$("#btnAjaxSheetgroupDelete").addClass('hide');
-		}
+
+		// debugging
+		// alert('1) ' + "\n" + sheetgroup_id + "\n" + sheetgroup_name + "\n" + sheetgroup_description + "\n" + sheetgroup_max_total + "\n" + sheetgroup_max_pending);
 	});
 
 
@@ -54,25 +57,21 @@ $(document).ready(function () {
 				.closest('.form-group').addClass('success').removeClass('error');//.addClass('success');
 		},
 		submitHandler: function (form) {
-			 // TODO WHY oh WHY is state whacked? second click through works... first click.. button clicked is a mystery
-			 //$("BUTTON").on("click", function () {
-			 //$("BUTTON").click(function () {
-				// alert("button click alert next, maybe...");
-				// alert(this.id);
-			 //});
-
-
 			var formName = $("#frmAjaxSheetgroup").attr('name');		// get name from the form element
+
+			// show loading text (button)
+			$("#btnAjaxSheetgroupSubmit").button('loading'); // bootstrap button label method
 			var action = $('#' + formName + ' #ajaxSheetgroupAction').val();
 			var sheetgroup_id = $('#' + formName + ' #ajaxSheetgroupID').val();
 			var sheetgroup_name = $('#' + formName + ' #ajaxSheetgroupName').val();
 			var sheetgroup_description = $('#' + formName + ' #ajaxSheetgroupDescription').val();
 			var sheetgroup_max_total = $('#' + formName + ' #ajaxSheetgroupMaxTotal').val();
 			var sheetgroup_max_pending = $('#' + formName + ' #ajaxSheetgroupMaxPending').val();
-			var sheetgroup_flag_is_default = $('#' + formName + ' #ajaxSheetgroupFlagIsDefault').val();
+			// debugging
+			alert('2) url=' + $("#frmAjaxSheetgroup").attr('action') + "\n" + formName + "\n" + action + "\n" + sheetgroup_id + "\n" + sheetgroup_name + "\n" + sheetgroup_description + "\n" + sheetgroup_max_total + "\n" + sheetgroup_max_pending);
 
 			$.ajax({
-				type: 'GET',
+				type: 'POST',
 				url: $("#frmAjaxSheetgroup").attr('action'),
 				data: {
 					ajaxVal_Action: action,
@@ -91,8 +90,10 @@ $(document).ready(function () {
 						// remove error messages
 						$('DIV.alert-error').remove();
 
-						$("#DKCTEST").text(data.test);
-
+						alert('fish');
+						$("#DKCTEST").prepend(data.which_action);
+						$("#DKCTEST").append(data.html_output);
+//TODO add html_output back into the DOM in correct location
 						/*if (data.which_action == 'add-sheetgroup') {
 						 // update element with resultant ajax data
 						 $("UL#displayAllSheetgroups").append(data.html_output);
@@ -113,20 +114,7 @@ $(document).ready(function () {
 					}
 				}
 			});
-
 		}
-	});
-
-
-	// ***************************
-	// Modal listeners
-	// ***************************
-	$("#btnAjaxSheetgroupDelete").click(function () {
-		// TODO Add bootbox confirm dialog here (are you sure?)
-		$("INPUT#ajaxSheetgroupAction").val("delete-sheetgroup");
-	});
-	$("#btnAjaxSheetgroupSubmit").click(function () {
-		$("INPUT#ajaxSheetgroupAction").val("edit-sheetgroup");
 	});
 
 
@@ -144,11 +132,12 @@ $(document).ready(function () {
 	$('#btnAjaxSheetgroupCancel').click(function () {
 		cleanUpForm("frmAjaxSheetgroup");
 		// clear and reset form
+		$("#frmAjaxSheetgroup textarea").val('');
 		$("#frmAjaxSheetgroup input[type=text]").val('');
 		$("#frmAjaxSheetgroup input[type=radio]").attr("checked", false);
 		// reset submit button (avoid disabled state)
-		$("#btnAjaxSheetgroupDelete").button('reset');
 		$("#btnAjaxSheetgroupSubmit").button('reset');
 	});
+
 
 });

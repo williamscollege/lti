@@ -23,11 +23,11 @@
 	# Create database connection object
 	$DB = util_createDbConnection();
 
-    $all_actions = Action::getAllFromDb(['flag_delete'=>false],$DB);
-    $ACTIONS = array();
-    foreach ($all_actions as $a) {
-        $ACTIONS[$a->name] = $a;
-    }
+//    $all_actions = Action::getAllFromDb(['flag_delete'=>false],$DB);
+//    $ACTIONS = array();
+//    foreach ($all_actions as $a) {
+//        $ACTIONS[$a->name] = $a;
+//    }
 
     $USER = User::getOneFromDb(['username' => $_SESSION['userdata']['username']],$DB);
     if (! $USER->matchesDb) {
