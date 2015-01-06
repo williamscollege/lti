@@ -19,7 +19,7 @@
 	<script src="<?php echo PATH_BOOTSTRAP_BOOTBOX_JS; ?>"></script>
 	<script src="<?php echo PATH_JQUERY_VALIDATION_JS; ?>"></script>
 	<!-- local JS -->
-	<!-- <script src="js/util.js"></script>-->
+	<script src="<?php echo APP_ROOT_PATH; ?>/js/util.js"></script>
 </head>
 <body>
 

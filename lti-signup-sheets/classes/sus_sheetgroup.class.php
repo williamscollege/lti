@@ -61,7 +61,7 @@
 		// load explicitly calls the DB (generally called indirectly from related cache fxn)
 		public function loadSheets() {
 			$this->sheets = [];
-			$this->sheets = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $this->sheetgroup_id], $this->dbConnection);
+			$this->sheets = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $this->sheetgroup_id, 'flag_deleted' => FALSE], $this->dbConnection);
 			usort($this->sheets, 'SUS_Sheet::cmp');
 		}
 

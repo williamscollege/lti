@@ -11,13 +11,13 @@
 
 	$FINGERPRINT = util_generateRequestFingerprint(); // used to prevent/complicate session hijacking ands XSS attacks
 
-    $DB = util_createDbConnection();
+	$DB = util_createDbConnection();
 
-//    $all_actions = Action::getAllFromDb(['flag_delete'=>false],$DB);
-//    $ACTIONS = array();
-//    foreach ($all_actions as $a) {
-//        $ACTIONS[$a->name] = $a;
-//    }
+	//    $all_actions = Action::getAllFromDb(['flag_delete'=>false],$DB);
+	//    $ACTIONS = array();
+	//    foreach ($all_actions as $a) {
+	//        $ACTIONS[$a->name] = $a;
+	//    }
 
 	if ((!isset($_SESSION['isAuthenticated'])) || (!$_SESSION['isAuthenticated'])) {
 		if ((isset($_REQUEST['username'])) && (isset($_REQUEST['password']))) { // SECTION: not yet authenticated, wants to log in
@@ -38,14 +38,14 @@
 				util_redirectToAppHome('failure', 'msg_failed_sign_in');
 			}
 		}
-        // NOTE: handling of non-logged-in users is delegated to individual app code pages - the application does NOT automatically require users to be logged in
-//		else {
-//			// SECTION: must be signed in to view pages; otherwise, redirect to index splash page
-//			if (!strpos(APP_FOLDER . "/index.php", $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])) {
-//				// TODO: add logging?
-//				util_redirectToAppHome('info', 'msg_do_sign_in');
-//			}
-//		}
+		// NOTE: handling of non-logged-in users is delegated to individual app code pages - the application does NOT automatically require users to be logged in
+		//		else {
+		//			// SECTION: must be signed in to view pages; otherwise, redirect to index splash page
+		//			if (!strpos(APP_FOLDER . "/index.php", $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])) {
+		//				// TODO: add logging?
+		//				util_redirectToAppHome('info', 'msg_do_sign_in');
+		//			}
+		//		}
 	}
 	else { // SECTION: authenticated
 		if ($_SESSION['fingerprint'] != $FINGERPRINT) {
@@ -70,6 +70,7 @@
 		// util_prePrintR($USER);
 		//util_prePrintR($_SESSION['userdata']);
 		//$USER->updateDbFromAuth($_SESSION['userdata']);
-	} else {
-        $USER = User::getOneFromDb(['username'=>'canonical_public'],$DB);
-    }
+	}
+	else {
+		$USER = User::getOneFromDb(['username' => 'canonical_public'], $DB);
+	}
