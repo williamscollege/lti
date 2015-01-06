@@ -107,12 +107,12 @@
 
 		# Remove sheets
 		foreach ($sg->sheets as $s) {
-			$s->flag_deleted = TRUE;
+			$s->flag_delete = TRUE;
 			$s->updateDb();
 		}
 
 		# Remove sheetgroup
-		$sg->flag_deleted = TRUE;
+		$sg->flag_delete = TRUE;
 		$sg->updateDb();
 
 		# Output

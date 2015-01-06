@@ -16,7 +16,7 @@
 			$this->assertTrue(in_array('sheetgroup_id', SUS_Sheetgroup::$fields));
 			$this->assertTrue(in_array('created_at', SUS_Sheetgroup::$fields));
 			$this->assertTrue(in_array('updated_at', SUS_Sheetgroup::$fields));
-			$this->assertTrue(in_array('flag_deleted', SUS_Sheetgroup::$fields));
+			$this->assertTrue(in_array('flag_delete', SUS_Sheetgroup::$fields));
 			$this->assertTrue(in_array('owner_user_id', SUS_Sheetgroup::$fields));
 			$this->assertTrue(in_array('flag_is_default', SUS_Sheetgroup::$fields));
 			$this->assertTrue(in_array('name', SUS_Sheetgroup::$fields));

@@ -16,7 +16,7 @@
 			$this->assertTrue(in_array('opening_id', SUS_Opening::$fields));
 			$this->assertTrue(in_array('created_at', SUS_Opening::$fields));
 			$this->assertTrue(in_array('updated_at', SUS_Opening::$fields));
-			$this->assertTrue(in_array('flag_deleted', SUS_Opening::$fields));
+			$this->assertTrue(in_array('flag_delete', SUS_Opening::$fields));
 			$this->assertTrue(in_array('sheet_id', SUS_Opening::$fields));
 			$this->assertTrue(in_array('opening_set_id', SUS_Opening::$fields));
 			$this->assertTrue(in_array('name', SUS_Opening::$fields));

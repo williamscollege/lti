@@ -161,7 +161,7 @@
 
 	function createTestData_SUS_Sheetgroups($dbConn) {
 		// 500 series ids
-		# SUS_Sheetgroup: 'sheetgroup_id', 'created_at', 'updated_at', 'flag_deleted', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
+		# SUS_Sheetgroup: 'sheetgroup_id', 'created_at', 'updated_at', 'flag_delete', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheetgroup::$dbTable . " VALUES
 			(501, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 501', 'Something to organize my math sheets', 1, 0),
 			(502, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 502', 'Something to organize my english sheets', 1, 0),
@@ -186,7 +186,7 @@
 
 	function createTestData_SUS_Sheets($dbConn) {
 		// 600 series ids
-		# SUS_Sheet: 'sheet_id', 'created_at', 'updated_at', 'flag_deleted', 'owner_user_id', 'sheetgroup_id', 'name', 'description',
+		# SUS_Sheet: 'sheet_id', 'created_at', 'updated_at', 'flag_delete', 'owner_user_id', 'sheetgroup_id', 'name', 'description',
 		# 'type', 'date_opens', 'date_closes', 'max_total_user_signups', 'max_pending_user_signups', 'flag_alert_owner_change', 'flag_alert_owner_signup',
 		# 'flag_alert_owner_imminent', 'flag_alert_admin_change', 'flag_alert_admin_signup', 'flag_alert_admin_imminent', 'flag_private_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheet::$dbTable . " VALUES
@@ -213,7 +213,7 @@
 
 	function createTestData_SUS_Openings($dbConn) {
 		// 700 series ids
-		# SUS_Opening: 'opening_id', 'created_at', 'updated_at', 'flag_deleted', 'sheet_id', 'opening_set_id', 'name', 'description',
+		# SUS_Opening: 'opening_id', 'created_at', 'updated_at', 'flag_delete', 'sheet_id', 'opening_set_id', 'name', 'description',
 		# 'max_signups', 'admin_comment', 'begin_datetime', 'end_datetime', 'location'
 		# TODO - Delete Confusing Moodle Fragment: 'opening_set_id' is current datetime concat-ed with the current user id
 		$addTestSql  = "INSERT INTO " . SUS_Opening::$dbTable . " VALUES
@@ -240,7 +240,7 @@
 
 	function createTestData_SUS_Signups($dbConn) {
 		// 800 series ids
-		# SUS_Signup: 'signup_id', 'created_at', 'updated_at', 'flag_deleted', 'opening_id', 'signup_user_id', 'admin_comment'
+		# SUS_Signup: 'signup_id', 'created_at', 'updated_at', 'flag_delete', 'opening_id', 'signup_user_id', 'admin_comment'
 		$addTestSql  = "INSERT INTO " . SUS_Signup::$dbTable . " VALUES
 			(801, NOW(), NOW(), 0, 701, 101, 'signup admin comment'),
 			(802, TIMESTAMPADD(day,1,NOW()), TIMESTAMPADD(day,1,NOW()), 0, 704, 101, 'no comment'),

@@ -2,7 +2,7 @@
 	require_once dirname(__FILE__) . '/db_linked.class.php';
 
 	class SUS_Sheetgroup extends Db_Linked {
-		public static $fields = array('sheetgroup_id', 'created_at', 'updated_at', 'flag_deleted', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups');
+		public static $fields = array('sheetgroup_id', 'created_at', 'updated_at', 'flag_delete', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups');
 		public static $primaryKeyField = 'sheetgroup_id';
 		public static $dbTable = 'sus_sheetgroups';
 		public static $entity_type_label = 'sus_sheetgroup';
@@ -27,11 +27,11 @@
 
 		// static factory function to populate new object with desired base values
 		public static function createNewSheetgroupForUser($user_id, $name, $description, $dbconnection) {
-			// 'sheetgroup_id', 'created_at', 'updated_at', 'flag_deleted', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
+			// 'sheetgroup_id', 'created_at', 'updated_at', 'flag_delete', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
 			$n = new SUS_Sheetgroup([
 				'created_at' => util_currentDateTimeString_asMySQL(),
 				'updated_at' => util_currentDateTimeString_asMySQL(),
-				'flag_deleted' => 0,
+				'flag_delete' => 0,
 				'owner_user_id' => $user_id,
 				'flag_is_default' => 1,
 				'name' => $name,
@@ -61,7 +61,7 @@
 		// load explicitly calls the DB (generally called indirectly from related cache fxn)
 		public function loadSheets() {
 			$this->sheets = [];
-			$this->sheets = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $this->sheetgroup_id, 'flag_deleted' => FALSE], $this->dbConnection);
+			$this->sheets = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $this->sheetgroup_id], $this->dbConnection);
 			usort($this->sheets, 'SUS_Sheet::cmp');
 		}
 

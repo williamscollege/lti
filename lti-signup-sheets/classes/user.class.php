@@ -175,7 +175,7 @@
 
 		public function loadSheetgroups() {
 			$this->sheetgroups = [];
-			$this->sheetgroups = SUS_Sheetgroup::getAllFromDb(['owner_user_id' => $this->user_id, 'flag_deleted' => FALSE],  $this->dbConnection);
+			$this->sheetgroups = SUS_Sheetgroup::getAllFromDb(['owner_user_id' => $this->user_id],  $this->dbConnection);
 			usort($this->sheetgroups, 'SUS_Sheetgroup::cmp');
 		}
 

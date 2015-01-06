@@ -16,7 +16,7 @@
 			$this->assertTrue(in_array('signup_id', SUS_Signup::$fields));
 			$this->assertTrue(in_array('created_at', SUS_Signup::$fields));
 			$this->assertTrue(in_array('updated_at', SUS_Signup::$fields));
-			$this->assertTrue(in_array('flag_deleted', SUS_Signup::$fields));
+			$this->assertTrue(in_array('flag_delete', SUS_Signup::$fields));
 			$this->assertTrue(in_array('opening_id', SUS_Signup::$fields));
 			$this->assertTrue(in_array('signup_user_id', SUS_Signup::$fields));
 			$this->assertTrue(in_array('admin_comment', SUS_Signup::$fields));
