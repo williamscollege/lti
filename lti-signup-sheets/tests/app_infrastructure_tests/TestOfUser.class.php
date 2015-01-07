@@ -187,6 +187,17 @@
 			$this->assertEqual(608, $u1->managed_sheets[1]->sheet_id);
 		}
 
+		function testCacheMySignups() {
+			$u1 = User::getOneFromDb(['user_id' => 101], $this->DB);
+
+			$u1->cacheMySignups();
+
+			$this->assertEqual(3,count($u1->my_signups));
+			$this->assertEqual(705,$u1->my_signups[0]->opening_id);
+			$this->assertEqual(701,$u1->my_signups[1]->opening_id);
+			$this->assertEqual(704,$u1->my_signups[2]->opening_id);
+		}
+
 
 		//// auth-related tests
 
@@ -232,5 +243,8 @@
 			$allTeachers = User::getUsersByCourseRole('teacher', $this->DB);
 			$this->assertEqual(2, count($allTeachers));
 		}
+
+//	util_prePrintR($u1);
+//	exit;
 
 	}

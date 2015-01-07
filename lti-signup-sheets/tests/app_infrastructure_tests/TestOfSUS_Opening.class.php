@@ -51,7 +51,7 @@
 			$s->cacheSignups();
 			$this->assertTrue($s->matchesDb);
 
-			$this->assertEqual(5, count($s->signups));
+			$this->assertEqual(4, count($s->signups));
 		}
 
 		public function testLoadSignups() {
@@ -60,7 +60,7 @@
 
 			$s->loadSignups();
 			$this->assertTrue($s->matchesDb);
-			$this->assertEqual(5, count($s->signups));
+			$this->assertEqual(4, count($s->signups));
 		}
 
 	}

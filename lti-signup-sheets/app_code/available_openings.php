@@ -1,6 +1,6 @@
 <?php
 	require_once('../app_setup.php');
-	$pageTitle = ucfirst(util_lang('my_signups'));
+	$pageTitle = ucfirst(util_lang('available_openings'));
 	require_once('../app_head.php');
 
 exit;

@@ -30,9 +30,9 @@
 				if ($a->begin_datetime == $b->begin_datetime) {
 					return 0;
 				}
-				return ($a->begin_datetime < $b->begin_datetime) ? -1 : 1;
+				return ($a->begin_datetime > $b->begin_datetime) ? -1 : 1;
 			}
-			return ($a->begin_datetime < $b->begin_datetime) ? -1 : 1;
+			return ($a->begin_datetime > $b->begin_datetime) ? -1 : 1;
 		}
 
 		/* public functions */

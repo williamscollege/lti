@@ -11,6 +11,7 @@
 		public $enrollments;
 		public $sheetgroups;
 		public $managed_sheets;
+		public $my_signups;
 
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);
@@ -35,6 +36,7 @@
 			$this->enrollments    = array();
 			$this->sheetgroups    = array();
 			$this->managed_sheets = array();
+			$this->my_signups     = array();
 		}
 
 		public function clearCaches() {
@@ -42,6 +44,7 @@
 			$this->enrollments    = array();
 			$this->sheetgroups    = array();
 			$this->managed_sheets = array();
+			$this->my_signups     = array();
 		}
 
 		/* static functions */
@@ -175,7 +178,7 @@
 
 		public function loadSheetgroups() {
 			$this->sheetgroups = [];
-			$this->sheetgroups = SUS_Sheetgroup::getAllFromDb(['owner_user_id' => $this->user_id],  $this->dbConnection);
+			$this->sheetgroups = SUS_Sheetgroup::getAllFromDb(['owner_user_id' => $this->user_id], $this->dbConnection);
 			usort($this->sheetgroups, 'SUS_Sheetgroup::cmp');
 		}
 
@@ -195,5 +198,28 @@
 				array_push($this->managed_sheets, SUS_Sheet::getOneFromDb(['sheet_id' => $sheet->sheet_id], $this->dbConnection));
 			}
 			usort($this->managed_sheets, 'SUS_Sheet::cmp');
+		}
+
+		public function cacheMySignups() {
+			if (!$this->my_signups) {
+				$this->loadMySignups();
+			}
+		}
+
+		public function loadMySignups() {
+			$this->my_signups = [];
+
+			// get every signup for this user
+			$tempMySignups = SUS_Signup::getAllFromDb(['signup_user_id' => $this->user_id], $this->dbConnection);
+
+			$tempOpeningIDs = [];
+			foreach ($tempMySignups as $signup) {
+				// build hash of signup_id values (send hash to DB later for just one DB call)
+				array_push($tempOpeningIDs, $signup->opening_id);
+			}
+
+			// send hash of signup_id values to get all openings that match values within hash
+			$this->my_signups = SUS_Opening::getAllFromDb(['opening_id' => $tempOpeningIDs], $this->dbConnection);
+			usort($this->my_signups, 'SUS_Opening::cmp');
 		}
 	}
