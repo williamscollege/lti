@@ -217,7 +217,7 @@
 		# 'max_signups', 'admin_comment', 'begin_datetime', 'end_datetime', 'location'
 		# TODO - Delete Confusing Moodle Fragment: 'opening_set_id' is current datetime concat-ed with the current user id
 		$addTestSql  = "INSERT INTO " . SUS_Opening::$dbTable . " VALUES
-			(701, NOW(), NOW(), 0, 601, 0, 'Opening 701', 'Opening 701, Sheet 601, Sheetgroup 501', 2 , 'opening admin comment', TIMESTAMPADD(hour,4,NOW()),  TIMESTAMPADD(hour,5,NOW()), 'opening location at CET 256'),
+			(701, NOW(), NOW(), 0, 601, 0, 'Opening 701', 'Opening 701, Sheet 601, Sheetgroup 501', 8 , 'opening admin comment', TIMESTAMPADD(hour,4,NOW()),  TIMESTAMPADD(hour,5,NOW()), 'opening location at CET 256'),
 			(702, NOW(), NOW(), 0, 601, 0, 'Opening 702', 'Opening 702, Sheet 601, Sheetgroup 501', 1 , 'no comment', TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(month,1,NOW()), 'CET MakerSpace'),
 			(703, NOW(), NOW(), 0, 602, 0, 'Opening 703', 'Opening 703, Sheet 602, Sheetgroup 501', 2 , 'no comment', TIMESTAMPADD(week,1,NOW()),  TIMESTAMPADD(month,1,NOW()), ''),
 			(704, NOW(), NOW(), 0, 602, 0, 'Opening 704', 'Opening 704, Sheet 602, Sheetgroup 501', 1 , '', TIMESTAMPADD(hour,1,NOW()),  TIMESTAMPADD(hour,2,NOW()), ''),

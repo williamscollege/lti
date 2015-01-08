@@ -198,6 +198,18 @@
 			$this->assertEqual(704,$u1->my_signups[2]->opening_id);
 		}
 
+		function testCacheSignupsOnMySheets() {
+			$u1 = User::getOneFromDb(['user_id' => 101], $this->DB);
+
+			$u1->cacheSignupsOnMySheets();
+
+			$this->assertEqual(10, count($u1->signups_on_my_sheets));
+			$this->assertEqual(801,$u1->signups_on_my_sheets[0]->signup_id);
+			$this->assertEqual(802,$u1->signups_on_my_sheets[1]->signup_id);
+			$this->assertEqual(803,$u1->signups_on_my_sheets[2]->signup_id);
+
+		}
+
 
 		//// auth-related tests
 
