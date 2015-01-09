@@ -17,10 +17,8 @@
 				</div>
 				<div class="modal-body">
 					<ol>
-						<li><p>To sign in, please use your Williams username and password.</p></li>
-						<li><p>Users must initially log in to the Equipment Reservation system one time, in order for this system to be "aware" of them and send
-								them
-								notifications, etc.</p></li>
+						<li><p>When you use GLOW, you are automatically signed into your Signup Sheets account.</p></li>
+						<li><p>Alternatively, you may directly access Signup Sheets (independant of GLOW) by clicking here (link coming soon) and signing in with your Williams username and password.</p></li>
 					</ol>
 
 					<p>&nbsp;</p>
@@ -33,7 +31,7 @@
 						}
 						else {
 							# show default suypport address
-							echo "<p>Please contact: <a href=\"mailto:itech@" . INSTITUTION_DOMAIN . "?subject=DigitalFieldNotebooks_Help_Request\"><i class=\"glyphicon glyphicon-envelope\"></i> itech@williams.edu</a></p>";
+							echo "<p>Please contact: <a href=\"mailto:itech@" . INSTITUTION_DOMAIN . "?subject=SignupSheets_Help_Request\"><i class=\"glyphicon glyphicon-envelope\"></i> itech@williams.edu</a></p>";
 						}
 					?>
 				</div>

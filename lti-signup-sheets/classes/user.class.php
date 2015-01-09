@@ -195,9 +195,9 @@
 			$this->managed_sheets = [];
 
 			// get all sheets that have been shared with current user by type='adminbyuser'
-			$temp_managed_access = SUS_Access::getAllFromDb(['type' => 'adminbyuser', 'constraint_data' => $this->username], $this->dbConnection);
+			$tmp_managed_access = SUS_Access::getAllFromDb(['type' => 'adminbyuser', 'constraint_data' => $this->username], $this->dbConnection);
 
-			foreach ($temp_managed_access as $sheet) {
+			foreach ($tmp_managed_access as $sheet) {
 				array_push($this->managed_sheets, SUS_Sheet::getOneFromDb(['sheet_id' => $sheet->sheet_id], $this->dbConnection));
 			}
 			usort($this->managed_sheets, 'SUS_Sheet::cmp');
@@ -212,93 +212,48 @@
 		public function loadMySignups() {
 			$this->my_signups = [];
 
-			// get every signup for this user
-			$tempMySignups = SUS_Signup::getAllFromDb(['signup_user_id' => $this->user_id], $this->dbConnection);
+			// get my signups
+			$tmpMySignups = SUS_Signup::getAllFromDb(['signup_user_id' => $this->user_id], $this->dbConnection);
 
-			// build hash of opening_id values
-			$tempOpeningIDs = [];
-			foreach ($tempMySignups as $signup) {
-				array_push($tempOpeningIDs, $signup->opening_id);
+			// create hash of opening_id's
+			$tmpOpeningIDs = [];
+			foreach ($tmpMySignups as $signup) {
+				array_push($tmpOpeningIDs, $signup->opening_id);
 			}
 
-			// send hash of signup_id values to get all openings that match values within hash
-			// SAVE WORKING ORIGINAL: $this->my_signups = SUS_Opening::getAllFromDb(['opening_id' => $tempOpeningIDs], $this->dbConnection);
+			// get openings (using hash of IDs)
+			$tmpOpenings = SUS_Opening::getAllFromDb(['opening_id' => $tmpOpeningIDs], $this->dbConnection);
 
+			// get everyone's signups for each opening (using hash of IDs)
+			$tmpAllSignups = SUS_Signup::getAllFromDb(['opening_id' => $tmpOpeningIDs], $this->dbConnection);
 
-			// ----------------START TEST
-			// get opening values for my list of signups
-			$tempOpenings = SUS_Opening::getAllFromDb(['opening_id' => $tempOpeningIDs], $this->dbConnection);
-
-
-			// get every signup associated with each opening I have signed up for
-			$tempAllSignups = SUS_Signup::getAllFromDb(['opening_id' => $tempOpeningIDs], $this->dbConnection);
-
-
-			// get numerical count of total signup_id's per each opening_id
+			// count total signup_id's per each opening_id
 			$countSignupsPerOpening = array_count_values(array_map(function ($item) {
 				return $item->opening_id;
-			}, $tempAllSignups));
-			 util_prePrintR($countSignupsPerOpening);
+			}, $tmpAllSignups));
 
-
-			// trim out cruft
-			$trimmed_array = array_map(function ($elt) {
-				return array(
-					'opening_id'     => $elt->opening_id,
-					'begin_datetime' => $elt->begin_datetime,
-					'end_datetime'   => $elt->end_datetime,
-					'cnt_signups'    => 'PLACEHOLDER',
-					'max_signups'    => $elt->max_signups,
-					'description'    => $elt->description,
-					'location'       => $elt->location,
-					'name'           => $elt->name
+			// create hash for output and trim out cruft
+			$trimmed_array = [];
+			foreach ($tmpOpenings as $opening) {
+				array_push($trimmed_array,
+					array(
+						'opening_id'      => $opening->opening_id,
+						'begin_datetime'  => $opening->begin_datetime,
+						'end_datetime'    => $opening->end_datetime,
+						'current_signups' => $countSignupsPerOpening[$opening->opening_id],
+						'max_signups'     => $opening->max_signups,
+						'description'     => $opening->description,
+						'location'        => $opening->location,
+						'name'            => $opening->name
+					)
 				);
-			}, $tempOpenings);
-			util_prePrintR($trimmed_array);
+			}
 
-			// TODO - HOW DO I ADD ELEMENT WITH VALUE FOR $countSignupsPerOpening TO APPROPRIATE array elements?
-//			// add in count of current total signups per opening
-//			$trimmed_array = array_map(function ($elt) {
-//				if ($countSignupsPerOpening == $elt->opening_id) {
-//					$current_count_of_signups = 8;
-//				}
-//				return array(
-//					'opening_id'     => $elt->opening_id,
-//					'begin_datetime' => $elt->begin_datetime,
-//					'end_datetime'   => $elt->end_datetime,
-//					'cnt_signups'    => $countSignupsPerOpening,
-//					'max_signups'    => $elt->max_signups,
-//					'description'    => $elt->description,
-//					'location'       => $elt->location,
-//					'name'           => $elt->name
-//				);
-//			}, $countSignupsPerOpening);
-//			util_prePrintR($trimmed_array);
-
+			// this returns a hash, not an object; retrieve values from this hash by referencing keys, instead of by using object properties
 			$this->my_signups = $trimmed_array;
 
-
-			/*
-			// find out how many total people have signed up for this opening
-			$tempAllSignups = SUS_Signup::getAllFromDb(['opening_id' => $tempOpeningIDs], $this->dbConnection);
-			// get numerical count of total signup_id's per each opening_id
-			$count = array_count_values(array_map(function ($item) {
-				return $item->opening_id;
-			}, $tempAllSignups));
-			// util_prePrintR($count);
-
-			foreach ($this->my_signups as $s) {
-				foreach ($count as $key => $val) {
-					if ($count[$key] == $s->opening_id){
-						$max = $this->my_signups->max_signups;
-						$this->my_signups->max_signups = $count[$val] . "/" . $max;
-					}
-				}
-			}
-			*/
-			// ----------------END TEST
-
-			usort($this->my_signups, 'SUS_Opening::cmp');
+			// sort using the hash comparator fxn
+			usort($this->my_signups, 'SUS_Opening::cmp_hash');
 		}
 
 		public function cacheSignupsOnMySheets() {
@@ -310,43 +265,102 @@
 		public function loadSignupsOnMySheets() {
 			$this->signups_on_my_sheets = [];
 
-			// get all of my sheets
-			$tempMySheets = SUS_Sheet::getAllFromDb(['owner_user_id' => $this->user_id], $this->dbConnection);
+			// get my sheets
+			$tmpSheets = SUS_Sheet::getAllFromDb(['owner_user_id' => $this->user_id], $this->dbConnection);
 
-			// build hash of sheet_id values
-			$tempMySheetIDs = [];
-			foreach ($tempMySheets as $sheet) {
-				array_push($tempMySheetIDs, $sheet->sheet_id);
+			// create hash of sheet_id's
+			$tmpSheetIDs = [];
+			foreach ($tmpSheets as $sheet) {
+				array_push($tmpSheetIDs, $sheet->sheet_id);
 			}
 
-			// get all openings on my sheets
-			$tempMyOpenings = SUS_Opening::getAllFromDb(['sheet_id' => $tempMySheetIDs], $this->dbConnection);
+			// get openings on my sheets
+			$tmpOpenings = SUS_Opening::getAllFromDb(['sheet_id' => $tmpSheetIDs], $this->dbConnection);
 
-			// build hash of opening_id values
-			$tempMyOpeningIDs = [];
-			foreach ($tempMyOpenings as $opening) {
-				array_push($tempMyOpeningIDs, $opening->opening_id);
+			// create hash of opening_id's
+			$tmpOpeningIDs = [];
+			foreach ($tmpOpenings as $opening) {
+				array_push($tmpOpeningIDs, $opening->opening_id);
 			}
 
-			// get all signups on my sheets
-			$tempMySignups = SUS_Signup::getAllFromDb(['opening_id' => $tempMyOpeningIDs], $this->dbConnection);
+			// get signups on my openings
+			$tmpSignups = SUS_Signup::getAllFromDb(['opening_id' => $tmpOpeningIDs], $this->dbConnection);
 
-			// build hash of signup_user_id values
-			$tempMySignupUserIDs = [];
-			foreach ($tempMySignups as $signup) {
-				array_push($tempMySignupUserIDs, $signup->opening_id);
-				array_push($tempMySignupUserIDs, $signup->signup_user_id);
+			// create hash of signup_user_id's
+			$tmpSignupUserIDs = [];
+			foreach ($tmpSignups as $signup) {
+				array_push($tmpSignupUserIDs, $signup->signup_user_id);
 			}
-			util_prePrintR($tempMySignupUserIDs);
 
-			// create resultant hash that combines Openings with Signup signup_id's and (User) signup_user_id names
-			$resultant = [];
+			// get user names
+			$tmpUsers = User::getAllFromDb(['user_id' => $tmpSignupUserIDs], $this->dbConnection);
 
+			// create hash of user information
+			$tmpUserInfo = [];
+			foreach ($tmpUsers as $user) {
+				$tmpUserInfo[$user->user_id] = array(
+					'user_id'   => $user->user_id,
+					'full_name' => $user->first_name . ' ' . $user->last_name,
+					'email'     => $user->email,
+					'username'  => $user->username
+				);
+			}
 
-			$this->signups_on_my_sheets = $tempMyOpenings;
+			// count total signup_id's per each opening_id
+			$countSignupsPerOpening = array_count_values(array_map(function ($item) {
+				return $item->opening_id;
+			}, $tmpSignups));
 
-			// TODO? do subfilter to also filter the signup's for any given opening (order by
-			usort($this->signups_on_my_sheets, 'SUS_Opening::cmp');
+			// create hash of signups, include user information (hash), and trim out cruft
+			$tmpSignupsWithUserInfo = [];
+			foreach ($tmpSignups as $signup) {
+				array_push($tmpSignupsWithUserInfo,
+					array(
+						// signup information
+						'opening_id'        => $signup->opening_id,
+						'signup_id'         => $signup->signup_id,
+						'signup_created_at' => $signup->created_at,
+						// user information
+						'user_id'           => $tmpUserInfo[$signup->signup_user_id]['user_id'],
+						'full_name'         => $tmpUserInfo[$signup->signup_user_id]['full_name'],
+						'email'             => $tmpUserInfo[$signup->signup_user_id]['email'],
+						'username'          => $tmpUserInfo[$signup->signup_user_id]['username']
+					)
+				);
+			}
+
+			// create hash for output and trim out cruft
+			$trimmed_array = [];
+			foreach ($tmpOpenings as $opening) {
+				// create a hash of signups for each opening
+				$signups_for_this_opening = [];
+				foreach ($tmpSignupsWithUserInfo as $item) {
+					if ($item['opening_id'] == $opening->opening_id) {
+						$signups_for_this_opening[] = $item;  // 'user_id' => $item['user_id']
+					}
+				}
+				// omit openings that contain zero signups
+				if (isset($countSignupsPerOpening[$opening->opening_id])) {
+					$trimmed_array[] = array(
+						'opening_id'      => $opening->opening_id,
+						'begin_datetime'  => $opening->begin_datetime,
+						'end_datetime'    => $opening->end_datetime,
+						'current_signups' => $countSignupsPerOpening[$opening->opening_id],
+						'max_signups'     => $opening->max_signups,
+						'description'     => $opening->description,
+						'location'        => $opening->location,
+						'name'            => $opening->name,
+						'array_signups'   => $signups_for_this_opening
+					);
+				}
+			}
+			// util_prePrintR($trimmed_array);
+
+			// this returns a hash, not an object; retrieve values from this hash by referencing keys, instead of by using object properties
+			$this->signups_on_my_sheets = $trimmed_array;
+
+			// sort using the hash comparator fxn
+			usort($this->signups_on_my_sheets, 'SUS_Opening::cmp_hash');
 		}
 
 	}

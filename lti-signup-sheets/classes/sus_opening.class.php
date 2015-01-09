@@ -35,6 +35,18 @@
 			return ($a->begin_datetime > $b->begin_datetime) ? -1 : 1;
 		}
 
+		// custom hash comparator (compares hash keys instead of object properties)
+		public static function cmp_hash($a, $b)
+		{
+			if ($a['begin_datetime'] == $b['begin_datetime']) {
+				if ($a['begin_datetime'] == $b['begin_datetime']) {
+					return 0;
+				}
+				return ($a['begin_datetime'] > $b['begin_datetime']) ? -1 : 1;
+			}
+			return ($a['begin_datetime'] > $b['begin_datetime']) ? -1 : 1;
+		}
+
 		/* public functions */
 
 		// cache provides data while eliminating unnecessary DB calls

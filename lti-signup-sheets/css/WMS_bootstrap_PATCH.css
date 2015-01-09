@@ -1,18 +1,34 @@
 /*=======================================
-/*=======================================
 Patch For: bootstrap.css
 Purpose: New styles that add icons to validation plugin (jquery.validate.js)
 Source: http://alittlecode.com/jquery-form-validation-with-styles-from-twitter-bootstrap/
 ==========================================*/
 
+
+/*=======================================*/
 /*NEW 2014 Signup Sheet Specific CSS Tweaks*/
+/*=======================================*/
+
 /*validation.js hack: to eliminate extra space after dynamic validation occurs */
 div.form-group.success{
 	margin-bottom: 0px !important;
 }
 
+/*create an indented, no-bulleted UL style for bootstrap.css*/
+UL.unstyled LI, OL.unstyled LI
+{
+	list-style-type: none;
+	margin-left: 0px;
+}
 
+/*Bootstrap Popover*/
+/*.popover .popover-content {*/
+/*background-color: #eee;*/
+/*}*/
+
+/*=======================================*/
 /*PRE 2014 EQR Historical CSS Tweaks*/
+/*=======================================*/
 LABEL.valid
 {
 	width: 24px;
@@ -34,6 +50,7 @@ LABEL.error
 {
 	color: #E17823;
 }
+
 /*=======================================
 Patch For: bootstrap.css
 Purpose: Williams custom tweaks to bootstrap.css
@@ -51,15 +68,6 @@ H1,H2,H3,H4,H5 {
 {
 	color: #d15545 !important;
 /*red-orange*/
-}
-/*remove annoying margin-left:0 from core bootstrap.css*/
-UL.unstyled LI, OL.unstyled LI
-{
-	margin-left: 50px;
-}
-
-UL {
-    list-style-type: none;
 }
 
 .form-horizontal .control-group .display-only-controls {
