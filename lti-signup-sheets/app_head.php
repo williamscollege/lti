@@ -45,12 +45,12 @@
 		?>
 		<div class="collapse navbar-collapse" id="wms-primary-navbar-1">
 			<ul class="nav navbar-nav">
-				<li class="<?php if (strpos($http_referer, "available_openings.php")) {
+				<li class="<?php if (strpos($http_referer, "my_available_openings.php")) {
 					echo "active";
 				} ?>">
-					<a id="link-available-openings" href="<?php echo APP_ROOT_PATH; ?>/app_code/available_openings.php">
+					<a id="link-available-openings" href="<?php echo APP_ROOT_PATH; ?>/app_code/my_available_openings.php">
 						<i class="glyphicon glyphicon-pencil"></i>
-						<b><?php echo ucfirst(util_lang('available_openings')); ?></b>
+						<b><?php echo ucfirst(util_lang('my_available_openings')); ?></b>
 					</a>
 				</li>
 				<li class="<?php if (strpos($http_referer, "my_signups.php")) {
@@ -96,7 +96,7 @@
 					?>
 					<form id="frmSignout" class="navbar-form pull-right" method="post" action="<?php echo APP_ROOT_PATH; ?>/index.php">
 						<span class="muted">Signed in: <a href="account_management.php" title="My Account"><?php echo $_SESSION['userdata']['username']; ?></a></span>.
-						<input type="submit" id="submit_signout" class="btn" name="submit_signout" value="Sign out" />
+						<input type="submit" id="submit_signout" class="btn btn-default" name="submit_signout" value="Sign out" />
 					</form>
 				<?php
 				}
@@ -106,7 +106,7 @@
 					<form id="frmSignin" class="navbar-form pull-right" method="post" action="">
 						<input type="text" id="username" class="span2" name="username" placeholder="<?php echo util_lang('username'); ?>" value="" />
 						<input type="password" id="password_login" class="span2" name="password" placeholder="<?php echo util_lang('password'); ?>" value="" />
-						<input type="submit" id="submit_signin" class="btn" name="submit_signin" value="<?php echo util_lang('app_sign_in_action'); ?>" />
+						<input type="submit" id="submit_signin" class="btn btn-default" name="submit_signin" value="<?php echo util_lang('app_sign_in_action'); ?>" />
 					</form>
 				<?php
 				}

@@ -13,6 +13,7 @@
 		public $managed_sheets;
 		public $my_signups;
 		public $signups_on_my_sheets;
+		public $my_available_openings;
 
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);
@@ -33,21 +34,23 @@
 			//				die("This user does not exist in the database. Abort.");
 			//			}
 
-			$this->course_roles         = array();
-			$this->enrollments          = array();
-			$this->sheetgroups          = array();
-			$this->managed_sheets       = array();
-			$this->my_signups           = array();
-			$this->signups_on_my_sheets = array();
+			$this->course_roles          = array();
+			$this->enrollments           = array();
+			$this->sheetgroups           = array();
+			$this->managed_sheets        = array();
+			$this->my_signups            = array();
+			$this->signups_on_my_sheets  = array();
+			$this->my_available_openings = array();
 		}
 
 		public function clearCaches() {
-			$this->course_roles         = array();
-			$this->enrollments          = array();
-			$this->sheetgroups          = array();
-			$this->managed_sheets       = array();
-			$this->my_signups           = array();
-			$this->signups_on_my_sheets = array();
+			$this->course_roles          = array();
+			$this->enrollments           = array();
+			$this->sheetgroups           = array();
+			$this->managed_sheets        = array();
+			$this->my_signups            = array();
+			$this->signups_on_my_sheets  = array();
+			$this->my_available_openings = array();
 		}
 
 		/* static functions */
@@ -354,13 +357,92 @@
 					);
 				}
 			}
-			// util_prePrintR($trimmed_array);
 
 			// this returns a hash, not an object; retrieve values from this hash by referencing keys, instead of by using object properties
 			$this->signups_on_my_sheets = $trimmed_array;
 
 			// sort using the hash comparator fxn
 			usort($this->signups_on_my_sheets, 'SUS_Opening::cmp_hash');
+			//util_prePrintR($this->signups_on_my_sheets);
 		}
+
+		public function cacheMyAvailableOpenings() {
+			if (!$this->my_available_openings) {
+				$this->loadMyAvailableOpenings();
+			}
+		}
+
+		public function loadMyAvailableOpenings() {
+			$this->my_available_openings = [];
+			/*
+			sheet_id".
+			($includeAccessRecords?'
+			,a.id AS id
+			,a.created_at AS created_at
+			,a.updated_at AS updated_at
+			,a.last_user_id AS last_user_id
+			,a.type AS type
+			,a.constraint_id AS constraint_id
+			,a.constraint_data AS constraint_data)
+			*/
+
+			// get 'byuser'
+			//			$tmp_my_openings_byuser = SUS_Access::getAllFromDb(['type' => 'byuser', 'constraint_id' => $this->user_id], $this->dbConnection);
+
+			// get 'bycourse'
+			//			$tmp_my_openings_bycourse = SUS_Access::getAllFromDb(['type' => 'bycourse', 'constraint_id' => $this->user_id], $this->dbConnection);
+
+			$strServerName = $_SERVER['SERVER_NAME'];
+			if (($strServerName == "localhost") OR ($strServerName == "127.0.0.1")) {
+				// MySQL connection string
+				$connString = mysqli_connect(TESTING_DB_SERVER, TESTING_DB_USER, TESTING_DB_PASS, TESTING_DB_NAME) or
+				die("Sorry! You lack proper authentication to the local database.");
+			}
+			else {
+				// MySQL connection string
+				$connString = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME) or
+				die("Sorry! You lack proper authentication to the live database.");
+			}
+
+			$queryMyAvailableOpenings = "
+SELECT
+	*
+FROM
+	sus_access
+";
+//WHERE type = 'byuser' AND constraint_id = $this->user_id;
+			echo $queryMyAvailableOpenings . "<br />";
+
+			$resultsMyAvailableOpenings = mysqli_query($connString, $queryMyAvailableOpenings) or
+			die(mysqli_error($connString));
+
+			// rows returned
+			echo $rows_returned = $resultsMyAvailableOpenings->num_rows  . "<hr />";
+
+			// iterate over rs
+			$resultsMyAvailableOpenings->data_seek(0);
+			while($row = $resultsMyAvailableOpenings->fetch_assoc()){
+				foreach ($row as $field=>$val) {
+					echo $row[$field] . '<br>';
+				}
+//				echo $row['access_id'] . '<br>';
+//				echo $row['created_at'] . '<br>';
+//				echo $row['updated_at'] . '<br>';
+//				echo $row['sheet_id'] . '<br>';
+//				echo $row['type'] . '<br>';
+//				echo $row['constraint_id'] . '<br>';
+//				echo $row['constraint_data'] . '<br>';
+//				echo $row['broadness'] . '<br><br>';
+			}
+
+
+			// close DB connection
+			mysqli_close($connString);
+
+			// this returns a hash, not an object; retrieve values from this hash by referencing keys, instead of by using object properties
+			$this->my_available_openings = $resultsMyAvailableOpenings;
+
+		}
+
 
 	}

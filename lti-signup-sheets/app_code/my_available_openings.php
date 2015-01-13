@@ -1,23 +1,23 @@
 <?php
 	require_once('../app_setup.php');
-	$pageTitle = ucfirst(util_lang('my_signups'));
+	$pageTitle = ucfirst(util_lang('my_available_openings'));
 	require_once('../app_head.php');
 
 
 	if ($IS_AUTHENTICATED) {
 		echo "<div>";
-		echo "<h3>" . ucfirst(util_lang('my_signups')) . "</h3>";
+		echo "<h3>" . ucfirst(util_lang('my_available_openings')) . "</h3>";
 		echo "<p>&nbsp;</p>";
 
 		// ***************************
-		// fetch signups: "I have signed up for"
+		// fetch available openings
 		// ***************************
-		$USER->cacheMySignups();
+		$USER->cacheMyAvailableOpenings();
+		util_prePrintR($USER->my_available_openings);
 
-		// ***************************
-		// fetch my_signups: "Signups on my Sheets"
-		// ***************************
-		$USER->cacheSignupsOnMySheets();
+
+		// old templated stuff, delete
+		$USER->cacheMySignups();
 
 
 		// display my_signups: "I have signed up for"
@@ -38,7 +38,7 @@
 				// display x of y total signups for this opening
 				echo "&nbsp;(" . $signup['current_signups'] . "/" . $signup['max_signups'] . ")";
 				// popovers (bootstrap: must manually initialize popovers in JS file)
-				echo "<a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Description:</strong> " . $signup['description'] . "<br /><strong>Where:</strong> " . $signup['location'] .  "\">" . $signup['name'] . "</a>";
+				echo "<a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Description:</strong> " . $signup['description'] . "<br /><strong>Where:</strong> " . $signup['location'] . "\">" . $signup['name'] . "</a>";
 				echo "</p>";
 			}
 			echo "</td>";
@@ -53,7 +53,7 @@
 				echo "&nbsp;(" . $scheduled['current_signups'] . "/" . $scheduled['max_signups'] . ")";
 				// link to edit
 				// TODO - add functionality to link click through
-				echo "&nbsp;<a href=\"edit_opening.php?opening_id=" . $scheduled['opening_id'] . "\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Description:</strong> " . $scheduled['description'] . "<br /><strong>Where:</strong> " . $scheduled['location'] .  "\">" . $scheduled['name'] . "</a>";
+				echo "&nbsp;<a href=\"edit_opening.php?opening_id=" . $scheduled['opening_id'] . "\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Description:</strong> " . $scheduled['description'] . "<br /><strong>Where:</strong> " . $scheduled['location'] . "\">" . $scheduled['name'] . "</a>";
 				// list signups
 				echo "<ul class=\"unstyled\">";
 				foreach ($scheduled['array_signups'] as $person) {
@@ -61,7 +61,7 @@
 					echo "<li>";
 					// dkc says: could tighten-up UI, if needed: by btn-link instead of btn btn-xs. can color the remove icon red, manually/automatically?
 					echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-for-opening-id=\"" . $person['opening_id'] . "\" data-for-signup-id=\"" . $person['signup_id'] . "\" title=\"Remove signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
-					echo "<a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>User:</strong>&nbsp; " . $person['username'] . "<br /><strong>Email:</strong> " . $person['email'] . "<br /><strong>Signed up:</strong> " .  date('n/j/Y g:i:A', strtotime($person['signup_created_at'])) .  "\">" . $person['full_name'] . "</a>";
+					echo "<a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>User:</strong>&nbsp; " . $person['username'] . "<br /><strong>Email:</strong> " . $person['email'] . "<br /><strong>Signed up:</strong> " . date('n/j/Y g:i:A', strtotime($person['signup_created_at'])) . "\">" . $person['full_name'] . "</a>";
 					echo "</li>";
 				}
 				echo "</ul>";
@@ -79,4 +79,4 @@
 	require_once('../foot.php');
 ?>
 
-<script type="text/javascript" src="../js/my_signups.js"></script>
+<script type="text/javascript" src="../js/my_available_openings.js"></script>

@@ -178,13 +178,13 @@
 
             $rendered .= '<div id="actions">'."\n";
             if ($this->notebook_id == 'NEW') {
-//                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>'."\n";
+//                $rendered .= '  <input id="edit-submit-control" class="btn btn-default" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>'."\n";
                 $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign"></i> '.util_lang('save','properize').'</button>'."\n";
-                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list"><i class="glyphicon glyphicon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
+                $rendered .= '  <a id="edit-cancel-control" class="btn btn-default" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list"><i class="glyphicon glyphicon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
             } else {
-//                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>'."\n";
+//                $rendered .= '  <input id="edit-submit-control" class="btn btn-default" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>'."\n";
                 $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign"></i> '.util_lang('update','properize').'</button>'."\n";
-                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$this->notebook_id.'"><i class="glyphicon glyphicon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
+                $rendered .= '  <a id="edit-cancel-control" class="btn btn-default" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$this->notebook_id.'"><i class="glyphicon glyphicon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
             }
             $rendered .= "</div>\n";
             $rendered .= '  <input type="hidden" name="action" value="update"/>'."\n".
@@ -220,7 +220,7 @@
                     '  '.util_lang('new_notebook_must_be_saved')."\n";
             } else {
                 $rendered .=  '  <h4>'.ucfirst(util_lang('pages')).'</h4>'."\n".
-//                    '  <a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.$this->notebook_id.'" class="btn">'.util_lang('add_notebook_page').'</a>'."\n".
+//                    '  <a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.$this->notebook_id.'" class="btn btn-default">'.util_lang('add_notebook_page').'</a>'."\n".
 
                     '  <ul id="list-of-notebook-pages" data-notebook-page-count="'.count($this->pages).'">'."\n";
                 // NOTE: add page control only in edit mode, not view mode!

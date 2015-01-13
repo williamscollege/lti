@@ -12,7 +12,7 @@
 		// SECTION: authenticated
 
 		echo "<hr />";
-		echo '<br /><h3>You are Authenticated; ' . ucfirst(util_lang('you_possesive')) . ' ' . ucfirst(util_lang('available_openings')) . '</h3><br />';
+		echo '<br /><h3>You are Authenticated; ' . ucfirst(util_lang('you_possesive')) . ' ' . ucfirst(util_lang('my_available_openings')) . '</h3><br />';
 
 		# is system admin?
 		if ($USER->flag_is_system_admin) {
@@ -37,7 +37,7 @@
 		<?php
 		//        if ($num_notebooks > 0) {
 		//            echo "<hr />\n";
-		//            echo '<h3>'.ucfirst(util_lang('public')).' '.ucfirst(util_lang('available_openings')).'</h3>';
+		//            echo '<h3>'.ucfirst(util_lang('public')).' '.ucfirst(util_lang('my_available_openings')).'</h3>';
 		//        }
 	}
 

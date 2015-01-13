@@ -135,7 +135,7 @@
         echo "</ul>\n";
         if ($USER->canActOnTarget($ACTIONS['create'],new Notebook(['DB'=>$DB]))) {
             ?>
-            <a href="<?php echo APP_ROOT_PATH.'/app_code/notebook.php?action=create&user_id='.$USER->user_id; ?>" class="btn" id="btn-add-notebook"><?php echo util_lang('add_notebook'); ?></a><?php
+            <a href="<?php echo APP_ROOT_PATH.'/app_code/notebook.php?action=create&user_id='.$USER->user_id; ?>" class="btn btn-default" id="btn-add-notebook"><?php echo util_lang('add_notebook'); ?></a><?php
         }
     }
 require_once('../foot.php');

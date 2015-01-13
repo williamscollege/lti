@@ -6,7 +6,7 @@
 
 	if ($IS_AUTHENTICATED) {
 		echo "<div>";
-		echo "<h3>Sheet Groups</h3>";
+		echo "<h3>" . ucfirst(util_lang('my_sheets')) . "</h3>";
 		echo "<p>Sheets are collected into groups (ordered alphabetically). Group settings affect all sheets in the group. Sheet settings affect only that sheet.</p>";
 
 		// ***************************
@@ -17,7 +17,7 @@
 		// display managed sheets
 		if ($USER->managed_sheets) {
 			echo "<table class=\"table table-condensed table-bordered table-hover\">";
-			echo "<tr class=\"danger\"><th class=\"col-sm-11\">Sheets I manage that are owned by others:</th>";
+			echo "<tr class=\"warning\"><th class=\"col-sm-11\">Sheets I manage that are owned by others...</th>";
 			// show placeholder icon (disabled)
 			echo "<th class=\"col-sm-1 text-right\"><a class=\"btn btn-xs btn-default disabled\" disabled=\"disabled\" title=\"Cannot delete\"><i class=\"glyphicon glyphicon-minus-sign\"></i></a>&nbsp;</th></tr>";
 			foreach ($USER->managed_sheets as $mgr_sheet) {
@@ -64,7 +64,7 @@
 			echo "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . $sheetgroup->sheetgroup_id . "\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . $sheetgroup->name . "\" data-for-sheetgroup-description=\"" . $sheetgroup->description . "\" data-for-sheetgroup-max-total=\"" . $sheetgroup->max_g_total_user_signups . "\" data-for-sheetgroup-max-pending=\"" . $sheetgroup->max_g_pending_user_signups . "\" title=\"Edit group\">" . $sheetgroup->name . "</a>";
 			echo "</th><th class=\"col-sm-1 text-right\">";
 			if (!$sheetgroup->flag_is_default) {
-				echo "<a class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-bb=\"alert_callback\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-trash\"></i> Group</a>&nbsp;";
+				echo "<a class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-bb=\"alert_callback\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-remove\"></i> Group</a>&nbsp;";
 			} else {
 				// show placeholder icon (disabled)
 				echo "<a class=\"btn btn-xs btn-default disabled\" disabled=\"disabled\" title=\"Cannot delete default group\"><i class=\"glyphicon glyphicon-minus-sign\"></i> Default</a>&nbsp;";
@@ -78,7 +78,7 @@
 				echo "<a href=\"edit_sheet.php?sheetgroup=" . $sheet->sheetgroup_id . "&sheet=" . $sheet->sheet_id . "\" id=\"btn-edit-sheet-id-" . $sheet->sheet_id . "\" class=\"sus-edit-sheet\" title=\"Edit sheet\">" . $sheet->name . "</a>";
 				echo "</td><td class=\"col-sm-1 text-right\">";
 					// TODO - jquery: confirm dialogue and action: confirm('Really delete this sheet?')
-					echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheet\" data-for-sheetgroup-id=\"" . $sheet->sheetgroup_id . "\" data-for-sheet-id=\"" . $sheet->sheet_id . "\" title=\"Delete sheet\"><i class=\"glyphicon glyphicon-trash\"></i></a>&nbsp;";
+					echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheet\" data-for-sheetgroup-id=\"" . $sheet->sheetgroup_id . "\" data-for-sheet-id=\"" . $sheet->sheet_id . "\" title=\"Delete sheet\"><i class=\"glyphicon glyphicon-remove\"></i></a>&nbsp;";
 				echo "</td></tr>";
 			}
 

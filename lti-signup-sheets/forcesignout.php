@@ -17,7 +17,7 @@
 
 <form id="frmSignout" class="navbar-form pull-right" method="post" action="<?php echo APP_ROOT_PATH; ?>/index.php">
 	<span class="muted">Signed in: <a href="account_management.php" title="My Account"><?php echo $_SESSION['userdata']['username']; ?></a></span>.
-	<input type="submit" id="submit_signout" class="btn" name="submit_signout" value="Sign out" />
+	<input type="submit" id="submit_signout" class="btn btn-default" name="submit_signout" value="Sign out" />
 </form>
 
 
@@ -37,7 +37,7 @@
 	<a href="#" data-toggle="dropdown" class="dropdown-toggle"><span class="caret"></span> <b><?php echo ucfirst(util_lang('go_to')); ?></b></a>
 	<ul class="dropdown-menu">
 		<li>
-			<a id="nav-notebooks" href="<?php echo APP_ROOT_PATH; ?>/app_code/notebook.php?action=list"><?php echo ucfirst(util_lang('available_openings')); ?></a>
+			<a id="nav-notebooks" href="<?php echo APP_ROOT_PATH; ?>/app_code/notebook.php?action=list"><?php echo ucfirst(util_lang('my_available_openings')); ?></a>
 		</li>
 		<li>
 			<a id="nav-metadata-structures" href="<?php echo APP_ROOT_PATH; ?>/app_code/metadata_structure.php?action=list"><?php echo ucfirst(util_lang('my_signups')); ?></a>

@@ -247,7 +247,7 @@
 <form action="' . APP_ROOT_PATH . '/app_code/notebook.php">
 <div id="actions">
   <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign"></i> ' . util_lang('update', 'properize') . '</button>
-  <a id="edit-cancel-control" class="btn" href="' . APP_ROOT_PATH . '/app_code/notebook.php?action=view&notebook_id=1001"><i class="glyphicon glyphicon-remove"></i> ' . util_lang('cancel', 'properize') . '</a>
+  <a id="edit-cancel-control" class="btn btn-default" href="' . APP_ROOT_PATH . '/app_code/notebook.php?action=view&notebook_id=1001"><i class="glyphicon glyphicon-remove"></i> ' . util_lang('cancel', 'properize') . '</a>
 </div>
   <input type="hidden" name="action" value="update"/>
   <input type="hidden" name="notebook_id" value="1001"/>
@@ -292,8 +292,8 @@
 			//  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($n->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($n->updated_at).'</span><br/>
 			//  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->first_name.'</a></span><br/>
 			//  <div class="notebook-notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">'.htmlentities(util_lang('new_notebook_notes')).'</textarea></div>
-			//  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>
-			//  <a id="edit-cancel-control" class="btn" href="/digitalfieldnotebooks/app_code/notebook.php?action=list">'.util_lang('cancel','properize').'</a>
+			//  <input id="edit-submit-control" class="btn btn-default" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>
+			//  <a id="edit-cancel-control" class="btn btn-default" href="/digitalfieldnotebooks/app_code/notebook.php?action=list">'.util_lang('cancel','properize').'</a>
 			//</form>
 			//  <h4>'.ucfirst(util_lang('pages')).'</h4>
 			//  '.util_lang('new_notebook_must_be_saved').'
@@ -303,7 +303,7 @@
 <form action="' . APP_ROOT_PATH . '/app_code/notebook.php">
 <div id="actions">
   <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign"></i> ' . util_lang('save', 'properize') . '</button>
-  <a id="edit-cancel-control" class="btn" href="' . APP_ROOT_PATH . '/app_code/notebook.php?action=list"><i class="glyphicon glyphicon-remove"></i> ' . util_lang('cancel', 'properize') . '</a>
+  <a id="edit-cancel-control" class="btn btn-default" href="' . APP_ROOT_PATH . '/app_code/notebook.php?action=list"><i class="glyphicon glyphicon-remove"></i> ' . util_lang('cancel', 'properize') . '</a>
 </div>
   <input type="hidden" name="action" value="update"/>
   <input type="hidden" name="notebook_id" value="NEW"/>
