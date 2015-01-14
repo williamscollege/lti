@@ -283,12 +283,11 @@
 			(902, NOW(), NOW(), 601, 'byuser', 101, '', 10),
 			(903, NOW(), NOW(), 601, 'bycourse', 201, '', 20),
 			(904, NOW(), NOW(), 601, 'byinstr', 101, '', 30),
-			(905, NOW(), NOW(), 601, 'bydept', 0, 'ARTH', 40),
-			(906, NOW(), NOW(), 601, 'bygradyear', 18, '', 50),
-			(907, NOW(), NOW(), 601, 'byrole', 0, 'teacher', 60),
-			(908, NOW(), NOW(), 601, 'byhasaccount', 0, 'all', 60),
-			(909, NOW(), NOW(), 607, 'adminbyuser', 0, 'mockUserJBond', 10),
-			(910, NOW(), NOW(), 608, 'adminbyuser', 0, 'mockUserJBond', 10)
+			(905, NOW(), NOW(), 601, 'bygradyear', 18, '', 50),
+			(906, NOW(), NOW(), 601, 'byrole', 0, 'teacher', 60),
+			(907, NOW(), NOW(), 601, 'byhasaccount', 0, 'all', 60),
+			(908, NOW(), NOW(), 607, 'adminbyuser', 0, 'mockUserJBond', 10),
+			(909, NOW(), NOW(), 608, 'adminbyuser', 0, 'mockUserJBond', 10)
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();

@@ -20,7 +20,7 @@
 		$USER->cacheSignupsOnMySheets();
 
 
-		// display my_signups: "I have signed up for"
+		// display my_signups: "I have signed up for..."
 		if ($USER->my_signups) {
 			echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
 			echo "<tr class=\"\">";

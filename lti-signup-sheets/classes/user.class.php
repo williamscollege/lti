@@ -372,25 +372,12 @@
 			}
 		}
 
-		public function loadMyAvailableOpenings() {
+		// takes: an optional flag for whether access data should be included in the results
+		// returns: an array of sheet objects on which the current user can sign up
+		// $for_sheet_id = use this to show openings for 1 sheet
+		// TODO - veryify use of params with moodle use cases
+		public function loadMyAvailableOpenings($includeAccessRecords=true,$for_user_id=0,$for_sheet_id=0,$for_access_id=0) {
 			$this->my_available_openings = [];
-			/*
-			sheet_id".
-			($includeAccessRecords?'
-			,a.id AS id
-			,a.created_at AS created_at
-			,a.updated_at AS updated_at
-			,a.last_user_id AS last_user_id
-			,a.type AS type
-			,a.constraint_id AS constraint_id
-			,a.constraint_data AS constraint_data)
-			*/
-
-			// get 'byuser'
-			//			$tmp_my_openings_byuser = SUS_Access::getAllFromDb(['type' => 'byuser', 'constraint_id' => $this->user_id], $this->dbConnection);
-
-			// get 'bycourse'
-			//			$tmp_my_openings_bycourse = SUS_Access::getAllFromDb(['type' => 'bycourse', 'constraint_id' => $this->user_id], $this->dbConnection);
 
 			$strServerName = $_SERVER['SERVER_NAME'];
 			if (($strServerName == "localhost") OR ($strServerName == "127.0.0.1")) {
@@ -404,44 +391,214 @@
 				die("Sorry! You lack proper authentication to the live database.");
 			}
 
-			$queryMyAvailableOpenings = "
-SELECT
-	*
-FROM
-	sus_access
-";
-//WHERE type = 'byuser' AND constraint_id = $this->user_id;
-			echo $queryMyAvailableOpenings . "<br />";
+			if ($for_user_id<1)
+			{
+				$for_user_id = $this->user_id;
+			}
 
-			$resultsMyAvailableOpenings = mysqli_query($connString, $queryMyAvailableOpenings) or
+			// if filtering on the access_id, need to get it in the query
+			if ($for_access_id > 0)
+			{
+				$includeAccessRecords=true;
+			}
+
+			$sql ="
+SELECT
+s.sheet_id  AS s_id
+,s.created_at  AS s_created_at
+,s.updated_at  AS s_updated_at
+,s.flag_delete  AS s_flag_delete
+,s.owner_user_id  AS s_owner_user_id
+,s.sheetgroup_id  AS s_sheetgroup_id
+,s.name  AS s_name
+,s.description  AS s_description
+,s.type  AS s_type
+,s.date_opens  AS s_date_opens
+,s.date_closes  AS s_date_closes
+,s.max_total_user_signups  AS s_max_total_user_signups
+,s.max_pending_user_signups  AS s_max_pending_user_signups
+,s.flag_alert_owner_change  AS s_flag_alert_owner_change
+,s.flag_alert_owner_signup  AS s_flag_alert_owner_signup
+,s.flag_alert_owner_imminent  AS s_flag_alert_owner_imminent
+,s.flag_alert_admin_change  AS s_flag_alert_admin_change
+,s.flag_alert_admin_signup  AS s_flag_alert_admin_signup
+,s.flag_alert_admin_imminent  AS s_flag_alert_admin_imminent
+,s.flag_private_signups AS s_flag_private_signups
+".
+				($includeAccessRecords?"
+,ac.access_id AS a_id
+,ac.created_at AS a_created_at
+,ac.updated_at AS a_updated_at
+,ac.sheet_id AS a_sheet_id
+,ac.type AS a_type
+,ac.constraint_id AS a_constraint_id
+,ac.constraint_data AS a_constraint_data
+,ac.broadness AS a_broadness":'')."
+FROM
+sus_sheets AS s
+JOIN (
+    SELECT DISTINCT
+      a.sheet_id".
+				($includeAccessRecords?'
+      ,a.access_id AS access_id
+      ,a.created_at AS created_at
+      ,a.updated_at AS updated_at
+      ,a.type AS type
+      ,a.constraint_id AS constraint_id
+      ,a.constraint_data AS constraint_data
+      ,a.broadness AS broadness':'')."
+    FROM
+      sus_access AS a
+    WHERE
+      (a.type='byhasaccount')
+      OR
+      (a.type='byuser'
+       AND (a.constraint_data = '{$this->username}' OR a.constraint_id=$for_user_id))
+      OR
+      (a.type='byrole'
+       AND a.constraint_data = 'teacher'
+       AND $for_user_id IN (
+          SELECT DISTINCT
+            usr.user_id
+          FROM
+            enrollments AS enr
+            JOIN course_roles AS crs_role ON crs_role.course_role_name = enr.course_role_name
+            JOIN users AS usr ON usr.user_id = enr.user_id
+            JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
+          WHERE
+            crs_role.course_role_name = 'teacher'
+            AND usr.user_id = $for_user_id))
+      OR
+      (a.type='byrole'
+       AND a.constraint_data = 'student'
+       AND $for_user_id IN (
+          SELECT DISTINCT
+            usr.user_id
+          FROM
+            enrollments AS enr
+            JOIN course_roles AS crs_role ON crs_role.course_role_name = enr.course_role_name
+            JOIN users AS usr ON usr.user_id = enr.user_id
+            JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
+          WHERE
+            crs_role.course_role_name = 'student'
+            AND usr.user_id = $for_user_id))
+      OR
+      (a.type='bycourse'
+       AND a.constraint_id IN (
+          SELECT DISTINCT
+            crs.course_id
+          FROM
+            enrollments AS enr
+            JOIN users AS usr ON usr.user_id = enr.user_id
+            JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
+          WHERE
+            usr.user_id = $for_user_id))
+      OR
+      (a.type='byinstr'
+       AND a.constraint_id IN (
+          SELECT DISTINCT
+            usr.user_id
+          FROM
+            enrollments AS enr
+            JOIN course_roles AS crs_role ON crs_role.course_role_name = enr.course_role_name
+            JOIN users AS usr ON usr.user_id = enr.user_id
+            JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
+          WHERE
+            crs_role.course_role_name = 'teacher'
+            AND crs.course_id IN (
+                SELECT DISTINCT
+                  crs.course_id
+                FROM
+                  enrollments AS enr
+                  JOIN course_roles AS crs_role ON crs_role.course_role_name = enr.course_role_name
+                  JOIN users AS usr ON usr.user_id = enr.user_id
+                  JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
+                WHERE
+                  crs_role.course_role_name = 'student'
+                  AND usr.user_id = $for_user_id
+            )))
+".
+				###############################
+				# NOTE: this is Williams specific, and is how access by grad year is
+				#  handled in our system (i.e. via Williams specific tables) - I've
+				#  left this code in a comment in case you want to implement a similar
+				#  thing on your own system.
+				###############################
+				#    "UNION
+				#    SELECT DISTINCT
+				#      a.sheet_id".
+				#($includeAccessRecords?'
+				#      ,a.access_id AS id
+				#      ,a.created_at AS created_at
+				#      ,a.updated_at AS updated_at
+				#      ,a.type AS type
+				#      ,a.constraint_id AS constraint_id
+				#      ,a.constraint_data AS constraint_data
+				#      ,a.broadness AS broadness':'')."
+				#    FROM
+				#      sus_access AS a
+				#      JOIN wms_card_ps_users AS wcpu ON wcpu.login_id = '{$this->username}' AND wcpu.wms_class=a.constraint_data
+				#    WHERE
+				#      a.type='bygradyear'".
+				###############################
+				") AS ac ON s.sheet_id = ac.sheet_id
+WHERE
+  s.flag_delete != 1
+  AND s.date_closes > ".(time()-(1)).
+				//(($for_sheet_id>0 || $for_access_id>0)?"WHERE ":'').
+				(($for_access_id > 0)?"\n  AND ac.access_id = $for_access_id":'').
+				//(($for_sheet_id>0 && $for_access_id>0)?" AND ":'').
+				(($for_sheet_id > 0)?"\n  AND s.sheet_id = $for_sheet_id":'')."
+ORDER BY
+  s.name".
+				($includeAccessRecords?'
+  ,ac.broadness DESC;':';');
+
+
+			// debugging
+			echo "\n<pre>$sql</pre>\n\n";
+			//debug(5,"\n<pre>$sql</pre>\n\n");
+
+			// return sus_get_records_sql($sql);
+
+			$resultsMyAvailableOpenings = mysqli_query($connString, $sql) or
 			die(mysqli_error($connString));
 
 			// rows returned
-			echo $rows_returned = $resultsMyAvailableOpenings->num_rows  . "<hr />";
+			echo $rows_returned = "<br />rows_returned = " . $resultsMyAvailableOpenings->num_rows  . "<hr />";
 
+			$sheets_with_access_reasons = [];
+			$last_sheet_id = -1;
 			// iterate over rs
 			$resultsMyAvailableOpenings->data_seek(0);
-			while($row = $resultsMyAvailableOpenings->fetch_assoc()){
-				foreach ($row as $field=>$val) {
-					echo $row[$field] . '<br>';
+			while($row = $resultsMyAvailableOpenings->fetch_assoc()) {
+				if ($row['s_id'] != $last_sheet_id) {
+					$sheets_with_access_reasons[] = $row;
 				}
-//				echo $row['access_id'] . '<br>';
-//				echo $row['created_at'] . '<br>';
-//				echo $row['updated_at'] . '<br>';
-//				echo $row['sheet_id'] . '<br>';
-//				echo $row['type'] . '<br>';
-//				echo $row['constraint_id'] . '<br>';
-//				echo $row['constraint_data'] . '<br>';
-//				echo $row['broadness'] . '<br><br>';
+				$last_sheet_id = $row['s_id'];
+
+				//				foreach ($row as $field=>$val) {
+				//					echo $row[$field] . '<br>';
+				//				}
+				//				echo $row['access_id'] . '<br>';
+				//				echo $row['created_at'] . '<br>';
+				//				echo $row['updated_at'] . '<br>';
+				//				echo $row['sheet_id'] . '<br>';
+				//				echo $row['type'] . '<br>';
+				//				echo $row['constraint_id'] . '<br>';
+				//				echo $row['constraint_data'] . '<br>';
+				//				echo $row['broadness'] . '<br><br>';
 			}
 
+		util_prePrintR($sheets_with_access_reasons);
+
+			echo $sheets_with_access_reasons[0]['s_type'];
 
 			// close DB connection
 			mysqli_close($connString);
 
 			// this returns a hash, not an object; retrieve values from this hash by referencing keys, instead of by using object properties
 			$this->my_available_openings = $resultsMyAvailableOpenings;
-
 		}
 
 
