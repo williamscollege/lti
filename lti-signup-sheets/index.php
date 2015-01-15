@@ -6,13 +6,10 @@
 	//    $notebooks = $USER->getAccessibleNotebooks(Action::getOneFromDb(['name'=>'view'],$DB));
 	//    $num_notebooks = count($notebooks);
 
-	//util_prePrintR($_POST); // remove DEBUGGING
-
 	if ($IS_AUTHENTICATED) {
 		// SECTION: authenticated
 
-		echo "<hr />";
-		echo '<br /><h3>You are Authenticated; ' . ucfirst(util_lang('you_possesive')) . ' ' . ucfirst(util_lang('my_available_openings')) . '</h3><br />';
+		echo '<br /><h3>You are Authenticated.</h3><br />';
 
 		# is system admin?
 		if ($USER->flag_is_system_admin) {
@@ -52,18 +49,7 @@
 	//    }
 
 	//    if ($USER->canActOnTarget($ACTIONS['create'],new Notebook(['DB'=>$DB]))) {
-	//
-?>
-	<!--        <input type="button" id="btn-add-notebook" value="<?php echo util_lang('add_notebook'); ?>"/>--><?php
 	//    }
-?>
-	<hr />
 
-	<!--    <ul class="">-->
-	<!--        <li><a id="notebooks-splash-link" class="splash-link" href="--><?php //echo APP_ROOT_PATH; ?><!--/app_code/notebook.php?action=list">--><?php //echo ucfirst(util_lang('help')); ?><!--</a></li>-->
-	<!--        <li><a id="metadata-structures-splash-link" class="splash-link" href="--><?php //echo APP_ROOT_PATH; ?><!--/app_code/metadata_structure.php?action=list">--><?php //echo ucfirst(util_lang('help')); ?><!--</a></li>-->
-	<!--        <li><a id="metadata-term-sets-splash-link" class="splash-link" href="--><?php //echo APP_ROOT_PATH; ?><!--/app_code/metadata_term_set.php?action=list">--><?php //echo ucfirst(util_lang('help')); ?><!--</a></li>-->
-	<!--    </ul>-->
-<?php
 	require_once('foot.php');
 ?>

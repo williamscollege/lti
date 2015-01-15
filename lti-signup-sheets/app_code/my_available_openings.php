@@ -13,37 +13,154 @@
 		// fetch available openings
 		// ***************************
 		$USER->cacheMyAvailableOpenings();
-
-		echo "Hah the count is: " . count($USER->my_available_openings);
-		util_prePrintR($USER->my_available_openings);
-
-
-
+		// util_prePrintR($USER->my_available_openings); // debugging
 
 
 		// display my_available_openings: "I can signup for..."
 		if ($USER->my_available_openings) {
-			echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
-			echo "<tr class=\"\">";
-			echo "<th class=\"col-sm-6 info\">I May Signup for...</th>";
-			echo "</tr>";
-			echo "<tr><td>";
-			foreach ($USER->my_available_openings as $opening) {
-				// date
-				echo "<p>";
-				echo "<strong>" . date('F d, Y', strtotime($opening['begin_datetime'])) . "</strong>";
-				echo "<br />";
-				// time opening
-				echo "&nbsp;&nbsp;&nbsp;&nbsp;" . date('g:i:A', strtotime($opening['begin_datetime'])) . " - " . date('g:i:A', strtotime($opening['end_datetime']));
-				// display x of y total signups for this opening
-				echo "&nbsp;(" . $opening['current_signups'] . "/" . $opening['max_signups'] . ")";
-				// popovers (bootstrap: must manually initialize popovers in JS file)
-				echo "<a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Description:</strong> " . $opening['description'] . "<br /><strong>Where:</strong> " . $opening['location'] . "\">" . $opening['name'] . "</a>";
-				echo "</p>";
+
+			if (count($USER->my_available_openings) < 1) {
+				echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
+				echo "<tr class=\"\">";
+				echo "<th class=\"col-sm-6 info\">There are no sheets on which you can sign up....</th>";
+				echo "</tr>";
+				echo "</table>";
 			}
-			echo "</td>";
-			echo "</tr>";
-			echo "</table>";
+			else {
+				$course_based_sheets = [];
+				$other_based_sheets  = [];
+				foreach ($USER->my_available_openings as $sheet) {
+
+					// popovers (bootstrap: must manually initialize popovers in JS file)
+					$base_sheet_link = "<a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Description:</strong> " . $sheet['s_description'] . "\">" . $sheet['s_name'] . "</a>";
+
+					// NOTE: the A) through G) leads on the keys are used to sort. The display trims the first 3 chars from the key.
+					switch ($sheet["a_type"]) {
+						case "byuser":
+							if (isset($other_based_sheets["A) I was specifically given access"])) {
+								$other_based_sheets["A) I was specifically given access"] .= "<li>$base_sheet_link</li>";
+							}
+							else {
+								$other_based_sheets["A) I was specifically given access"] = "<li>$base_sheet_link</li>";
+							}
+							break;
+						case "bycourse":
+							$course = Course::getAllFromDb(['course_id'=> $sheet["a_constraint_id"]], $DB);
+
+							if (isset($course_based_sheets[$course[0]->course_idstr])) {
+								$course_based_sheets[$course[0]->short_name] .= "<li>$base_sheet_link</li>";
+							}
+							else {
+								$course_based_sheets[$course[0]->short_name] = "<li>$base_sheet_link</li>";
+							}
+							break;
+						case "byinstr":
+							$instr = User::getOneFromDb(['user_id'=>$sheet["a_constraint_id"]], $DB);
+
+							if (isset($other_based_sheets["B) I am in a course taught by"])) {
+								$other_based_sheets["B) I am in a course taught by"] .= "<li>Professor " . $instr->first_name . " " . $instr->last_name . " - $base_sheet_link</li>";
+							}
+							else {
+								$other_based_sheets["B) I am in a course taught by"] = "<li>Professor " . $instr->first_name . " " . $instr->last_name . " - $base_sheet_link</li>";
+							}
+							break;
+						case "bydept":
+							if (isset($other_based_sheets["C) I am in a course in this department"])) {
+								$other_based_sheets["C) I am in a course in this department"] .= "<li>" . $sheet["a_constraint_data"] . " - $base_sheet_link</li>";
+							}
+							else {
+								$other_based_sheets["C) I am in a course in this department"] = "<li>" . $sheet["a_constraint_data"] . " - $base_sheet_link</li>";
+							}
+							break;
+						case "bygradyear":
+							if (isset($other_based_sheets["D) your grad year is {$sheet["a_constraint_data"]}"])) {
+								$other_based_sheets["D) your grad year is {$sheet["a_constraint_data"]}"] .= "<li>$base_sheet_link</li>";
+							}
+							else {
+								$other_based_sheets["D) your grad year is {$sheet["a_constraint_data"]}"] = "<li>$base_sheet_link</li>";
+							}
+							break;
+						case "byrole":
+							if ($sheet["a_constraint_data"] == "teacher") {
+								if (isset($other_based_sheets["E) I am teaching a course"])) {
+									$other_based_sheets["E) I am teaching a course"] .= "<li>$base_sheet_link</li>";
+								}
+								else {
+									$other_based_sheets["E) I am teaching a course"] = "<li>$base_sheet_link</li>";
+								}
+							}
+							elseif ($sheet["a_constraint_data"] == "student") {
+								if (isset($other_based_sheets["F) I am a student in a course"])) {
+									$other_based_sheets["F) I am a student in a course"] .= "<li>$base_sheet_link</li>";
+								}
+								else {
+									$other_based_sheets["F) I am a student in a course"] = "<li>$base_sheet_link</li>";
+								}
+
+							}
+							break;
+						case "byhasaccount":
+							if (isset($other_based_sheets["G) you have an account on this system"])) {
+								$other_based_sheets["G) you have an account on this system"] .= "<li>$base_sheet_link</li>";
+							}
+							else {
+								$other_based_sheets["G) you have an account on this system"] = "<li>$base_sheet_link</li>";
+							}
+							break;
+						default:
+							break;
+					}
+				}
+
+				// util_prePrintR($other_based_sheets);
+				ksort($course_based_sheets);
+				ksort($other_based_sheets);
+
+				if ($course_based_sheets && $other_based_sheets) {
+					// start table
+					echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
+					echo "<tr class=\"\"><th class=\"col-sm-6 info\">Sheets available because I am enrolled in...</th></tr>";
+					echo "<tr><td>";
+
+					foreach ($course_based_sheets as $course => $items) {
+						echo "<h4><strong>" . $course . "</strong></h4>";
+						echo "<ul>" . $items . "</ul>";
+					}
+					// end table
+					echo "</td></tr></table>";
+
+					// start table
+					echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
+					echo "<tr class=\"\"><th class=\"col-sm-6 info\">Sheets available because...</th></tr>";
+					echo "<tr><td>";
+
+					foreach ($other_based_sheets as $reason => $items) {
+						echo "<h4><strong>" . substr($reason, 3)  . "</strong></h4>";
+						echo "<ul>" . $items . "</ul>";
+					}
+
+					// end table
+					echo "</td></tr></table>";
+				}
+				else // only one list has info
+				{
+					// start table
+					echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
+					echo "<tr class=\"\"><th class=\"col-sm-6 info\">I can sign up for these because...</th></tr>";
+					echo "<tr><td>";
+
+					foreach ($course_based_sheets as $course => $items) {
+						echo "<h4><strong>" . $course . "</strong></h4>";
+						echo "<ul>" . $items . "</ul>";
+					}
+					foreach ($other_based_sheets as $reason => $items) {
+						echo "<br /><strong>" . substr($reason, 3) . "</strong>";
+						echo "<ul>" . $items . "</ul>";
+					}
+					// end table
+					echo "</td></tr></table>";
+				}
+			}
 		}
 
 		// end parent div

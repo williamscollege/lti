@@ -7,7 +7,7 @@
 	if ($IS_AUTHENTICATED) {
 		echo "<div>";
 		echo "<h3>" . ucfirst(util_lang('help')) . "</h3>";
-		echo "<p>NOTE: Below is temporary FPO text from old Moodle Signup Sheets help file</p>";
+		echo "<p>NOTE: Below is temporary text from Moodle help file</p>";
 
 		// NOTE: START placeholder text from old Moodle Signup Sheets help file
 		?>
