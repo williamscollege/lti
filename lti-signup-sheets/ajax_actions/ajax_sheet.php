@@ -18,6 +18,7 @@
 	$action       = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
 	$ownerUserID  = htmlentities((isset($_REQUEST["ajaxVal_OwnerUserID"])) ? $_REQUEST["ajaxVal_OwnerUserID"] : 0);
 	$sheetgroupID = htmlentities((isset($_REQUEST["ajaxVal_SheetgroupID"])) ? $_REQUEST["ajaxVal_SheetgroupID"] : 0);
+	$sheetID = htmlentities((isset($_REQUEST["ajaxVal_SheetID"])) ? $_REQUEST["ajaxVal_SheetID"] : 0);
 	$name         = htmlentities((isset($_REQUEST["ajaxVal_Name"])) ? util_quoteSmart($_REQUEST["ajaxVal_Name"]) : 0);
 	$description  = htmlentities((isset($_REQUEST["ajaxVal_Description"])) ? util_quoteSmart($_REQUEST["ajaxVal_Description"]) : 0);
 	$maxTotal     = htmlentities((isset($_REQUEST["ajaxVal_MaxTotal"])) ? $_REQUEST["ajaxVal_MaxTotal"] : 0);
@@ -31,27 +32,27 @@
 		'status' => 'failure'
 	];
 
-
+# TODO Search for 'sheetgroup' and update where approprate to 'sheet'
 	#------------------------------------------------#
 	# Identify and process requested action
 	#------------------------------------------------#
 	//###############################################################
-	if ($action == 'add-sheetgroup') {
-		$sg = SUS_Sheetgroup::getOneFromDb(['name' => $name], $DB);
+	if ($action == 'add-sheet') {
+		$s = SUS_Sheet::getOneFromDb(['name' => $name], $DB);
 
-		if ($sg->matchesDb) {
+		if ($s->matchesDb) {
 			// error: matching record already exists
 			echo json_encode($results);
 			exit;
 		}
-		$sg->owner_user_id              = $ownerUserID;
-		$sg->name                       = $name;
-		$sg->description                = $description;
-		$sg->max_g_total_user_signups   = $maxTotal;
-		$sg->max_g_pending_user_signups = $maxPending;
-		$sg->updated_at                 = date("Y-m-d H:i:s");
+		$s->owner_user_id              = $ownerUserID;
+		$s->name                       = $name;
+		$s->description                = $description;
+		$s->max_g_total_user_signups   = $maxTotal;
+		$s->max_g_pending_user_signups = $maxPending;
+		$s->updated_at                 = date("Y-m-d H:i:s");
 
-		$sg->updateDb();
+		$s->updateDb();
 
 		# TODO NEED TO ENSURE THAT ADD Sheetgroup cannot add a new group with same name of pre-existing sheetgroup
 		$sheetgroup = SUS_Sheetgroup::getOneFromDb(['name' => $name], $DB);
@@ -72,20 +73,20 @@
 	}
 	//###############################################################
 	elseif ($action == 'edit-sheetgroup') {
-		$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $sheetgroupID], $DB);
+		$s = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $sheetgroupID], $DB);
 
-		if (!$sg->matchesDb) {
+		if (!$s->matchesDb) {
 			// error: no matching record found
 			echo json_encode($results);
 			exit;
 		}
-		$sg->name                       = $name;
-		$sg->description                = $description;
-		$sg->max_g_total_user_signups   = $maxTotal;
-		$sg->max_g_pending_user_signups = $maxPending;
-		$sg->updated_at                 = date("Y-m-d H:i:s");
+		$s->name                       = $name;
+		$s->description                = $description;
+		$s->max_g_total_user_signups   = $maxTotal;
+		$s->max_g_pending_user_signups = $maxPending;
+		$s->updated_at                 = date("Y-m-d H:i:s");
 
-		$sg->updateDb();
+		$s->updateDb();
 
 		# Output
 		$results['status']       = 'success';
@@ -93,32 +94,27 @@
 		$results['html_output']  = '';
 	}
 	//###############################################################
-	elseif ($action == 'delete-sheetgroup') {
-		$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $deleteID], $DB);
+	elseif ($action == 'delete-sheet') {
+		$s = SUS_Sheet::getOneFromDb(['sheet_id' => $deleteID], $DB);
 
-		if (!$sg->matchesDb) {
+		if (!$s->matchesDb) {
 			// error: no matching record found
 			echo json_encode($results);
 			exit;
 		}
 
 		# Get any sheets belonging to this sheetgroup(for subsequent removal)
-		$sg->loadSheets();
+		$s->loadSheets();
 
-		# Remove sheets
-		foreach ($sg->sheets as $s) {
-			$s->flag_delete = TRUE;
-			$s->updateDb();
-		}
+		# TODO - NEED TO REMOVE OPENINGS and access?
+		# TODO - implement doDelete() to cascade deletes
 
 		# Remove sheetgroup
-		$sg->flag_delete = TRUE;
-		$sg->updateDb();
-
-		# TODO NEED TO REMOVE OPENINGS and access?
+		$s->flag_delete = TRUE;
+		$s->updateDb();
 
 		# Output
-		if ($sg->matchesDb) {
+		if ($s->matchesDb) {
 			$results['status'] = 'success';
 		}
 	}

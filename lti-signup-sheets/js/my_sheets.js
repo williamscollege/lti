@@ -4,6 +4,7 @@ $(document).ready(function () {
 	// helper functions
 	// ***************************
 
+	// BootBox jQuery helper function
 	function showConfirmBox(ary) {
 		alert(ary['ajax_action'] + ', ' + ary['ajax_id']);
 
@@ -100,6 +101,22 @@ $(document).ready(function () {
 		showConfirmBox(params);
 	});
 
+	// Delete sheet
+	$(document).on("click", ".sus-delete-sheet", function () {
+
+		GLOBAL_confirmHandlerData = $(this).attr('data-for-sheet-id');
+		var params = {
+			title: "Delete Sheet",
+			message: "This sheet will be deleted. Really delete this sheet?<br /><br /><strong>&quot;" + $(this).parent('TD').prev().children("A").attr('data-for-sheet-name') + "&quot;</strong>",
+			label: "Delete Sheet",
+			class: "btn btn-danger",
+			url: "../ajax_actions/ajax_sheet.php",
+			ajax_action: "delete-sheet",
+			ajax_id: GLOBAL_confirmHandlerData
+		};
+		showConfirmBox(params);
+	});
+
 	// Add sheetgroup
 	$(".sus-add-sheetgroup").click(function () {
 
@@ -168,7 +185,7 @@ $(document).ready(function () {
 			var sheetgroup_max_total = $('#' + formName + ' #ajaxSheetgroupMaxTotal').val();
 			var sheetgroup_max_pending = $('#' + formName + ' #ajaxSheetgroupMaxPending').val();
 			// debugging
-			//alert('2) url=' + $("#frmAjaxSheetgroup").attr('action') + "\n" + formName + "\n" + action + "\n" + owner_user_id + "\n" + sheetgroup_id + "\n" + sheetgroup_name + "\n" + sheetgroup_description + "\n" + sheetgroup_max_total + "\n" + sheetgroup_max_pending);
+			alert('2) url=' + $("#frmAjaxSheetgroup").attr('action') + "\n" + formName + "\n" + action + "\n" + owner_user_id + "\n" + sheetgroup_id + "\n" + sheetgroup_name + "\n" + sheetgroup_description + "\n" + sheetgroup_max_total + "\n" + sheetgroup_max_pending);
 
 			$.ajax({
 				type: 'POST',
