@@ -5,9 +5,10 @@
 
 
 	if ($IS_AUTHENTICATED) {
-		echo "<div>";
+		echo "<div id=\"parent_container\">"; // start: div#parent_container
 		echo "<h3>" . ucfirst(util_lang('my_sheets')) . "</h3>";
 		echo "<p>Sheets are collected into groups (ordered alphabetically). Group settings affect all sheets in the group. Sheet settings affect only that sheet.</p>";
+
 
 		// ***************************
 		// fetch managed sheets
@@ -95,8 +96,7 @@
 		echo "<a href=\"#modalSheetgroup\" class=\"btn btn-primary sus-add-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" title=\"Add group\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new group</a>";
 		echo "</p>";
 
-		// end parent div
-		echo "</div>";
+		echo "</div>"; // end: div#parent_container
 	}
 
 	require_once('../foot.php');

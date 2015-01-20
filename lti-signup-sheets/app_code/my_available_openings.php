@@ -5,7 +5,7 @@
 
 
 	if ($IS_AUTHENTICATED) {
-		echo "<div>";
+		echo "<div id=\"parent_container\">"; // start: div#parent_container
 		echo "<h3>" . ucfirst(util_lang('my_available_openings')) . "</h3>";
 		echo "<p>&nbsp;</p>";
 
@@ -45,7 +45,7 @@
 							}
 							break;
 						case "bycourse":
-							$course = Course::getAllFromDb(['course_id'=> $sheet["a_constraint_id"]], $DB);
+							$course = Course::getAllFromDb(['course_id' => $sheet["a_constraint_id"]], $DB);
 
 							if (isset($course_based_sheets[$course[0]->course_idstr])) {
 								$course_based_sheets[$course[0]->short_name] .= "<li>$base_sheet_link</li>";
@@ -55,7 +55,7 @@
 							}
 							break;
 						case "byinstr":
-							$instr = User::getOneFromDb(['user_id'=>$sheet["a_constraint_id"]], $DB);
+							$instr = User::getOneFromDb(['user_id' => $sheet["a_constraint_id"]], $DB);
 
 							if (isset($other_based_sheets["B) I am in a course taught by"])) {
 								$other_based_sheets["B) I am in a course taught by"] .= "<li>Professor " . $instr->first_name . " " . $instr->last_name . " - $base_sheet_link</li>";
@@ -135,7 +135,7 @@
 					echo "<tr><td>";
 
 					foreach ($other_based_sheets as $reason => $items) {
-						echo "<h4><strong>" . substr($reason, 3)  . "</strong></h4>";
+						echo "<h4><strong>" . substr($reason, 3) . "</strong></h4>";
 						echo "<ul>" . $items . "</ul>";
 					}
 
@@ -163,8 +163,7 @@
 			}
 		}
 
-		// end parent div
-		echo "</div>";
+		echo "</div>"; // end: div#parent_container
 	}
 
 	require_once('../foot.php');

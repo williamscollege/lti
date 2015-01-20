@@ -4,21 +4,27 @@ Purpose: New styles that add icons to validation plugin (jquery.validate.js)
 Source: http://alittlecode.com/jquery-form-validation-with-styles-from-twitter-bootstrap/
 ==========================================*/
 
-
 /*=======================================*/
 /*NEW 2014 Signup Sheet Specific CSS Tweaks*/
 /*=======================================*/
 
 /*validation.js hack: to eliminate extra space after dynamic validation occurs */
-div.form-group.success{
+div.form-group.success {
 	margin-bottom: 0px !important;
 }
 
 /*create an indented, no-bulleted UL style for bootstrap.css*/
-UL.unstyled LI, OL.unstyled LI
-{
+UL.unstyled LI, OL.unstyled LI {
 	list-style-type: none;
 	margin-left: 0px;
+}
+
+#page_alert_div {
+	z-index: 1;
+	position: fixed;
+	top: 60px;
+	right: 20px;
+	width: 250px;
 }
 
 /*Bootstrap Popover*/
@@ -26,20 +32,18 @@ UL.unstyled LI, OL.unstyled LI
 /*background-color: #eee;*/
 /*}*/
 
-
 /*=======================================*/
 /*PRE 2014 EQR Historical CSS Tweaks*/
 /*=======================================*/
-LABEL.valid
-{
+LABEL.valid {
 	width: 24px;
 	height: 24px;
 	background: url(../img/valid.png) no-repeat center center;
 	display: inline-block;
 	text-indent: -9999px;
 }
-LABEL.error
-{
+
+LABEL.error {
 	font-weight: bold;
 	color: #ff0000;
 	padding: 2px 8px;
@@ -47,8 +51,8 @@ LABEL.error
 	/*padding: 0px !important;*/
 	/*margin: 0px !important;*/
 }
-.text-warning
-{
+
+.text-warning {
 	color: #E17823;
 }
 
@@ -57,24 +61,22 @@ Patch For: bootstrap.css
 Purpose: Williams custom tweaks to bootstrap.css
 ==========================================
 add a placeholder to prevent page content from shifting to accommodate the scrollbar*/
-HTML
-{
+HTML {
 	overflow-y: scroll;
 }
 
-H1,H2,H3,H4,H5 {
-    margin-bottom: 0;
+H1, H2, H3, H4, H5 {
+	margin-bottom: 0;
 }
-.btn.btn-link.btn-cancel, .btn-link.btn-cancel
-{
+
+.btn.btn-link.btn-cancel, .btn-link.btn-cancel {
 	color: #d15545 !important;
-/*red-orange*/
+	/*red-orange*/
 }
 
 .form-horizontal .control-group .display-only-controls {
-    padding-top: 5px;
+	padding-top: 5px;
 }
-
 
 /*=======================================
 Williams Custom CSS
@@ -85,145 +87,114 @@ Purpose: CSS that's NOT an extension / modification of the bootstrap framework
 /* GLOBAL */
 
 #frmSignout {
-    padding-top: 8px;
-}
-#frmSignout #submit_signout {
-    margin-top: -3px;
+	padding-top: 8px;
 }
 
-.cursorPointer
-{
-    cursor: pointer;
+#frmSignout #submit_signout {
+	margin-top: -3px;
+}
+
+.cursorPointer {
+	cursor: pointer;
 }
 
 a.show-hide-control {
-    font-size: 10px;
-    text-decoration: underline;
+	font-size: 10px;
+	text-decoration: underline;
 }
 
 .ordering-controls-up-down {
-    display: inline-block;
+	display: inline-block;
 }
+
 .ordering-controls-up-down a.btn,
 .ordering-controls-up-down a.btn i {
-    margin: 0 !important;
-    padding: 0 !important;
-    font-size: 10px !important;
-    line-height: 10px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	font-size: 10px !important;
+	line-height: 10px !important;
 }
 
 .ordering-controls-up-down a.btn {
-    margin-top: -4px !important;
+	margin-top: -4px !important;
 }
 
 /***********************************************************************************/
 /* general embedding */
 
 .embedded {
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    border-width: 1px;
-    border-color: #999;
-    border-style: solid;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border-width: 1px;
+	border-color: #999;
+	border-style: solid;
 
-    padding: 16px;
-    margin: 12px 0;
+	padding: 16px;
+	margin: 12px 0;
 }
 
 .embedded h1,
 .embedded h2,
 .embedded h3,
 .embedded h4,
-.embedded h5
-{
-    margin-top: 0  !important;
+.embedded h5 {
+	margin-top: 0 !important;
 }
 
-.embedded h3
-{
-    font-size: 18px;
-    line-height: 30px;
+.embedded h3 {
+	font-size: 18px;
+	line-height: 30px;
 }
+
 .embedded h3 input {
-    margin-bottom: 0 !important;
-    font-size: 18px !important;
-    height: 30px !important;
-    width: 300px;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    margin-top: -2px !important;
+	margin-bottom: 0 !important;
+	font-size: 18px !important;
+	height: 30px !important;
+	width: 300px;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	margin-top: -2px !important;
 }
-
 
 .embedded img {
-    max-width: 180px;
-    max-height: 180px;
+	max-width: 180px;
+	max-height: 180px;
 }
 
 .embedded .details-info {
-    display: none;
+	display: none;
 }
 
 /***********************************************************************************/
 /* home page */
 
 .splash-links {
-    width: 800px;
-    margin: 0 auto !important;
+	width: 800px;
+	margin: 0 auto !important;
 }
 
 .splash-links a.splash-link {
-    font-weight: bold;
-    font-size: 20px;
-    margin: 0 12px;
+	font-weight: bold;
+	font-size: 20px;
+	margin: 0 12px;
 }
 
-/***********************************************************************************/
-.transient_alert
-{
-	position: absolute;
-	top: 100px;
-	left: 500px;
-	padding: 6px;
-	z-index: 1060;
-}
-.in_progress_alert
-{
-	border: 1px solid #F89406;
-	color: #F89406;
-	background-color: #FCF8E3;
-}
-.success_alert
-{
-	border: 1px solid #468847;
-	color: #468847;
-	background-color: #DFF0D8;
-}
-.error_alert
-{
-	border: 1px solid #B94A48;
-	color: #B94A48;
-	background-color: #F2DEDE;
-}
-
-/***********************************************************************************/
 /*-------------------------
 confirmation dialog*/
-.confirmationDialog
-{
+.confirmationDialog {
 	border-width: 3px;
 	background-color: #FEB;
-    padding-bottom: 8px;
-    font-weight: bold;
+	padding-bottom: 8px;
+	font-weight: bold;
 }
-.confirmationDialog .modal-header
-{
+
+.confirmationDialog .modal-header {
 	border: none;
 	padding: 0;
 }
-.confirmationDialog .modal-header .close
-{
+
+.confirmationDialog .modal-header .close {
 	width: 20px;
 	height: 20px;
 	margin: 6px 8px 0 0;
@@ -232,23 +203,23 @@ confirmation dialog*/
 	border: 1px solid #700;
 	text-align: center;
 	vertical-align: middle;
-/*text-shadow: none;*/
+	/*text-shadow: none;*/
 	opacity: .9;
 	filter: alpha(opacity=90);
 	background-color: #DCC;
 }
-.confirmationDialog .modal-header .close:hover
-{
+
+.confirmationDialog .modal-header .close:hover {
 	color: #B00;
 	background-color: #EBB;
 }
-.confirmationDialog .modal-body
-{
+
+.confirmationDialog .modal-body {
 	padding-bottom: 0;
 	border: none;
 }
-.confirmationDialog .modal-footer
-{
+
+.confirmationDialog .modal-footer {
 	text-align: center;
 	padding: 6px;
 	border-width: 0;
@@ -256,7 +227,7 @@ confirmation dialog*/
 	box-shadow: none;
 	-webkit-box-shadow: none;
 }
-.confirmationDialog .modal-footer .btn
-{
+
+.confirmationDialog .modal-footer .btn {
 	margin: 0 24px;
 }

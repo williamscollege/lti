@@ -25,6 +25,7 @@
 	$maxPending   = htmlentities((isset($_REQUEST["ajaxVal_MaxPending"])) ? $_REQUEST["ajaxVal_MaxPending"] : 0);
 	$deleteID     = htmlentities((isset($_REQUEST["ajaxVal_Delete_ID"])) ? $_REQUEST["ajaxVal_Delete_ID"] : 0);
 
+
 	#------------------------------------------------#
 	# Set default return value
 	#------------------------------------------------#
@@ -104,7 +105,7 @@
 		}
 
 		# Get any sheets belonging to this sheetgroup(for subsequent removal)
-		$s->loadSheets();
+//		$s->loadSheets();
 
 		# TODO - NEED TO REMOVE OPENINGS and access?
 		# TODO - implement doDelete() to cascade deletes

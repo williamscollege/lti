@@ -1,52 +1,42 @@
 /* This function causes an alert to be displayed on the page. If the alert is of type success or error then it will fade away in a few seconds
- REQUIRES: a div of id page_alert
+ REQUIRES: a div of id page_alert_div
  */
 
 function appRootPath() {
 	return "/GITHUB/lti/lti-signup-sheets";
 }
 
-function dfnUtil_setTransientAlert(alertType, alertMessage, optionalReferenceElt) {
-	if (optionalReferenceElt !== undefined) {
-		$('#page_alert').css('top', optionalReferenceElt.position().top);
-		$('#page_alert').css('left', optionalReferenceElt.position().left * 1 + optionalReferenceElt.css('width') * 1 + 100);
-	}
-	else {
-		$('#page_alert').css('top', 100);
-		$('#page_alert').css('left', 500);
-	}
-	$('#page_alert').removeClass("in_progress_alert");
-	$('#page_alert').removeClass("success_alert");
-	$('#page_alert').removeClass("error_alert");
+function dfnUtil_setTransientAlert(alertType, alertMessage) {
+
+	// show the pre-existing alert button in DOM
+	$('#page_alert_div').show();
+
 	if (alertType == 'progress') {
-		$('#page_alert').css("display", 'block');
-		$('#page_alert').html('<i class="glyphicon glyphicon-time"></i> ' + alertMessage);
-		$('#page_alert').addClass("in_progress_alert");
-		$('#page_alert').stop();
-		$('#page_alert').css("opacity", 1);
+		$('#page_alert_div').addClass('alert-success').removeClass('alert-danger').removeClass("alert-info");
+		$('#page_alert_message').html('<i class="glyphicon glyphicon-time"></i> ' + alertMessage);
 	}
 	else if (alertType == 'success') {
-		$('#page_alert').css("display", 'block');
-		$('#page_alert').html('<i class="glyphicon glyphicon-ok"></i> ' + alertMessage);
-		$('#page_alert').addClass("success_alert");
-		$('#page_alert').stop();
-		$('#page_alert').css("opacity", 1);
-		$('#page_alert').fadeOut({duration: 3000, queue: false}); //,function(){$('#page_alert').addClass("hide");})
-		//alert('success ta');
+		// alert('INSIDE SUCCESS: ' + alertType + ',' + alertMessage);
+		$('#page_alert_div').addClass('alert-success').removeClass('alert-danger').removeClass("alert-info");
+		$('#page_alert_message').html('<i class="glyphicon glyphicon-ok"></i> ' + alertMessage);
 	}
 	else if (alertType == 'error') {
-//        console.log("alert position top is "+$('#page_alert').css("top"));
-		$('#page_alert').css("display", 'block');
-		$('#page_alert').html('<i class="glyphicon glyphicon-exclamation-sign"></i> ' + alertMessage);
-		$('#page_alert').addClass("error_alert");
-		$('#page_alert').stop();
-		$('#page_alert').css("opacity", 1);
-		$('#page_alert').fadeOut({duration: 10000, queue: false});//,function(){$('#page_alert').addClass("hide");})
+		$('#page_alert_div').removeClass('alert-success').addClass('alert-danger').removeClass("alert-info");
+		$('#page_alert_message').html('<i class="glyphicon glyphicon-exclamation-sign"></i> ' + alertMessage);
 	}
+
+	// pause for user to read the alert, then hide alert button
+	setTimeout(function() {
+		$('#page_alert_div').hide();
+	}, 3000);
 }
+
+
 // NOTE: could put this directly in the HTML or in a footer file or some such, but doing it here consolidates the code
 $(document).ready(function () {
-	$('body').append('<div id="page_alert" class="transient_alert in_progress_alert hide alert">Saved</div>');
+	$('#parent_container').prepend('<div id="page_alert_div" class="alert alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span id="page_alert_message"></span></div>');
+	// hide message button placeholder
+	$('#page_alert_div').hide();
 
 	$('.show-hide-control').click(function () {
 		var target_id = $(this).attr("data-for_elt_id");

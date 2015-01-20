@@ -6,8 +6,7 @@ $(document).ready(function () {
 
 	// BootBox jQuery helper function
 	function showConfirmBox(ary) {
-		alert(ary['ajax_action'] + ', ' + ary['ajax_id']);
-
+		//alert(ary['ajax_action'] + ', ' + ary['ajax_id']);
 		bootbox.dialog({
 			title: ary['title'],
 			message: ary['message'],
@@ -17,7 +16,7 @@ $(document).ready(function () {
 					className: ary['class'],
 					callback: function () {
 						// show status
-						dfnUtil_setTransientAlert('progress', 'saving...');
+						dfnUtil_setTransientAlert('progress', 'Saving...');
 						$.ajax({
 							type: 'GET',
 							url: ary['url'],
@@ -58,25 +57,25 @@ $(document).ready(function () {
 		if (action == 'delete-sheetgroup') {
 			if (ret) {
 				// show status
-				dfnUtil_setTransientAlert('success', 'saved');
+				dfnUtil_setTransientAlert('success', 'Saved');
 				// remove element
 				$('#btn-edit-sheetgroup-id-' + GLOBAL_confirmHandlerData).closest('TABLE').remove();
 			}
 			else {
 				// error message
-				$("#btn-edit-sheetgroup-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+				$("#btn-edit-sheetgroup-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
 			}
 		}
 		else if (action == 'delete-sheet') {
 			if (ret) {
 				// show status
-				dfnUtil_setTransientAlert('success', 'saved');
+				dfnUtil_setTransientAlert('success', 'Saved');
 				// remove element
 				$('#btn-edit-sheet-id-' + GLOBAL_confirmHandlerData).closest('TR').remove();
 			}
 			else {
 				// error message
-				$("#btn-edit-sheet-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+				$("#btn-edit-sheet-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
 			}
 		}
 	}
@@ -185,7 +184,7 @@ $(document).ready(function () {
 			var sheetgroup_max_total = $('#' + formName + ' #ajaxSheetgroupMaxTotal').val();
 			var sheetgroup_max_pending = $('#' + formName + ' #ajaxSheetgroupMaxPending').val();
 			// debugging
-			alert('2) url=' + $("#frmAjaxSheetgroup").attr('action') + "\n" + formName + "\n" + action + "\n" + owner_user_id + "\n" + sheetgroup_id + "\n" + sheetgroup_name + "\n" + sheetgroup_description + "\n" + sheetgroup_max_total + "\n" + sheetgroup_max_pending);
+			//alert('2) url=' + $("#frmAjaxSheetgroup").attr('action') + "\n" + formName + "\n" + action + "\n" + owner_user_id + "\n" + sheetgroup_id + "\n" + sheetgroup_name + "\n" + sheetgroup_description + "\n" + sheetgroup_max_total + "\n" + sheetgroup_max_pending);
 
 			$.ajax({
 				type: 'POST',
@@ -206,9 +205,9 @@ $(document).ready(function () {
 
 					if (data.status == 'success') {
 						// remove error messages
-						$('DIV.alert-error').remove();
+						$('DIV.alert-danger').remove();
 
-						alert(data.which_action); // debugging
+						//alert(data.which_action); // debugging
 
 						// inject updates back into the DOM
 						if (data.which_action == 'add-sheetgroup') {
@@ -238,7 +237,7 @@ $(document).ready(function () {
 					else {
 						// error message
 						$("#DKCTEST").text("<div><p>AJAX ERROR HERE!</p></div>");
-						//$("UL#displayAllSheetgroups").after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> A record with that same name already exists in database.</div>');
+						//$("UL#displayAllSheetgroups").after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> A record with that same name already exists in database.</div>');
 					}
 				}
 			});

@@ -5,7 +5,7 @@
 
 
 	if ($IS_AUTHENTICATED) {
-		echo "<div>";
+		echo "<div id=\"parent_container\">"; // start: div#parent_container
 		echo "<h3>" . ucfirst(util_lang('my_signups')) . "</h3>";
 		echo "<p>&nbsp;</p>";
 
@@ -72,8 +72,7 @@
 			echo "</table>";
 		}
 
-		// end parent div
-		echo "</div>";
+		echo "</div>"; // end: div#parent_container
 	}
 
 	require_once('../foot.php');
