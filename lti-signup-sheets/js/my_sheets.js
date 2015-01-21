@@ -1,6 +1,12 @@
 $(document).ready(function () {
 
 	// ***************************
+	// For performance reasons, the Tooltip and Popover data-apis are opt-in, meaning you must initialize them yourself.
+	// ***************************
+	$('[data-toggle="popover"]').popover();
+
+
+	// ***************************
 	// helper functions
 	// ***************************
 
@@ -86,14 +92,13 @@ $(document).ready(function () {
 
 	// Delete sheetgroup
 	$(document).on("click", ".sus-delete-sheetgroup", function () {
-
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-sheetgroup-id');
 		var params = {
 			title: "Delete Group",
 			message: "Any sheets in this group will be deleted. Really delete this group?<br /><br /><strong>&quot;" + $(this).parent('TH').prev().children("A").attr('data-for-sheetgroup-name') + "&quot;</strong>",
 			label: "Delete Group",
 			class: "btn btn-danger",
-			url: "../ajax_actions/ajax_sheetgroup.php",
+			url: "../ajax_actions/ajax_actions.php",
 			ajax_action: "delete-sheetgroup",
 			ajax_id: GLOBAL_confirmHandlerData
 		};
@@ -102,14 +107,13 @@ $(document).ready(function () {
 
 	// Delete sheet
 	$(document).on("click", ".sus-delete-sheet", function () {
-
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-sheet-id');
 		var params = {
 			title: "Delete Sheet",
 			message: "This sheet will be deleted. Really delete this sheet?<br /><br /><strong>&quot;" + $(this).parent('TD').prev().children("A").attr('data-for-sheet-name') + "&quot;</strong>",
 			label: "Delete Sheet",
 			class: "btn btn-danger",
-			url: "../ajax_actions/ajax_sheet.php",
+			url: "../ajax_actions/ajax_actions.php",
 			ajax_action: "delete-sheet",
 			ajax_id: GLOBAL_confirmHandlerData
 		};

@@ -1,11 +1,14 @@
-/* This function causes an alert to be displayed on the page. If the alert is of type success or error then it will fade away in a few seconds
- REQUIRES: a div of id page_alert_div
- */
+// declare global variables
+var GLOBAL_confirmHandlerData = -1; // data value of element
+var GLOBAL_confirmHandlerReference = -1; // data value of reference element (i.e. container, parent, etc.)
+
 
 function appRootPath() {
 	return "/GITHUB/lti/lti-signup-sheets";
 }
 
+
+// REQUIRES: a div of id page_alert_div
 function dfnUtil_setTransientAlert(alertType, alertMessage) {
 
 	// show the pre-existing alert button in DOM
@@ -28,7 +31,12 @@ function dfnUtil_setTransientAlert(alertType, alertMessage) {
 	// pause for user to read the alert, then hide alert button
 	setTimeout(function() {
 		$('#page_alert_div').hide();
-	}, 3000);
+	}, 500);
+
+	// TODO: how to queue ajax actions to ensure that multiple rapidly clicked delete actions will update the UI (currently, the DB updates correctly, but UI fails to update)
+	//.queue(function() {
+	//		$( this ).toggleClass( "red" ).dequeue();
+	//	})
 }
 
 
@@ -38,6 +46,7 @@ $(document).ready(function () {
 	// hide message button placeholder
 	$('#page_alert_div').hide();
 
+	// TODO obsolete snippet
 	$('.show-hide-control').click(function () {
 		var target_id = $(this).attr("data-for_elt_id");
 		$("#" + target_id).toggle('display');
@@ -53,7 +62,7 @@ function dfnUtil_launchConfirm(msg, handler) {
 	$('#confirm-yes').off("click");
 	$('#confirm-yes').click(handler);
 }
-var GLOBAL_confirmHandlerData = -1;
+
 
 // NOTE: could put this directly in the HTML or in a footer file or some such, but doing it here consolidates the code
 //$(document).ready(function () {
@@ -70,6 +79,7 @@ var GLOBAL_confirmHandlerData = -1;
 //        '</div>' +
 //        '</div>');
 //});
+
 
 function randomString(strSize) {
 	var text = "";

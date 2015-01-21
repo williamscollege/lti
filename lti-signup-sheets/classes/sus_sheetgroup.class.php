@@ -65,5 +65,18 @@
 			usort($this->sheets, 'SUS_Sheet::cmp');
 		}
 
+		// mark this object as deleted as well as any lower dependent items
+		public function cascadeDelete() {
+			// mark sheetgroup as deleted
+			$this->doDelete();
+
+			// for this sheetgroup: fetch sheets
+			$this->cacheSheets();
+
+			// mark sheets as deleted
+			foreach ($this->sheets as $sheet) {
+				$sheet->cascadeDelete();
+			}
+		}
 
 	}

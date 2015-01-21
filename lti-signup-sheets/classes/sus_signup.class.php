@@ -37,6 +37,11 @@
 
 		/* public functions */
 
+		// mark this object as deleted as well as any lower dependent items
+		public function cascadeDelete() {
+			// mark signup as deleted (at this time, deleting a single opening has no dependencies worth pursuing)
+			$this->doDelete();
+		}
 
 
 

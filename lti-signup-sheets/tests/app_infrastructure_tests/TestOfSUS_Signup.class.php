@@ -38,6 +38,16 @@
 
 		//// instance methods - related data
 
+		public function testCascadeDelete() {
+			$s = SUS_Signup::getOneFromDb(['signup_id' => 801], $this->DB);
+			$this->assertTrue($s->matchesDb);
+			$this->assertEqual(0, $s->flag_delete);
+
+			$s->cascadeDelete();
+
+			// were items correctly marked as deleted?
+			$this->assertEqual(1, $s->flag_delete);
+		}
 
 
 	}

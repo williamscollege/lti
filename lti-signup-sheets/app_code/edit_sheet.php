@@ -1,13 +1,13 @@
 <?php
 	require_once('../app_setup.php');
-	$pageTitle = ucfirst(util_lang('my_sheets'));
+	$pageTitle = ucfirst(util_lang('edit_sheet'));
 	require_once('../app_head.php');
 
 
 	if ($IS_AUTHENTICATED) {
 		echo "<div id=\"parent_container\">"; // start: div#parent_container
-		echo "<h3>" . ucfirst(util_lang('my_sheets')) . "</h3>";
-		echo "<p>Sheets are collected into groups (ordered alphabetically). Group settings affect all sheets in the group. Sheet settings affect only that sheet.</p>";
+		echo "<h3>" . ucfirst(util_lang('edit_sheet')) . "</h3>";
+		echo "<p>Start with 'Add Sheet'... then enable 'Edit sheet'...</p>";
 
 
 		// ***************************
@@ -175,4 +175,4 @@
 </form>
 <!-- /Modal -->
 
-<script type="text/javascript" src="../js/my_sheets.js"></script>
+<script type="text/javascript" src="../js/edit_sheet.js"></script>

@@ -201,7 +201,15 @@
 			$tmp_managed_access = SUS_Access::getAllFromDb(['type' => 'adminbyuser', 'constraint_data' => $this->username], $this->dbConnection);
 
 			foreach ($tmp_managed_access as $sheet) {
+				// TODO why is a sheet returned if flag_delete=1? [to replicate, set flag_delete=1 for sheet_id=607 and sheet_id=608]
+				// TODO: this type of object to hash problem may exist elsewhere too
 				array_push($this->managed_sheets, SUS_Sheet::getOneFromDb(['sheet_id' => $sheet->sheet_id], $this->dbConnection));
+
+				// attempted hack to resolve above issue... aborted.
+//				$one_sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $sheet->sheet_id], $this->dbConnection);
+//				if (isset($one_sheet->flag_delete)) {
+//					array_push($this->managed_sheets, $one_sheet);
+//				}
 			}
 			usort($this->managed_sheets, 'SUS_Sheet::cmp');
 		}
@@ -373,7 +381,7 @@
 		}
 
 		// takes: an optional flag for whether access data should be included in the results
-		// returns: an array of sheet objects on which the current user can sign up
+		// returns: an array of sheet objects on which the current user has access to sign up
 		// $for_sheet_id = use this to show openings for 1 sheet
 		// TODO - veryify use of params with moodle use cases
 		public function loadMyAvailableOpenings($includeAccessRecords = TRUE, $for_user_id = 0, $for_sheet_id = 0, $for_access_id = 0) {

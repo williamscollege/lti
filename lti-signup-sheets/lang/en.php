@@ -75,6 +75,7 @@ $LANGUAGE['en'] = [
 	'my_available_openings' => 'My Available Openings',
     'my_signups' => 'My Signups',
     'my_sheets' => 'My Sheets',
+    'edit_sheet' => 'Edit Sheet',
     'help' => 'Help',
 
 

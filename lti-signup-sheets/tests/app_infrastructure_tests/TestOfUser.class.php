@@ -220,8 +220,10 @@
 			$u1 = User::getOneFromDb(['user_id'=>101], $this->DB);
 
 			$u1->cacheMyAvailableOpenings();
-			$this->assertEqual(9, count($u1->my_available_openings));
-			$this->assertEqual(888, $u1->my_available_openings['byuser']);
+
+			$this->assertEqual(2, count($u1->my_available_openings));
+			$this->assertEqual(601, $u1->my_available_openings[0]['s_id']);
+			$this->assertEqual(602, $u1->my_available_openings[1]['s_id']);
 		}
 
 

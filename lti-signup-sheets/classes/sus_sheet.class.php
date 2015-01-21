@@ -66,4 +66,18 @@
 			usort($this->access, 'SUS_Access::cmp');
 		}
 
+		// mark this object as deleted as well as any lower dependent items
+		public function cascadeDelete() {
+			// mark sheet as deleted
+			$this->doDelete();
+
+			// for this sheet: fetch openings
+			$this->cacheOpenings();
+
+			// mark openings as deleted
+			foreach ($this->openings as $opening) {
+				$opening->cascadeDelete();
+			}
+		}
+
 	}

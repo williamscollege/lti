@@ -76,7 +76,7 @@
 
 			$a->cacheAccess();
 			$this->assertTrue($a->matchesDb);
-			$this->assertEqual(8, count($a->access));
+			$this->assertEqual(7, count($a->access));
 		}
 
 		public function testLoadAccess() {
@@ -85,7 +85,33 @@
 
 			$a->loadAccess();
 			$this->assertTrue($a->matchesDb);
-			$this->assertEqual(8, count($a->access));
+			$this->assertEqual(7, count($a->access));
+		}
+
+		public function testCascadeDelete() {
+			$s = SUS_Sheet::getOneFromDb(['sheet_id' => 601], $this->DB);
+			$this->assertTrue($s->matchesDb);
+			$this->assertEqual(0, $s->flag_delete);
+
+			$s->cascadeDelete();
+
+			// test expected results
+			$this->assertEqual(2, count($s->openings));
+			$this->assertEqual(2, count($s->openings[0]->signups));
+			$this->assertEqual(4, count($s->openings[1]->signups));
+			$this->assertEqual(702, $s->openings[0]->opening_id);
+			$this->assertEqual(809, $s->openings[0]->signups[0]->signup_id);
+
+			// were items correctly marked as deleted?
+			$this->assertEqual(1, $s->flag_delete); // sheet
+			$this->assertEqual(1, $s->openings[0]->flag_delete); // opening
+			$this->assertEqual(1, $s->openings[1]->flag_delete); // opening
+			$this->assertEqual(1, $s->openings[0]->signups[0]->flag_delete); // signup
+			$this->assertEqual(1, $s->openings[0]->signups[1]->flag_delete); // signup
+			$this->assertEqual(1, $s->openings[1]->signups[0]->flag_delete); // signup
+			$this->assertEqual(1, $s->openings[1]->signups[1]->flag_delete); // signup
+			$this->assertEqual(1, $s->openings[1]->signups[2]->flag_delete); // signup
+			$this->assertEqual(1, $s->openings[1]->signups[3]->flag_delete); // signup
 		}
 
 	}

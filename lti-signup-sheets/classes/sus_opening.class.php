@@ -63,4 +63,18 @@
 			usort($this->signups, 'SUS_Signup::cmp');
 		}
 
+		// mark this object as deleted as well as any lower dependent items
+		public function cascadeDelete() {
+			// mark opening as deleted
+			$this->doDelete();
+
+			// for this opening: fetch signups
+			$this->cacheSignups();
+
+			// mark signups as deleted
+			foreach ($this->signups as $signup) {
+				$signup->cascadeDelete();
+			}
+		}
+
 	}

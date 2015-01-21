@@ -58,9 +58,29 @@
 			$s = SUS_Opening::getOneFromDb(['opening_id' => 701], $this->DB);
 			$this->assertTrue($s->matchesDb);
 
-			$s->loadSignups();
+			$s->cacheSignups();
 			$this->assertTrue($s->matchesDb);
 			$this->assertEqual(4, count($s->signups));
+			$this->assertEqual(801, $s->signups[3]->signup_id);
+		}
+
+		public function testCascadeDelete() {
+			$o = SUS_Opening::getOneFromDb(['opening_id' => 701], $this->DB);
+			$this->assertTrue($o->matchesDb);
+			$this->assertEqual(0, $o->flag_delete);
+
+			$o->cascadeDelete();
+
+			// test expected results
+			$this->assertEqual(4, count($o->signups));
+			$this->assertEqual(801, $o->signups[3]->signup_id);
+
+			// were items correctly marked as deleted?
+			$this->assertEqual(1, $o->flag_delete); // opening
+			$this->assertEqual(1, $o->signups[0]->flag_delete); // signup
+			$this->assertEqual(1, $o->signups[1]->flag_delete); // signup
+			$this->assertEqual(1, $o->signups[2]->flag_delete); // signup
+			$this->assertEqual(1, $o->signups[3]->flag_delete); // signup
 		}
 
 	}
