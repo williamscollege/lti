@@ -9,7 +9,6 @@
 	<link rel="stylesheet" href="<?php echo PATH_BOOTSTRAP_CSS; ?>" type="text/css" media="all">
 	<!-- CSS: Plugins -->
 	<link rel="stylesheet" href="<?php echo PATH_JQUERYUI_CSS; ?>" />
-	<link rel="stylesheet" href="<?php echo APP_ROOT_PATH; ?>/css/WMS_bootstrap_PATCH.css" type="text/css" media="all">
 	<link rel="stylesheet" href="<?php echo APP_ROOT_PATH; ?>/css/wms-custom.css" type="text/css" media="all">
 	<!-- jQuery: Framework -->
 	<script src="<?php echo PATH_JQUERY_JS; ?>"></script>
@@ -93,10 +92,11 @@
 			</ul>
 			<?php
 				if ($IS_AUTHENTICATED) {
+					// TODO - DO NOT SHOW THIS WHEN AUTH'ed AS AN LTI
 					?>
 					<form id="frmSignout" class="navbar-form pull-right" method="post" action="<?php echo APP_ROOT_PATH; ?>/index.php">
-						<span class="muted">Signed in: <a href="account_management.php" title="My Account"><?php echo $_SESSION['userdata']['username']; ?></a></span>.
-						<input type="submit" id="submit_signout" class="btn btn-default" name="submit_signout" value="Sign out" />
+						<a href="account_management.php" title="My Account" class="wms_white"><?php echo $_SESSION['userdata']['username']; ?></a>&nbsp;
+						<input type="submit" id="submit_signout" class="btn btn-default btn-sm" name="submit_signout" value="Sign out" />
 					</form>
 				<?php
 				}

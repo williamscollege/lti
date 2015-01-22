@@ -6,7 +6,7 @@
 
 	if ($IS_AUTHENTICATED) {
 		echo "<div id=\"parent_container\">"; // start: div#parent_container
-		echo "<h3>" . ucfirst(util_lang('my_sheets')) . "</h3>";
+		echo "<h3>" . $pageTitle . "</h3>";
 		echo "<p>Sheets are collected into groups (ordered alphabetically). Group settings affect all sheets in the group. Sheet settings affect only that sheet.</p>";
 
 
@@ -88,7 +88,7 @@
 
 			// add new sheet
 			echo "<tr><td class=\"col-sm-12\" colspan=\"2\">";
-			echo "<a href=\"add_sheet.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "\" class=\"btn btn-xs btn-success sus-add-sheet\"  title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
+			echo "<a href=\"edit_sheet.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "&sheet=new\" class=\"btn btn-xs btn-success sus-add-sheet\"  title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
 			echo "</td></tr>\n";
 
 			// complete sheetgroup

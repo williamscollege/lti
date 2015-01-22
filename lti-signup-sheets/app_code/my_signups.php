@@ -6,7 +6,7 @@
 
 	if ($IS_AUTHENTICATED) {
 		echo "<div id=\"parent_container\">"; // start: div#parent_container
-		echo "<h3>" . ucfirst(util_lang('my_signups')) . "</h3>";
+		echo "<h3>" . $pageTitle . "</h3>";
 		echo "<p>&nbsp;</p>";
 
 		// ***************************
