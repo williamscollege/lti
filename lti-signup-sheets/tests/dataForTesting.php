@@ -190,16 +190,16 @@
 		# 'type', 'date_opens', 'date_closes', 'max_total_user_signups', 'max_pending_user_signups', 'flag_alert_owner_change', 'flag_alert_owner_signup',
 		# 'flag_alert_owner_imminent', 'flag_alert_admin_change', 'flag_alert_admin_signup', 'flag_alert_admin_imminent', 'flag_private_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheet::$dbTable . " VALUES
-			(601, NOW(), NOW(), 0, 101, 501, 'Sheet 601', 'Sheet 601, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 0),
+			(601, NOW(), NOW(), 0, 101, 501, 'Sheet 601', 'Sheet 601, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 0, 0, 0, 0),
 			(602, NOW(), NOW(), 0, 101, 501, 'Sheet 602', 'Sheet 602, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 1, 0, 0, 0, 0, 0, 0, 0),
-			(603, NOW(), NOW(), 0, 101, 501, 'Sheet 603', 'Sheet 603, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 1, 0, 0, 0, 0, 0, 0),
-			(604, NOW(), NOW(), 0, 101, 502, 'Sheet 604', 'Sheet 604, Sheetgroup 502', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 1, 0, 0, 0, 0, 0),
-			(605, NOW(), NOW(), 0, 101, 503, 'Sheet 605', 'Sheet 605, Sheetgroup 503', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 1, 0, 0, 0, 0),
-			(606, NOW(), NOW(), 0, 102, 504, 'Sheet 606', 'Sheet 606, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 1, 0, 0, 0),
-			(607, NOW(), NOW(), 0, 102, 504, 'Sheet 607', 'Sheet 607, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 1, 0, 0),
-			(608, NOW(), NOW(), 0, 103, 506, 'Sheet 608', 'Sheet 608, Sheetgroup 506', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 1, 0),
-			(609, NOW(), NOW(), 0, 104, 507, 'Sheet 609', 'Sheet 609, Sheetgroup 506', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 1),
-			(610, NOW(), NOW(), 0, 109, 510, 'Sheet 610', 'Sheet 610, Sheetgroup 510', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 0, 0, 0)
+			(603, NOW(), NOW(), 0, 101, 501, 'Sheet 603', 'Sheet 603, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 1, 0, 0, 0, 0, 0, 0),
+			(604, NOW(), NOW(), 0, 101, 502, 'Sheet 604', 'Sheet 604, Sheetgroup 502', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 1, 0, 0, 0, 0, 0),
+			(605, NOW(), NOW(), 0, 101, 503, 'Sheet 605', 'Sheet 605, Sheetgroup 503', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 1, 0, 0, 0, 0),
+			(606, NOW(), NOW(), 0, 102, 504, 'Sheet 606', 'Sheet 606, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 1, 0, 0, 0),
+			(607, NOW(), NOW(), 0, 102, 504, 'Sheet 607', 'Sheet 607, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 0, 1, 0, 0),
+			(608, NOW(), NOW(), 0, 103, 506, 'Sheet 608', 'Sheet 608, Sheetgroup 506', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 0, 0, 1, 0),
+			(609, NOW(), NOW(), 0, 104, 507, 'Sheet 609', 'Sheet 609, Sheetgroup 506', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 0, 0, 0, 1),
+			(610, NOW(), NOW(), 0, 109, 510, 'Sheet 610', 'Sheet 610, Sheetgroup 510', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 0, 0, 0, 0)
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();

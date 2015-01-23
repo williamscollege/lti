@@ -16,6 +16,17 @@ $(document).ready(function () {
 	});
 
 
+	// New Sheet: set default date (today)
+	if ($("#inputSheetDateStart").val() == "") {
+		var today =  new Date();
+		$("#inputSheetDateStart").datepicker('setDate',today);
+
+		var futureDate = new Date(today.getTime());
+		futureDate.setMonth( futureDate.getMonth( ) + 1 );
+		$("#inputSheetDateEnd").datepicker('setDate', futureDate);
+	}
+
+
 	// TODO - Replace this with pre-bundled jquery validation.js
 	// form validation
 	$("#btnSheetInfoSubmit").click(function (event) {

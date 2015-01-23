@@ -416,3 +416,7 @@
 		return $controls;
 	}
 
+	function util_getValueForCheckboxRequestData($fieldName) {
+		if (isset($_REQUEST[$fieldName]) && $_REQUEST[$fieldName]=='on') {return 1;}
+		return 0;
+	}

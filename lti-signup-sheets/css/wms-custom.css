@@ -5,8 +5,36 @@
 a.navbar:hover {
 	background-color: #512699 !important;
 }
-a.wms_white{
+
+a.wms_white {
 	color: white;
+}
+
+/*create no padding/margins style*/
+.nopadding {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+/*wms_tiny_break*/
+div.wms_tiny_break {
+	max-height: 5px !important;
+	/*background-color: red !important;*/
+}
+
+/*custom combo-box*/
+.cb_list {
+	border: 1px solid #DDD;
+	overflow: auto;
+	height: 80px;
+	padding: 0px !important;
+	margin: 0px !important;
+}
+
+/*custom combo-box: create custom padding for DIV contents inside this combo-box*/
+.cb_list DIV, #wms_panel_list {
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
 }
 
 /*=======================================
@@ -22,23 +50,6 @@ div.form-group.success {
 UL.unstyled LI, OL.unstyled LI {
 	list-style-type: none;
 	margin-left: 0px;
-}
-
-/*create no padding/margins style*/
-.nopadding {
-	padding: 0 !important;
-	margin: 0 !important;
-}
-
-#access_by_course_list, #access_by_instr_list, #access_by_dept_list, #access_by_gradyear_list, #access_by_role_list {
-	
-	height: 80px;
-	padding: 3px;
-	margin-left: 10px;
-}
-.cb_list {
-	border: 1px solid #888;
-	overflow: auto;
 }
 
 /*=======================================*/

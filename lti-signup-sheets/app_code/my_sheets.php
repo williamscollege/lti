@@ -5,6 +5,38 @@
 
 
 	if ($IS_AUTHENTICATED) {
+
+		// Auto-Click "Edit Sheetgroup Modal" if user arrived at this page by clicking "Edit current group" link from edit_sheet.php?sheetgroup=502 page
+		if (isset($_REQUEST['sheetgroup']) && $_REQUEST['sheetgroup'] && is_numeric($_REQUEST['sheetgroup'])) { ?>
+			<script>
+				$(document).ready(function () {
+					// this fxn is nearly identical to my_sheets.js listener for ".sus-edit-sheetgroup" clicks
+					function openEditSheetgroupModal() {
+						// fetch values from DOM
+						var sheetgroup_id = $(sheetgrouplink).attr("data-for-sheetgroup-id");
+						var sheetgroup_name = $(sheetgrouplink).attr("data-for-sheetgroup-name");
+						var sheetgroup_description = $(sheetgrouplink).attr("data-for-sheetgroup-description");
+						var sheetgroup_max_total = $(sheetgrouplink).attr("data-for-sheetgroup-max-total");
+						var sheetgroup_max_pending = $(sheetgrouplink).attr("data-for-sheetgroup-max-pending");
+
+						// update values in modal
+						$("#ajaxSheetgroupLabel").text("Edit Group");
+						$("INPUT#ajaxSheetgroupAction").val("edit-sheetgroup");
+						$("INPUT#ajaxSheetgroupID").val(sheetgroup_id);
+						$("INPUT#ajaxSheetgroupName").val(sheetgroup_name);
+						$("TEXTAREA#ajaxSheetgroupDescription").val(sheetgroup_description);
+						$("#ajaxSheetgroupMaxTotal").val(sheetgroup_max_total);
+						$("#ajaxSheetgroupMaxPending").val(sheetgroup_max_pending);
+					}
+
+					var sheetgrouplink = $('#btn-edit-sheetgroup-id-<?php echo $_REQUEST['sheetgroup']; ?>');
+					openEditSheetgroupModal();
+					$(sheetgrouplink).click();
+				});
+			</script>
+		<?php
+		}
+
 		echo "<div id=\"parent_container\">"; // start: div#parent_container
 		echo "<h3>" . $pageTitle . "</h3>";
 		echo "<p>Sheets are collected into groups (ordered alphabetically). Group settings affect all sheets in the group. Sheet settings affect only that sheet.</p>";
