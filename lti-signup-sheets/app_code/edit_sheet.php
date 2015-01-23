@@ -101,14 +101,16 @@
 					<div class="row">
 						<div class="tab-container" role="tabpanel" data-example-id="set1">
 							<ul id="boxSheet" class="nav nav-tabs" role="tablist">
-								<li role="presentation" class="active">
+								<!--IMPORTANT: set class to: 'active'-->
+								<li role="presentation" class="">
 									<a href="#tabSheetInfo" role="tab" data-toggle="tab" aria-controls="tabSheetInfo" aria-expanded="false">Basic Sheet Info</a>
 								</li>
 								<?php
 									if ($sheetDataIncoming) {
 										// for a new sheet: hide advanced settings
 										?>
-										<li role="presentation" class="">
+										<!--IMPORTANT: set class to: ''-->
+										<li role="presentation" class="active">
 											<a href="#tabSheetAccess" role="tab" data-toggle="tab" aria-controls="tabSheetAccess" aria-expanded="false">Sheet
 												Access</a>
 										</li>
@@ -119,7 +121,8 @@
 							<div id="boxSheetContent" class="tab-content">
 
 								<!-- Start: Basic Sheet Info -->
-								<div role="tabpanel" id="tabSheetInfo" class="tab-pane fade active in" aria-labelledby="tabSheetInfo">
+								<!--IMPORTANT: set class to: 'tab-pane fade active in'-->
+								<div role="tabpanel" id="tabSheetInfo" class="tab-pane fade" aria-labelledby="tabSheetInfo">
 									<form action="edit_sheet.php" id="frmEditSheet" name="frmEditSheet" class="form-group" role="form" method="post">
 										<!--<input type="hidden" id="hiddenSheetgroupID" name="hiddenSheetgroupID" value="<?php /*echo $USER->sheetgroups->sheetgroup_id; */ ?>">-->
 										<input type="hidden" id="hiddenSheetID" name="sheet" value="<?php echo $s ? $s->sheet_id : 0; ?>">
@@ -272,19 +275,20 @@
 								<!-- End: Basic Sheet Info -->
 
 								<!--Start: Sheet Access-->
-								<div role="tabpanel" id="tabSheetAccess" class="tab-pane fade" aria-labelledby="tabSheetAccess">
+								<!--IMPORTANT: set class to: 'tab-pane fade'-->
+								<div role="tabpanel" id="tabSheetAccess" class="tab-pane fade active in" aria-labelledby="tabSheetAccess">
 									<div class="form-group">
 										<strong>Who can see signups</strong><br />
 
 										<div class="radio small col-sm-12">
 											<label>
-												<input type="radio" id="radioSignupPrivacy1" name="radioSignupPrivacy" checked="" value="0">
+												<input type="radio" id="radioSignupPrivacy1" name="radioSignupPrivacy" <?php echo ($s && $s->flag_private_signups == 0) ? " checked=\"checked\" " : ''; ?> value="0">
 												Users can see who signed up when
 											</label>
 										</div>
 										<div class="radio small col-sm-12">
 											<label>
-												<input type="radio" id="radioSignupPrivacy2" name="radioSignupPrivacy" checked="checked" value="1">
+												<input type="radio" id="radioSignupPrivacy2" name="radioSignupPrivacy" <?php echo ($s && $s->flag_private_signups == 1) ? " checked=\"checked\" " : ''; ?> value="1">
 												Users can only see their own signups
 											</label>
 										</div>
