@@ -3,16 +3,15 @@
 	$sheetDataIncoming = TRUE;
 
 	if (isset($_REQUEST["sheet"]) && $_REQUEST["sheet"] == "new") {
-		$pageTitle = ucfirst(util_lang('add_sheet'));
-		//		$isNewSheet = TRUE;
+		$pageTitle         = ucfirst(util_lang('add_sheet'));
 		$sheetDataIncoming = FALSE;
 	}
 	else {
 		$pageTitle = ucfirst(util_lang('edit_sheet'));
-		//		$isNewSheet = FALSE;
 		if (isset($_REQUEST["hiddenAction"]) && $_REQUEST["hiddenAction"] == "savesheet") {
 			$sheetDataIncoming = TRUE;
-		} else {
+		}
+		else {
 			$sheetDataIncoming = FALSE;
 		}
 	}
@@ -24,7 +23,6 @@
 		$s = FALSE;
 
 		// Postback
-		//		if (!$isNewSheet) {
 		if ($sheetDataIncoming) {
 
 			if (isset($_REQUEST["sheet"])) {
@@ -39,8 +37,8 @@
 
 			// create record (if there is no match in DB)
 			//$s->sheet_id                  = $_REQUEST[""];
-			//					$s->created_at                = date("Y-m-d H:i:s");
-			//					$s->updated_at                = date("Y-m-d H:i:s");
+			//$s->created_at                = date("Y-m-d H:i:s");
+			//$s->updated_at                = date("Y-m-d H:i:s");
 			//$s->flag_delete               = $_REQUEST[""];
 			//$s->owner_user_id             = $USER->user_id;
 			$s->sheetgroup_id = $_REQUEST["selectSheetgroupID"];
@@ -56,7 +54,6 @@
 			$s->flag_alert_owner_signup   = util_getValueForCheckboxRequestData('checkAlertOwnerSignup');// _REQUEST["checkAlertOwnerSignup"];
 			$s->flag_alert_owner_imminent = util_getValueForCheckboxRequestData('checkAlertOwnerImminent');// $_REQUEST["checkAlertOwnerImminent"];
 			//$s->flag_alert_admin_change   = $_REQUEST[""];
-			// TODO special handling for checkboxes
 			$s->flag_alert_admin_signup   = util_getValueForCheckboxRequestData('checkAlertAdminSignup');
 			$s->flag_alert_admin_imminent = util_getValueForCheckboxRequestData('checkAlertAdminImminent');
 			//$s->flag_private_signups      = "";
@@ -64,11 +61,6 @@
 			if (!$s->matchesDb) {
 				$s->updateDb();
 			}
-			//				else {
-			//					echo "error: matching record already exists";
-			//					exit;
-			//				}
-			///	}
 
 			// Populate fields based on DB record
 			// util_prePrintR($s);
@@ -77,7 +69,7 @@
 		else {
 			if (isset($_REQUEST["sheet"])) {
 				$sheetDataIncoming = TRUE;
-				$s = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
+				$s                 = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
 			}
 		}
 
@@ -109,7 +101,7 @@
 									if ($sheetDataIncoming) {
 										// for a new sheet: hide advanced settings
 										?>
-										<!--IMPORTANT: set class to: ''-->
+										<!--DKC IMPORTANT: set class to: ''-->
 										<li role="presentation" class="active">
 											<a href="#tabSheetAccess" role="tab" data-toggle="tab" aria-controls="tabSheetAccess" aria-expanded="false">Sheet
 												Access</a>
@@ -121,10 +113,9 @@
 							<div id="boxSheetContent" class="tab-content">
 
 								<!-- Start: Basic Sheet Info -->
-								<!--IMPORTANT: set class to: 'tab-pane fade active in'-->
+								<!--DKC IMPORTANT: set class to: 'tab-pane fade active in'-->
 								<div role="tabpanel" id="tabSheetInfo" class="tab-pane fade" aria-labelledby="tabSheetInfo">
 									<form action="edit_sheet.php" id="frmEditSheet" name="frmEditSheet" class="form-group" role="form" method="post">
-										<!--<input type="hidden" id="hiddenSheetgroupID" name="hiddenSheetgroupID" value="<?php /*echo $USER->sheetgroups->sheetgroup_id; */ ?>">-->
 										<input type="hidden" id="hiddenSheetID" name="sheet" value="<?php echo $s ? $s->sheet_id : 0; ?>">
 										<input type="hidden" id="hiddenAction" name="hiddenAction" value="savesheet">
 										<!--<input type="hidden" id="subaction" name="subaction" value="addsheet">-->
@@ -185,10 +176,6 @@
 
 											<div class="form-inline small">
 												Users can have
-
-												<!--												$s->max_total_user_signups    = $_REQUEST["selectMaxTotalSignups"];-->
-												<!--												$s->max_pending_user_signups  = $_REQUEST["selectMaxPendingSignups"];-->
-
 												<select id="selectMaxTotalSignups" name="selectMaxTotalSignups" class="form-control input-sm">
 													<?php
 
@@ -203,17 +190,7 @@
 															}
 															echo "<option value=\"$optval\"" . getPreselectedStateHtml($s, 'max_total_user_signups', $optval) . ">$optdisplay</option>\n";
 														}
-													?><!--
-													<option selected="selected" value="-1">unlimited</option>
-													<option value="1">1</option>
-													<option value="2">2</option>
-													<option value="3">3</option>
-													<option value="4">4</option>
-													<option value="5">5</option>
-													<option value="6">6</option>
-													<option value="7">7</option>
-													<option value="8">8</option>
-													 -->
+													?>
 												</select>
 												signups on this sheet, and
 												<select id="selectMaxPendingSignups" name="selectMaxPendingSignups" class="form-control input-sm"><?php
@@ -225,15 +202,6 @@
 															echo "<option value=\"$optval\"" . getPreselectedStateHtml($s, 'max_pending_user_signups', $optval) . ">$optdisplay</option>\n";
 														}
 													?>
-													<!--													<option selected="selected" value="-1">any</option>-->
-													<!--													<option value="1">1</option>-->
-													<!--													<option value="2">2</option>-->
-													<!--													<option value="3">3</option>-->
-													<!--													<option value="4">4</option>-->
-													<!--													<option value="5">5</option>-->
-													<!--													<option value="6">6</option>-->
-													<!--													<option value="7">7</option>-->
-													<!--													<option value="8">8</option>-->
 												</select>
 												may be for future openings.
 											</div>
@@ -274,8 +242,9 @@
 								</div>
 								<!-- End: Basic Sheet Info -->
 
+								<!-- TODO - need to update access record(s) in DB upon save -->
 								<!--Start: Sheet Access-->
-								<!--IMPORTANT: set class to: 'tab-pane fade'-->
+								<!--DKC IMPORTANT: set class to: 'tab-pane fade'-->
 								<div role="tabpanel" id="tabSheetAccess" class="tab-pane fade active in" aria-labelledby="tabSheetAccess">
 									<div class="form-group">
 										<strong>Who can see signups</strong><br />
@@ -300,41 +269,32 @@
 										<!-- List: Courses -->
 										<span class="small"><strong>People in these courses</strong><br /></span>
 
-										<div id="access_by_course_list" class="cb_list">
+										<div id="access_by_course_enr_list" class="cb_list">
 											<div class="checkbox small col-sm-12">
-												<!-- TODO - iterator, DB saved values, and create unique 'id' values for elements -->
-												<label>
-													<input type="checkbox" id="access_by_course_50" name="access_by_course_50" data-permtype="bycourse" data-permval="50">
-													Course 15S-ABC
-												</label><br />
-												<label>
-													<input type="checkbox" id="access_by_course_50" name="access_by_course_50" data-permtype="bycourse" data-permval="50">
-													Course 15S-DEFG
-												</label><br />
-												<label>
-													<input type="checkbox" id="access_by_course_50" name="access_by_course_50" data-permtype="bycourse" data-permval="50">
-													Course 15S-PDQ
-												</label><br />
-												<label>
-													<input type="checkbox" id="access_by_course_50" name="access_by_course_50" data-permtype="bycourse" data-permval="50">
-													Course 15S-XYZ
-												</label><br />
-												<label>
-													<input type="checkbox" id="access_by_course_50" name="access_by_course_50" data-permtype="bycourse" data-permval="50">
-													Course 15S-ABC
-												</label><br />
-												<label>
-													<input type="checkbox" id="access_by_course_50" name="access_by_course_50" data-permtype="bycourse" data-permval="50">
-													Course 15S-DEFG
-												</label><br />
-												<label>
-													<input type="checkbox" id="access_by_course_50" name="access_by_course_50" data-permtype="bycourse" data-permval="50">
-													Course 15S-PDQ
-												</label><br />
-												<label>
-													<input type="checkbox" id="access_by_course_50" name="access_by_course_50" data-permtype="bycourse" data-permval="50">
-													Course 15S-XYZ
-												</label><br />
+												<?php
+													$USER->cacheEnrollments();
+													if (count($USER->enrollments) == 0) {
+														echo "You are not enrolled in any courses.<br />";
+													}
+													else {
+														// fetch which courses, if any, that this user has already given access
+														$s->cacheAccess();
+														// iterate this user's enrollments
+														foreach ($USER->enrollments as $enr) {
+															// util_prePrintR($enr);
+															$checkboxSelected = "";
+
+															// util_prePrintR($s->access);
+															// fetch any user granted access values for these courses
+															foreach ($s->access as $a) {
+																if ($a->type == "bycourse" && $a->constraint_data == $enr->course_idstr) {
+																	$checkboxSelected = " checked=\"checked\" ";
+																}
+															}
+															echo "<label><input type=\"checkbox\" id=\"access_by_course_enr_" . $enr->enrollment_id . "\" name=\"access_by_course_enr_" . $enr->enrollment_id . "\" data-permtype=\"bycourse\" data-permval=\"" . $enr->course_idstr . "\"" . $checkboxSelected . ">" . $enr->course_idstr . "</label><br />";
+														}
+													}
+												?>
 											</div>
 										</div>
 
@@ -344,53 +304,65 @@
 
 										<div id="access_by_instr_list" class="cb_list">
 											<div class="checkbox small col-sm-12">
-												<!-- TODO - iterator, DB saved values, and create unique 'id' values for elements -->
-												<label>
-													<input type="checkbox" id="access_by_instr_1554" name="access_by_instr_1554" data-permtype="byinstr" data-permval="1554">
-													Daniel Aalberts (daalbert)
-												</label><br />
-												<label>
-													<input type="checkbox" id="access_by_course_5080" name="access_by_course_5080" data-permtype="bycourse" data-permval="5080">
-													Sayaka Abe (sa9)
-												</label><br />
-												<label>
-													<input type="checkbox" id="access_by_course_9587" name="access_by_course_9587" data-permtype="bycourse" data-permval="9587">
-													Hanane Aboulahmam (ha3)
-												</label><br />
-												<label>
-													<input type="checkbox" id="access_by_course_1234" name="access_by_course_1234" data-permtype="bycourse" data-permval="1234">
-													Beverly Acha (09bda)
-												</label><br />
-												<label>
-													<input type="checkbox" id="access_by_instr_1554" name="access_by_instr_1554" data-permtype="byinstr" data-permval="1554">
-													rDaniel Aalberts (daalbert)
-												</label><br />
-												<label>
-													<input type="checkbox" id="access_by_course_5080" name="access_by_course_5080" data-permtype="bycourse" data-permval="5080">
-													rSayaka Abe (sa9)
-												</label><br />
-												<label>
-													<input type="checkbox" id="access_by_course_9587" name="access_by_course_9587" data-permtype="bycourse" data-permval="9587">
-													rHanane Aboulahmam (ha3)
-												</label><br />
-												<label>
-													<input type="checkbox" id="access_by_course_1234" name="access_by_course_1234" data-permtype="bycourse" data-permval="1234">
-													rBeverly Acha (09bda)
-												</label><br />
+												<?php
+													$instr_enrollments = Enrollment::getAllFromDb(['course_role_name' => 'teacher'], $DB);
+													$instr_uid_hash    = [];
+													foreach ($instr_enrollments as $i) {
+														array_push($instr_uid_hash, $i->user_id);
+													}
+													$instr_users = User::getAllFromDb(['user_id' => $instr_uid_hash], $DB);
+													// util_prePrintR($instr_users);
+													usort($instr_users, 'User::cmp');
+
+													if (count($instr_users) == 0) {
+														echo "There are no instructors in any courses.<br />";
+													}
+													else {
+														// fetch which courses, if any, that this user has already given access
+														$s->cacheAccess();
+														// iterate this user's enrollments
+														foreach ($instr_users as $u) {
+															// util_prePrintR($u);
+															$checkboxSelected = "";
+
+															//util_prePrintR($s->access);
+															// fetch any user granted access values for these courses
+															foreach ($s->access as $a) {
+																if ($a->type == "byinstr" && $a->constraint_id == $u->user_id) {
+																	$checkboxSelected = " checked=\"checked\" ";
+																}
+															}
+															echo "<label><input type=\"checkbox\" id=\"access_by_instr_" . $u->user_id . "\" name=\"access_by_instr_" . $u->user_id . "\" data-permtype=\"byinstr\" data-permval=\"" . $u->user_id . "\"" . $checkboxSelected . ">" . $u->first_name . " " . $u->last_name . "</label><br />";
+														}
+													}
+												?>
 											</div>
 										</div>
 
 										<!-- List: These People -->
 										<div class="wms_tiny_break"><br /></div>
 										<span class="small"><strong>These people: UNIX username(s)</strong><br /></span>
+										<?php
+											util_prePrintR($s->access);
+											// fetch if this sheet has been granted 'byuser' access
+											foreach ($s->access as $a) {
+												# create hash of usernames
+												$byrole_hash = [];
+												if ($a->type == "byuser") {
+													array_push($byrole_hash, $a->constraint_data);
+												}
+												util_prePrintR($byrole_hash);
+												# TODO sort list a-z
+												# TODO create custom cmp?
+											}
+										?>
 
 										<div id="access_by_user">
-											<textarea id="textAccessByUserList" name="textAccessByUserList" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"></textarea>
+											<textarea id="textAccessByUserList" name="textAccessByUserList" data-permtype="byuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"></textarea>
 										</div>
 
-										<!-- List: People who are a -->
 										<!-- Bootstrap panel -->
-
+										<!-- List: People who are a -->
 										<div class="wms_tiny_break"><br /></div>
 										<span class="small"><strong>People who are a...</strong><br /></span>
 
@@ -398,6 +370,17 @@
 											<div id="access_by_role_list" class="panel-body nopadding">
 												<div id="wms_panel_list" class="checkbox small col-sm-12">
 													<!-- TODO - iterator, DB saved values, and create unique 'id' values for elements -->
+													<!-- TODO - FINISH THIS CODE -->
+													<?php
+														util_prePrintR($s->access);
+														// fetch any user granted access values for these courses
+														foreach ($s->access as $a) {
+															if ($a->type == "bycourse" && $a->constraint_data == $enr->course_idstr) {
+																$checkboxSelected = " checked=\"checked\" ";
+															}
+														}
+													?>
+
 													<label>
 														<input type="checkbox" id="access_by_role_teacher" name="access_by_role_teacher" data-permtype="teacher" data-permval="byrole">
 														Teacher of a course

@@ -42,7 +42,7 @@
 						}
 						break;
 					case "bycourse":
-						$course = Course::getAllFromDb(['course_id' => $sheet["a_constraint_id"]], $DB);
+						$course = Course::getAllFromDb(['course_idstr' => $sheet["a_constraint_data"]], $DB);
 
 						if (isset($course_based_sheets[$course[0]->course_idstr])) {
 							$course_based_sheets[$course[0]->short_name] .= "<li>$base_sheet_link</li>";

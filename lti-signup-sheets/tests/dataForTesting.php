@@ -273,22 +273,21 @@
 		}
 	}
 
-	// remove test line
-	//(607, NOW(), NOW(), 0, 102, 504, 'Sheet 607', 'Sheet 607, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 0, 0, 0, 0, 0, 1, 0, 0),
 	function createTestData_SUS_Access($dbConn) {
 		// 900 series ids
 		# SUS_Access: 'access_id', 'created_at', 'updated_at', 'sheet_id', 'type', 'constraint_id', 'constraint_data', 'broadness'
 		$addTestSql  = "INSERT INTO " . SUS_Access::$dbTable . " VALUES
 			(901, NOW(), NOW(), 601, 'adminbyuser', 0, '', 1),
-			(902, NOW(), NOW(), 601, 'byuser', 101, '', 10),
-			(903, NOW(), NOW(), 601, 'bycourse', 201, '', 20),
+			(902, NOW(), NOW(), 601, 'byuser', 0, 'mockUserJBond', 10),
+			(903, NOW(), NOW(), 601, 'bycourse', 0, '15F-ARTH-101-01', 20),
 			(904, NOW(), NOW(), 601, 'byinstr', 101, '', 30),
 			(905, NOW(), NOW(), 601, 'bygradyear', 18, '', 50),
 			(906, NOW(), NOW(), 601, 'byrole', 0, 'teacher', 60),
 			(907, NOW(), NOW(), 601, 'byhasaccount', 0, 'all', 60),
 			(908, NOW(), NOW(), 607, 'adminbyuser', 0, 'mockUserJBond', 10),
 			(909, NOW(), NOW(), 608, 'adminbyuser', 0, 'mockUserJBond', 10),
-			(910, NOW(), NOW(), 602, 'byrole', 0, 'teacher', 60)
+			(910, NOW(), NOW(), 602, 'byrole', 0, 'teacher', 60),
+			(911, NOW(), NOW(), 601, 'byuser', 0, 'tusr2', 10)
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();

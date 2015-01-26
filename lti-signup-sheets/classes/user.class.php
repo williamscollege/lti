@@ -459,7 +459,8 @@
 						(a.type='byhasaccount')
 						OR
 						(a.type='byuser'
-						 AND (a.constraint_data = '{$this->username}' OR a.constraint_id=$for_user_id))
+						 --original AND (a.constraint_data = '{$this->username}' OR a.constraint_id=$for_user_id))
+						 AND (a.constraint_data = '{$this->username}'))
 						OR
 						(a.type='byrole'
 						 AND a.constraint_data = 'teacher'
@@ -490,9 +491,9 @@
 							AND usr.user_id = $for_user_id))
 						OR
 						(a.type='bycourse'
-						 AND a.constraint_id IN (
+						 AND a.constraint_data IN (
 							SELECT DISTINCT
-							crs.course_id
+							crs.course_idstr
 							FROM
 							enrollments AS enr
 							JOIN users AS usr ON usr.user_id = enr.user_id

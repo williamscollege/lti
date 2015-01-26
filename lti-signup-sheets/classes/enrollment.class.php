@@ -25,15 +25,15 @@
 
 		/* static functions */
 
-		# TODO: How do we want to sort enrollments? by role_name? by last_name?
+		# Sort course enrollments by alphabetical course name
 		public static function cmp($a, $b) {
-			if ($a->user_id == $b->user_id) {
-				if ($a->user_id == $b->user_id) {
+			if ($a->course_idstr == $b->course_idstr) {
+				if ($a->course_idstr == $b->course_idstr) {
 					return 0;
 				}
-				return ($a->user_id < $b->user_id) ? -1 : 1;
+				return ($a->course_idstr < $b->course_idstr) ? -1 : 1;
 			}
-			return ($a->user_id < $b->user_id) ? -1 : 1;
+			return ($a->course_idstr < $b->course_idstr) ? -1 : 1;
 		}
 
 
