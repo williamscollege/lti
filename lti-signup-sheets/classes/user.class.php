@@ -65,18 +65,6 @@
 			return ($a->last_name < $b->last_name) ? -1 : 1;
 		}
 
-		// custom hash comparator (compares hash keys instead of object properties)
-		public static function cmp_hash($a, $b)
-		{
-			if ($a == $b) {
-				if ($a == $b) {
-					return 0;
-				}
-				return ($a > $b) ? 1 : -1;
-			}
-			return ($a > $b) ? 1 : -1;
-		}
-
 		public static function getUsersByCourseRole($role, $dbconn) {
 			$users = User::getAllFromDb(['flag_is_banned' => FALSE, 'flag_delete' => FALSE], $dbconn);
 

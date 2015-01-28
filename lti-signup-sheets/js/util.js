@@ -31,7 +31,7 @@ function dfnUtil_setTransientAlert(alertType, alertMessage) {
 	// pause for user to read the alert, then hide alert button
 	setTimeout(function() {
 		$('#page_alert_div').hide();
-	}, 500);
+	}, 5000);
 
 	// TODO: how to queue ajax actions to ensure that multiple rapidly clicked delete actions will update the UI (currently, the DB updates correctly, but UI fails to update)
 	//.queue(function() {

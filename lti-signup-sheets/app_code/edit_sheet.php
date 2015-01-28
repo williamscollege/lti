@@ -291,7 +291,7 @@
 																	$checkboxSelected = " checked=\"checked\" ";
 																}
 															}
-															echo "<label><input type=\"checkbox\" id=\"access_by_course_enr_" . $enr->enrollment_id . "\" name=\"access_by_course_enr_" . $enr->enrollment_id . "\" data-permtype=\"bycourse\" data-permval=\"" . $enr->course_idstr . "\"" . $checkboxSelected . ">" . $enr->course_idstr . "</label><br />";
+															echo "<label><input type=\"checkbox\" id=\"access_by_course_enr_" . $enr->enrollment_id . "\" class=\"access_by_course_ckboxes\"  name=\"access_by_course_enr_" . $enr->enrollment_id . "\" data-permtype=\"bycourse\" data-permval=\"" . $enr->course_idstr . "\"" . $checkboxSelected . ">" . $enr->course_idstr . "</label><br />";
 														}
 													}
 												?>
@@ -332,7 +332,7 @@
 																	$checkboxSelected = " checked=\"checked\" ";
 																}
 															}
-															echo "<label><input type=\"checkbox\" id=\"access_by_instr_" . $u->user_id . "\" name=\"access_by_instr_" . $u->user_id . "\" data-permtype=\"byinstr\" data-permval=\"" . $u->user_id . "\"" . $checkboxSelected . ">" . $u->first_name . " " . $u->last_name . "</label><br />";
+															echo "<label><input type=\"checkbox\" id=\"access_by_instr_" . $u->user_id . "\" class=\"access_by_instructor_ckboxes\" name=\"access_by_instr_" . $u->user_id . "\" data-permtype=\"byinstr\" data-permval=\"" . $u->user_id . "\"" . $checkboxSelected . ">" . $u->first_name . " " . $u->last_name . "</label><br />";
 														}
 													}
 												?>
@@ -343,20 +343,19 @@
 										<div class="wms_tiny_break"><br /></div>
 										<span class="small"><strong>These people: UNIX username(s)</strong><br /></span>
 										<?php
-											// create hash of usernames where access type = 'byuser'
-											$byuser_hash = [];
+											// create array of usernames where access type = 'byuser'
+											$byuser_ary = [];
 											foreach ($s->access as $a) {
 												if ($a->type == "byuser") {
-													array_push($byuser_hash, $a->constraint_data);
+													array_push($byuser_ary, $a->constraint_data);
 												}
 											}
-											// custom comparator to sort by username a-z
-											usort($byuser_hash, 'User::cmp_hash');
-											// util_prePrintR($byuser_hash);
+											sort($byuser_ary);
+											// util_prePrintR($byuser_ary);
 										?>
 
 										<div id="access_by_user">
-											<textarea id="textAccessByUserList" name="textAccessByUserList" data-permtype="byuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $byuser_hash); ?></textarea>
+											<textarea id="textAccessByUserList" name="textAccessByUserList" data-permtype="byuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $byuser_ary); ?></textarea>
 										</div>
 
 										<!-- Bootstrap panel -->
@@ -409,20 +408,19 @@
 											<div class="wms_tiny_break"><br /></div>
 											<span class="small"><strong>These people: UNIX username(s)</strong><br /></span>
 											<?php
-												// create hash of usernames where access type = 'byuser'
-												$adminbyuser_hash = [];
+												// create array of usernames where access type = 'adminbyuser'
+												$adminbyuser_ary = [];
 												foreach ($s->access as $a) {
 													if ($a->type == "adminbyuser") {
-														array_push($adminbyuser_hash, $a->constraint_data);
+														array_push($adminbyuser_ary, $a->constraint_data);
 													}
 												}
-												// custom comparator to sort by username a-z
-												usort($adminbyuser_hash, 'User::cmp_hash');
-												// util_prePrintR($adminbyuser_hash);
+												sort($adminbyuser_ary);
+												// util_prePrintR($adminbyuser_ary);
 											?>
 
 											<div id="access_by_user">
-												<textarea id="textAdminByUserList" name="textAdminByUserList" data-permtype="adminbyuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $adminbyuser_hash); ?></textarea>
+												<textarea id="textAdminByUserList" name="textAdminByUserList" data-permtype="adminbyuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $adminbyuser_ary); ?></textarea>
 											</div>
 										</div>
 
