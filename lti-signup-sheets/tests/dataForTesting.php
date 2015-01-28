@@ -277,17 +277,18 @@
 		// 900 series ids
 		# SUS_Access: 'access_id', 'created_at', 'updated_at', 'sheet_id', 'type', 'constraint_id', 'constraint_data', 'broadness'
 		$addTestSql  = "INSERT INTO " . SUS_Access::$dbTable . " VALUES
-			(901, NOW(), NOW(), 601, 'adminbyuser', 0, '', 1),
-			(902, NOW(), NOW(), 601, 'byuser', 0, 'mockUserJBond', 10),
+			(901, NOW(), NOW(), 601, 'adminbyuser', 0, 'tusr3', 1),
+			(902, NOW(), NOW(), 601, 'byuser', 0, 'tusr4', 10),
 			(903, NOW(), NOW(), 601, 'bycourse', 0, '15F-ARTH-101-01', 20),
 			(904, NOW(), NOW(), 601, 'byinstr', 101, '', 30),
 			(905, NOW(), NOW(), 601, 'bygradyear', 18, '', 50),
 			(906, NOW(), NOW(), 601, 'byrole', 0, 'teacher', 60),
 			(907, NOW(), NOW(), 601, 'byhasaccount', 0, 'all', 60),
-			(908, NOW(), NOW(), 607, 'adminbyuser', 0, 'mockUserJBond', 10),
-			(909, NOW(), NOW(), 608, 'adminbyuser', 0, 'mockUserJBond', 10),
+			(908, NOW(), NOW(), 607, 'byuser', 0, 'mockUserJBond', 1),
+			(909, NOW(), NOW(), 608, 'adminbyuser', 0, 'tusr9', 1),
 			(910, NOW(), NOW(), 602, 'byrole', 0, 'teacher', 60),
-			(911, NOW(), NOW(), 601, 'byuser', 0, 'tusr2', 10)
+			(911, NOW(), NOW(), 601, 'byuser', 0, 'tusr5', 10),
+			(912, NOW(), NOW(), 601, 'byrole', 0, 'student', 60)
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();

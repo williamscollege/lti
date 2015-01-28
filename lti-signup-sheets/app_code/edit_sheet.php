@@ -139,16 +139,16 @@
 															if ($_REQUEST["sheetgroup"] == $sg->sheetgroup_id) {
 																$optionSelected        = " selected=\"selected\" ";
 																$currentSheetgroupID   = $sg->sheetgroup_id;
-																$currentSheetgroupName = $sg->sheetgroup_name;
+																$currentSheetgroupName = $sg->name;
+																$currentSheetgroupDesc = $sg->description;
 															}
 															echo "<option" . $optionSelected . " value=\"" . $sg->sheetgroup_id . "\">" . $sg->name . "</option>";
 														}
 													?>
 												</select>
 
-												<!--TODO add popover to show contents of above group...-->
-												<span class="small"><a href="my_sheets.php?sheetgroup=<?php echo $currentSheetgroupID; ?>">Go to current
-														group</a></span>
+												<span class="small"><a href="my_sheets.php?sheetgroup=<?php echo $currentSheetgroupID; ?>" title="<?php echo $currentSheetgroupName . " (&quot;" . $currentSheetgroupDesc . "&quot;)"; ?>">Go
+														to current group</a></span>
 											</div>
 										</div>
 
@@ -343,22 +343,20 @@
 										<div class="wms_tiny_break"><br /></div>
 										<span class="small"><strong>These people: UNIX username(s)</strong><br /></span>
 										<?php
-											util_prePrintR($s->access);
-											// fetch if this sheet has been granted 'byuser' access
+											// create hash of usernames where access type = 'byuser'
+											$byuser_hash = [];
 											foreach ($s->access as $a) {
-												# create hash of usernames
-												$byrole_hash = [];
 												if ($a->type == "byuser") {
-													array_push($byrole_hash, $a->constraint_data);
+													array_push($byuser_hash, $a->constraint_data);
 												}
-												util_prePrintR($byrole_hash);
-												# TODO sort list a-z
-												# TODO create custom cmp?
 											}
+											// custom comparator to sort by username a-z
+											usort($byuser_hash, 'User::cmp_hash');
+											// util_prePrintR($byuser_hash);
 										?>
 
 										<div id="access_by_user">
-											<textarea id="textAccessByUserList" name="textAccessByUserList" data-permtype="byuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"></textarea>
+											<textarea id="textAccessByUserList" name="textAccessByUserList" data-permtype="byuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $byuser_hash); ?></textarea>
 										</div>
 
 										<!-- Bootstrap panel -->
@@ -369,28 +367,35 @@
 										<div class="panel panel-default">
 											<div id="access_by_role_list" class="panel-body nopadding">
 												<div id="wms_panel_list" class="checkbox small col-sm-12">
-													<!-- TODO - iterator, DB saved values, and create unique 'id' values for elements -->
-													<!-- TODO - FINISH THIS CODE -->
 													<?php
-														util_prePrintR($s->access);
+														// util_prePrintR($s->access);
 														// fetch any user granted access values for these courses
+														$checkboxSelected_byrole_teacher = "";
+														$checkboxSelected_byrole_student = "";
+														$checkboxSelected_byhasaccount   = "";
 														foreach ($s->access as $a) {
-															if ($a->type == "bycourse" && $a->constraint_data == $enr->course_idstr) {
-																$checkboxSelected = " checked=\"checked\" ";
+															if ($a->type == "byrole" && $a->constraint_data == "teacher") {
+																$checkboxSelected_byrole_teacher = " checked=\"checked\" ";
+															}
+															elseif ($a->type == "byrole" && $a->constraint_data == "student") {
+																$checkboxSelected_byrole_student = " checked=\"checked\" ";
+															}
+															elseif ($a->type == "byhasaccount" && $a->constraint_data == "all") {
+																$checkboxSelected_byhasaccount = " checked=\"checked\" ";
 															}
 														}
 													?>
 
 													<label>
-														<input type="checkbox" id="access_by_role_teacher" name="access_by_role_teacher" data-permtype="teacher" data-permval="byrole">
+														<input type="checkbox" id="access_by_role_teacher" name="access_by_role_teacher" data-permtype="teacher" data-permval="byrole" <?php echo $checkboxSelected_byrole_teacher; ?>>
 														Teacher of a course
 													</label><br />
 													<label>
-														<input type="checkbox" id="access_by_role_student" name="access_by_role_student" data-permtype="student" data-permval="byrole">
+														<input type="checkbox" id="access_by_role_student" name="access_by_role_student" data-permtype="student" data-permval="byrole" <?php echo $checkboxSelected_byrole_student; ?>>
 														Student in a course
 													</label><br />
 													<label>
-														<input type="checkbox" id="access_by_any" name="access_by_any" data-permtype="byhasaccount" data-permval="all">
+														<input type="checkbox" id="access_by_any" name="access_by_any" data-permtype="byhasaccount" data-permval="all" <?php echo $checkboxSelected_byhasaccount; ?>>
 														Glow user
 													</label>
 												</div>
@@ -403,9 +408,21 @@
 
 											<div class="wms_tiny_break"><br /></div>
 											<span class="small"><strong>These people: UNIX username(s)</strong><br /></span>
+											<?php
+												// create hash of usernames where access type = 'byuser'
+												$adminbyuser_hash = [];
+												foreach ($s->access as $a) {
+													if ($a->type == "adminbyuser") {
+														array_push($adminbyuser_hash, $a->constraint_data);
+													}
+												}
+												// custom comparator to sort by username a-z
+												usort($adminbyuser_hash, 'User::cmp_hash');
+												// util_prePrintR($adminbyuser_hash);
+											?>
 
 											<div id="access_by_user">
-												<textarea id="textAdminByUserList" name="textAdminByUserList" data-permtype="adminbyuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"></textarea>
+												<textarea id="textAdminByUserList" name="textAdminByUserList" data-permtype="adminbyuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $adminbyuser_hash); ?></textarea>
 											</div>
 										</div>
 
