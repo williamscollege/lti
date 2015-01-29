@@ -24,8 +24,8 @@
 	$maxTotal     = htmlentities((isset($_REQUEST["ajaxVal_MaxTotal"])) ? $_REQUEST["ajaxVal_MaxTotal"] : 0);
 	$maxPending   = htmlentities((isset($_REQUEST["ajaxVal_MaxPending"])) ? $_REQUEST["ajaxVal_MaxPending"] : 0);
 	$deleteID     = htmlentities((isset($_REQUEST["ajaxVal_Delete_ID"])) ? $_REQUEST["ajaxVal_Delete_ID"] : 0);
-	$editID     = htmlentities((isset($_REQUEST["ajaxVal_Edit_ID"])) ? $_REQUEST["ajaxVal_Edit_ID"] : 0);
-	$editValue     = htmlentities((isset($_REQUEST["ajaxVal_Edit_Value"])) ? $_REQUEST["ajaxVal_Edit_Value"] : 0);
+	$editID       = htmlentities((isset($_REQUEST["ajaxVal_Edit_ID"])) ? $_REQUEST["ajaxVal_Edit_ID"] : 0);
+	$editValue    = htmlentities((isset($_REQUEST["ajaxVal_Edit_Value"])) ? $_REQUEST["ajaxVal_Edit_Value"] : 0);
 
 
 	#------------------------------------------------#
@@ -41,6 +41,8 @@
 	#------------------------------------------------#
 	//###############################################################
 	if ($action == 'add-sheetgroup') {
+		# TODO UNSURE ABOUT Necessity of this: NEED TO ENSURE THAT ADD Sheetgroup cannot add a new group with same name of pre-existing sheetgroup
+		# TODO maybe just create a createSheetgroup fxn, instead and allow duplicate names?
 		$sg = SUS_Sheetgroup::getOneFromDb(['name' => $name], $DB);
 
 		if ($sg->matchesDb) {
@@ -57,7 +59,6 @@
 
 		$sg->updateDb();
 
-		# TODO NEED TO ENSURE THAT ADD Sheetgroup cannot add a new group with same name of pre-existing sheetgroup
 		$sheetgroup = SUS_Sheetgroup::getOneFromDb(['name' => $name], $DB);
 
 		# Output
@@ -212,35 +213,35 @@
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-course-remove') {
-		doAccessRemove('bycourse',$editID,$editValue,$results);
+		doAccessRemove('bycourse', $editID, $editValue, $results);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-course-add') {
-		doAccessAdd('bycourse',$editID,$editValue,$results);
+		doAccessAdd('bycourse', $editID, $editValue, $results);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-instructor-remove') {
-		doAccessRemove('byinstr',$editID,$editValue,$results);
+		doAccessRemove('byinstr', $editID, $editValue, $results);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-instructor-add') {
-		doAccessAdd('byinstr',$editID,$editValue,$results);
+		doAccessAdd('byinstr', $editID, $editValue, $results);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-role-remove') {
-		doAccessRemove('byrole',$editID,$editValue,$results);
+		doAccessRemove('byrole', $editID, $editValue, $results);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-role-add') {
-		doAccessAdd('byrole',$editID,$editValue,$results);
+		doAccessAdd('byrole', $editID, $editValue, $results);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-any-remove') {
-		doAccessRemove('byhasaccount',$editID,'all',$results);
+		doAccessRemove('byhasaccount', $editID, 'all', $results);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-any-add') {
-		doAccessAdd('byhasaccount',$editID,'all',$results);
+		doAccessAdd('byhasaccount', $editID, 'all', $results);
 	}
 	//###############################################################
 	elseif (($action == 'editSheetAccess-access-by-user') || ($action == 'editSheetAccess-admin-by-user')) {
@@ -259,27 +260,25 @@
 
 		// 1 clean incoming user namea and split into array
 		$usernames_str = $editValue;
-		//util_prePrintR($editValue);
-		$usernames_str = preg_replace('/,/',' ',$usernames_str); // convert commas to single white space
-		$usernames_str = preg_replace('/\\s+/',' ',$usernames_str); // convert all white space to single white space
-		$usernames_str = preg_replace('/^\\s+|\\s+$/','',$usernames_str); // trim leading and trailing space
-		$usernames_ary = explode(' ',$usernames_str);
-		//util_prePrintR($usernames_ary);
+		$usernames_str = preg_replace('/,/', ' ', $usernames_str); // convert commas to single white space
+		$usernames_str = preg_replace('/\\s+/', ' ', $usernames_str); // convert all white space to single white space
+		$usernames_str = preg_replace('/^\\s+|\\s+$/', '', $usernames_str); // trim leading and trailing space
+		$usernames_ary = explode(' ', $usernames_str);
 
 		// 2 get existing byuser records
-		$existing_access_records = SUS_Access::getAllFromDb(['sheet_id'=>$editID,'type'=>$access_type],$DB);
-		$existing_access_usernames = Db_Linked::arrayOfAttrValues($existing_access_records,'constraint_data');
+		$existing_access_records   = SUS_Access::getAllFromDb(['sheet_id' => $editID, 'type' => $access_type], $DB);
+		$existing_access_usernames = Db_Linked::arrayOfAttrValues($existing_access_records, 'constraint_data');
 
 		// 3 generate to-add and to-remove sets
 		$to_add = [];
 		foreach ($usernames_ary as $username) {
-			if (! in_array($username,$existing_access_usernames)) {
+			if (!in_array($username, $existing_access_usernames)) {
 				array_push($to_add, $username);
 			}
 		}
 		$to_remove = [];
 		foreach ($existing_access_usernames as $username) {
-			if (! in_array($username,$usernames_ary)) {
+			if (!in_array($username, $usernames_ary)) {
 				array_push($to_remove, $username);
 			}
 		}
@@ -287,13 +286,24 @@
 		$results["notes"] = '';
 
 		// 4 do adds
-		//util_prePrintR($to_add);
-		foreach ($to_add as $username_to_add) {
-			// todo - if validating unix names, do it here, then if validation fails add to note and 'continue', else proceed with below (implement as fetch user record for the given username and verify it matchesDb)
-			$access_record = SUS_Access::createNewAccess($access_type, $editID, 0, $username_to_add, $DB);
-			$access_record->updateDb();
-			if (!$access_record->matchesDb) {
-				$results["notes"] .= "could not save access for ".$username_to_add."<br/>\n";
+
+		if (count($to_add) > 0) {
+			// only fetch big user object if we are going to add a username
+			$obj_all_users = User::getAllFromDb([], $DB);
+			// remove cruft
+			$obj_all_attr_usernames = Db_Linked::arrayOfAttrValues($obj_all_users, 'username');
+			foreach ($to_add as $username_to_add) {
+				if (!in_array($username_to_add, $obj_all_attr_usernames)) {
+					// username does not exist
+					$results["notes"] .= "invalid username: " . $username_to_add . "<br/>\n";
+				}
+				else {
+					$access_record = SUS_Access::createNewAccess($access_type, $editID, 0, $username_to_add, $DB);
+					$access_record->updateDb();
+					if (!$access_record->matchesDb) {
+						$results["notes"] .= "could not save access for " . $username_to_add . "<br/>\n";
+					}
+				}
 			}
 		}
 
@@ -314,13 +324,13 @@
 
 		// 6 note results
 		if ($results["notes"]) {
-			$results["notes"] = "Problems saving one or more user access changes:<br/>\n".$results["notes"];
-		} else {
+			$results["notes"] = "<br/>Problems saving one or more usernames:<br/>\n" . $results["notes"];
+		}
+		else {
 			$results['status'] = 'success';
 		}
 	}
 	//###############################################################
-
 
 
 	//###############################################################
@@ -329,12 +339,13 @@
 		return ($type == 'byinstr') || ($type == 'bygradyear');
 	}
 
-	function doAccessAdd($type,$sheetId,$constraintInfo,&$results) {
+	function doAccessAdd($type, $sheetId, $constraintInfo, &$results) {
 		global $DB;
 		$access_record = '';
 		if (constraintForAccessTypeIsById($type)) {
 			$access_record = SUS_Access::createNewAccess($type, $sheetId, $constraintInfo, '', $DB);
-		} else {
+		}
+		else {
 			$access_record = SUS_Access::createNewAccess($type, $sheetId, 0, $constraintInfo, $DB);
 		}
 		$access_record->updateDb();
@@ -347,12 +358,13 @@
 		$results['status'] = 'success';
 	}
 
-	function doAccessRemove($type,$sheetId,$constraintInfo,&$results) {
+	function doAccessRemove($type, $sheetId, $constraintInfo, &$results) {
 		global $DB;
 		$access_record = '';
 		if (constraintForAccessTypeIsById($type)) {
 			$access_record = SUS_Access::getOneFromDb(['type' => $type, 'sheet_id' => $sheetId, 'constraint_id' => $constraintInfo], $DB);
-		} else {
+		}
+		else {
 			$access_record = SUS_Access::getOneFromDb(['type' => $type, 'sheet_id' => $sheetId, 'constraint_data' => $constraintInfo], $DB);
 		}
 
@@ -367,7 +379,8 @@
 		$check_access_record = '';
 		if (constraintForAccessTypeIsById($type)) {
 			$check_access_record = SUS_Access::getOneFromDb(['type' => $type, 'sheet_id' => $sheetId, 'constraint_id' => $constraintInfo], $DB);
-		} else {
+		}
+		else {
 			$check_access_record = SUS_Access::getOneFromDb(['type' => $type, 'sheet_id' => $sheetId, 'constraint_data' => $constraintInfo], $DB);
 		}
 
@@ -380,6 +393,7 @@
 
 		$results['status'] = 'success';
 	}
+
 	//###############################################################
 	//###############################################################
 

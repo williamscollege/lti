@@ -1,75 +1,75 @@
 <?php
 	require_once('../app_setup.php');
-	$sheetDataIncoming = TRUE;
+	$sheetIsNew          = FALSE;
+	$sheetIsDataIncoming = TRUE;
 
 	if (isset($_REQUEST["sheet"]) && $_REQUEST["sheet"] == "new") {
-		$pageTitle         = ucfirst(util_lang('add_sheet'));
-		$sheetDataIncoming = FALSE;
+		$pageTitle           = ucfirst(util_lang('add_sheet'));
+		$sheetIsNew          = TRUE;
+		$sheetIsDataIncoming = FALSE;
 	}
 	else {
 		$pageTitle = ucfirst(util_lang('edit_sheet'));
 		if (isset($_REQUEST["hiddenAction"]) && $_REQUEST["hiddenAction"] == "savesheet") {
-			$sheetDataIncoming = TRUE;
+			$sheetIsDataIncoming = TRUE;
 		}
 		else {
-			$sheetDataIncoming = FALSE;
+			$sheetIsDataIncoming = FALSE;
 		}
 	}
 	require_once('../app_head.php');
 
+	// TODO - hitting this page directly (w/o QS or form values) causes different not-so-great issues in each of the 2 visible tabs
+	// TODO - http://localhost/GITHUB/lti/lti-signup-sheets/app_code/edit_sheet.php
 
 	if ($IS_AUTHENTICATED) {
 
 		$s = FALSE;
 
-		// Postback
-		if ($sheetDataIncoming) {
+		// postback
+		if ($sheetIsDataIncoming) {
+			// use cases:
+			// 1) postback for brand new sheet (record not yet in db)
+			// 2) postback for edited sheet (record exists in db)
 
 			if (isset($_REQUEST["sheet"])) {
+				// populate fields based on DB record
 				$s = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
 			}
 			else {
+				// create new sheet
 				$s = SUS_Sheet::createNewSheet($USER->user_id, $DB);
 			}
 
-			//if (isset($_REQUEST["hiddenAction"]) && $_REQUEST["hiddenAction"] == "addsheet") {
-			util_prePrintR($_REQUEST);
+			// util_prePrintR($_REQUEST); // debugging
 
-			// create record (if there is no match in DB)
-			//$s->sheet_id                  = $_REQUEST[""];
-			//$s->created_at                = date("Y-m-d H:i:s");
-			//$s->updated_at                = date("Y-m-d H:i:s");
-			//$s->flag_delete               = $_REQUEST[""];
-			//$s->owner_user_id             = $USER->user_id;
-			$s->sheetgroup_id = $_REQUEST["selectSheetgroupID"];
-			$s->name          = $_REQUEST["inputSheetName"];
-			$s->description   = $_REQUEST["textSheetDescription"];
-			$s->type          = "timeblocks";
-			$s->date_opens    = date_format(new DateTime($_REQUEST["inputSheetDateStart"] . " 00:00:00"), "Y-m-d H:i:s");
-			$s->date_closes   = date_format(new DateTime($_REQUEST["inputSheetDateEnd"] . " 23:59:59"), "Y-m-d H:i:s");
-			//$s->date_closes               = date_format(strtotime($_REQUEST["inputSheetDateEnd"]," 23:59:59"),"Y-m-d H:i:s");
+			$s->updated_at               = date("Y-m-d H:i:s");
+			$s->owner_user_id            = $USER->user_id;
+			$s->sheetgroup_id            = $_REQUEST["selectSheetgroupID"];
+			$s->name                     = $_REQUEST["inputSheetName"];
+			$s->description              = $_REQUEST["textSheetDescription"];
+			$s->type                     = "timeblocks"; // hardcode this data as possible hook for future use/modification
+			$s->date_opens               = date_format(new DateTime($_REQUEST["inputSheetDateStart"] . " 00:00:00"), "Y-m-d H:i:s");
+			$s->date_closes              = date_format(new DateTime($_REQUEST["inputSheetDateEnd"] . " 23:59:59"), "Y-m-d H:i:s");
 			$s->max_total_user_signups   = $_REQUEST["selectMaxTotalSignups"];
 			$s->max_pending_user_signups = $_REQUEST["selectMaxPendingSignups"];
 			//$s->flag_alert_owner_change   = $_REQUEST[""];
-			$s->flag_alert_owner_signup   = util_getValueForCheckboxRequestData('checkAlertOwnerSignup');// _REQUEST["checkAlertOwnerSignup"];
-			$s->flag_alert_owner_imminent = util_getValueForCheckboxRequestData('checkAlertOwnerImminent');// $_REQUEST["checkAlertOwnerImminent"];
+			$s->flag_alert_owner_signup   = util_getValueForCheckboxRequestData('checkAlertOwnerSignup');
+			$s->flag_alert_owner_imminent = util_getValueForCheckboxRequestData('checkAlertOwnerImminent');
 			//$s->flag_alert_admin_change   = $_REQUEST[""];
 			$s->flag_alert_admin_signup   = util_getValueForCheckboxRequestData('checkAlertAdminSignup');
 			$s->flag_alert_admin_imminent = util_getValueForCheckboxRequestData('checkAlertAdminImminent');
-			//$s->flag_private_signups      = "";
 
 			if (!$s->matchesDb) {
 				$s->updateDb();
 			}
-
-			// Populate fields based on DB record
-			// util_prePrintR($s);
-
 		}
 		else {
 			if (isset($_REQUEST["sheet"])) {
-				$sheetDataIncoming = TRUE;
-				$s                 = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
+				// use cases:
+				// 1) requested to edit existing sheet from link on another page (record exists in db)
+				$sheetIsDataIncoming = TRUE;
+				$s                   = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
 			}
 		}
 
@@ -93,16 +93,18 @@
 					<div class="row">
 						<div class="tab-container" role="tabpanel" data-example-id="set1">
 							<ul id="boxSheet" class="nav nav-tabs" role="tablist">
-								<!--IMPORTANT: set class to: 'active'-->
-								<li role="presentation" class="">
+								<!--DKC IMPORTANT (normal): set class to: 'active'-->
+								<!--DKC IMPORTANT (testing): set class to: ''-->
+								<li role="presentation" class="active">
 									<a href="#tabSheetInfo" role="tab" data-toggle="tab" aria-controls="tabSheetInfo" aria-expanded="false">Basic Sheet Info</a>
 								</li>
 								<?php
-									if ($sheetDataIncoming) {
-										// for a new sheet: hide advanced settings
+									// for a new sheet: hide advanced settings
+									if (!$sheetIsNew) {
 										?>
-										<!--DKC IMPORTANT: set class to: ''-->
-										<li role="presentation" class="active">
+										<!--DKC IMPORTANT (normal): set class to: ''-->
+										<!--DKC IMPORTANT (testing): set class to: 'active'-->
+										<li role="presentation" class="">
 											<a href="#tabSheetAccess" role="tab" data-toggle="tab" aria-controls="tabSheetAccess" aria-expanded="false">Sheet
 												Access</a>
 										</li>
@@ -113,12 +115,12 @@
 							<div id="boxSheetContent" class="tab-content">
 
 								<!-- Start: Basic Sheet Info -->
-								<!--DKC IMPORTANT: set class to: 'tab-pane fade active in'-->
-								<div role="tabpanel" id="tabSheetInfo" class="tab-pane fade" aria-labelledby="tabSheetInfo">
+								<!--DKC IMPORTANT (normal): set class to: 'tab-pane fade active in'-->
+								<!--DKC IMPORTANT (testing): set class to: 'tab-pane fade'-->
+								<div role="tabpanel" id="tabSheetInfo" class="tab-pane fade active in" aria-labelledby="tabSheetInfo">
 									<form action="edit_sheet.php" id="frmEditSheet" name="frmEditSheet" class="form-group" role="form" method="post">
 										<input type="hidden" id="hiddenSheetID" name="sheet" value="<?php echo $s ? $s->sheet_id : 0; ?>">
 										<input type="hidden" id="hiddenAction" name="hiddenAction" value="savesheet">
-										<!--<input type="hidden" id="subaction" name="subaction" value="addsheet">-->
 
 										<div class="form-group">
 											<label for="inputSheetName" class="control-label">Sheet Name</label>
@@ -136,7 +138,8 @@
 													<?php
 														foreach ($USER->sheetgroups as $sg) {
 															$optionSelected = "";
-															if ($_REQUEST["sheetgroup"] == $sg->sheetgroup_id) {
+															// comparison using whichever value exists (hyperlink querystring reference or sheet object)
+															if (($_REQUEST["sheetgroup"] == $sg->sheetgroup_id) || ($s->sheetgroup_id == $sg->sheetgroup_id)) {
 																$optionSelected        = " selected=\"selected\" ";
 																$currentSheetgroupID   = $sg->sheetgroup_id;
 																$currentSheetgroupName = $sg->name;
@@ -244,8 +247,9 @@
 
 								<!-- TODO - need to update access record(s) in DB upon save -->
 								<!--Start: Sheet Access-->
-								<!--DKC IMPORTANT: set class to: 'tab-pane fade'-->
-								<div role="tabpanel" id="tabSheetAccess" class="tab-pane fade active in" aria-labelledby="tabSheetAccess">
+								<!--DKC IMPORTANT (normal): set class to: 'tab-pane fade'-->
+								<!--DKC IMPORTANT (testing): set class to: 'tab-pane fade active in'-->
+								<div role="tabpanel" id="tabSheetAccess" class="tab-pane fade" aria-labelledby="tabSheetAccess">
 									<div class="form-group">
 										<strong>Who can see signups</strong><br />
 
@@ -434,8 +438,8 @@
 				</div>
 				<div class="col-sm-1">&nbsp;</div>
 				<?php
-					if ($sheetDataIncoming) {
-						// for a new sheet: hide advanced settings
+					// for a new sheet: hide advanced settings
+					if (!$sheetIsNew) {
 						?>
 						<!-- Calendar Openings / List Openings -->
 						<div class="col-sm-5">

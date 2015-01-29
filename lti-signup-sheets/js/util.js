@@ -33,6 +33,7 @@ function dfnUtil_setTransientAlert(alertType, alertMessage) {
 		$('#page_alert_div').hide();
 	}, 5000);
 
+	// Note: This issue seems to be resolved.
 	// TODO: how to queue ajax actions to ensure that multiple rapidly clicked delete actions will update the UI (currently, the DB updates correctly, but UI fails to update)
 	//.queue(function() {
 	//		$( this ).toggleClass( "red" ).dequeue();
@@ -42,7 +43,7 @@ function dfnUtil_setTransientAlert(alertType, alertMessage) {
 
 // NOTE: could put this directly in the HTML or in a footer file or some such, but doing it here consolidates the code
 $(document).ready(function () {
-	$('#parent_container').prepend('<div id="page_alert_div" class="alert alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span id="page_alert_message"></span></div>');
+	$('#parent_container').prepend('<div id="page_alert_div" class="alert alert-dismissible small" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span id="page_alert_message"></span></div>');
 	// hide message button placeholder
 	$('#page_alert_div').hide();
 

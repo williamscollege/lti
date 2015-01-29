@@ -26,6 +26,7 @@ $(document).ready(function () {
 						$.ajax({
 							type: 'GET',
 							url: ary['url'],
+							cache: false,
 							data: {
 								'ajaxVal_Action': ary['ajax_action'],
 								'ajaxVal_Delete_ID': ary['ajax_id']
@@ -193,6 +194,7 @@ $(document).ready(function () {
 			$.ajax({
 				type: 'POST',
 				url: $("#frmAjaxSheetgroup").attr('action'),
+				cache: false,
 				data: {
 					ajaxVal_Action: action,
 					ajaxVal_OwnerUserID: owner_user_id,

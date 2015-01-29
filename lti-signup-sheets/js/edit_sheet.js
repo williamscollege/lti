@@ -150,6 +150,7 @@ $(document).ready(function () {
 		$.ajax({
 			type: 'GET',
 			url: "../ajax_actions/ajax_actions.php",
+			cache: false,
 			data: params,
 			dataType: 'json',
 			error: function (req, textStatus, err) {
