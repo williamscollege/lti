@@ -139,7 +139,7 @@
 ?>
 
 
-<!-- Modal: Add/Edit Sheetgroup -->
+<!-- Bootstrap Modal: Add/Edit Sheetgroup -->
 <form action="../ajax_actions/ajax_actions.php" id="frmAjaxSheetgroup" name="frmAjaxSheetgroup" class="form-horizontal" role="form" method="post">
 	<input type="hidden" id="ajaxSheetgroupAction" name="ajaxSheetgroupAction" value="" />
 	<input type="hidden" id="ajaxOwnerUserID" name="ajaxOwnerUserID" value="<?php echo $USER->user_id ?>" />

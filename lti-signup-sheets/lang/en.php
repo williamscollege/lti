@@ -78,7 +78,6 @@ $LANGUAGE['en'] = [
     'edit_sheet' => 'Edit Sheet',
     'add_sheet' => 'Add Sheet',
     'help' => 'Help',
-
-
+    'calendar' => 'Calendar',
 	'' => ''
 ];

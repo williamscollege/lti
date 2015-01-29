@@ -120,7 +120,7 @@
 				echo "<tr><td>";
 
 				foreach ($course_based_sheets as $course => $items) {
-					echo "<h4><strong>" . $course . "</strong></h4>";
+					echo "<strong>" . $course . "</strong>";
 					echo "<ul>" . $items . "</ul>";
 				}
 				// end table
@@ -132,7 +132,7 @@
 				echo "<tr><td>";
 
 				foreach ($other_based_sheets as $reason => $items) {
-					echo "<h4><strong>" . substr($reason, 3) . "</strong></h4>";
+					echo "<strong>" . substr($reason, 3) . "</strong>";
 					echo "<ul>" . $items . "</ul>";
 				}
 
@@ -147,7 +147,7 @@
 				echo "<tr><td>";
 
 				foreach ($course_based_sheets as $course => $items) {
-					echo "<h4><strong>" . $course . "</strong></h4>";
+					echo "<strong>" . $course . "</strong>";
 					echo "<ul>" . $items . "</ul>";
 				}
 				foreach ($other_based_sheets as $reason => $items) {

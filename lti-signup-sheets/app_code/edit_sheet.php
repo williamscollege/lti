@@ -442,7 +442,7 @@
 					if (!$sheetIsNew) {
 						?>
 						<!-- Calendar Openings / List Openings -->
-						<div class="col-sm-5">
+						<div class="col-sm-6">
 							<div class="row">
 								<div class="tab-container" role="tabpanel" data-example-id="set2">
 									<ul id="boxOpenings" class="nav nav-tabs" role="tablist">
@@ -461,6 +461,9 @@
 										<div role="tabpanel" class="tab-pane fade active in" id="tabOpeningsCalendar" aria-labelledby="tabOpeningsCalendar">
 
 											<p>Calendar stuff</p>
+											<?php
+												require_once('calendar.php');
+											?>
 
 										</div>
 										<!--End: Calendar Openings -->
@@ -479,7 +482,7 @@
 					<?php
 					}
 				?>
-				<div class="col-sm-1">&nbsp;</div>
+				<!--<div class="col-sm-1">&nbsp;</div>-->
 			</div>
 		</div> <!-- end: div.container -->
 
