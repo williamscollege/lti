@@ -118,28 +118,58 @@
 				// customize event icons
 				$("a[data-event-class='event-important']").removeClass("event").removeClass("event-important").html("<i class=\"glyphicon glyphicon-plus\"></i> text");
 
+
+				function processCurrentCalendarCells() {
+					$(".cal-cell").each(function (idx) {
+					console.log("processing cell " + idx);
+						if (cellElementNeedsBlockInsertLink(this)) {
+							insertNewBlockLinkIntoCell(this);
+						}
+					});
+				}
+
+				function cellElementNeedsBlockInsertLink(cellElement) {
+//					var calendarDateStart = new Date(Date.parse($("#calendar span").first().attr("data-cal-date") + 'T00:00:00Z'));
+//					var calendarDateEnd = new Date(Date.parse($("#calendar span").last().attr("data-cal-date") + 'T00:00:00Z'));
+					var currentCellDate = new Date(Date.parse($(cellElement).find('span').attr("data-cal-date") + 'T00:00:00Z'));
+					var sheetDateStart = new Date($("#inputSheetDateStart").val());
+					var sheetDateEnd = new Date($("#inputSheetDateEnd").val());
+					return currentCellDate <= sheetDateEnd && currentCellDate >= sheetDateStart;
+				}
+
+				function insertNewBlockLinkIntoCell(cellElement) {
+//					$(cellElement).css("background-color", "green");
+					$(cellElement).find('div').prepend("<a href='#' class='addOpeningLink' data-toggle='modal' data-target='#modal-create-opening'><i class=\"glyphicon glyphicon-plus\"></i></a>");
+				}
+
 				// previous button: limit to show only relevant months
 				$("BUTTON[data-calendar-nav='prev']").click(function () {
 					updateCalendarNavButtons();
+					processCurrentCalendarCells();
 				});
 
 				// next button: limit to show only relevant months
 				$("BUTTON[data-calendar-nav='next']").click(function () {
 					updateCalendarNavButtons();
+					processCurrentCalendarCells();
 				});
+
 
 				// TODO: date-time comparison of: 19:00:00 GMT-0500 vs 00:00:00 GMT-0500
 				// TODO: end >  or  >=... what if both conditions are valid
 
 				function updateCalendarNavButtons() {
+					// TODO- someday fix this, too:
+					// The "Day" button contains no 'cells' amd does not trigger the 'prev' or 'next' btn to disable appropriately
+
 					// TODO- someday fix this:
 					// currently gives (e.g)
 					// calendarDateStart=Sat Dec 27 2014 19:00:00 GMT-0500 (Eastern Standard Time)
 					// sheetDateStart = Tue Dec 02 2014 00:00:00 GMT-0500 (Eastern Standard Time)
 //					console.log($("#calendar span").first().attr("data-cal-date"));
 //					console.log($("#calendar span").last().attr("data-cal-date"));
-					var calendarDateStart = new Date(Date.parse($("#calendar span").first().attr("data-cal-date")+'T00:00:00Z'));
-					var calendarDateEnd = new Date(Date.parse($("#calendar span").last().attr("data-cal-date")+'T00:00:00Z'));
+					var calendarDateStart = new Date(Date.parse($("#calendar span").first().attr("data-cal-date") + 'T00:00:00Z'));
+					var calendarDateEnd = new Date(Date.parse($("#calendar span").last().attr("data-cal-date") + 'T00:00:00Z'));
 					var sheetDateStart = new Date($("#inputSheetDateStart").val());
 					var sheetDateEnd = new Date($("#inputSheetDateEnd").val());
 
@@ -150,6 +180,7 @@
 				}
 
 				updateCalendarNavButtons();
+				processCurrentCalendarCells();
 			});
 
 
@@ -167,13 +198,6 @@
 				font-size: 1.2em;
 				font-weight: bold;
 			}
-
-			/*.event{
-				background-color: transparent;
-			}
-			.event-important {
-				background-color: transparent;
-			}*/
 		</style>
 
 		<!-- Bootstrap Modal: Calendar Event Info -->
@@ -182,7 +206,41 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h3>Cally Event</h3>
+						<h3>Default events-modal</h3>
+					</div>
+					<div class="modal-body" style="height: 400px">
+					</div>
+					<div class="modal-footer">
+						<a href="#" data-dismiss="modal" class="btn">Close</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Bootstrap Modal: Calendar Event Info -->
+		<div class="modal fade" id="modal-create-opening">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3>modal-create-opening</h3>
+					</div>
+					<div class="modal-body" style="height: 400px">
+					</div>
+					<div class="modal-footer">
+						<a href="#" data-dismiss="modal" class="btn">Close</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Bootstrap Modal: Calendar Event Info -->
+		<div class="modal fade" id="modal-manage-opening">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3>modal-manage-opening</h3>
 					</div>
 					<div class="modal-body" style="height: 400px">
 					</div>
