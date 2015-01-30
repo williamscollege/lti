@@ -121,7 +121,7 @@
 
 				function processCurrentCalendarCells() {
 					$(".cal-cell").each(function (idx) {
-					console.log("processing cell " + idx);
+//					console.log("processing cell " + idx);
 						if (cellElementNeedsBlockInsertLink(this)) {
 							insertNewBlockLinkIntoCell(this);
 						}

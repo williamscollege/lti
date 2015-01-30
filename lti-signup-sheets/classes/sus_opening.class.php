@@ -77,4 +77,15 @@
 			}
 		}
 
+		public function renderAsHtmlShort() {
+		    $rendered = '';
+			$rendered .= '<div id="list-opening-'.$this->opening_id.'" class="list-opening" '.$this->fieldsAsDataAttribs().'>';
+			$rendered .= '<span class="opening-time-range">'.date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A").'</span>';
+			$this->cacheSignups();
+			$rendered .= '<span class="opening-space-usage">'.'('.count($this->signups).'/'.$this->max_signups.')</span>';
+			$rendered .= '</div>';
+
+			return $rendered;
+		}
+
 	}

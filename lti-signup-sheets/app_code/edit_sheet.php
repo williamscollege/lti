@@ -472,6 +472,25 @@
 
 											<p>List stuff</p>
 
+											<?php
+												$s->cacheOpenings();
+												$lastOpeningDate = '';
+												foreach ($s->openings as $opening) {
+													$curOpeningDate = explode(' ',$opening->begin_datetime)[0];
+													if ($curOpeningDate != $lastOpeningDate) {
+														if ($lastOpeningDate) {
+															echo '</div>'."\n";
+														}
+														echo '<div class="opening-list-for-date" data-for-date="'.$curOpeningDate.'"><h4>'.$curOpeningDate."</h4>";
+													}
+													echo $opening->renderAsHtmlShort()."<br/>\n";
+													$lastOpeningDate = $curOpeningDate;
+//													util_prePrintR($opening);
+												}
+												echo '</div>'."\n";
+
+											?>
+
 										</div>
 										<!--End: List Openings -->
 									</div>
