@@ -14,20 +14,19 @@
 
 			<div class="pull-right form-inline">
 				<div class="btn-group">
-					<button class="btn btn-primary" data-calendar-nav="prev">&lt;&lt; Prev</button>
-					<button class="btn" data-calendar-nav="today">Today</button>
-					<button class="btn btn-primary" data-calendar-nav="next">Next &gt;&gt;</button>
+					<button class="btn btn-primary btn-sm" data-calendar-nav="prev">&lt;&lt; Prev</button>
+					<button class="btn btn-sm" data-calendar-nav="today">Today</button>
+					<button class="btn btn-primary btn-sm" data-calendar-nav="next">Next &gt;&gt;</button>
 				</div>
-				<div class="btn-group">
-					<button class="btn btn-warning" data-calendar-view="year">Year</button>
-					<button class="btn btn-warning active" data-calendar-view="month">Month</button>
-					<button class="btn btn-warning" data-calendar-view="week">Week</button>
-					<button class="btn btn-warning" data-calendar-view="day">Day</button>
-				</div>
+<!--				<div class="btn-group">-->
+<!--					<button class="btn btn-warning btn-sm" data-calendar-view="year">Year</button>-->
+<!--					<button class="btn btn-warning btn-sm active" data-calendar-view="month">Month</button>-->
+<!--					<button class="btn btn-warning btn-sm" data-calendar-view="week">Week</button>-->
+<!--					<button class="btn btn-warning btn-sm" data-calendar-view="day">Day</button>-->
+<!--				</div>-->
 			</div>
 
-			<h3>March 2013</h3>
-			<small>To see example with events navigate to march 2013</small>
+			<h3></h3>
 		</div>
 
 		<div id="calendar"></div>
@@ -116,7 +115,7 @@
 
 				// dkc hacks
 				// customize event icons
-				$("a[data-event-class='event-important']").removeClass("event").removeClass("event-important").html("<i class=\"glyphicon glyphicon-plus\"></i> text");
+				//$("a[data-event-class='event-important']").removeClass("event").removeClass("event-important").html("<i class=\"glyphicon glyphicon-plus\"></i> text");
 
 
 				function processCurrentCalendarCells() {
@@ -125,24 +124,37 @@
 						if (cellElementNeedsBlockInsertLink(this)) {
 							insertNewBlockLinkIntoCell(this);
 						}
+						addExistingOpeingingToCell(this);
 					});
 				}
 
 				function cellElementNeedsBlockInsertLink(cellElement) {
-//					var calendarDateStart = new Date(Date.parse($("#calendar span").first().attr("data-cal-date") + 'T00:00:00Z'));
-//					var calendarDateEnd = new Date(Date.parse($("#calendar span").last().attr("data-cal-date") + 'T00:00:00Z'));
-					var currentCellDate = new Date(Date.parse($(cellElement).find('span').attr("data-cal-date") + 'T00:00:00Z'));
+					var currentCellDate_ary = ($(cellElement).find('span').attr("data-cal-date")).split('-');
+					var currentCellDate = new Date(currentCellDate_ary[1]+'/'+currentCellDate_ary[2]+'/'+currentCellDate_ary[0]);
+
 					var sheetDateStart = new Date($("#inputSheetDateStart").val());
 					var sheetDateEnd = new Date($("#inputSheetDateEnd").val());
 					return currentCellDate <= sheetDateEnd && currentCellDate >= sheetDateStart;
 				}
 
 				function insertNewBlockLinkIntoCell(cellElement) {
-//					$(cellElement).css("background-color", "green");
 					$(cellElement).find('div').prepend("<a href='#' class='addOpeningLink' data-toggle='modal' data-target='#modal-create-opening'><i class=\"glyphicon glyphicon-plus\"></i></a>");
 				}
 
-				// previous button: limit to show only relevant months
+				function addExistingOpeingingToCell(cellElement) {
+					var cell_date_str = $(cellElement).find('span').attr("data-cal-date");
+					console.log(cell_date_str);
+					// get from the list data all events for this date
+					var openings = $(".opening-list-for-date[data-for-date=\""+cell_date_str+"\"]").html();
+					//console.dir(openings);
+
+					// if there are any, copy them into this cell
+					if (openings) {
+						$(cellElement).find('div').first().append('<div class="calendar-cell-openings">'+openings+'</div>');
+					}
+				}
+
+					// previous button: limit to show only relevant months
 				$("BUTTON[data-calendar-nav='prev']").click(function () {
 					updateCalendarNavButtons();
 					processCurrentCalendarCells();
@@ -159,21 +171,16 @@
 				// TODO: end >  or  >=... what if both conditions are valid
 
 				function updateCalendarNavButtons() {
-					// TODO- someday fix this, too:
-					// The "Day" button contains no 'cells' amd does not trigger the 'prev' or 'next' btn to disable appropriately
+					var calendarDateStart_ary = ($("#calendar span").first().attr("data-cal-date")).split('-');
+					var calendarDateStart = new Date(calendarDateStart_ary[1]+'/'+calendarDateStart_ary[2]+'/'+calendarDateStart_ary[0]);
 
-					// TODO- someday fix this:
-					// currently gives (e.g)
-					// calendarDateStart=Sat Dec 27 2014 19:00:00 GMT-0500 (Eastern Standard Time)
-					// sheetDateStart = Tue Dec 02 2014 00:00:00 GMT-0500 (Eastern Standard Time)
-//					console.log($("#calendar span").first().attr("data-cal-date"));
-//					console.log($("#calendar span").last().attr("data-cal-date"));
-					var calendarDateStart = new Date(Date.parse($("#calendar span").first().attr("data-cal-date") + 'T00:00:00Z'));
-					var calendarDateEnd = new Date(Date.parse($("#calendar span").last().attr("data-cal-date") + 'T00:00:00Z'));
+					var calendarDateEnd_ary = ($("#calendar span").last().attr("data-cal-date")).split('-');
+					var calendarDateEnd = new Date(calendarDateEnd_ary[1]+'/'+calendarDateEnd_ary[2]+'/'+calendarDateEnd_ary[0]);
+
 					var sheetDateStart = new Date($("#inputSheetDateStart").val());
 					var sheetDateEnd = new Date($("#inputSheetDateEnd").val());
 
-//					alert('calendarDateStart=' + calendarDateStart +  '\n' + 'sheetDateStart = ' + sheetDateStart);
+					//alert('calendarDateStart=' + calendarDateStart +  '\n' + 'sheetDateStart = ' + sheetDateStart);
 
 					$("BUTTON[data-calendar-nav='prev']").prop("disabled", calendarDateStart <= sheetDateStart);
 					$("BUTTON[data-calendar-nav='next']").prop("disabled", sheetDateEnd <= calendarDateEnd);

@@ -14,7 +14,7 @@
 			);
 		}
 
-		echo json_encode(array('success' => 1, 'result' => $out));
+		//echo json_encode(array('success' => 1, 'result' => $out));
 		exit;
 
 ?>

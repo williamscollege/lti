@@ -481,7 +481,7 @@
 														if ($lastOpeningDate) {
 															echo '</div>'."\n";
 														}
-														echo '<div class="opening-list-for-date" data-for-date="'.$curOpeningDate.'"><h4>'.$curOpeningDate."</h4>";
+														echo '<div class="opening-list-for-date" data-for-date="'.$curOpeningDate.'"><h4>'.date_format(new DateTime($opening->begin_datetime), "m/d/Y")."</h4>";
 													}
 													echo $opening->renderAsHtmlShort()."<br/>\n";
 													$lastOpeningDate = $curOpeningDate;
