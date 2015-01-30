@@ -38,27 +38,23 @@ div.wms_tiny_break {
 }
 
 /*=======================================
-bootstrap calendar extensions
+wms bootstrap-calendar-master extensions
 ==========================================*/
-
-
 
 .calendar-cell-openings {
 	font-size: 11px;
 	width: 20px;
 	height: 20px;
-	background-color: #f00;
+	background-color: green;
 	margin-top: 3px;
 	margin-left: 3px;
 	position: relative;
 	top: 3px;
 	left: 3px;
-
 }
 
 .calendar-cell-openings h4,
-.calendar-cell-openings div
-{
+.calendar-cell-openings .calendar-cell-openings-container {
 	display: none;
 }
 
@@ -70,15 +66,45 @@ bootstrap calendar extensions
 	border: 1px solid #666;
 	padding: 4px;
 }
-.calendar-cell-openings:hover div {
+
+.calendar-cell-openings:hover .calendar-cell-openings-container {
 	display: inline-block;
 	margin-top: 0px !important;
 	padding-top: 0px !important;
-	float:left;
+	float: left;
 }
 
-.opening-space-usage{
+.opening-space-usage {
 	padding-left: 3px;
+}
+
+.edit-opening-link {
+	padding-right: 3px;
+}
+
+.delete-opening-link, .delete-opening-link:hover {
+	padding-right: 3px;
+	color: #ff0000;
+}
+
+/*=======================================
+wms bootstrap-calendar-master overrides
+==========================================*/
+/* make date numbers within calendar smaller */
+span[data-cal-date] {
+	margin-top: 5px !important;
+	margin-right: 5px !important;
+	font-size: inherit !important;
+}
+
+.cal-month-box .cal-day-today span[data-cal-date] {
+	font-size: 1.2em !important;
+	font-weight: bold !important;
+}
+
+/* remove annoying weekly display tab */
+#cal-week-box {
+	display: none !important;
 }
 
 /*=======================================

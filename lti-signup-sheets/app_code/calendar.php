@@ -18,12 +18,12 @@
 					<button class="btn btn-sm" data-calendar-nav="today">Today</button>
 					<button class="btn btn-primary btn-sm" data-calendar-nav="next">Next &gt;&gt;</button>
 				</div>
-<!--				<div class="btn-group">-->
-<!--					<button class="btn btn-warning btn-sm" data-calendar-view="year">Year</button>-->
-<!--					<button class="btn btn-warning btn-sm active" data-calendar-view="month">Month</button>-->
-<!--					<button class="btn btn-warning btn-sm" data-calendar-view="week">Week</button>-->
-<!--					<button class="btn btn-warning btn-sm" data-calendar-view="day">Day</button>-->
-<!--				</div>-->
+				<div class="btn-group">
+					<!--					<button class="btn btn-warning btn-sm" data-calendar-view="year">Year</button>-->
+					<button id="wms_force_btn_to_link" class="btn btn-default btn-link btn-sm" data-calendar-view="month">View Month</button>
+					<!--					<button class="btn btn-warning btn-sm" data-calendar-view="week">Week</button>-->
+					<!--					<button class="btn btn-warning btn-sm" data-calendar-view="day">Day</button>-->
+				</div>
 			</div>
 
 			<h3></h3>
@@ -113,10 +113,33 @@
 					//e.stopPropagation();
 				});
 
-				// dkc hacks
-				// customize event icons
-				//$("a[data-event-class='event-important']").removeClass("event").removeClass("event-important").html("<i class=\"glyphicon glyphicon-plus\"></i> text");
+				// button listeners: enable handlers to populate cells correctly
+				$("BUTTON[data-calendar-nav],#wms_force_btn_to_link").click(function () {
+					updateCalendarNavButtons();
+					processCurrentCalendarCells();
+					customizeUI();
+				});
 
+				// force "View Month" to appear as a link, not a button
+				function customizeUI(){
+					$("#wms_force_btn_to_link").removeClass("active");
+				}
+
+				function updateCalendarNavButtons() {
+					var calendarDateStart_ary = ($("#calendar span").first().attr("data-cal-date")).split('-');
+					var calendarDateStart = new Date(calendarDateStart_ary[1] + '/' + calendarDateStart_ary[2] + '/' + calendarDateStart_ary[0]);
+
+					var calendarDateEnd_ary = ($("#calendar span").last().attr("data-cal-date")).split('-');
+					var calendarDateEnd = new Date(calendarDateEnd_ary[1] + '/' + calendarDateEnd_ary[2] + '/' + calendarDateEnd_ary[0]);
+
+					var sheetDateStart = new Date($("#inputSheetDateStart").val());
+					var sheetDateEnd = new Date($("#inputSheetDateEnd").val());
+
+					//alert('calendarDateStart=' + calendarDateStart +  '\n' + 'sheetDateStart = ' + sheetDateStart);
+
+					$("BUTTON[data-calendar-nav='prev']").prop("disabled", calendarDateStart <= sheetDateStart);
+					$("BUTTON[data-calendar-nav='next']").prop("disabled", sheetDateEnd <= calendarDateEnd);
+				}
 
 				function processCurrentCalendarCells() {
 					$(".cal-cell").each(function (idx) {
@@ -130,7 +153,7 @@
 
 				function cellElementNeedsBlockInsertLink(cellElement) {
 					var currentCellDate_ary = ($(cellElement).find('span').attr("data-cal-date")).split('-');
-					var currentCellDate = new Date(currentCellDate_ary[1]+'/'+currentCellDate_ary[2]+'/'+currentCellDate_ary[0]);
+					var currentCellDate = new Date(currentCellDate_ary[1] + '/' + currentCellDate_ary[2] + '/' + currentCellDate_ary[0]);
 
 					var sheetDateStart = new Date($("#inputSheetDateStart").val());
 					var sheetDateEnd = new Date($("#inputSheetDateEnd").val());
@@ -138,74 +161,75 @@
 				}
 
 				function insertNewBlockLinkIntoCell(cellElement) {
-					$(cellElement).find('div').prepend("<a href='#' class='addOpeningLink' data-toggle='modal' data-target='#modal-create-opening'><i class=\"glyphicon glyphicon-plus\"></i></a>");
+					$(cellElement).find('div').prepend('<a href="#" class="addOpeningLink" data-toggle="modal" data-target="#modal-create-opening" title="Create opening"><i class=\"glyphicon glyphicon-plus\"></i></a>');
 				}
 
 				function addExistingOpeingingToCell(cellElement) {
 					var cell_date_str = $(cellElement).find('span').attr("data-cal-date");
-					console.log(cell_date_str);
+					//console.log(cell_date_str);
 					// get from the list data all events for this date
-					var openings = $(".opening-list-for-date[data-for-date=\""+cell_date_str+"\"]").html();
+//					var openings = ($(".opening-list-for-date[data-for-date=\""+cell_date_str+"\"]"));
+					var openings = $(".opening-list-for-date[data-for-date=\"" + cell_date_str + "\"]").html();
 					//console.dir(openings);
 
 					// if there are any, copy them into this cell
 					if (openings) {
-						$(cellElement).find('div').first().append('<div class="calendar-cell-openings">'+openings+'</div>');
+						$(cellElement).find('div').first().append('<div class="calendar-cell-openings"><div class="calendar-cell-openings-container">' + openings + '</div></div>');
 					}
 				}
 
-					// previous button: limit to show only relevant months
-				$("BUTTON[data-calendar-nav='prev']").click(function () {
-					updateCalendarNavButtons();
-					processCurrentCalendarCells();
+
+				//////////////// TODO - Complete or abandon: ATTEMPT TO STOP PROPAGATION OF DAY DBLCLICK and SingleClick on Numeral ////////////////
+				// todo - viewing empty calendar cells in 'day mode' creates a cascade JS errors (.first(...).attr(...)
+				// keep calendar in month view; this hack removes ability for calendar to display a single day
+				$('*[data-cal-date]').click(function () {
+					console.log('clicked date');
+					return false;
+//					var view = $(this).data('cal-view');
+//					self.options.day = $(this).data('cal-date');
+//					self.view(view);
 				});
-
-				// next button: limit to show only relevant months
-				$("BUTTON[data-calendar-nav='next']").click(function () {
-					updateCalendarNavButtons();
-					processCurrentCalendarCells();
+				$('.cal-cell').on("dblclick", function () {
+				//$('.cal-cell').dblclick(function () {
+					console.log('clicked cal cell2');
+					alert('trying to revert...');
+					$("button[data-calendar-view='month']").click();
+//					$('.btn-group button[data-calendar-view]').each(function () {
+//						var $this = $(this);
+//						$this.click(function () {
+//							calendar.view($this.data('calendar-view')).stop();
+//						});
+//					});
+//					var view = $('[data-cal-date]', this).data('cal-view');
+//					self.options.day = $('[data-cal-date]', this).data('cal-date');
+//					self.view('month');
 				});
+//				this['_update_' + this.options.view]();
+//				this._update_modal();
+//				function stopme() {
+//					alert('trying to just stop...');
+//					return false;
+//				}
+				//////////////// ATTEMPT TO STOP PROPAGATION OF DAY DBLCLICK and SingleClick on Numeral ////////////////
 
 
-				// TODO: date-time comparison of: 19:00:00 GMT-0500 vs 00:00:00 GMT-0500
-				// TODO: end >  or  >=... what if both conditions are valid
-
-				function updateCalendarNavButtons() {
-					var calendarDateStart_ary = ($("#calendar span").first().attr("data-cal-date")).split('-');
-					var calendarDateStart = new Date(calendarDateStart_ary[1]+'/'+calendarDateStart_ary[2]+'/'+calendarDateStart_ary[0]);
-
-					var calendarDateEnd_ary = ($("#calendar span").last().attr("data-cal-date")).split('-');
-					var calendarDateEnd = new Date(calendarDateEnd_ary[1]+'/'+calendarDateEnd_ary[2]+'/'+calendarDateEnd_ary[0]);
-
-					var sheetDateStart = new Date($("#inputSheetDateStart").val());
-					var sheetDateEnd = new Date($("#inputSheetDateEnd").val());
-
-					//alert('calendarDateStart=' + calendarDateStart +  '\n' + 'sheetDateStart = ' + sheetDateStart);
-
-					$("BUTTON[data-calendar-nav='prev']").prop("disabled", calendarDateStart <= sheetDateStart);
-					$("BUTTON[data-calendar-nav='next']").prop("disabled", sheetDateEnd <= calendarDateEnd);
-				}
+				// ***************************
+				// onload actions
+				// ***************************
 
 				updateCalendarNavButtons();
 				processCurrentCalendarCells();
+				customizeUI()
+
+				// dkc hacks: customize event icons
+//				$("a[data-event-class='event-important']").removeClass("event").removeClass("event-important").html("<i class=\"glyphicon glyphicon-plus\"></i> text");
+				// attempt to change icon.. but it's too small. use image instead?
+				//$(".calendar-cell-openings").prepend('<a href="#"><i class="glyphicon glyphicon-list"></i></a>');
+
 			});
-
-
 		</script>
 
-		<style type="text/css">
-			/* wms bootstrap-calendar-master overrides */
-			span[data-cal-date] {
-				margin-top: 5px;
-				margin-right: 5px;
-				font-size: inherit;
-			}
 
-			.cal-month-box .cal-day-today span[data-cal-date] {
-				font-size: 1.2em;
-				font-weight: bold;
-			}
-		</style>
 
 		<!-- Bootstrap Modal: Calendar Event Info -->
 		<div class="modal fade" id="events-modal">

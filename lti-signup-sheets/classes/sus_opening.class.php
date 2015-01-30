@@ -36,8 +36,7 @@
 		}
 
 		// custom hash comparator (compares hash keys instead of object properties)
-		public static function cmp_hash($a, $b)
-		{
+		public static function cmp_hash($a, $b) {
 			if ($a['begin_datetime'] == $b['begin_datetime']) {
 				if ($a['begin_datetime'] == $b['begin_datetime']) {
 					return 0;
@@ -78,12 +77,28 @@
 		}
 
 		public function renderAsHtmlShort() {
-		    $rendered = '';
-			$rendered .= '<div id="list-opening-'.$this->opening_id.'" class="list-opening" '.$this->fieldsAsDataAttribs().'>';
-			$rendered .= '<span class="opening-time-range">'.date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A").'</span>';
+			$rendered = '';
+			$rendered .= '<div id="list-opening-' . $this->opening_id . '" class="`list-opening`" ' . $this->fieldsAsDataAttribs() . '>';
+			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A") . '</span>';
 			$this->cacheSignups();
-			$rendered .= '<span class="opening-space-usage">'.'('.count($this->signups).'/'.$this->max_signups.')</span>';
+			$rendered .= '<span class="opening-space-usage">' . '(' . count($this->signups) . '/' . $this->max_signups . ')</span>';
 			$rendered .= '</div>';
+
+			return $rendered;
+		}
+
+		public function renderAsEditLink() {
+			$rendered = '';
+			// <i class="glyphicon glyphicon-wrench"></i>
+			$rendered .= '<a href="#" title="Edit opening" id="edit-opening-' . $this->opening_id . '" data-opening-id="' . $this->opening_id . '" class="edit-opening-link">Edit</a>';
+
+			return $rendered;
+		}
+
+		public function renderAsDeleteLink() {
+			$rendered = '';
+			// <i class="glyphicon glyphicon-remove"></i>
+			$rendered .= '<a href="#" title="Delete opening" id="delete-opening-' . $this->opening_id . '" data-opening-id="' . $this->opening_id . '" class="delete-opening-link">Delete</a>';
 
 			return $rendered;
 		}
