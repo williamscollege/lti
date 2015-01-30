@@ -25,9 +25,6 @@
 					<button class="btn btn-warning" data-calendar-view="day">Day</button>
 				</div>
 			</div>
-			<label class="checkbox">
-				<input type="checkbox" value="#events-modal" id="events-in-modal"> Open events in modal window
-			</label>
 
 			<h3>March 2013</h3>
 			<small>To see example with events navigate to march 2013</small>
@@ -43,7 +40,7 @@
 				"use strict";
 
 				var options = {
-//					modal: '#events-modal',
+					modal: '#events-modal',
 //					modal_type: 'ajax'
 //					, modal_title: function (e) {
 //						return e.title
@@ -112,19 +109,49 @@
 					calendar.view();
 				});
 
-				$('#events-in-modal').change(function () {
-					var val = $(this).is(':checked') ? $(this).val() : null;
-					calendar.setOptions({modal: val});
-				});
 				$('#events-modal .modal-header, #events-modal .modal-footer').click(function (e) {
 					//e.preventDefault();
 					//e.stopPropagation();
 				});
+
+				// dkc hacks
+				// customize event icons
+				$("a[data-event-class='event-important']").removeClass("event").removeClass("event-important").html("<i class=\"glyphicon glyphicon-plus\"></i> text");
+
+				// previous button: limit to show only relevant months
+				$("BUTTON[data-calendar-nav='prev']").click(function () {
+					updateCalendarNavButtons();
+				});
+
+				// next button: limit to show only relevant months
+				$("BUTTON[data-calendar-nav='next']").click(function () {
+					updateCalendarNavButtons();
+				});
+
+				// TODO: date-time comparison of: 19:00:00 GMT-0500 vs 00:00:00 GMT-0500
+				// TODO: end >  or  >=... what if both conditions are valid
+
+				function updateCalendarNavButtons() {
+					// TODO- someday fix this:
+					// currently gives (e.g)
+					// calendarDateStart=Sat Dec 27 2014 19:00:00 GMT-0500 (Eastern Standard Time)
+					// sheetDateStart = Tue Dec 02 2014 00:00:00 GMT-0500 (Eastern Standard Time)
+//					console.log($("#calendar span").first().attr("data-cal-date"));
+//					console.log($("#calendar span").last().attr("data-cal-date"));
+					var calendarDateStart = new Date(Date.parse($("#calendar span").first().attr("data-cal-date")+'T00:00:00Z'));
+					var calendarDateEnd = new Date(Date.parse($("#calendar span").last().attr("data-cal-date")+'T00:00:00Z'));
+					var sheetDateStart = new Date($("#inputSheetDateStart").val());
+					var sheetDateEnd = new Date($("#inputSheetDateEnd").val());
+
+//					alert('calendarDateStart=' + calendarDateStart +  '\n' + 'sheetDateStart = ' + sheetDateStart);
+
+					$("BUTTON[data-calendar-nav='prev']").prop("disabled", calendarDateStart <= sheetDateStart);
+					$("BUTTON[data-calendar-nav='next']").prop("disabled", sheetDateEnd <= calendarDateEnd);
+				}
+
+				updateCalendarNavButtons();
 			});
 
-			// dkc hacks
-			// customize event icons
-			$("a[data-event-class='event-important']").removeClass("event").removeClass("event-important").html("<i class=\"glyphicon glyphicon-plus\"></i> text");
 
 		</script>
 

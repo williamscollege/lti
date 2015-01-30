@@ -460,7 +460,6 @@
 										<!--Start: Calendar Openings -->
 										<div role="tabpanel" class="tab-pane fade active in" id="tabOpeningsCalendar" aria-labelledby="tabOpeningsCalendar">
 
-											<p>Calendar stuff</p>
 											<?php
 												require_once('calendar.php');
 											?>
