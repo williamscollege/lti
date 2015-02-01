@@ -17,12 +17,12 @@
 					<h4 id="ajaxCalCreateOpeningLabel" class="modal-title">Creating openings on 12/23/2014</h4>
 				</div>
 				<div class="modal-body">
-					<!-- TOGGLE LINK: Optional Fields -->
-					<a href="#" class="link_show_optional_opening_fields" title="Show optional fields">Show optional fields</a>
+					<!-- TOGGLE LINK: Show Optional Fields -->
+					<a href="#" id="link_show_optional_opening_fields" title="Show optional fields">Show optional fields</a>
 
 					<div class="optional_opening_fields">
-						<!-- TOGGLE LINK: Optional Fields -->
-						<a href="#" class="link_hide_optional_opening_fields" title="Hide optional fields">Hide optional fields</a>
+						<!-- TOGGLE LINK: Hide Optional Fields -->
+						<a href="#" id="link_hide_optional_opening_fields" title="Hide optional fields">Hide optional fields</a>
 
 						<div class="form-group form-group-sm">
 							<label for="ajaxCalCreateOpeningName" class="col-sm-2 control-label">Name</label>
@@ -55,16 +55,11 @@
 					</div>
 					<!-- end optional_opening_fields -->
 					<div class="form-group form-group-sm">
-						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">From</label>
+						<label for="ajaxCalCreateOpeningBeginTimeHour" class="col-sm-2 control-label">From</label>
 
 						<div class="col-sm-10">
-							<!-- START LABEL -->
-							<label for="begintime_hour">
-								<span style="display: inline;" class="openings_by_time_range">From:</span>
-								<span style="display: none;" class="openings_by_duration">Starting At:</span>
-							</label>
 							<!-- START 'HOURS' -->
-							<select name="begintime_hour" id="begintime_hour">
+							<select id="ajaxCalCreateOpeningBeginTimeHour" name="ajaxCalCreateOpeningBeginTimeHour">
 								<option value="1" selected="selected">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
@@ -100,15 +95,20 @@
 							</select>
 
 							<!-- TOGGLE LINKS: Openings by duration / time-range -->
-							<span id="opening_spec_toggler">
-								<span style="display: inline;" class="openings_by_time_range">switch to openings by duration</span>
-								<span style="display: none;" class="openings_by_duration">switch to openings by time range</span>
-							</span>
-							<input name="opening_spec_type" id="opening_spec_type" value="by_time_range" type="hidden">
+							<!-- <span id="opening_spec_toggler">-->
+
+							<!-- <a href="#" id="link_show_optional_opening_fields" title="Show optional fields">Show optional fields</a>-->
+							<a href="#" id="link_show_by_time_range" class="openings_by_time_range" title="Switch to openings by duration">Switch to openings by duration</a>
+							<a href="#" id="link_show_by_duration" class="openings_by_duration" title="Switch to openings by time range">Switch to openings by time range</a>
+							<!-- openings_by_time_range-->
+							<!-- <span style="display: none;" class="openings_by_duration">switch to openings by time range</span>-->
+							<!-- <a href="#" class="opening_spec_toggler openings_by_duration" title="Switch to openings by time range">Switch to openings by time range</a>-->
+							<!-- </span>-->
+<!--							<input name="opening_spec_type" id="opening_spec_type" value="by_time_range" type="hidden">-->
 						</div>
 					</div>
 					<div class="form-group form-group-sm">
-						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">From</label>
+						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">To</label>
 
 						<div class="col-sm-10">
 							<!-- START LABEL -->
@@ -153,7 +153,7 @@
 							</div>
 							<!-- TOGGLED RESULT: openings by duration -->
 							<div style="display: block;" class="openings_by_duration">
-								<label for="durationEachOpening">Make each opening</label>
+								<label for="durationEachOpening">Make&nbsp;each&nbsp;opening</label>
 								<select name="durationEachOpening" id="durationEachOpening">
 									<option value="5" selected="selected">5</option>
 									<option value="10">10</option>
@@ -179,7 +179,7 @@
 					</div>
 
 					<div class="form-group form-group-sm">
-						<label for="ajaxSheetgroupName" class="col-sm-2 control-label"># Openings</label>
+						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">#&nbsp;Openings</label>
 
 						<div class="col-sm-10">
 							<select name="numOpeningsInTimeRange" id="numOpeningsInTimeRange">
@@ -211,7 +211,7 @@
 						</div>
 					</div>
 					<div class="form-group form-group-sm">
-						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">Max Signups/Opening</label>
+						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">&nbsp;Signups/Opening</label>
 
 						<div class="col-sm-10">
 							<select name="numSignupsPerOpening" id="numSignupsPerOpening">
