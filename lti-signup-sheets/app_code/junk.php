@@ -18,11 +18,11 @@
 				</div>
 				<div class="modal-body">
 					<!-- TOGGLE LINK: Show Optional Fields -->
-					<a href="#" id="link_show_optional_opening_fields" title="Show optional fields">Show optional fields</a>
+					<a href="#" id="link_show_optional_opening_fields" class="small" title="Show optional fields">Show optional fields</a>
 
 					<div class="optional_opening_fields">
 						<!-- TOGGLE LINK: Hide Optional Fields -->
-						<a href="#" id="link_hide_optional_opening_fields" title="Hide optional fields">Hide optional fields</a>
+						<a href="#" id="link_hide_optional_opening_fields" class="small" title="Hide optional fields">Hide optional fields</a>
 
 						<div class="form-group form-group-sm">
 							<label for="ajaxCalCreateOpeningName" class="col-sm-2 control-label">Name</label>
@@ -98,8 +98,8 @@
 							<!-- <span id="opening_spec_toggler">-->
 
 							<!-- <a href="#" id="link_show_optional_opening_fields" title="Show optional fields">Show optional fields</a>-->
-							<a href="#" id="link_show_by_time_range" class="openings_by_time_range" title="Switch to openings by duration">Switch to openings by duration</a>
-							<a href="#" id="link_show_by_duration" class="openings_by_duration" title="Switch to openings by time range">Switch to openings by time range</a>
+							<a href="#" id="link_show_by_time_range" class="openings_by_time_range small" title="Switch to openings by duration">Switch to openings by duration</a>
+							<a href="#" id="link_show_by_duration" class="openings_by_duration small" title="Switch to openings by time range">Switch to openings by time range</a>
 							<!-- openings_by_time_range-->
 							<!-- <span style="display: none;" class="openings_by_duration">switch to openings by time range</span>-->
 							<!-- <a href="#" class="opening_spec_toggler openings_by_duration" title="Switch to openings by time range">Switch to openings by time range</a>-->
