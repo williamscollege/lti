@@ -59,7 +59,7 @@ wms bootstrap-calendar-master extensions
 }
 
 .calendar-cell-openings:hover {
-	width: 200px;
+	width: 250px;
 	height: 200px;
 	z-index: 10;
 	background-color: #fff;
@@ -67,11 +67,10 @@ wms bootstrap-calendar-master extensions
 	padding: 4px;
 }
 
-.calendar-cell-openings:hover .calendar-cell-openings-container {
+.calendar-cell-openings h4, .calendar-cell-openings:hover .calendar-cell-openings-container {
 	display: inline-block;
 	margin-top: 0px !important;
 	padding-top: 0px !important;
-	float: left;
 }
 
 .opening-space-usage {
@@ -83,8 +82,12 @@ wms bootstrap-calendar-master extensions
 }
 
 .delete-opening-link, .delete-opening-link:hover {
-	padding-right: 3px;
+	padding-right: 6px;
 	color: #ff0000;
+}
+
+.add-someone-to-opening-link{
+	padding-left: 3px;
 }
 
 /*=======================================

@@ -76,9 +76,27 @@
 			}
 		}
 
+		public function renderAsHtmlShortWithControls() {
+			$rendered = '';
+			$rendered .= '<div id="list-opening-' . $this->opening_id . '" class="list-opening" ' . $this->fieldsAsDataAttribs() . '>';
+			$rendered .= '<a href="#" title="Edit opening" id="edit-opening-' . $this->opening_id . '" data-opening-id="' . $this->opening_id . '" class="edit-opening-link"><i class="glyphicon glyphicon-wrench"></i></a>';
+			$rendered .= '<a href="#" title="Delete opening" id="delete-opening-' . $this->opening_id . '" data-opening-id="' . $this->opening_id . '" class="delete-opening-link"><i class="glyphicon glyphicon-remove"></i></a>';
+			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A") . '</span>';
+			$this->cacheSignups();
+			$customColorClass = " text-danger ";
+			if (count($this->signups) < $this->max_signups) {
+				$customColorClass = " text-success ";
+			}
+			$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . count($this->signups) . '/' . $this->max_signups . ')</strong></span>';
+			$rendered .= '<a href="#" title="Add someone" id="add-someone-to-opening-' . $this->opening_id . '" data-opening-id="' . $this->opening_id . '" class="add-someone-to-opening-link">add someone</a>';
+			$rendered .= '</div>';
+
+			return $rendered;
+		}
+
 		public function renderAsHtmlShort() {
 			$rendered = '';
-			$rendered .= '<div id="list-opening-' . $this->opening_id . '" class="`list-opening`" ' . $this->fieldsAsDataAttribs() . '>';
+			$rendered .= '<div id="list-opening-' . $this->opening_id . '" class="list-opening" ' . $this->fieldsAsDataAttribs() . '>';
 			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A") . '</span>';
 			$this->cacheSignups();
 			$rendered .= '<span class="opening-space-usage">' . '(' . count($this->signups) . '/' . $this->max_signups . ')</span>';
@@ -87,20 +105,5 @@
 			return $rendered;
 		}
 
-		public function renderAsEditLink() {
-			$rendered = '';
-			// <i class="glyphicon glyphicon-wrench"></i>
-			$rendered .= '<a href="#" title="Edit opening" id="edit-opening-' . $this->opening_id . '" data-opening-id="' . $this->opening_id . '" class="edit-opening-link">Edit</a>';
-
-			return $rendered;
-		}
-
-		public function renderAsDeleteLink() {
-			$rendered = '';
-			// <i class="glyphicon glyphicon-remove"></i>
-			$rendered .= '<a href="#" title="Delete opening" id="delete-opening-' . $this->opening_id . '" data-opening-id="' . $this->opening_id . '" class="delete-opening-link">Delete</a>';
-
-			return $rendered;
-		}
 
 	}
