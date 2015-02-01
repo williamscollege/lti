@@ -1,16 +1,21 @@
 $(document).ready(function () {
 
-	$(".optional_opening_fields_show").click(function()
+	// onload actions
+	$(".optional_opening_fields").hide();
+
+
+	// listeners
+	$(".link_show_optional_opening_fields").click(function()
 	{
-		window.resizeBy(0, $(".optional_opening_fields").height())
+		//window.resizeBy(0, $(".optional_opening_fields").height())
 		$(".optional_opening_fields").show();
-		$(".optional_opening_fields_show").hide();
+		$(".link_show_optional_opening_fields").hide();
 	});
-	$(".optional_opening_fields_hide").click(function()
+	$(".link_hide_optional_opening_fields").click(function()
 	{
 		$(".optional_opening_fields").hide();
-		window.resizeBy(0, -1 * $(".optional_opening_fields").height())
-		$(".optional_opening_fields_show").show();
+		//window.resizeBy(0, -1 * $(".optional_opening_fields").height())
+		$(".link_show_optional_opening_fields").show();
 	});
 
 	$("#opening_spec_toggler").click(function()

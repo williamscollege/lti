@@ -17,44 +17,52 @@
 					<h4 id="ajaxCalCreateOpeningLabel" class="modal-title">Creating openings on 12/23/2014</h4>
 				</div>
 				<div class="modal-body">
-					<!--CONTENTS HERE-->
-					<!-- SHOW TOGGLE LINK -->
-					<div class="optional_opening_fields_hide">hide optional fields</div>
+					<!-- TOGGLE LINK: Optional Fields -->
+					<a href="#" class="link_show_optional_opening_fields" title="Show optional fields">Show optional fields</a>
 
-					<div class="form-group form-group-sm">
-						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">Name</label>
+					<div class="optional_opening_fields">
+						<!-- TOGGLE LINK: Optional Fields -->
+						<a href="#" class="link_hide_optional_opening_fields" title="Hide optional fields">Hide optional fields</a>
 
-						<div class="col-sm-10">
-							<input type="text" id="ajaxSheetgroupName" name="ajaxSheetgroupName" class="form-control" placeholder="Opening name" value="" />
+						<div class="form-group form-group-sm">
+							<label for="ajaxCalCreateOpeningName" class="col-sm-2 control-label">Name</label>
+
+							<div class="col-sm-10">
+								<input type="text" id="ajaxCalCreateOpeningName" name="ajaxCalCreateOpeningName" class="form-control" placeholder="Opening name" value="" />
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label for="ajaxCalCreateOpeningDescription" class="col-sm-2 control-label">Description</label>
+
+							<div class="col-sm-10">
+								<textarea id="ajaxCalCreateOpeningDescription" name="ajaxCalCreateOpeningDescription" class="form-control" placeholder="Opening description" rows="1"></textarea>
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label for="ajaxCalCreateOpeningAdminNotes" class="col-sm-2 control-label">Admin&nbsp;Notes</label>
+
+							<div class="col-sm-10">
+								<textarea id="ajaxCalCreateOpeningAdminNotes" name="ajaxCalCreateOpeningAdminNotes" class="form-control" placeholder="Only the sheet admin can see these notes" rows="1"></textarea>
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label for="ajaxCalCreateOpeningLocation" class="col-sm-2 control-label">Location</label>
+
+							<div class="col-sm-10">
+								<input type="text" id="ajaxCalCreateOpeningLocation" name="ajaxCalCreateOpeningLocation" class="form-control" placeholder="Opening location" value="" />
+							</div>
 						</div>
 					</div>
-					<div class="form-group form-group-sm">
-						<label for="ajaxSheetgroupDescription" class="col-sm-2 control-label">Description</label>
-
-						<div class="col-sm-10">
-							<textarea id="ajaxSheetgroupDescription" name="ajaxSheetgroupDescription" class="form-control" placeholder="Opening description" rows="1"></textarea>
-						</div>
-					</div>
-					<div class="form-group form-group-sm">
-						<label for="ajaxSheetgroupDescription" class="col-sm-2 control-label">Admin&nbsp;Notes</label>
-
-						<div class="col-sm-10">
-							<textarea id="ajaxSheetgroupDescription" name="ajaxSheetgroupDescription" class="form-control" placeholder="(Only the sheet admin can see these)" rows="1"></textarea>
-						</div>
-					</div>
-					<div class="form-group form-group-sm">
-						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">Location</label>
-
-						<div class="col-sm-10">
-							<input type="text" id="ajaxSheetgroupName" name="ajaxSheetgroupName" class="form-control" placeholder="Opening location" value="" />
-						</div>
-					</div>
+					<!-- end optional_opening_fields -->
 					<div class="form-group form-group-sm">
 						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">From</label>
 
 						<div class="col-sm-10">
 							<!-- START LABEL -->
-							<label for="begintime_hour"><span style="display: inline;" class="openings_by_time_range">From:</span><span style="display: none;" class="openings_by_duration">Starting At:</span></label>
+							<label for="begintime_hour">
+								<span style="display: inline;" class="openings_by_time_range">From:</span>
+								<span style="display: none;" class="openings_by_duration">Starting At:</span>
+							</label>
 							<!-- START 'HOURS' -->
 							<select name="begintime_hour" id="begintime_hour">
 								<option value="1" selected="selected">1</option>
@@ -91,8 +99,11 @@
 								<option value="pm" selected="selected">pm</option>
 							</select>
 
-							<!-- SHOW TOGGLE LINK -->
-							<span id="opening_spec_toggler"><span style="display: inline;" class="openings_by_time_range">switch to openings by duration</span><span style="display: none;" class="openings_by_duration">switch to openings by time range</span></span>
+							<!-- TOGGLE LINKS: Openings by duration / time-range -->
+							<span id="opening_spec_toggler">
+								<span style="display: inline;" class="openings_by_time_range">switch to openings by duration</span>
+								<span style="display: none;" class="openings_by_duration">switch to openings by time range</span>
+							</span>
 							<input name="opening_spec_type" id="opening_spec_type" value="by_time_range" type="hidden">
 						</div>
 					</div>
