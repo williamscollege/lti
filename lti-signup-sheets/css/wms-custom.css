@@ -44,23 +44,21 @@ wms bootstrap-calendar-master extensions
 /* help force 'create openings' link into top left corner */
 .addOpeningLink {
 	float: left;
+	margin-top: 5px;
+	margin-left: 7px;
 }
 
 .calendar-cell-openings {
+	clear: both;
 	font-size: 11px;
-	width: 20px;
-	height: 20px;
-	background-color: green;
-	margin-top: 3px;
-	margin-left: 3px;
+	background-color: transparent;
 	position: relative;
 	top: 3px;
 	left: 3px;
-	clear: both;
+	padding: 1px;
 }
 
-.calendar-cell-openings h4,
-.calendar-cell-openings .calendar-cell-openings-container {
+.calendar-cell-openings h4, .calendar-cell-openings .calendar-cell-openings-container {
 	display: none;
 }
 
@@ -70,7 +68,7 @@ wms bootstrap-calendar-master extensions
 	z-index: 10;
 	background-color: #fff;
 	border: 1px solid #666;
-	padding: 4px;
+	padding: 0px;
 }
 
 .calendar-cell-openings h4, .calendar-cell-openings:hover .calendar-cell-openings-container {
@@ -79,17 +77,38 @@ wms bootstrap-calendar-master extensions
 	padding-top: 0px !important;
 }
 
+.calendar-cell-openings-container {
+	font-size: 11px;
+	padding: 4px;
+}
+
 .opening-space-usage {
 	padding-left: 3px;
 }
 
+/* opening control links (edit, delete, add someone) */
 .edit-opening-link {
-	padding-right: 3px;
+	padding-right: 2px;
+	margin-right: 1px;
 }
 
-.delete-opening-link, .delete-opening-link:hover {
-	padding-right: 6px;
+.edit-opening-link:hover {
+	background-color: #57D283;
+}
+
+.delete-opening-link {
+	padding-right: 2px;
+	margin-right: 1px;
 	color: #ff0000;
+}
+
+.delete-opening-link:hover {
+	background-color: #F7A9AD;
+	color: #ff0000;
+}
+
+.opening-time-range {
+	padding-left: 3px;
 }
 
 .add-someone-to-opening-link {

@@ -85,18 +85,19 @@
 				// ***************************
 				var calendar = $('#calendar').calendar(options);
 
+
+				// ***************************
 				// onload actions
+				// ***************************
 				updateCalendarNavButtons();
 				processCurrentCalendarCells();
 				unbindDailyMode();
-
-				// dkc hacks: customize event icons
-				// $("a[data-event-class='event-important']").removeClass("event").removeClass("event-important").html("<i class=\"glyphicon glyphicon-plus\"></i> text");
-				// attempt to change icon.. but it's too small. use image instead?
-				//$(".calendar-cell-openings").prepend('<a href="#"><i class="glyphicon glyphicon-list"></i></a>');
+//				$(".edit-opening-link").hover().toggleClass("bg-success");
 
 
-
+				// ***************************
+				// calendar listeners
+				// ***************************
 				$('.btn-group button[data-calendar-nav]').each(function () {
 					var $this = $(this);
 					$this.click(function () {
@@ -134,6 +135,11 @@
 					processCurrentCalendarCells();
 					unbindDailyMode();
 				});
+
+
+				// ***************************
+				// calendar functions
+				// ***************************
 
 				// prevent 'prev' and 'next' buttons from displaying months outside of sheet date span
 				function updateCalendarNavButtons() {
@@ -182,14 +188,13 @@
 					var cell_date_str = $(cellElement).find('span').attr("data-cal-date");
 					//console.log(cell_date_str);
 					// get from the list data all events for this date
-//					var openings = ($(".opening-list-for-date[data-for-date=\""+cell_date_str+"\"]"));
 					var openings = $(".opening-list-for-date[data-for-date=\"" + cell_date_str + "\"]").html();
 					//console.dir(openings);
 
 					// if there are any, copy them into this cell
 					if (openings) {
 						// TODO - Consider changing custom div overlay to instead use bootstrap popover (hover)
-						$(cellElement).find('div').first().append('<div class="calendar-cell-openings"><div class="calendar-cell-openings-container">' + openings + '</div></div>');
+						$(cellElement).find('div').first().append('<div class="calendar-cell-openings"><span class="glyphicon glyphicon-list-alt" style="font-size: 24px;" aria-hidden="true"></span><div class="calendar-cell-openings-container">' + openings + '</div></div>');
 					}
 				}
 
