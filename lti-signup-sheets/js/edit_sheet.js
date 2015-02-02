@@ -12,6 +12,7 @@ $(document).ready(function () {
 	$("#inputSheetDateStart, #inputSheetDateEnd").datepicker({
 		showOtherMonths: true,
 		selectOtherMonths: true,
+		dateFormat: 'mm/dd/yy',
 		yearRange: '-4:+4'
 	});
 
