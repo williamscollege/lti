@@ -115,6 +115,22 @@ wms bootstrap-calendar-master extensions
 	padding-left: 3px;
 }
 
+
+.toggler_dow{
+	width: 40px !important;
+	min-width: 40px !important;
+	max-width: 40px !important;
+	margin: 2px 0px !important; /* top/bottom, right/left*/
+}
+
+.toggler_dom{
+	width: 26px !important;
+	min-width: 26px !important;
+	max-width: 26px !important;
+	margin: 2px 0px !important; /* top/bottom, right/left*/
+}
+
+
 /*=======================================
 wms bootstrap-calendar-master overrides
 ==========================================*/

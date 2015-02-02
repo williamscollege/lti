@@ -8,7 +8,9 @@ $(document).ready(function () {
 	$('[data-toggle="popover"]').popover();
 
 
+	// ***************************
 	// Calendar datepicker
+	// ***************************
 	$("#inputSheetDateStart, #inputSheetDateEnd").datepicker({
 		showOtherMonths: true,
 		selectOtherMonths: true,

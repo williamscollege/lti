@@ -7,14 +7,14 @@
 <a href="#" class="addOpeningLink" data-toggle="modal" data-target="#modal-create-opening" title="Create openings"><i class="glyphicon glyphicon-plus"></i></a>
 
 <!-- Bootstrap Modal: Calendar Create Opening -->
-<form action="../ajax_actions/ajax_actions.php" id="frmAjaxCalCreateOpening" name="frmAjaxCalCreateOpening" class="form-horizontal" role="form" method="post">
-	<div id="modal-create-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ajaxCalCreateOpeningLabel" aria-hidden="true">
+<form action="../ajax_actions/ajax_actions.php" id="frmajaxOpening" name="frmajaxOpening" class="form-horizontal" role="form" method="post">
+	<div id="modal-create-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ajaxOpeningLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header bg-info">
 					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 id="ajaxCalCreateOpeningLabel" class="modal-title">Creating openings on 12/23/2014</h4>
+					<h4 id="ajaxOpeningLabel" class="modal-title">Creating openings on 12/23/2014</h4>
 				</div>
 				<div class="modal-body">
 					<!-- TOGGLE LINK: Show Optional Fields -->
@@ -25,41 +25,41 @@
 						<a href="#" id="link_hide_optional_opening_fields" class="small" title="Hide optional fields">Hide optional fields</a>
 
 						<div class="form-group form-group-sm">
-							<label for="ajaxCalCreateOpeningName" class="col-sm-2 control-label">Name</label>
+							<label for="ajaxOpeningName" class="col-sm-3 control-label">Name</label>
 
-							<div class="col-sm-10">
-								<input type="text" id="ajaxCalCreateOpeningName" name="ajaxCalCreateOpeningName" class="form-control" placeholder="Opening name" value="" />
+							<div class="col-sm-9">
+								<input type="text" id="ajaxOpeningName" name="ajaxOpeningName" class="form-control" placeholder="Opening name" value="" />
 							</div>
 						</div>
 						<div class="form-group form-group-sm">
-							<label for="ajaxCalCreateOpeningDescription" class="col-sm-2 control-label">Description</label>
+							<label for="ajaxOpeningDescription" class="col-sm-3 control-label">Description</label>
 
-							<div class="col-sm-10">
-								<textarea id="ajaxCalCreateOpeningDescription" name="ajaxCalCreateOpeningDescription" class="form-control" placeholder="Opening description" rows="1"></textarea>
+							<div class="col-sm-9">
+								<textarea id="ajaxOpeningDescription" name="ajaxOpeningDescription" class="form-control" placeholder="Opening description" rows="1"></textarea>
 							</div>
 						</div>
 						<div class="form-group form-group-sm">
-							<label for="ajaxCalCreateOpeningAdminNotes" class="col-sm-2 control-label">Admin&nbsp;Notes</label>
+							<label for="ajaxOpeningAdminNotes" class="col-sm-3 control-label">Admin&nbsp;Notes</label>
 
-							<div class="col-sm-10">
-								<textarea id="ajaxCalCreateOpeningAdminNotes" name="ajaxCalCreateOpeningAdminNotes" class="form-control" placeholder="Only the sheet admin can see these notes" rows="1"></textarea>
+							<div class="col-sm-9">
+								<textarea id="ajaxOpeningAdminNotes" name="ajaxOpeningAdminNotes" class="form-control" placeholder="Only the sheet admin can see these notes" rows="1"></textarea>
 							</div>
 						</div>
 						<div class="form-group form-group-sm">
-							<label for="ajaxCalCreateOpeningLocation" class="col-sm-2 control-label">Location</label>
+							<label for="ajaxOpeningLocation" class="col-sm-3 control-label">Location</label>
 
-							<div class="col-sm-10">
-								<input type="text" id="ajaxCalCreateOpeningLocation" name="ajaxCalCreateOpeningLocation" class="form-control" placeholder="Opening location" value="" />
+							<div class="col-sm-9">
+								<input type="text" id="ajaxOpeningLocation" name="ajaxOpeningLocation" class="form-control" placeholder="Opening location" value="" />
 							</div>
 						</div>
 					</div>
 					<!-- end optional_opening_fields -->
 					<div class="form-group form-group-sm">
-						<label for="ajaxCalCreateOpeningBeginTimeHour" class="col-sm-2 control-label">From</label>
+						<label for="ajaxOpeningBeginTimeHour" class="col-sm-3 control-label">From</label>
 
-						<div class="col-sm-10">
+						<div class="col-sm-9">
 							<!-- START 'HOURS' -->
-							<select id="ajaxCalCreateOpeningBeginTimeHour" name="ajaxCalCreateOpeningBeginTimeHour">
+							<select id="ajaxOpeningBeginTimeHour" name="ajaxOpeningBeginTimeHour">
 								<option value="1" selected="selected">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
@@ -74,7 +74,7 @@
 								<option value="12">12</option>
 							</select>:
 							<!-- START 'MINUTES' -->
-							<select name="begintime_minute" id="begintime_minute">
+							<select id="ajaxOpeningBeginTimeMinute" name="ajaxOpeningBeginTimeMinute">
 								<option value="0" selected="selected">00</option>
 								<option value="5">05</option>
 								<option value="10">10</option>
@@ -89,34 +89,26 @@
 								<option value="55">55</option>
 							</select>
 							<!-- START 'AM/PM' -->
-							<select name="begintime_ampm" id="begintime_ampm">
+							<select id="ajaxOpeningBeginTime_AMPM" name="ajaxOpeningBeginTime_AMPM">
 								<option value="am">am</option>
 								<option value="pm" selected="selected">pm</option>
 							</select>
 
 							<!-- TOGGLE LINKS: Openings by duration / time-range -->
-							<!-- <span id="opening_spec_toggler">-->
-
-							<!-- <a href="#" id="link_show_optional_opening_fields" title="Show optional fields">Show optional fields</a>-->
-							<a href="#" id="link_show_by_time_range" class="openings_by_time_range small" title="Switch to openings by duration">Switch to openings by duration</a>
-							<a href="#" id="link_show_by_duration" class="openings_by_duration small" title="Switch to openings by time range">Switch to openings by time range</a>
-							<!-- openings_by_time_range-->
-							<!-- <span style="display: none;" class="openings_by_duration">switch to openings by time range</span>-->
-							<!-- <a href="#" class="opening_spec_toggler openings_by_duration" title="Switch to openings by time range">Switch to openings by time range</a>-->
-							<!-- </span>-->
-<!--							<input name="opening_spec_type" id="opening_spec_type" value="by_time_range" type="hidden">-->
+							<a href="#" id="link_show_by_time_range" class="openings_by_time_range small" title="Switch to openings by duration">Switch to
+								duration</a>
+							<a href="#" id="link_show_by_duration" class="openings_by_duration small" title="Switch to openings by time range">Switch to time
+								range</a>
 						</div>
 					</div>
 					<div class="form-group form-group-sm">
-						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">To</label>
+						<label for="ajaxOpeningEndTimeHour" class="col-sm-3 control-label">To</label>
 
-						<div class="col-sm-10">
-							<!-- START LABEL -->
+						<div class="col-sm-9">
 							<!-- TOGGLED RESULT: openings by time range -->
-							<div style="display: block;" class="openings_by_time_range">
-								<label for="endtime_hour">To:</label>
+							<div class="openings_by_time_range">
 								<!-- START 'HOURS' -->
-								<select name="endtime_hour" id="endtime_hour">
+								<select id="ajaxOpeningEndTimeHour" name="ajaxOpeningEndTimeHour">
 									<option value="1">1</option>
 									<option value="2" selected="selected">2</option>
 									<option value="3">3</option>
@@ -131,7 +123,7 @@
 									<option value="12">12</option>
 								</select>:
 								<!-- START 'MINUTES' -->
-								<select name="endtime_minute" id="endtime_minute">
+								<select id="ajaxOpeningEndTimeMinute" name="ajaxOpeningEndTimeMinute">
 									<option value="0" selected="selected">00</option>
 									<option value="5">05</option>
 									<option value="10">10</option>
@@ -146,15 +138,14 @@
 									<option value="55">55</option>
 								</select>
 								<!-- START 'AM/PM' -->
-								<select name="endtime_ampm" id="endtime_ampm">
+								<select id="ajaxOpeningEndTimeMinute_AMPM" name="ajaxOpeningEndTimeMinute_AMPM">
 									<option value="am">am</option>
 									<option value="pm" selected="selected">pm</option>
 								</select>
 							</div>
 							<!-- TOGGLED RESULT: openings by duration -->
-							<div style="display: block;" class="openings_by_duration">
-								<label for="durationEachOpening">Make&nbsp;each&nbsp;opening</label>
-								<select name="durationEachOpening" id="durationEachOpening">
+							<div class="openings_by_duration">
+								<select id="ajaxOpeningDurationEachOpening" name="ajaxOpeningDurationEachOpening">
 									<option value="5" selected="selected">5</option>
 									<option value="10">10</option>
 									<option value="15">15</option>
@@ -179,10 +170,10 @@
 					</div>
 
 					<div class="form-group form-group-sm">
-						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">#&nbsp;Openings</label>
+						<label for="ajaxOpeningNumOpeningsInTimeRange" class="col-sm-3 control-label">#&nbsp;Openings</label>
 
-						<div class="col-sm-10">
-							<select name="numOpeningsInTimeRange" id="numOpeningsInTimeRange">
+						<div class="col-sm-9">
+							<select id="ajaxOpeningNumOpeningsInTimeRange" name="ajaxOpeningNumOpeningsInTimeRange">
 								<option value="1" selected="selected">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
@@ -211,10 +202,10 @@
 						</div>
 					</div>
 					<div class="form-group form-group-sm">
-						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">&nbsp;Signups/Opening</label>
+						<label for="ajaxOpeningNumSignupsPerOpening" class="col-sm-3 control-label">&nbsp;Signups/Opening</label>
 
-						<div class="col-sm-10">
-							<select name="numSignupsPerOpening" id="numSignupsPerOpening">
+						<div class="col-sm-9">
+							<select id="ajaxOpeningNumSignupsPerOpening" name="ajaxOpeningNumSignupsPerOpening">
 								<option value="-1">unlimited</option>
 								<option value="1" selected="selected">1</option>
 								<option value="2">2</option>
@@ -250,120 +241,132 @@
 						</div>
 					</div>
 					<div class="form-group form-group-sm">
-						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">Repeating?</label>
+						<label for="ajaxOpeningRepeaterControls" class="col-sm-3 control-label">Repeating?</label>
 
-						<div class="col-sm-10">
-							<div id="repeaterControls">
+						<div class="col-sm-9">
+							<div id="ajaxOpeningRepeaterControls">
 
 								<div id="chooseRepeatType">
-									<ul>
-										<li><input id="radioOpeningRepeatRate1" name="openingRepeatRate" value="1" checked="checked" type="radio">Only on
+									<div class="radio">
+										<label for="radioOpeningRepeatRate1">
+											<input id="radioOpeningRepeatRate1" name="openingRepeatRate" value="1" checked="checked" type="radio" /> Only on
 											2014-12-23
-										</li>
-										<li><input id="radioOpeningRepeatRate2" name="openingRepeatRate" value="2" type="radio">Repeat on days of the week</li>
-										<li><input id="radioOpeningRepeatRate3" name="openingRepeatRate" value="3" type="radio">Repeat on days of the month</li>
-									</ul>
+										</label>
+									</div>
+									<div class="radio">
+										<label for="radioOpeningRepeatRate2">
+											<input id="radioOpeningRepeatRate2" name="openingRepeatRate" value="2" type="radio" /> Repeat on days of the week
+										</label>
+									</div>
+									<div class="radio">
+										<label for="radioOpeningRepeatRate3">
+											<input id="radioOpeningRepeatRate3" name="openingRepeatRate" value="3" type="radio" /> Repeat on days of the month
+										</label>
+									</div>
 								</div>
 
-								<div style="display: none;" id="repeatWeekdayChooser">
-									<input name="repeat_dow_sun" id="repeat_dow_sun" value="0" type="hidden">
-									<input name="repeat_dow_mon" id="repeat_dow_mon" value="0" type="hidden">
-									<input name="repeat_dow_tue" id="repeat_dow_tue" value="0" type="hidden">
-									<input name="repeat_dow_wed" id="repeat_dow_wed" value="0" type="hidden">
-									<input name="repeat_dow_thu" id="repeat_dow_thu" value="0" type="hidden">
-									<input name="repeat_dow_fri" id="repeat_dow_fri" value="0" type="hidden">
-									<input name="repeat_dow_sat" id="repeat_dow_sat" value="0" type="hidden">
-									<input id="btn_mon" value="MON" class="toggler_dow" type="button">
-									<input id="btn_tue" value="TUE" class="toggler_dow" type="button">
-									<input id="btn_wed" value="WED" class="toggler_dow" type="button">
-									<input id="btn_thu" value="THU" class="toggler_dow" type="button">
-									<input id="btn_fri" value="FRI" class="toggler_dow" type="button"><br>
-									<input id="btn_sat" value="SAT" class="toggler_dow" type="button">
-									<input id="btn_sun" value="SUN" class="toggler_dow" type="button">
+								<div id="repeatWeekdayChooser">
+									<input name="repeat_dow_sun" id="repeat_dow_sun" value="0" type="hidden" />
+									<input name="repeat_dow_mon" id="repeat_dow_mon" value="0" type="hidden" />
+									<input name="repeat_dow_tue" id="repeat_dow_tue" value="0" type="hidden" />
+									<input name="repeat_dow_wed" id="repeat_dow_wed" value="0" type="hidden" />
+									<input name="repeat_dow_thu" id="repeat_dow_thu" value="0" type="hidden" />
+									<input name="repeat_dow_fri" id="repeat_dow_fri" value="0" type="hidden" />
+									<input name="repeat_dow_sat" id="repeat_dow_sat" value="0" type="hidden" />
+									<input id="btn_mon" value="MON" class="toggler_dow btn btn-default btn-xs" type="button" />
+									<input id="btn_tue" value="TUE" class="toggler_dow btn btn-default btn-xs" type="button" />
+									<input id="btn_wed" value="WED" class="toggler_dow btn btn-default btn-xs" type="button" />
+									<input id="btn_thu" value="THU" class="toggler_dow btn btn-success btn-xs" type="button" />
+									<input id="btn_fri" value="FRI" class="toggler_dow btn btn-default btn-xs" type="button" /><br />
+									<input id="btn_sat" value="SAT" class="toggler_dow btn btn-default btn-xs" type="button" />
+									<input id="btn_sun" value="SUN" class="toggler_dow btn btn-default btn-xs" type="button" />
 								</div>
 
-								<div style="display: none;" id="repeatMonthdayChooser">
-									<input name="repeat_dom_1" id="repeat_dom_1" value="0" type="hidden">
-									<input id="btn_dom_1" value="1" class="toggler_dom" type="button">
-									<input name="repeat_dom_2" id="repeat_dom_2" value="0" type="hidden">
-									<input id="btn_dom_2" value="2" class="toggler_dom" type="button">
-									<input name="repeat_dom_3" id="repeat_dom_3" value="0" type="hidden">
-									<input id="btn_dom_3" value="3" class="toggler_dom" type="button">
-									<input name="repeat_dom_4" id="repeat_dom_4" value="0" type="hidden">
-									<input id="btn_dom_4" value="4" class="toggler_dom" type="button">
-									<input name="repeat_dom_5" id="repeat_dom_5" value="0" type="hidden">
-									<input id="btn_dom_5" value="5" class="toggler_dom" type="button">
-									<input name="repeat_dom_6" id="repeat_dom_6" value="0" type="hidden">
-									<input id="btn_dom_6" value="6" class="toggler_dom" type="button">
-									<input name="repeat_dom_7" id="repeat_dom_7" value="0" type="hidden">
-									<input id="btn_dom_7" value="7" class="toggler_dom" type="button">
-									<br>
-									<input name="repeat_dom_8" id="repeat_dom_8" value="0" type="hidden">
-									<input id="btn_dom_8" value="8" class="toggler_dom" type="button">
-									<input name="repeat_dom_9" id="repeat_dom_9" value="0" type="hidden">
-									<input id="btn_dom_9" value="9" class="toggler_dom" type="button">
-									<input name="repeat_dom_10" id="repeat_dom_10" value="1" type="hidden">
-									<input style="background: none repeat scroll 0% 0% rgb(170, 170, 170);" id="btn_dom_10" value="10" class="toggler_dom" type="button">
-									<input name="repeat_dom_11" id="repeat_dom_11" value="1" type="hidden">
-									<input style="background: none repeat scroll 0% 0% rgb(170, 170, 170);" id="btn_dom_11" value="11" class="toggler_dom" type="button">
-									<input name="repeat_dom_12" id="repeat_dom_12" value="0" type="hidden">
-									<input id="btn_dom_12" value="12" class="toggler_dom" type="button">
-									<input name="repeat_dom_13" id="repeat_dom_13" value="0" type="hidden">
-									<input id="btn_dom_13" value="13" class="toggler_dom" type="button">
-									<input name="repeat_dom_14" id="repeat_dom_14" value="0" type="hidden">
-									<input id="btn_dom_14" value="14" class="toggler_dom" type="button">
-									<br>
-									<input name="repeat_dom_15" id="repeat_dom_15" value="0" type="hidden">
-									<input id="btn_dom_15" value="15" class="toggler_dom" type="button">
-									<input name="repeat_dom_16" id="repeat_dom_16" value="0" type="hidden">
-									<input id="btn_dom_16" value="16" class="toggler_dom" type="button">
-									<input name="repeat_dom_17" id="repeat_dom_17" value="0" type="hidden">
-									<input id="btn_dom_17" value="17" class="toggler_dom" type="button">
-									<input name="repeat_dom_18" id="repeat_dom_18" value="1" type="hidden">
-									<input style="background: none repeat scroll 0% 0% rgb(170, 170, 170);" id="btn_dom_18" value="18" class="toggler_dom" type="button">
-									<input name="repeat_dom_19" id="repeat_dom_19" value="0" type="hidden">
-									<input id="btn_dom_19" value="19" class="toggler_dom" type="button">
-									<input name="repeat_dom_20" id="repeat_dom_20" value="0" type="hidden">
-									<input id="btn_dom_20" value="20" class="toggler_dom" type="button">
-									<input name="repeat_dom_21" id="repeat_dom_21" value="0" type="hidden">
-									<input id="btn_dom_21" value="21" class="toggler_dom" type="button">
-									<br>
-									<input name="repeat_dom_22" id="repeat_dom_22" value="0" type="hidden">
-									<input id="btn_dom_22" value="22" class="toggler_dom" type="button">
-									<input name="repeat_dom_23" id="repeat_dom_23" value="0" type="hidden">
-									<input id="btn_dom_23" value="23" class="toggler_dom" type="button">
-									<input name="repeat_dom_24" id="repeat_dom_24" value="0" type="hidden">
-									<input id="btn_dom_24" value="24" class="toggler_dom" type="button">
-									<input name="repeat_dom_25" id="repeat_dom_25" value="0" type="hidden">
-									<input id="btn_dom_25" value="25" class="toggler_dom" type="button">
-									<input name="repeat_dom_26" id="repeat_dom_26" value="0" type="hidden">
-									<input id="btn_dom_26" value="26" class="toggler_dom" type="button">
-									<input name="repeat_dom_27" id="repeat_dom_27" value="0" type="hidden">
-									<input id="btn_dom_27" value="27" class="toggler_dom" type="button">
-									<input name="repeat_dom_28" id="repeat_dom_28" value="0" type="hidden">
-									<input id="btn_dom_28" value="28" class="toggler_dom" type="button">
-									<br>
-									<input name="repeat_dom_29" id="repeat_dom_29" value="0" type="hidden">
-									<input id="btn_dom_29" value="29" class="toggler_dom" type="button">
-									<input name="repeat_dom_30" id="repeat_dom_30" value="0" type="hidden">
-									<input id="btn_dom_30" value="30" class="toggler_dom" type="button">
-									<input name="repeat_dom_31" id="repeat_dom_31" value="0" type="hidden">
-									<input id="btn_dom_31" value="31" class="toggler_dom" type="button">
+								<div id="repeatMonthdayChooser">
+									<input name="repeat_dom_1" id="repeat_dom_1" value="0" type="hidden" />
+									<input id="btn_dom_1" value="1" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_2" id="repeat_dom_2" value="0" type="hidden" />
+									<input id="btn_dom_2" value="2" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_3" id="repeat_dom_3" value="0" type="hidden" />
+									<input id="btn_dom_3" value="3" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_4" id="repeat_dom_4" value="0" type="hidden" />
+									<input id="btn_dom_4" value="4" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_5" id="repeat_dom_5" value="0" type="hidden" />
+									<input id="btn_dom_5" value="5" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_6" id="repeat_dom_6" value="0" type="hidden" />
+									<input id="btn_dom_6" value="6" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_7" id="repeat_dom_7" value="0" type="hidden" />
+									<input id="btn_dom_7" value="7" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<br />
+									<input name="repeat_dom_8" id="repeat_dom_8" value="0" type="hidden" />
+									<input id="btn_dom_8" value="8" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_9" id="repeat_dom_9" value="0" type="hidden" />
+									<input id="btn_dom_9" value="9" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_10" id="repeat_dom_10" value="1" type="hidden" />
+									<input id="btn_dom_10" value="10" class="toggler_dom btn btn-success btn-xs" type="button" />
+									<input name="repeat_dom_11" id="repeat_dom_11" value="1" type="hidden" />
+									<input id="btn_dom_11" value="11" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_12" id="repeat_dom_12" value="0" type="hidden" />
+									<input id="btn_dom_12" value="12" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_13" id="repeat_dom_13" value="0" type="hidden" />
+									<input id="btn_dom_13" value="13" class="toggler_dom btn btn-success btn-xs" type="button" />
+									<input name="repeat_dom_14" id="repeat_dom_14" value="0" type="hidden" />
+									<input id="btn_dom_14" value="14" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<br />
+									<input name="repeat_dom_15" id="repeat_dom_15" value="0" type="hidden" />
+									<input id="btn_dom_15" value="15" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_16" id="repeat_dom_16" value="0" type="hidden" />
+									<input id="btn_dom_16" value="16" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_17" id="repeat_dom_17" value="0" type="hidden" />
+									<input id="btn_dom_17" value="17" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_18" id="repeat_dom_18" value="1" type="hidden" />
+									<input id="btn_dom_18" value="18" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_19" id="repeat_dom_19" value="0" type="hidden" />
+									<input id="btn_dom_19" value="19" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_20" id="repeat_dom_20" value="0" type="hidden" />
+									<input id="btn_dom_20" value="20" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_21" id="repeat_dom_21" value="0" type="hidden" />
+									<input id="btn_dom_21" value="21" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<br />
+									<input name="repeat_dom_22" id="repeat_dom_22" value="0" type="hidden" />
+									<input id="btn_dom_22" value="22" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_23" id="repeat_dom_23" value="0" type="hidden" />
+									<input id="btn_dom_23" value="23" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_24" id="repeat_dom_24" value="0" type="hidden" />
+									<input id="btn_dom_24" value="24" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_25" id="repeat_dom_25" value="0" type="hidden" />
+									<input id="btn_dom_25" value="25" class="toggler_dom btn btn-success btn-xs" type="button" />
+									<input name="repeat_dom_26" id="repeat_dom_26" value="0" type="hidden" />
+									<input id="btn_dom_26" value="26" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_27" id="repeat_dom_27" value="0" type="hidden" />
+									<input id="btn_dom_27" value="27" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_28" id="repeat_dom_28" value="0" type="hidden" />
+									<input id="btn_dom_28" value="28" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<br />
+									<input name="repeat_dom_29" id="repeat_dom_29" value="0" type="hidden" />
+									<input id="btn_dom_29" value="29" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_30" id="repeat_dom_30" value="0" type="hidden" />
+									<input id="btn_dom_30" value="30" class="toggler_dom btn btn-default btn-xs" type="button" />
+									<input name="repeat_dom_31" id="repeat_dom_31" value="0" type="hidden" />
+									<input id="btn_dom_31" value="31" class="toggler_dom btn btn-default btn-xs" type="button" />
 								</div>
 
-								<div style="display: none;" id="repeatUntilDate">
-									until <input name="until_date" class="sus_choose_date hasDatepicker" id="text_until_date" value="2015-12-31" type="text">
+								<div id="repeatUntilDate">
+									<label for="ajaxOpeningUntilDate" style="font-weight: normal; border-radius: 0;">
+										<strong>until</strong> <input type="text" id="ajaxOpeningUntilDate" name="ajaxOpeningUntilDate" class="form-inline" placeholder="mm/dd/yyyy" maxlength="10" value="02/03/2015" />
+										<!--value="<?php /*echo $s ? date_format(new DateTime($s->date_closes), "m/d/Y") : ''; */?>" />-->
+									</label>
 								</div>
 							</div>
-							<!-- end repeaterControls -->
+							<!-- end ajaxOpeningRepeaterControls -->
 						</div>
 					</div>
 
 
 				</div>
 				<div class="modal-footer">
-					<button type="submit" id="btnAjaxCalCreateOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
-					<button type="reset" id="btnAjaxCalCreateOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
+					<button type="submit" id="btnajaxOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
+					<button type="reset" id="btnajaxOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
 					</button>
 				</div>
 			</div>

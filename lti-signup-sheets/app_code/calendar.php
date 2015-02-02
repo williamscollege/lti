@@ -92,7 +92,6 @@
 				updateCalendarNavButtons();
 				processCurrentCalendarCells();
 				unbindDailyMode();
-//				$(".edit-opening-link").hover().toggleClass("bg-success");
 
 
 				// ***************************
@@ -160,7 +159,7 @@
 				// iterate through each visible calendar cell
 				function processCurrentCalendarCells() {
 					$(".cal-cell").each(function (idx) {
-					// console.log("processing cell " + idx);
+						// console.log("processing cell " + idx);
 						if (cellElementNeedsBlockInsertLink(this)) {
 							insertNewBlockLinkIntoCell(this);
 						}
@@ -233,14 +232,14 @@
 		<!-- /Modal -->
 
 		<!-- Bootstrap Modal: Calendar Create Opening -->
-		<form action="../ajax_actions/ajax_actions.php" id="frmAjaxCalCreateOpening" name="frmAjaxCalCreateOpening" class="form-horizontal" role="form" method="post">
-			<div id="modal-create-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ajaxCalCreateOpeningLabel" aria-hidden="true">
+		<form action="../ajax_actions/ajax_actions.php" id="frmajaxOpening" name="frmajaxOpening" class="form-horizontal" role="form" method="post">
+			<div id="modal-create-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ajaxOpeningLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header bg-info">
 							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 							</button>
-							<h4 id="ajaxCalCreateOpeningLabel" class="modal-title">Creating openings on 12/23/2014</h4>
+							<h4 id="ajaxOpeningLabel" class="modal-title">Creating openings on 12/23/2014</h4>
 						</div>
 						<div class="modal-body">
 							<!--CONTENTS HERE-->
@@ -582,8 +581,8 @@
 
 						</div>
 						<div class="modal-footer">
-							<button type="submit" id="btnAjaxCalCreateOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
-							<button type="reset" id="btnAjaxCalCreateOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
+							<button type="submit" id="btnajaxOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
+							<button type="reset" id="btnajaxOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
 							</button>
 						</div>
 					</div>
