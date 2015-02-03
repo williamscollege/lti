@@ -89,9 +89,7 @@
 				// ***************************
 				// onload actions
 				// ***************************
-				updateCalendarNavButtons();
-				processCurrentCalendarCells();
-				unbindDailyMode();
+				setupMonth();
 
 
 				// ***************************
@@ -130,15 +128,21 @@
 
 				// button listeners: enable handlers to populate cells correctly
 				$("BUTTON[data-calendar-nav]").click(function () {
-					updateCalendarNavButtons();
-					processCurrentCalendarCells();
-					unbindDailyMode();
+					setupMonth();
 				});
 
 
 				// ***************************
 				// calendar functions
 				// ***************************
+
+				function setupMonth(){
+					updateCalendarNavButtons();
+					processCurrentCalendarCells();
+					unbindDailyMode();
+					abbreviateDaysOfWeekLabels();
+				}
+
 
 				// prevent 'prev' and 'next' buttons from displaying months outside of sheet date span
 				function updateCalendarNavButtons() {
@@ -180,7 +184,7 @@
 				// insert link to 'create openings' in this calendar cell
 				function insertNewBlockLinkIntoCell(cellElement) {
 					var cellDate = $(cellElement).find('span[data-cal-date]').attr('data-cal-date');
-					$(cellElement).find('div').prepend('<a href="#" class="addOpeningLink" data-toggle="modal" data-target="#modal-create-opening" data-cal-date="' + cellDate + '" title="Create openings"><i class="glyphicon glyphicon-plus"></i></a>');
+					$(cellElement).find('div').append('<a href="#" class="addOpeningLink pull-right" data-toggle="modal" data-target="#modal-create-opening" data-cal-date="' + cellDate + '" title="Create openings"><i class="glyphicon glyphicon-plus"></i></a>');
 				}
 
 				// display any existing openings within this calendar cell
@@ -194,7 +198,7 @@
 					// if there are any, copy them into this cell
 					if (openings) {
 						// TODO - Consider changing custom div overlay to instead use bootstrap popover (hover)
-						$(cellElement).find('div').first().append('<div class="calendar-cell-openings"><span class="glyphicon glyphicon-list-alt" style="font-size: 24px;" aria-hidden="true"></span><div class="calendar-cell-openings-container">' + openings + '</div></div>');
+						$(cellElement).find('div').first().append('<div class="calendar-cell-openings"><span class="glyphicon glyphicon-list-alt pull-right" style="font-size: 24px;" aria-hidden="true"></span><div class="calendar-cell-openings-container">' + openings + '</div></div>');
 					}
 				}
 
@@ -203,6 +207,14 @@
 					$('*[data-cal-date]').unbind("click");
 					$('.cal-cell').unbind("dblclick");
 				}
+
+				function abbreviateDaysOfWeekLabels(){
+					// console.log( $(".cal-row-head .cal-cell1").html());
+					$(".cal-row-head .cal-cell1").each(function(idx,ele){
+						$(this).html($(this).html().substring(0, 3));
+					});
+				}
+
 
 			});
 		</script>

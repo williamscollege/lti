@@ -43,18 +43,22 @@ wms bootstrap-calendar-master extensions
 
 /* help force 'create openings' link into top left corner */
 .addOpeningLink {
-	float: left;
+	/*float: left;*/
+	/*float: right !important;*/
+	/*text-align: center;*/
 	margin-top: 5px;
-	margin-left: 7px;
+	margin-right: 3px;
+	/*margin: 5px auto !important;*/
 }
 
 .calendar-cell-openings {
 	clear: both;
+	/*float: right;*/
 	font-size: 11px;
 	background-color: transparent;
 	position: relative;
 	top: 3px;
-	left: 3px;
+	right: 6px;
 	padding: 1px;
 }
 
@@ -62,6 +66,9 @@ wms bootstrap-calendar-master extensions
 	display: none;
 }
 
+.calendar-cell-openings:hover .glyphicon-list-alt{
+display: none;
+}
 .calendar-cell-openings:hover {
 	width: 250px;
 	height: 200px;
@@ -69,6 +76,7 @@ wms bootstrap-calendar-master extensions
 	background-color: #fff;
 	border: 1px solid #666;
 	padding: 0px;
+	margin-left: 4px;
 }
 
 .calendar-cell-openings h4, .calendar-cell-openings:hover .calendar-cell-openings-container {
@@ -149,6 +157,18 @@ span[data-cal-date] {
 #cal-week-box {
 	display: none !important;
 }
+
+/*.cal-month-box .cal-cell, .cal-month-day{*/
+.cal-cell{
+	min-height: 65px !important;
+}
+.cal-month-day{
+	height: 65px !important;
+}
+/*#tabOpeningsCalendar .page-header,*/
+/*#calendar {*/
+	/*max-width: 463px !important;*/
+/*}*/
 
 /*=======================================
 Bootstrap.css tweaks are below
