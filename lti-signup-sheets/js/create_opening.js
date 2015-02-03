@@ -3,13 +3,7 @@ $(document).ready(function () {
 	// ***************************
 	// onload actions
 	// ***************************
-	// hide stuff that should be hidden
-	$(".optional_opening_fields").hide();
-	$("#link_show_by_duration").hide();
-	$(".openings_by_duration").hide();
-	$("#repeatWeekdayChooser").hide();
-	$("#repeatMonthdayChooser").hide();
-	$("#repeatUntilDate").hide();
+
 
 
 	// ***************************
@@ -22,6 +16,54 @@ $(document).ready(function () {
 		yearRange: '-4:+4'
 	});
 
+
+	// populate modal form with calendar date of day clicked
+	$(".addOpeningLink").click(function(){
+		var dateClicked = $(this).attr('data-cal-date');
+		console.log('dateClicked = ' + dateClicked );
+		setupModalForm(dateClicked);
+	});
+
+	function setupModalForm(forDateYYYYMMDD){
+
+		var forDateAry = forDateYYYYMMDD.split('-');
+		var forDateClean = forDateAry[1]+'/'+forDateAry[2]+'/'+forDateAry[0];
+
+		var d = new Date(forDateYYYYMMDD);
+		var dow = (['mon','tue','wed','thu','fri','sat','sun'])[d.getDay()];
+		var dom = forDateAry[2] * 1;
+
+
+		// set up the date
+		$("#ajaxOpeningUntilDate").attr('value',forDateClean);
+
+		$(".ajaxOpeningCalDate").html(forDateClean);
+
+		// clear out & reset the day-of-week repeats
+		$('.repeat_dow_val').val(0);
+		$('.toggler_dow').removeClass('btn-success');
+		$('.toggler_dow').removeClass('btn-default');
+		$('.toggler_dow').addClass('btn-default');
+		$('#btn_'+dow).click();
+
+		// clear out & reset the day-of-month repeats
+		$('.repeat_dom_val').val(0);
+		$('.toggler_dom').removeClass('btn-success');
+		$('.toggler_dom').removeClass('btn-default');
+		$('.toggler_dom').addClass('btn-default');
+		$('#btn_dom_'+dom).click();
+
+		// set the repeat option to be the default (only on)
+		$('#radioOpeningRepeatRate1').click();
+
+		// hide the stuff that should be hidden
+		$('#link_show_by_duration').click();
+		$('#link_hide_optional_opening_fields').click();
+
+		// reset non-dynamic form fields to defaults
+		//$("#frmAjaxOpening select").val(0);
+		$('#frmAjaxOpening').trigger("reset");
+	}
 
 	// ***************************
 	// listeners
@@ -145,13 +187,13 @@ $(document).ready(function () {
 
 		// TODO - temporary... need to deal with hidden values, and button conditions after click, dismiss, and re-open of modal
 		// TODO - also need to bind  button[data-dismiss="modal"]  action (AND ESCAPE KEY TOO) to the cleanUpForm()
-		$(":input", form).each(function () {
-			var type = this.type;
-			var tag = this.tagName.toLowerCase();
-			if (type == 'text') {
-				this.value = "";
-			}
-		});
+		//$(":input", form).each(function () {
+		//	var type = this.type;
+		//	var tag = this.tagName.toLowerCase();
+		//	if (type == 'text') {
+		//		this.value = "";
+		//	}
+		//});
 		//validateAjaxOpening.resetForm();
 		// manually remove input highlights
 		// $(".form-group").removeClass('success').removeClass('error');
