@@ -88,21 +88,21 @@ wms bootstrap-calendar-master extensions
 
 /* opening control links (edit, delete, add someone) */
 .edit-opening-link {
-	padding-right: 2px;
+	padding-right: 3px;
 	margin-right: 1px;
 }
 
-.edit-opening-link:hover {
+.edit-opening-link i:hover {
 	background-color: #57D283;
 }
 
 .delete-opening-link {
-	padding-right: 2px;
+	padding-right: 3px;
 	margin-right: 1px;
 	color: #ff0000;
 }
 
-.delete-opening-link:hover {
+.delete-opening-link i:hover {
 	background-color: #F7A9AD;
 	color: #ff0000;
 }
@@ -115,21 +115,20 @@ wms bootstrap-calendar-master extensions
 	padding-left: 3px;
 }
 
-
-.toggler_dow{
+/* ensure uniform btn sizes for repeating days of week */
+.toggler_dow {
 	width: 40px !important;
 	min-width: 40px !important;
 	max-width: 40px !important;
 	margin: 2px 0px !important; /* top/bottom, right/left*/
 }
-
-.toggler_dom{
+/* ensure uniform btn sizes for repeating days of month */
+.toggler_dom {
 	width: 26px !important;
 	min-width: 26px !important;
 	max-width: 26px !important;
 	margin: 2px 0px !important; /* top/bottom, right/left*/
 }
-
 
 /*=======================================
 wms bootstrap-calendar-master overrides

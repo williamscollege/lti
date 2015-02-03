@@ -3,6 +3,7 @@ $(document).ready(function () {
 	// ***************************
 	// onload actions
 	// ***************************
+	// hide stuff that should be hidden
 	$(".optional_opening_fields").hide();
 	$("#link_show_by_duration").hide();
 	$(".openings_by_duration").hide();
@@ -10,10 +11,6 @@ $(document).ready(function () {
 	$("#repeatMonthdayChooser").hide();
 	$("#repeatUntilDate").hide();
 
-
-	// TODO - Modal needs form reset and optional links reset (for Create mode) wired up to Cancel button (works with Escape key too?)
-	//$("#link_hide_optional_opening_fields").click();
-	//$("#link_show_by_duration").click();
 
 	// ***************************
 	// Calendar datepicker
@@ -65,11 +62,12 @@ $(document).ready(function () {
 	$(".toggler_dow").click(function (event) {
 		var which = event.target.id.substr(4, 3);
 		//alert("which is "+which);
-		if( $(this).hasClass("btn-success") ){
+		if ($(this).hasClass("btn-success")) {
 			//alert("turning off #repeat_dow_"+which);
 			$(this).removeClass("btn-success").addClass("btn-default");
 			$("#repeat_dow_" + which).prop("value", 1);
-		} else {
+		}
+		else {
 			//alert("turning on #repeat_dow_"+which);
 			$(this).addClass("btn-success").removeClass("btn-default");
 			$("#repeat_dow_" + which).prop("value", 0);
@@ -79,11 +77,12 @@ $(document).ready(function () {
 	$(".toggler_dom").click(function (event) {
 		var which = event.target.id.substr(8, 3);
 		//alert("which is "+which);
-		if( $(this).hasClass("btn-success") ){
+		if ($(this).hasClass("btn-success")) {
 			//alert("turning off #repeat_dom_"+which);
 			$(this).removeClass("btn-success").addClass("btn-default");
 			$("#repeat_dom_" + which).prop("value", 1);
-		} else {
+		}
+		else {
 			//alert("turning on #repeat_dom_"+which);
 			$(this).addClass("btn-success").removeClass("btn-default");
 			$("#repeat_dom_" + which).prop("value", 0);
@@ -134,5 +133,51 @@ $(document).ready(function () {
 		return true;
 	});
 
-})
-;
+
+	// ***************************
+	// Cancel and cleanup
+	// ***************************
+	// TODO - update other modal cleanUpForm fxns with solutions from this one
+
+	function cleanUpForm(formName) {
+		// reset form to initial values (does not effect hidden inputs)
+		$('#' + formName).trigger("reset");
+
+		// TODO - temporary... need to deal with hidden values, and button conditions after click, dismiss, and re-open of modal
+		// TODO - also need to bind  button[data-dismiss="modal"]  action (AND ESCAPE KEY TOO) to the cleanUpForm()
+		$(":input", form).each(function () {
+			var type = this.type;
+			var tag = this.tagName.toLowerCase();
+			if (type == 'text') {
+				this.value = "";
+			}
+		});
+		//validateAjaxOpening.resetForm();
+		// manually remove input highlights
+		// $(".form-group").removeClass('success').removeClass('error');
+	}
+
+	$('#btnAjaxOpeningCancel').click(function () {
+		cleanUpForm("frmAjaxOpening");
+
+		// manually clear modal values
+		//$("#ajaxOpeningID").val(0);
+		//$("#ajaxOpeningLabel").text('');
+		//$("#ajaxOpeningAction").val('');
+		//$("#frmAjaxOpening textarea").val('');
+		//$("#frmAjaxOpening input[type=text]").val('');
+		//$("#frmAjaxOpening input[type=radio]").attr("checked", false);
+		//$("#frmAjaxOpening select").val(0);
+
+		// reset submit button (avoid disabled state)
+		$("#btnAjaxOpeningSubmit").button('reset');
+	});
+
+	// TODO - implement in ajax success callback
+	//success: function (data) {
+	//	// hide and reset form
+	//	$("#btnAjaxOpeningCancel").click();
+
+	// END: Cancel and cleanup
+
+});

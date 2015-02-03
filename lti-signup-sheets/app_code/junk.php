@@ -7,7 +7,7 @@
 <a href="#" class="addOpeningLink" data-toggle="modal" data-target="#modal-create-opening" title="Create openings"><i class="glyphicon glyphicon-plus"></i></a>
 
 <!-- Bootstrap Modal: Calendar Create Opening -->
-<form action="../ajax_actions/ajax_actions.php" id="frmajaxOpening" name="frmajaxOpening" class="form-horizontal" role="form" method="post">
+<form action="../ajax_actions/ajax_actions.php" id="frmAjaxOpening" name="frmAjaxOpening" class="form-horizontal" role="form" method="post">
 	<div id="modal-create-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ajaxOpeningLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -365,14 +365,14 @@
 
 				</div>
 				<div class="modal-footer">
-					<button type="submit" id="btnajaxOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
-					<button type="reset" id="btnajaxOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
+					<button type="submit" id="btnAjaxOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
+					<button type="reset" id="btnAjaxOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
 					</button>
 				</div>
 			</div>
 		</div>
 	</div>
 </form>
-<!-- /Modal -->
+<!-- /Bootstrap Modal: Calendar Create Opening -->
 
 <script type="text/javascript" src="../js/create_opening.js"></script>
