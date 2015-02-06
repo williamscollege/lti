@@ -8,20 +8,20 @@
 
 		util_prePrintR($_POST);
 
-		$openingSheetID         = $_REQUEST["openingSheetID"];
-		$openingID              = $_REQUEST["openingID"];
-		$openingDateStart       = $_REQUEST["openingDateStart"];
-		$openingTimeMode        = $_REQUEST["openingTimeMode"];
-		$openingName            = $_REQUEST["openingName"];
-		$openingDescription     = $_REQUEST["openingDescription"];
-		$openingAdminNotes      = $_REQUEST["openingAdminNotes"];
-		$openingLocation        = $_REQUEST["openingLocation"];
+		$openingSheetID     = $_REQUEST["openingSheetID"];
+		$openingID          = $_REQUEST["openingID"];
+		$openingDateStart   = $_REQUEST["openingDateStart"];
+		$openingTimeMode    = $_REQUEST["openingTimeMode"];
+		$openingName        = $_REQUEST["openingName"];
+		$openingDescription = $_REQUEST["openingDescription"];
+		$openingAdminNotes  = $_REQUEST["openingAdminNotes"];
+		$openingLocation    = $_REQUEST["openingLocation"];
 
 		$openingBeginTimeHour   = $_REQUEST["openingBeginTimeHour"];
 		$openingBeginTimeMinute = $_REQUEST["openingBeginTimeMinute"];
 		$openingBeginTime_AMPM  = $_REQUEST["openingBeginTime_AMPM"];
 
-		$openingNumOpenings     = $_REQUEST["openingNumOpeningsInTimeRange"];
+		$openingNumOpenings = $_REQUEST["openingNumOpeningsInTimeRange"];
 
 		// these are valid is $openingTimeMode is time range
 		$openingEndTimeHour        = $_REQUEST["openingEndTimeHour"];
@@ -47,18 +47,18 @@
 
 
 		// ensure start, count, duration style of opening specification...
-		$openingBeginTimeMinute = ($openingBeginTimeMinute<10?'0':'').$openingBeginTimeMinute;
-		$beginDateTime = DateTime::createFromFormat('Y-m-d g:i a',"$openingDateStart $openingBeginTimeHour:$openingBeginTimeMinute $openingBeginTime_AMPM");
+		$openingBeginTimeMinute = ($openingBeginTimeMinute < 10 ? '0' : '') . $openingBeginTimeMinute;
+		$beginDateTime          = DateTime::createFromFormat('Y-m-d g:i a', "$openingDateStart $openingBeginTimeHour:$openingBeginTimeMinute $openingBeginTime_AMPM");
 		if ($openingTimeMode == 'time_range') {
 			// calc duration of each opening
-			$openingEndTimeMinute = ($openingEndTimeMinute<10?'0':'').$openingEndTimeMinute;
-			$endDateTime = DateTime::createFromFormat('Y-m-d g:i a',"$openingDateStart $openingEndTimeHour:$openingEndTimeMinute $openingEndTimeMinute_AMPM");
+			$openingEndTimeMinute = ($openingEndTimeMinute < 10 ? '0' : '') . $openingEndTimeMinute;
+			$endDateTime          = DateTime::createFromFormat('Y-m-d g:i a', "$openingDateStart $openingEndTimeHour:$openingEndTimeMinute $openingEndTimeMinute_AMPM");
 			// handle case where the range spans midnight
 			if (($openingBeginTime_AMPM == 'pm') && ($openingEndTimeMinute_AMPM == 'am')) {
 				$endDateTime->modify('+1 day');
 			}
-			$total_time_range = date_diff( $beginDateTime , $endDateTime, true);
-			$time_range_minutes = $total_time_range->format('%h')*60 + $total_time_range->format('%i');
+			$total_time_range           = date_diff($beginDateTime, $endDateTime, TRUE);
+			$time_range_minutes         = $total_time_range->format('%h') * 60 + $total_time_range->format('%i');
 			$openingDurationEachOpening = $time_range_minutes / $openingNumOpenings;
 		}
 		// at this point the opening specification is al;ways valid as start at X, do Y openings of Z minutes each
@@ -73,45 +73,51 @@
 		// NEED: way of looping through days from begin date to end date
 		// NEED: validation algo for each of the repeat radio choices
 
-		echo "<pre>\n";
-
-		$repeatBeginDate = DateTime::createFromFormat('Y-m-d',$openingDateStart);
-		$repeatEndDate = DateTime::createFromFormat('Y-m-d',$openingDateStart);
-		if ($openingRepeatRate == 2  ||  $openingRepeatRate == 3) {
-			$repeatEndDate = DateTime::createFromFormat('m/d/Y',$openingUntilDate);
+		$repeatBeginDate           = DateTime::createFromFormat('Y-m-d', $openingDateStart);
+		$repeatEndDate             = DateTime::createFromFormat('Y-m-d', $openingDateStart);
+		$validation_for_repetition = [];
+		if ($openingRepeatRate == 2 || $openingRepeatRate == 3) {
+			$repeatEndDate = DateTime::createFromFormat('m/d/Y', $openingUntilDate);
+			if ($openingRepeatRate == 2) {
+				foreach (['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as $baseDow) {
+					if ($_REQUEST["repeat_dow_$baseDow"]) {
+						array_push($validation_for_repetition, $baseDow);
+					}
+				}
+			}
+			elseif ($openingRepeatRate == 3) {
+				for ($baseDom = 1; $baseDom < 35; $baseDom++) {
+					if ($_REQUEST["repeat_dom_$baseDom"]) {
+						array_push($validation_for_repetition, $baseDom);
+					}
+				}
+			}
 		}
 
-		echo $repeatBeginDate->format('Y-m-d')."\n";
-		echo $repeatEndDate->format('Y-m-d')."\n";
-
 		// 1. generate/find a unique opening group id
-		$opening_group_id = 'uniquify this';
+		$opening_group_id   = 'uniquify this';
 		$currentOpeningDate = clone $repeatBeginDate;
 		while ($currentOpeningDate <= $repeatEndDate) {
-			echo "current date in loop: ".$currentOpeningDate->format('Y-m-d')."\n";
 			//   if current day is 'valid', then create openings on that day
-//			if (/* NEED: validation algo for each of the repeat radio choices*/) {
-			if (true) {
-				$baseOpeningDateTime = DateTime::createFromFormat('Y-m-d g:i a',$currentOpeningDate->format('Y-m-d')." $openingBeginTimeHour:$openingBeginTimeMinute $openingBeginTime_AMPM");
+			if (($openingRepeatRate == 1) ||
+				(($openingRepeatRate == 2) && (in_array(strtolower($currentOpeningDate->format('D')), $validation_for_repetition))) ||
+				(($openingRepeatRate == 3) && (in_array($currentOpeningDate->format('j'), $validation_for_repetition)))
+			) {
+				$baseOpeningDateTime = DateTime::createFromFormat('Y-m-d g:i a', $currentOpeningDate->format('Y-m-d') . " $openingBeginTimeHour:$openingBeginTimeMinute $openingBeginTime_AMPM");
 				// iterate for number of openings, creating a new one at each step
 				for ($i = 0; $i < $openingNumOpenings; $i++) {
-					// create the opening form the parameters specified in the form
-					// save it
+					// create the opening form the parameters specified in the form, then save it
 					$newOpeningDateTimeBegin = clone $baseOpeningDateTime;
-					$newOpeningDateTimeBegin->modify('+'.$i*$openingDurationEachOpening.' minute');
+					$newOpeningDateTimeBegin->modify('+' . $i * $openingDurationEachOpening . ' minute');
 					$newOpeningDateTimeEnd = clone $baseOpeningDateTime;
-					$newOpeningDateTimeEnd->modify('+'.($i+1)*$openingDurationEachOpening.' minute');
+					$newOpeningDateTimeEnd->modify('+' . ($i + 1) * $openingDurationEachOpening . ' minute');
 
-//				)->add(new DateInterval('PT'.$i*$openingDurationEachOpening.'M'));
-//					$newOpeningDateTimeEnd = (clone $baseOpeningDateTime)->add(new DateInterval('PT'.($i+1)*$openingDurationEachOpening.'M'));
-
-					echo $newOpeningDateTimeBegin->format('Y-m-d h:i').' - '.$newOpeningDateTimeEnd->format('Y-m-d h:i')."\n";
+					echo $newOpeningDateTimeBegin->format('Y-m-d h:i') . ' - ' . $newOpeningDateTimeEnd->format('Y-m-d h:i') . "\n";
 				}
 			}
 
 			$currentOpeningDate->modify('+1 day');
 		}
-
 
 
 		/*
