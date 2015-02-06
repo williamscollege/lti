@@ -213,9 +213,8 @@
 
 	function createTestData_SUS_Openings($dbConn) {
 		// 700 series ids
-		# SUS_Opening: 'opening_id', 'created_at', 'updated_at', 'flag_delete', 'sheet_id', 'opening_set_id', 'name', 'description',
+		# SUS_Opening: 'opening_id', 'created_at', 'updated_at', 'flag_delete', 'sheet_id', 'opening_group_id', 'name', 'description',
 		# 'max_signups', 'admin_comment', 'begin_datetime', 'end_datetime', 'location'
-		# TODO - Delete Confusing Moodle Fragment: 'opening_set_id' is current datetime concat-ed with the current user id
 		$addTestSql  = "INSERT INTO " . SUS_Opening::$dbTable . " VALUES
 			(701, NOW(), NOW(), 0, 601, 0, 'Opening 701', 'Opening 701, Sheet 601, Sheetgroup 501', 8 , 'opening admin comment', TIMESTAMPADD(hour,4,NOW()),  TIMESTAMPADD(hour,5,NOW()), 'opening location at CET 256'),
 			(702, NOW(), NOW(), 0, 601, 0, 'Opening 702', 'Opening 702, Sheet 601, Sheetgroup 501', 2 , 'no comment', TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(hour,25,NOW()), 'CET MakerSpace'),

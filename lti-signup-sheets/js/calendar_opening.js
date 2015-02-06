@@ -9,7 +9,7 @@ $(document).ready(function () {
 	// ***************************
 	// Calendar datepicker
 	// ***************************
-	$("#ajaxOpeningUntilDate").datepicker({
+	$("#openingUntilDate").datepicker({
 		showOtherMonths: true,
 		selectOtherMonths: true,
 		dateFormat: 'mm/dd/yy',
@@ -34,9 +34,10 @@ $(document).ready(function () {
 
 
 		// set up the date
-		$("#ajaxOpeningUntilDate").attr('value',forDateClean);
+		$("#openingUntilDate").attr('value',forDateClean);
 
-		$(".ajaxOpeningCalDate").html(forDateClean);
+		$("#openingDateStart").val(forDateYYYYMMDD);
+		$(".openingCalDate").html(forDateClean);
 
 		// clear out & reset the day-of-week repeats
 		$('.repeat_dow_val').val(0);
@@ -56,25 +57,22 @@ $(document).ready(function () {
 		$('#radioOpeningRepeatRate1').click();
 
 		// hide the stuff that should be hidden
-		$('#link_show_by_duration').click();
+		$('#link_hide_duration').click();
 		$('#link_hide_optional_opening_fields').click();
 
 		// reset non-dynamic form fields to defaults
-		//$("#frmAjaxOpening select").val(0);
-		$('#frmAjaxOpening').trigger("reset");
+		$('#frmOpening').trigger("reset");
 	}
 
 	// ***************************
 	// listeners
 	// ***************************
 	$("#link_show_optional_opening_fields").click(function () {
-		//window.resizeBy(0, $(".optional_opening_fields").height())
 		$(".optional_opening_fields").show();
 		$("#link_show_optional_opening_fields").hide();
 	});
 	$("#link_hide_optional_opening_fields").click(function () {
 		$(".optional_opening_fields").hide();
-		//window.resizeBy(0, -1 * $(".optional_opening_fields").height())
 		$("#link_show_optional_opening_fields").show();
 	});
 
@@ -82,51 +80,51 @@ $(document).ready(function () {
 	// ***************************
 	// default condition
 	// ***************************
-	$("#link_show_by_time_range").click(function () {
+	$("#link_hide_time_range").click(function () {
 		$(this).hide();
 		$(".openings_by_time_range").hide();
-		$("label[for='ajaxOpeningBeginTimeHour']").html("Starting&nbsp;at");
-		$("label[for='ajaxOpeningEndTimeHour']").html("Make&nbsp;each&nbsp;opening");
-		$("#link_show_by_duration").show();
+		$("label[for='openingBeginTimeHour']").html("Starting&nbsp;at");
+		$("label[for='openingEndTimeHour']").html("Make&nbsp;each&nbsp;opening");
+		$("#link_hide_duration").show();
 		$(".openings_by_duration").show();
+		$("#openingTimeMode").val('duration');
 	});
 
-	$("#link_show_by_duration").click(function () {
+	$("#link_hide_duration").click(function () {
 		$(this).hide();
 		$(".openings_by_duration").hide();
-		$("label[for='ajaxOpeningBeginTimeHour']").html("From");
-		$("label[for='ajaxOpeningEndTimeHour']").html("To");
-		$("#link_show_by_time_range").show();
+		$("label[for='openingBeginTimeHour']").html("From");
+		$("label[for='openingEndTimeHour']").html("To");
+		$("#link_hide_time_range").show();
 		$(".openings_by_time_range").show();
+		$("#openingTimeMode").val('time_range');
 	});
 
 	$(".toggler_dow").click(function (event) {
 		var which = event.target.id.substr(4, 3);
-		//alert("which is "+which);
 		if ($(this).hasClass("btn-success")) {
 			//alert("turning off #repeat_dow_"+which);
 			$(this).removeClass("btn-success").addClass("btn-default");
-			$("#repeat_dow_" + which).prop("value", 1);
+			$("#repeat_dow_" + which).val(0);
 		}
 		else {
 			//alert("turning on #repeat_dow_"+which);
 			$(this).addClass("btn-success").removeClass("btn-default");
-			$("#repeat_dow_" + which).prop("value", 0);
+			$("#repeat_dow_" + which).val(1);
 		}
 	});
 
 	$(".toggler_dom").click(function (event) {
 		var which = event.target.id.substr(8, 3);
-		//alert("which is "+which);
 		if ($(this).hasClass("btn-success")) {
 			//alert("turning off #repeat_dom_"+which);
 			$(this).removeClass("btn-success").addClass("btn-default");
-			$("#repeat_dom_" + which).prop("value", 1);
+			$("#repeat_dom_" + which).val(0);
 		}
 		else {
 			//alert("turning on #repeat_dom_"+which);
 			$(this).addClass("btn-success").removeClass("btn-default");
-			$("#repeat_dom_" + which).prop("value", 0);
+			$("#repeat_dom_" + which).val(1);
 		}
 	});
 
@@ -153,17 +151,17 @@ $(document).ready(function () {
 
 
 	$("#btn_save_openings").click(function (event) {
-		if (($("#ajaxOpeningEndTimeHour").val() == '12')
-			&& ($("#ajaxOpeningEndTimeMinute").val() == '0')
-			&& ($("#ajaxOpeningEndTimeMinute_AMPM").val() == 'am')) {
+		if (($("#openingEndTimeHour").val() == '12')
+			&& ($("#openingEndTimeMinute").val() == '0')
+			&& ($("#openingEndTimeMinute_AMPM").val() == 'am')) {
 			customAlert("", "cannot end an opening at 12:00 AM");
 			return false;
 		}
 
 		// create start time string
 		// create end time string
-		var btime = valsToTimeString($("#ajaxOpeningBeginTimeHour").val(), $("#ajaxOpeningBeginTimeMinute").val(), $("#ajaxOpeningBeginTime_AMPM").val());
-		var etime = valsToTimeString($("#ajaxOpeningEndTimeHour").val(), $("#ajaxOpeningEndTimeMinute").val(), $("#ajaxOpeningEndTimeMinute_AMPM").val());
+		var btime = valsToTimeString($("#openingBeginTimeHour").val(), $("#openingBeginTimeMinute").val(), $("#openingBeginTime_AMPM").val());
+		var etime = valsToTimeString($("#openingEndTimeHour").val(), $("#openingEndTimeMinute").val(), $("#openingEndTimeMinute_AMPM").val());
 		//alert("time strings are "+btime+" and "+etime);
 
 		// if end <= start, that's a problem
@@ -193,31 +191,31 @@ $(document).ready(function () {
 		//		this.value = "";
 		//	}
 		//});
-		//validateAjaxOpening.resetForm();
+		//validateOpening.resetForm();
 		// manually remove input highlights
 		// $(".form-group").removeClass('success').removeClass('error');
 	}
 
-	$('#btnAjaxOpeningCancel').click(function () {
-		cleanUpForm("frmAjaxOpening");
+	$('#btnOpeningCancel').click(function () {
+		cleanUpForm("frmOpening");
 
 		// manually clear modal values
-		//$("#ajaxOpeningID").val(0);
-		//$("#ajaxOpeningLabel").text('');
-		//$("#ajaxOpeningAction").val('');
-		//$("#frmAjaxOpening textarea").val('');
-		//$("#frmAjaxOpening input[type=text]").val('');
-		//$("#frmAjaxOpening input[type=radio]").attr("checked", false);
-		//$("#frmAjaxOpening select").val(0);
+		//$("#openingID").val(0);
+		//$("#openingLabel").text('');
+		//$("#openingAction").val('');
+		//$("#frmOpening textarea").val('');
+		//$("#frmOpening input[type=text]").val('');
+		//$("#frmOpening input[type=radio]").attr("checked", false);
+		//$("#frmOpening select").val(0);
 
 		// reset submit button (avoid disabled state)
-		$("#btnAjaxOpeningSubmit").button('reset');
+		$("#btnOpeningSubmit").button('reset');
 	});
 
 	// TODO - implement in ajax success callback
 	//success: function (data) {
 	//	// hide and reset form
-	//	$("#btnAjaxOpeningCancel").click();
+	//	$("#btnOpeningCancel").click();
 
 	// END: Cancel and cleanup
 

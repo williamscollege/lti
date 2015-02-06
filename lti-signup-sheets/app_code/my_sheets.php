@@ -56,7 +56,8 @@
 			echo "<th class=\"col-sm-1 text-right\"><a class=\"btn btn-xs btn-default disabled\" disabled=\"disabled\" title=\"Cannot delete\"><i class=\"glyphicon glyphicon-minus-sign\"></i></a>&nbsp;</th></tr>";
 			foreach ($USER->managed_sheets as $mgr_sheet) {
 				echo "<tr><td class=\"col-sm-11\">";
-				echo "<a href=\"edit_sheet.php?sheetgroup=" . $mgr_sheet->sheetgroup_id . "&sheet=" . $mgr_sheet->sheet_id . "\"  title=\"Edit sheet\">" . $mgr_sheet->name . "</a>";
+				# TODO - refactor link below to renderAsEditLink on sheet object
+				echo "<a href=\"edit_sheet.php?sheet=" . $mgr_sheet->sheet_id . "\"  title=\"Edit sheet\">" . $mgr_sheet->name . "</a>";
 				$owner = User::getOneFromDb(['user_id' => $mgr_sheet->owner_user_id], $DB);
 				echo " <small>(owned by " . $owner->first_name . " " . $owner->last_name . ")</small>";
 				echo "</td><td class=\"col-sm-1 text-right\">";
@@ -112,7 +113,7 @@
 			$sheetgroup->cacheSheets();
 			foreach ($sheetgroup->sheets as $sheet) {
 				echo "<tr><td class=\"col-sm-11\">";
-				echo "<a href=\"edit_sheet.php?sheetgroup=" . $sheet->sheetgroup_id . "&sheet=" . $sheet->sheet_id . "\" id=\"btn-edit-sheet-id-" . $sheet->sheet_id . "\" class=\"sus-edit-sheet\" data-for-sheet-name=\"" . $sheet->name . "\"  title=\"Edit sheet\">" . $sheet->name . "</a>";
+				echo "<a href=\"edit_sheet.php?sheet=" . $sheet->sheet_id . "\" id=\"btn-edit-sheet-id-" . $sheet->sheet_id . "\" class=\"sus-edit-sheet\" data-for-sheet-name=\"" . $sheet->name . "\"  title=\"Edit sheet\">" . $sheet->name . "</a>";
 				echo "</td><td class=\"col-sm-1 text-right\">";
 				echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheet\" data-bb=\"alert_callback\" data-for-sheetgroup-id=\"" . $sheet->sheetgroup_id . "\" data-for-sheet-id=\"" . $sheet->sheet_id . "\" title=\"Delete sheet\"><i class=\"glyphicon glyphicon-remove\"></i></a>&nbsp;";
 				echo "</td></tr>";

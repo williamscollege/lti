@@ -7,14 +7,14 @@
 <a href="#" class="addOpeningLink" data-toggle="modal" data-target="#modal-create-opening" title="Create openings"><i class="glyphicon glyphicon-plus"></i></a>
 
 <!-- Bootstrap Modal: Calendar Create Opening -->
-<form action="../ajax_actions/ajax_actions.php" id="frmAjaxOpening" name="frmAjaxOpening" class="form-horizontal" role="form" method="post">
-	<div id="modal-create-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ajaxOpeningLabel" aria-hidden="true">
+<form action="../ajax_actions/ajax_actions.php" id="frmOpening" name="frmOpening" class="form-horizontal" role="form" method="post">
+	<div id="modal-create-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="openingLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header bg-info">
 					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 id="ajaxOpeningLabel" class="modal-title">Creating openings on 12/23/2014</h4>
+					<h4 id="openingLabel" class="modal-title">Creating openings on 12/23/2014</h4>
 				</div>
 				<div class="modal-body">
 					<!-- TOGGLE LINK: Show Optional Fields -->
@@ -25,41 +25,41 @@
 						<a href="#" id="link_hide_optional_opening_fields" class="small" title="Hide optional fields">Hide optional fields</a>
 
 						<div class="form-group form-group-sm">
-							<label for="ajaxOpeningName" class="col-sm-3 control-label">Name</label>
+							<label for="openingName" class="col-sm-3 control-label">Name</label>
 
 							<div class="col-sm-9">
-								<input type="text" id="ajaxOpeningName" name="ajaxOpeningName" class="form-control" placeholder="Opening name" value="" />
+								<input type="text" id="openingName" name="openingName" class="form-control" placeholder="Opening name" value="" />
 							</div>
 						</div>
 						<div class="form-group form-group-sm">
-							<label for="ajaxOpeningDescription" class="col-sm-3 control-label">Description</label>
+							<label for="openingDescription" class="col-sm-3 control-label">Description</label>
 
 							<div class="col-sm-9">
-								<textarea id="ajaxOpeningDescription" name="ajaxOpeningDescription" class="form-control" placeholder="Opening description" rows="1"></textarea>
+								<textarea id="openingDescription" name="openingDescription" class="form-control" placeholder="Opening description" rows="1"></textarea>
 							</div>
 						</div>
 						<div class="form-group form-group-sm">
-							<label for="ajaxOpeningAdminNotes" class="col-sm-3 control-label">Admin&nbsp;Notes</label>
+							<label for="openingAdminNotes" class="col-sm-3 control-label">Admin&nbsp;Notes</label>
 
 							<div class="col-sm-9">
-								<textarea id="ajaxOpeningAdminNotes" name="ajaxOpeningAdminNotes" class="form-control" placeholder="Only the sheet admin can see these notes" rows="1"></textarea>
+								<textarea id="openingAdminNotes" name="openingAdminNotes" class="form-control" placeholder="Only the sheet admin can see these notes" rows="1"></textarea>
 							</div>
 						</div>
 						<div class="form-group form-group-sm">
-							<label for="ajaxOpeningLocation" class="col-sm-3 control-label">Location</label>
+							<label for="openingLocation" class="col-sm-3 control-label">Location</label>
 
 							<div class="col-sm-9">
-								<input type="text" id="ajaxOpeningLocation" name="ajaxOpeningLocation" class="form-control" placeholder="Opening location" value="" />
+								<input type="text" id="openingLocation" name="openingLocation" class="form-control" placeholder="Opening location" value="" />
 							</div>
 						</div>
 					</div>
 					<!-- end optional_opening_fields -->
 					<div class="form-group form-group-sm">
-						<label for="ajaxOpeningBeginTimeHour" class="col-sm-3 control-label">From</label>
+						<label for="openingBeginTimeHour" class="col-sm-3 control-label">From</label>
 
 						<div class="col-sm-9">
 							<!-- START 'HOURS' -->
-							<select id="ajaxOpeningBeginTimeHour" name="ajaxOpeningBeginTimeHour">
+							<select id="openingBeginTimeHour" name="openingBeginTimeHour">
 								<option value="1" selected="selected">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
@@ -74,7 +74,7 @@
 								<option value="12">12</option>
 							</select>:
 							<!-- START 'MINUTES' -->
-							<select id="ajaxOpeningBeginTimeMinute" name="ajaxOpeningBeginTimeMinute">
+							<select id="openingBeginTimeMinute" name="openingBeginTimeMinute">
 								<option value="0" selected="selected">00</option>
 								<option value="5">05</option>
 								<option value="10">10</option>
@@ -89,26 +89,26 @@
 								<option value="55">55</option>
 							</select>
 							<!-- START 'AM/PM' -->
-							<select id="ajaxOpeningBeginTime_AMPM" name="ajaxOpeningBeginTime_AMPM">
+							<select id="openingBeginTime_AMPM" name="openingBeginTime_AMPM">
 								<option value="am">am</option>
 								<option value="pm" selected="selected">pm</option>
 							</select>
 
 							<!-- TOGGLE LINKS: Openings by duration / time-range -->
-							<a href="#" id="link_show_by_time_range" class="openings_by_time_range small" title="Switch to openings by duration">Switch to
+							<a href="#" id="link_hide_time_range" class="openings_by_time_range small" title="Switch to openings by duration">Switch to
 								duration</a>
-							<a href="#" id="link_show_by_duration" class="openings_by_duration small" title="Switch to openings by time range">Switch to time
+							<a href="#" id="link_hide_duration" class="openings_by_duration small" title="Switch to openings by time range">Switch to time
 								range</a>
 						</div>
 					</div>
 					<div class="form-group form-group-sm">
-						<label for="ajaxOpeningEndTimeHour" class="col-sm-3 control-label">To</label>
+						<label for="openingEndTimeHour" class="col-sm-3 control-label">To</label>
 
 						<div class="col-sm-9">
 							<!-- TOGGLED RESULT: openings by time range -->
 							<div class="openings_by_time_range">
 								<!-- START 'HOURS' -->
-								<select id="ajaxOpeningEndTimeHour" name="ajaxOpeningEndTimeHour">
+								<select id="openingEndTimeHour" name="openingEndTimeHour">
 									<option value="1">1</option>
 									<option value="2" selected="selected">2</option>
 									<option value="3">3</option>
@@ -123,7 +123,7 @@
 									<option value="12">12</option>
 								</select>:
 								<!-- START 'MINUTES' -->
-								<select id="ajaxOpeningEndTimeMinute" name="ajaxOpeningEndTimeMinute">
+								<select id="openingEndTimeMinute" name="openingEndTimeMinute">
 									<option value="0" selected="selected">00</option>
 									<option value="5">05</option>
 									<option value="10">10</option>
@@ -138,14 +138,14 @@
 									<option value="55">55</option>
 								</select>
 								<!-- START 'AM/PM' -->
-								<select id="ajaxOpeningEndTimeMinute_AMPM" name="ajaxOpeningEndTimeMinute_AMPM">
+								<select id="openingEndTimeMinute_AMPM" name="openingEndTimeMinute_AMPM">
 									<option value="am">am</option>
 									<option value="pm" selected="selected">pm</option>
 								</select>
 							</div>
 							<!-- TOGGLED RESULT: openings by duration -->
 							<div class="openings_by_duration">
-								<select id="ajaxOpeningDurationEachOpening" name="ajaxOpeningDurationEachOpening">
+								<select id="openingDurationEachOpening" name="openingDurationEachOpening">
 									<option value="5" selected="selected">5</option>
 									<option value="10">10</option>
 									<option value="15">15</option>
@@ -170,10 +170,10 @@
 					</div>
 
 					<div class="form-group form-group-sm">
-						<label for="ajaxOpeningNumOpeningsInTimeRange" class="col-sm-3 control-label">#&nbsp;Openings</label>
+						<label for="openingNumOpeningsInTimeRange" class="col-sm-3 control-label">#&nbsp;Openings</label>
 
 						<div class="col-sm-9">
-							<select id="ajaxOpeningNumOpeningsInTimeRange" name="ajaxOpeningNumOpeningsInTimeRange">
+							<select id="openingNumOpeningsInTimeRange" name="openingNumOpeningsInTimeRange">
 								<option value="1" selected="selected">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
@@ -202,10 +202,10 @@
 						</div>
 					</div>
 					<div class="form-group form-group-sm">
-						<label for="ajaxOpeningNumSignupsPerOpening" class="col-sm-3 control-label">&nbsp;Signups/Opening</label>
+						<label for="openingNumSignupsPerOpening" class="col-sm-3 control-label">&nbsp;Signups/Opening</label>
 
 						<div class="col-sm-9">
-							<select id="ajaxOpeningNumSignupsPerOpening" name="ajaxOpeningNumSignupsPerOpening">
+							<select id="openingNumSignupsPerOpening" name="openingNumSignupsPerOpening">
 								<option value="-1">unlimited</option>
 								<option value="1" selected="selected">1</option>
 								<option value="2">2</option>
@@ -241,10 +241,10 @@
 						</div>
 					</div>
 					<div class="form-group form-group-sm">
-						<label for="ajaxOpeningRepeaterControls" class="col-sm-3 control-label">Repeating?</label>
+						<label for="openingRepeaterControls" class="col-sm-3 control-label">Repeating?</label>
 
 						<div class="col-sm-9">
-							<div id="ajaxOpeningRepeaterControls">
+							<div id="openingRepeaterControls">
 
 								<div id="chooseRepeatType">
 									<div class="radio">
@@ -352,21 +352,21 @@
 								</div>
 
 								<div id="repeatUntilDate">
-									<label for="ajaxOpeningUntilDate" style="font-weight: normal; border-radius: 0;">
-										<strong>until</strong> <input type="text" id="ajaxOpeningUntilDate" name="ajaxOpeningUntilDate" class="form-inline" placeholder="mm/dd/yyyy" maxlength="10" value="02/03/2015" />
+									<label for="openingUntilDate" style="font-weight: normal; border-radius: 0;">
+										<strong>until</strong> <input type="text" id="openingUntilDate" name="openingUntilDate" class="form-inline" placeholder="mm/dd/yyyy" maxlength="10" value="02/03/2015" />
 										<!--value="<?php /*echo $s ? date_format(new DateTime($s->date_closes), "m/d/Y") : ''; */?>" />-->
 									</label>
 								</div>
 							</div>
-							<!-- end ajaxOpeningRepeaterControls -->
+							<!-- end openingRepeaterControls -->
 						</div>
 					</div>
 
 
 				</div>
 				<div class="modal-footer">
-					<button type="submit" id="btnAjaxOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
-					<button type="reset" id="btnAjaxOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
+					<button type="submit" id="btnOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
+					<button type="reset" id="btnOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
 					</button>
 				</div>
 			</div>
