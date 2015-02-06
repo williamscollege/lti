@@ -95,7 +95,7 @@
 		}
 
 		// 1. generate/find a unique opening group id
-		$opening_group_id   = 'uniquify this';
+		$opening_group_id   = 0;
 		$currentOpeningDate = clone $repeatBeginDate;
 		while ($currentOpeningDate <= $repeatEndDate) {
 			//   if current day is 'valid', then create openings on that day
@@ -107,12 +107,35 @@
 				// iterate for number of openings, creating a new one at each step
 				for ($i = 0; $i < $openingNumOpenings; $i++) {
 					// create the opening form the parameters specified in the form, then save it
+					// create new Opening using factory function
+					$newOpening = SUS_Opening::createNewOpening($openingSheetID, $DB);
+
 					$newOpeningDateTimeBegin = clone $baseOpeningDateTime;
 					$newOpeningDateTimeBegin->modify('+' . $i * $openingDurationEachOpening . ' minute');
 					$newOpeningDateTimeEnd = clone $baseOpeningDateTime;
 					$newOpeningDateTimeEnd->modify('+' . ($i + 1) * $openingDurationEachOpening . ' minute');
 
-					echo $newOpeningDateTimeBegin->format('Y-m-d h:i') . ' - ' . $newOpeningDateTimeEnd->format('Y-m-d h:i') . "\n";
+					//					echo $newOpeningDateTimeBegin->format('Y-m-d h:i') . ' - ' . $newOpeningDateTimeEnd->format('Y-m-d h:i') . "\n";
+
+					$newOpening->opening_group_id = $opening_group_id;
+					$newOpening->name             = $openingName;
+					$newOpening->description      = $openingDescription;
+					$newOpening->max_signups      = $openingNumSignupsPerOpening;
+					$newOpening->admin_comment    = $openingAdminNotes;
+					$newOpening->begin_datetime   = util_dateTimeObject_asMySQL($newOpeningDateTimeBegin);
+					$newOpening->end_datetime     = util_dateTimeObject_asMySQL($newOpeningDateTimeEnd);
+					$newOpening->location         = $openingLocation;
+
+					util_prePrintR($newOpening);
+
+					// save the new opening
+					$newOpening->updateDb();
+
+					if (! $opening_group_id) {
+						$opening_group_id = $newOpening->opening_id;
+						$newOpening->opening_group_id = $opening_group_id;
+						$newOpening->updateDb();
+					}
 				}
 			}
 

@@ -19,6 +19,26 @@
 			$this->signups = array();
 		}
 
+		// factory function
+		public static function createNewOpening($sheet_id, $dbConnection) {
+			return new SUS_Opening([
+					'opening_id'       => 'NEW',
+					'created_at'       => util_currentDateTimeString_asMySQL(),
+					'updated_at'       => util_currentDateTimeString_asMySQL(),
+					'flag_delete'      => FALSE,
+					'sheet_id'         => $sheet_id,
+					'opening_group_id' => 0,
+					'name'             => '',
+					'description'      => '',
+					'max_signups'      => 0,
+					'admin_comment'    => '',
+					'begin_datetime'   => util_currentDateTimeString_asMySQL(),
+					'end_datetime'     => util_currentDateTimeString_asMySQL(),
+					'location'         => '',
+					'DB'               => $dbConnection]
+			);
+		}
+
 		public function clearCaches() {
 			$this->signups = array();
 		}
