@@ -18,9 +18,8 @@ $(document).ready(function () {
 
 
 	// populate modal form with calendar date of day clicked
-	$(".addOpeningLink").click(function(){
+	$(document).on('click', '.addOpeningLink', function(){
 		var dateClicked = $(this).attr('data-cal-date');
-		console.log('dateClicked = ' + dateClicked );
 		setupModalForm(dateClicked);
 	});
 

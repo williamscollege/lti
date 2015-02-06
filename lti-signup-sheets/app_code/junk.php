@@ -375,4 +375,4 @@
 </form>
 <!-- /Bootstrap Modal: Calendar Create Opening -->
 
-<script type="text/javascript" src="../js/create_opening.js"></script>
+<script type="text/javascript" src="../js/calendar_opening.js"></script>

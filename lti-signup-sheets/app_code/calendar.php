@@ -44,7 +44,7 @@
 //					, modal_title: function (e) {
 //						return e.title
 //					}
-					events_source: 'calendar-events.php',
+					events_source: 'calendar-events.php', // unnecessary? optimize efficiency?
 					//events_source: 'events.json.php',
 					//events_source: function () { return []; }
 					view: 'month',
@@ -652,7 +652,7 @@
 		</form>
 		<!-- /Bootstrap Modal: Calendar Manage Opening -->
 
-		<script type="text/javascript" src="../js/create_opening.js"></script>
+		<script type="text/javascript" src="../js/calendar_opening.js"></script>
 
 	<?php
 	}

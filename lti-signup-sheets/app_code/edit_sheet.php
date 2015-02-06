@@ -441,7 +441,7 @@
 					if (!$sheetIsNew) {
 						?>
 						<!-- Calendar Openings / List Openings -->
-						<div class="col-sm-5">
+						<div class="col-sm-6">
 							<div class="row">
 								<div class="tab-container" role="tabpanel" data-example-id="set2">
 									<ul id="boxOpenings" class="nav nav-tabs" role="tablist">
@@ -484,7 +484,8 @@
 													}
 													echo $opening->renderAsHtmlShortWithControls()."<br/>\n";
 													$lastOpeningDate = $curOpeningDate;
-//													util_prePrintR($opening);
+													//util_prePrintR($opening);
+													//$s = substr('tmp', $lastOpeningDate);
 												}
 												echo '</div>'."\n";
 
@@ -496,12 +497,9 @@
 								</div>
 							</div>
 						</div>
-						<!-- TODO - resolve this, and / or change tabCalendar panel to be col-sm-6; or use css changes -->
-						<div class="col-sm-1">&nbsp;</div>
 					<?php
 					}
 				?>
-				<!--<div class="col-sm-1">&nbsp;</div>-->
 			</div>
 		</div> <!-- end: div.container -->
 
