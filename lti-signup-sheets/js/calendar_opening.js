@@ -7,6 +7,89 @@ $(document).ready(function () {
 
 
 	// ***************************
+	// helper functions
+	// ***************************
+
+	// BootBox jQuery helper function
+	function showConfirmBox(ary) {
+		//alert(ary['ajax_action'] + ', ' + ary['ajax_id']);
+		bootbox.dialog({
+			title: ary['title'],
+			message: ary['message'],
+			buttons: {
+				success: {
+					label: ary['label'],
+					className: ary['class'],
+					callback: function () {
+						// show status
+						dfnUtil_setTransientAlert('progress', 'Saving...');
+						$.ajax({
+							type: 'GET',
+							url: ary['url'],
+							cache: false,
+							data: {
+								'ajaxVal_Action': ary['ajax_action'],
+								'ajaxVal_Delete_ID': ary['ajax_id']
+							},
+							dataType: 'json',
+							success: function (data) {
+								if (data.status == 'success') {
+									// remove element
+									updateDOM(ary['ajax_action'], true);
+								}
+								else {
+									// error message
+									updateDOM(ary['ajax_action'], false);
+								}
+							}
+						});
+					}
+				},
+				cancel: {
+					label: "Cancel",
+					className: "btn btn-link btn-cancel",
+					callback: function () {
+						this.dismiss = "modal";
+					}
+				}
+			},
+			// modal options
+			animate: false,
+			backdrop: "static",
+			onEscape: true
+		});
+	}
+
+	function updateDOM(action, ret) {
+		if (action == 'delete-opening') {
+			if (ret) {
+				// show status
+				dfnUtil_setTransientAlert('success', 'Saved');
+				// remove element from calendar Overlay AND from List Openings
+				$('#list-opening-id-' + GLOBAL_confirmHandlerData).remove();
+				$('#tabOpeningsList #list-opening-id-' + GLOBAL_confirmHandlerData).remove();
+			}
+			else {
+				// error message
+				$("#list-opening-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+			}
+		}
+		else if (action == 'delete-sheet') {
+			if (ret) {
+				// show status
+				dfnUtil_setTransientAlert('success', 'Saved');
+				// remove element
+				$('#btn-edit-sheet-id-' + GLOBAL_confirmHandlerData).closest('TR').remove();
+			}
+			else {
+				// error message
+				$("#btn-edit-sheet-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+			}
+		}
+	}
+
+
+	// ***************************
 	// Calendar datepicker
 	// ***************************
 	$("#openingUntilDate").datepicker({
@@ -15,7 +98,6 @@ $(document).ready(function () {
 		dateFormat: 'mm/dd/yy',
 		yearRange: '-4:+4'
 	});
-
 
 	// populate modal form with calendar date of day clicked
 	$(document).on('click', '.addOpeningLink', function(){
@@ -67,6 +149,22 @@ $(document).ready(function () {
 	// ***************************
 	// listeners
 	// ***************************
+
+	// Delete opening
+	$(document).on("click", ".sus-delete-opening", function () {
+		GLOBAL_confirmHandlerData = $(this).attr('data-for-opening-id');
+		var params = {
+			title: "Delete Opening",
+			message: "Really delete this opening?<br /><br /><strong>&quot;" + $(this).next('.opening-time-range').html() + "&quot;</strong>",
+			label: "Delete Opening",
+			class: "btn btn-danger",
+			url: "../ajax_actions/ajax_actions.php",
+			ajax_action: "delete-opening",
+			ajax_id: GLOBAL_confirmHandlerData
+		};
+		showConfirmBox(params);
+	});
+
 	$("#link_show_optional_opening_fields").click(function () {
 		$(".optional_opening_fields").show();
 		$("#link_show_optional_opening_fields").hide();

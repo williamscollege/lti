@@ -104,13 +104,13 @@ display: none;
 	background-color: #57D283;
 }
 
-.delete-opening-link {
+.sus-delete-opening {
 	padding-right: 3px;
 	margin-right: 1px;
 	color: #ff0000;
 }
 
-.delete-opening-link i:hover {
+.sus-delete-opening i:hover {
 	background-color: #F7A9AD;
 	color: #ff0000;
 }

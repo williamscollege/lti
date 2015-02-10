@@ -172,7 +172,25 @@
 		}
 	}
 	//###############################################################
-	elseif ($action == 'delete-signup') {
+	elseif ($action == 'delete-opening') {
+		$o = SUS_Opening::getOneFromDb(['opening_id' => $deleteID], $DB);
+
+		if (!$o->matchesDb) {
+			// error: no matching record found
+			echo json_encode($results);
+			exit;
+		}
+
+		# mark this object as deleted as well as any lower dependent items
+		$o->cascadeDelete();
+
+		# Output
+		if ($o->matchesDb) {
+			$results['status'] = 'success';
+		}
+	}
+	//###############################################################
+		elseif ($action == 'delete-signup') {
 		$s = SUS_Signup::getOneFromDb(['signup_id' => $deleteID], $DB);
 
 		if (!$s->matchesDb) {

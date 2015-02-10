@@ -469,8 +469,6 @@
 										<!--Start: List Openings -->
 										<div role="tabpanel" class="tab-pane fade" id="tabOpeningsList" aria-labelledby="tabOpeningsList">
 
-											<p>List stuff</p>
-
 											<?php
 												$s->cacheOpenings();
 												$lastOpeningDate = '';
@@ -482,13 +480,12 @@
 														}
 														echo '<div class="opening-list-for-date" data-for-date="'.$curOpeningDate.'"><h4>'.date_format(new DateTime($opening->begin_datetime), "m/d/Y").'</h4>';
 													}
-													echo $opening->renderAsHtmlShortWithControls()."<br/>\n";
+													echo $opening->renderAsHtmlShortWithControls()."\n";
 													$lastOpeningDate = $curOpeningDate;
-													//util_prePrintR($opening);
+//													util_prePrintR($opening);
 													//$s = substr('tmp', $lastOpeningDate);
 												}
 												echo '</div>'."\n";
-
 											?>
 
 										</div>

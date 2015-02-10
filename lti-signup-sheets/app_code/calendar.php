@@ -413,10 +413,10 @@
 							</div>
 
 							<div class="form-group form-group-sm">
-								<label for="openingNumOpeningsInTimeRange" class="col-sm-3 control-label">#&nbsp;Openings</label>
+								<label for="openingNumOpenings" class="col-sm-3 control-label">#&nbsp;Openings</label>
 
 								<div class="col-sm-9">
-									<select id="openingNumOpeningsInTimeRange" name="openingNumOpeningsInTimeRange">
+									<select id="openingNumOpenings" name="openingNumOpenings">
 										<option value="1" selected="selected">1</option>
 										<option value="2">2</option>
 										<option value="3">3</option>

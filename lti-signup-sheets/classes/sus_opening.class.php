@@ -45,6 +45,7 @@
 
 		/* static functions */
 
+		// TODO - resort cmp to list Date DESC, and Times ASC
 		public static function cmp($a, $b) {
 			if ($a->begin_datetime == $b->begin_datetime) {
 				if ($a->begin_datetime == $b->begin_datetime) {
@@ -98,9 +99,9 @@
 
 		public function renderAsHtmlShortWithControls() {
 			$rendered = '';
-			$rendered .= '<div id="list-opening-' . $this->opening_id . '" class="list-opening" ' . $this->fieldsAsDataAttribs() . '>';
-			$rendered .= '<a href="#" title="Edit opening" id="edit-opening-' . $this->opening_id . '" data-opening-id="' . $this->opening_id . '" class="edit-opening-link"><i class="glyphicon glyphicon-wrench"></i></a>';
-			$rendered .= '<a href="#" title="Delete opening" id="delete-opening-' . $this->opening_id . '" data-opening-id="' . $this->opening_id . '" class="delete-opening-link"><i class="glyphicon glyphicon-remove"></i></a>';
+			$rendered .= '<div id="list-opening-id-' . $this->opening_id . '" class="list-opening" ' . $this->fieldsAsDataAttribs() . '>';
+			$rendered .= '<a href="#" title="Edit opening" id="edit-opening-id-' . $this->opening_id . '" data-for-opening-id="' . $this->opening_id . '" class="edit-opening-link"><i class="glyphicon glyphicon-wrench"></i></a>';
+			$rendered .= '<a href="#" title="Delete opening" id="delete-opening-id-' . $this->opening_id . '" data-for-opening-id="' . $this->opening_id . '" class="sus-delete-opening"><i class="glyphicon glyphicon-remove"></i></a>';
 			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A") . '</span>';
 			$this->cacheSignups();
 			$customColorClass = " text-danger ";
@@ -108,7 +109,7 @@
 				$customColorClass = " text-success ";
 			}
 			$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . count($this->signups) . '/' . $this->max_signups . ')</strong></span>';
-			$rendered .= '<a href="#" title="Add someone" id="add-someone-to-opening-' . $this->opening_id . '" data-opening-id="' . $this->opening_id . '" class="add-someone-to-opening-link">add someone</a>';
+			$rendered .= '<a href="#" title="Add someone" id="add-someone-to-opening-id-' . $this->opening_id . '" data-for-opening-id="' . $this->opening_id . '" class="add-someone-to-opening-link">add someone</a>';
 			$rendered .= '</div>';
 
 			return $rendered;
@@ -116,7 +117,7 @@
 
 		public function renderAsHtmlShort() {
 			$rendered = '';
-			$rendered .= '<div id="list-opening-' . $this->opening_id . '" class="list-opening" ' . $this->fieldsAsDataAttribs() . '>';
+			$rendered .= '<div id="list-opening-id-' . $this->opening_id . '" class="list-opening" ' . $this->fieldsAsDataAttribs() . '>';
 			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A") . '</span>';
 			$this->cacheSignups();
 			$rendered .= '<span class="opening-space-usage">' . '(' . count($this->signups) . '/' . $this->max_signups . ')</span>';
