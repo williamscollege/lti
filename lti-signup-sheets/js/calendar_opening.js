@@ -105,7 +105,7 @@ $(document).ready(function () {
 	// ***************************
 	// Calendar datepicker
 	// ***************************
-	$("#openingUntilDate").datepicker({
+	$("#openingUntilDate,#openingDateStart").datepicker({
 		showOtherMonths: true,
 		selectOtherMonths: true,
 		dateFormat: 'mm/dd/yy',
@@ -115,18 +115,70 @@ $(document).ready(function () {
 	// Create Openings: populate modal form with calendar date of day clicked
 	$(document).on('click', '.addOpeningLink', function(){
 		var dateClicked = $(this).attr('data-cal-date');
-		setupModalForm(dateClicked);
+		setupModalForm_CreateOpening(dateClicked);
 	});
 
 	// Edit Opening: populate modal form using opening_id
 	$(document).on('click', '.sus-edit-opening, .sus-add-someone-to-opening', function(){
-		var openingID  = $(this).attr('data-for-opening-id');
-		console.log(openingID);
-		//var dateClicked = $(this).attr('data-cal-date');
-		setupModalForm(dateClicked);
+		var openingID = $(this).parent(".list-opening").attr('data-opening_id');
+		setupModalForm_EditOpening(openingID);
 	});
 
-	function setupModalForm(forDateYYYYMMDD){
+	function setupModalForm_EditOpening(openingID){
+		// reset non-dynamic form fields to defaults
+		$('#frmEditOpening').trigger("reset");
+
+		// variable that represents parent of the link clicked (i.e. edit or add link)
+		var parentOfClickedLink = $(".list-opening").attr('data-opening_id',openingID);
+
+ 		// set initial form values; parent of clicked link contains all attributes for this opening
+		$("#openingID").val($(parentOfClickedLink).attr('data-opening_id'));
+		$("#openingName").val($(parentOfClickedLink).attr('data-name'));
+		$("#openingDescription").val($(parentOfClickedLink).attr('data-description'));
+		$("#openingAdminNotes").val($(parentOfClickedLink).attr('data-admin_comment'));
+		$("#openingLocation").val($(parentOfClickedLink).attr('data-location'));
+		$("#openingNumSignupsPerOpening").val($(parentOfClickedLink).attr('data-max_signups'));
+
+		// split date/time values
+		var datetimeBeginAry = $(parentOfClickedLink).attr('data-begin_datetime').split(' ');
+		var datetimeEndAry = $(parentOfClickedLink).attr('data-end_datetime').split(' ');
+
+		// format dates: mm/dd/yyyy format (for datepicker)
+		var forDateBeginAry = datetimeBeginAry[0].split('-');
+		var forDateEndAry = datetimeEndAry[0].split('-');
+
+		var forDateBeginClean = forDateBeginAry[1]+'/'+forDateBeginAry[2]+'/'+forDateBeginAry[0];
+		var forDateEndClean = forDateEndAry[1]+'/'+forDateEndAry[2]+'/'+forDateEndAry[0];
+
+		// clean times: 12 hour format with AM/PM
+		var forTimeBeginAry = timeConvert24to12(datetimeBeginAry[1]).split(':');
+		var forTimeEndAry = timeConvert24to12(datetimeEndAry[1]).split(':');
+
+		// set date/time values
+		$("#openingDateStart").attr('value',forDateBeginClean);
+
+		$("#openingBeginTimeHour").val(forTimeBeginAry[0]).prop('selected', true);
+		$("#openingBeginTimeMinute").val(forTimeBeginAry[1]).prop('selected', true);
+		$("#openingBeginTime_AMPM").val(forTimeBeginAry[3]).prop('selected', true);
+
+		$("#openingEndTimeHour").val(forTimeEndAry[0]).prop('selected', true);
+		$("#openingEndTimeMinute").val(forTimeEndAry[1]).prop('selected', true);
+		$("#openingEndTimeMinute_AMPM").val(forTimeEndAry[3]).prop('selected', true);
+	}
+
+	function timeConvert24to12(time) {
+		// Check correct time format and split into components
+		time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+		if (time.length > 1) { // If time format correct
+			time = time.slice (1);  // Remove full string match value
+			time[5] = +time[0] < 12 ? ':am' : ':pm'; // Set am/pm
+			time[0] = +time[0] % 12 || 12; // Adjust hours
+		}
+		return time.join (''); // return adjusted time or original string
+	}
+
+	function setupModalForm_CreateOpening(forDateYYYYMMDD){
 
 		var forDateAry = forDateYYYYMMDD.split('-');
 		var forDateClean = forDateAry[1]+'/'+forDateAry[2]+'/'+forDateAry[0];
@@ -173,10 +225,11 @@ $(document).ready(function () {
 
 	// Delete opening
 	$(document).on("click", ".sus-delete-opening", function () {
-		GLOBAL_confirmHandlerData = $(this).attr('data-for-opening-id');
+		GLOBAL_confirmHandlerData = $(this).parent(".list-opening").attr('data-opening_id');
+
 		var openingName = '';
-		if($(this).attr('data-for-name')){
-			var openingName = " (" + $(this).attr('data-for-name') + ")";
+		if($(this).parent(".list-opening").attr('data-name')){
+			var openingName = " (" + $(this).parent(".list-opening").attr('data-name') + ")";
 		}
 
 		var params = {

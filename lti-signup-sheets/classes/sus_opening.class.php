@@ -107,9 +107,9 @@
 				$customColorClass = " text-success ";
 			}
 			$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . count($this->signups) . '/' . $this->max_signups . ')</strong></span>';
-			$rendered .= '<a href="#" title="Edit opening" id="edit-opening-id-' . $this->opening_id . '" data-for-opening-id="' . $this->opening_id . '" class="sus-edit-opening"><i class="glyphicon glyphicon-wrench"></i></a>';
-			$rendered .= '<a href="#" title="Delete opening" id="delete-opening-id-' . $this->opening_id . '" data-for-name="' . $this->name . '"  data-for-opening-id="' . $this->opening_id . '" class="sus-delete-opening"><i class="glyphicon glyphicon-remove"></i></a>';
-			$rendered .= '<a href="#" title="Add someone" id="add-someone-to-opening-id-' . $this->opening_id . '" data-for-opening-id="' . $this->opening_id . '" class="sus-add-someone-to-opening"><i class="glyphicon glyphicon-plus"></i></a>';
+			$rendered .= '<a href="#" class="sus-edit-opening" data-toggle="modal" data-target="#modal-edit-opening" title="Edit opening"><i class="glyphicon glyphicon-wrench"></i></a>';
+			$rendered .= '<a href="#" class="sus-delete-opening" title="Delete opening"><i class="glyphicon glyphicon-remove"></i></a>';
+			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-toggle="modal" data-target="#modal-edit-opening" title="Add someone to opening"><i class="glyphicon glyphicon-plus"></i></a>';
 			$rendered .= '</div>';
 
 			return $rendered;
