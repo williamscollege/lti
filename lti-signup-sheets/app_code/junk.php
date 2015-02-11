@@ -2,19 +2,29 @@
 	require_once('../app_setup.php');
 	$pageTitle = ucfirst(util_lang('my_sheets'));
 	require_once('../app_head.php');
+
+	$s = SUS_Sheet::getOneFromDb(['sheet_id' => 601], $DB);
+
+
 ?>
 
-<a href="#" class="addOpeningLink" data-toggle="modal" data-target="#modal-create-opening" title="Create openings"><i class="glyphicon glyphicon-plus"></i></a>
+<a href="#" class="addOpeningLink" data-toggle="modal" data-target="#modal-edit-opening" title="Create openings"><i class="glyphicon glyphicon-plus"></i></a>
+<a href="#" class="sus-edit-opening sus-add-someone-to-opening" data-toggle="modal" data-target="#modal-edit-opening" title="Edit opening"><i class="glyphicon glyphicon-wrench"></i></a>
 
-<!-- Bootstrap Modal: Calendar Create Opening -->
-<form action="../ajax_actions/ajax_actions.php" id="frmOpening" name="frmOpening" class="form-horizontal" role="form" method="post">
-	<div id="modal-create-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="openingLabel" aria-hidden="true">
+<!-- Bootstrap Modal: Calendar Edit Opening -->
+<form action="../app_code/opening_proc.php" id="frmEditOpening" name="frmEditOpening" class="form-horizontal" role="form" method="post">
+	<input type="hidden" id="openingSheetID" name="openingSheetID" value="<?php echo $s->sheet_id; ?>" />
+	<input type="hidden" id="openingID" name="openingID" value="NEW" />
+	<input type="hidden" id="openingDateStart" name="openingDateStart" value="" />
+	<input type="hidden" id="openingTimeMode" name="openingTimeMode" value="" />
+
+	<div id="modal-edit-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="openingLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header bg-info">
 					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 id="openingLabel" class="modal-title">Creating openings on 12/23/2014</h4>
+					<h4 id="openingLabel" class="modal-title">Creating openings on <span class="openingCalDate"></span></h4>
 				</div>
 				<div class="modal-body">
 					<!-- TOGGLE LINK: Show Optional Fields -->
@@ -95,10 +105,10 @@
 							</select>
 
 							<!-- TOGGLE LINKS: Openings by duration / time-range -->
-							<a href="#" id="link_hide_time_range" class="openings_by_time_range small" title="Switch to openings by duration">Switch to
-								duration</a>
-							<a href="#" id="link_hide_duration" class="openings_by_duration small" title="Switch to openings by time range">Switch to time
-								range</a>
+							<a href="#" id="link_hide_time_range" class="openings_by_time_range small" title="Switch to openings by duration">Switch
+								to openings by duration</a>
+							<a href="#" id="link_hide_duration" class="openings_by_duration small" title="Switch to openings by time range">Switch to openings by
+								time range</a>
 						</div>
 					</div>
 					<div class="form-group form-group-sm">
@@ -249,121 +259,125 @@
 								<div id="chooseRepeatType">
 									<div class="radio">
 										<label for="radioOpeningRepeatRate1">
-											<input id="radioOpeningRepeatRate1" name="openingRepeatRate" value="1" checked="checked" type="radio" /> Only on
-											2014-12-23
+											<input id="radioOpeningRepeatRate1" name="openingRepeatRate" value="1" checked="checked" type="radio" />
+											Only on
+											<span class="openingCalDate">2014-12-23</span>
 										</label>
 									</div>
 									<div class="radio">
 										<label for="radioOpeningRepeatRate2">
-											<input id="radioOpeningRepeatRate2" name="openingRepeatRate" value="2" type="radio" /> Repeat on days of the week
+											<input id="radioOpeningRepeatRate2" name="openingRepeatRate" value="2" type="radio" /> Repeat on days of the
+											week
 										</label>
 									</div>
+
+									<div id="repeatWeekdayChooser">
+										<input name="repeat_dow_sun" id="repeat_dow_sun" class="repeat_dow_val" value="0" type="hidden" />
+										<input name="repeat_dow_mon" id="repeat_dow_mon" class="repeat_dow_val" value="0" type="hidden" />
+										<input name="repeat_dow_tue" id="repeat_dow_tue" class="repeat_dow_val" value="0" type="hidden" />
+										<input name="repeat_dow_wed" id="repeat_dow_wed" class="repeat_dow_val" value="0" type="hidden" />
+										<input name="repeat_dow_thu" id="repeat_dow_thu" class="repeat_dow_val" value="0" type="hidden" />
+										<input name="repeat_dow_fri" id="repeat_dow_fri" class="repeat_dow_val" value="0" type="hidden" />
+										<input name="repeat_dow_sat" id="repeat_dow_sat" class="repeat_dow_val" value="0" type="hidden" />
+										<input id="btn_mon" value="MON" class="toggler_dow btn btn-default btn-xs" type="button" />
+										<input id="btn_tue" value="TUE" class="toggler_dow btn btn-default btn-xs" type="button" />
+										<input id="btn_wed" value="WED" class="toggler_dow btn btn-default btn-xs" type="button" />
+										<input id="btn_thu" value="THU" class="toggler_dow btn btn-success btn-xs" type="button" />
+										<input id="btn_fri" value="FRI" class="toggler_dow btn btn-default btn-xs" type="button" /><br />
+										<input id="btn_sat" value="SAT" class="toggler_dow btn btn-default btn-xs" type="button" />
+										<input id="btn_sun" value="SUN" class="toggler_dow btn btn-default btn-xs" type="button" />
+									</div>
+
 									<div class="radio">
 										<label for="radioOpeningRepeatRate3">
-											<input id="radioOpeningRepeatRate3" name="openingRepeatRate" value="3" type="radio" /> Repeat on days of the month
+											<input id="radioOpeningRepeatRate3" name="openingRepeatRate" value="3" type="radio" /> Repeat on days of the
+											month
 										</label>
 									</div>
-								</div>
-
-								<div id="repeatWeekdayChooser">
-									<input name="repeat_dow_sun" id="repeat_dow_sun" value="0" type="hidden" />
-									<input name="repeat_dow_mon" id="repeat_dow_mon" value="0" type="hidden" />
-									<input name="repeat_dow_tue" id="repeat_dow_tue" value="0" type="hidden" />
-									<input name="repeat_dow_wed" id="repeat_dow_wed" value="0" type="hidden" />
-									<input name="repeat_dow_thu" id="repeat_dow_thu" value="0" type="hidden" />
-									<input name="repeat_dow_fri" id="repeat_dow_fri" value="0" type="hidden" />
-									<input name="repeat_dow_sat" id="repeat_dow_sat" value="0" type="hidden" />
-									<input id="btn_mon" value="MON" class="toggler_dow btn btn-default btn-xs" type="button" />
-									<input id="btn_tue" value="TUE" class="toggler_dow btn btn-default btn-xs" type="button" />
-									<input id="btn_wed" value="WED" class="toggler_dow btn btn-default btn-xs" type="button" />
-									<input id="btn_thu" value="THU" class="toggler_dow btn btn-success btn-xs" type="button" />
-									<input id="btn_fri" value="FRI" class="toggler_dow btn btn-default btn-xs" type="button" /><br />
-									<input id="btn_sat" value="SAT" class="toggler_dow btn btn-default btn-xs" type="button" />
-									<input id="btn_sun" value="SUN" class="toggler_dow btn btn-default btn-xs" type="button" />
 								</div>
 
 								<div id="repeatMonthdayChooser">
-									<input name="repeat_dom_1" id="repeat_dom_1" value="0" type="hidden" />
+									<input name="repeat_dom_1" id="repeat_dom_1" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_1" value="1" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_2" id="repeat_dom_2" value="0" type="hidden" />
+									<input name="repeat_dom_2" id="repeat_dom_2" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_2" value="2" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_3" id="repeat_dom_3" value="0" type="hidden" />
+									<input name="repeat_dom_3" id="repeat_dom_3" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_3" value="3" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_4" id="repeat_dom_4" value="0" type="hidden" />
+									<input name="repeat_dom_4" id="repeat_dom_4" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_4" value="4" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_5" id="repeat_dom_5" value="0" type="hidden" />
+									<input name="repeat_dom_5" id="repeat_dom_5" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_5" value="5" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_6" id="repeat_dom_6" value="0" type="hidden" />
+									<input name="repeat_dom_6" id="repeat_dom_6" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_6" value="6" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_7" id="repeat_dom_7" value="0" type="hidden" />
+									<input name="repeat_dom_7" id="repeat_dom_7" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_7" value="7" class="toggler_dom btn btn-default btn-xs" type="button" />
 									<br />
-									<input name="repeat_dom_8" id="repeat_dom_8" value="0" type="hidden" />
+									<input name="repeat_dom_8" id="repeat_dom_8" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_8" value="8" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_9" id="repeat_dom_9" value="0" type="hidden" />
+									<input name="repeat_dom_9" id="repeat_dom_9" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_9" value="9" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_10" id="repeat_dom_10" value="1" type="hidden" />
+									<input name="repeat_dom_10" id="repeat_dom_10" class="repeat_dom_val" value="1" type="hidden" />
 									<input id="btn_dom_10" value="10" class="toggler_dom btn btn-success btn-xs" type="button" />
-									<input name="repeat_dom_11" id="repeat_dom_11" value="1" type="hidden" />
+									<input name="repeat_dom_11" id="repeat_dom_11" class="repeat_dom_val" value="1" type="hidden" />
 									<input id="btn_dom_11" value="11" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_12" id="repeat_dom_12" value="0" type="hidden" />
+									<input name="repeat_dom_12" id="repeat_dom_12" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_12" value="12" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_13" id="repeat_dom_13" value="0" type="hidden" />
+									<input name="repeat_dom_13" id="repeat_dom_13" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_13" value="13" class="toggler_dom btn btn-success btn-xs" type="button" />
-									<input name="repeat_dom_14" id="repeat_dom_14" value="0" type="hidden" />
+									<input name="repeat_dom_14" id="repeat_dom_14" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_14" value="14" class="toggler_dom btn btn-default btn-xs" type="button" />
 									<br />
-									<input name="repeat_dom_15" id="repeat_dom_15" value="0" type="hidden" />
+									<input name="repeat_dom_15" id="repeat_dom_15" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_15" value="15" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_16" id="repeat_dom_16" value="0" type="hidden" />
+									<input name="repeat_dom_16" id="repeat_dom_16" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_16" value="16" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_17" id="repeat_dom_17" value="0" type="hidden" />
+									<input name="repeat_dom_17" id="repeat_dom_17" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_17" value="17" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_18" id="repeat_dom_18" value="1" type="hidden" />
+									<input name="repeat_dom_18" id="repeat_dom_18" class="repeat_dom_val" value="1" type="hidden" />
 									<input id="btn_dom_18" value="18" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_19" id="repeat_dom_19" value="0" type="hidden" />
+									<input name="repeat_dom_19" id="repeat_dom_19" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_19" value="19" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_20" id="repeat_dom_20" value="0" type="hidden" />
+									<input name="repeat_dom_20" id="repeat_dom_20" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_20" value="20" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_21" id="repeat_dom_21" value="0" type="hidden" />
+									<input name="repeat_dom_21" id="repeat_dom_21" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_21" value="21" class="toggler_dom btn btn-default btn-xs" type="button" />
 									<br />
-									<input name="repeat_dom_22" id="repeat_dom_22" value="0" type="hidden" />
+									<input name="repeat_dom_22" id="repeat_dom_22" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_22" value="22" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_23" id="repeat_dom_23" value="0" type="hidden" />
+									<input name="repeat_dom_23" id="repeat_dom_23" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_23" value="23" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_24" id="repeat_dom_24" value="0" type="hidden" />
+									<input name="repeat_dom_24" id="repeat_dom_24" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_24" value="24" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_25" id="repeat_dom_25" value="0" type="hidden" />
+									<input name="repeat_dom_25" id="repeat_dom_25" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_25" value="25" class="toggler_dom btn btn-success btn-xs" type="button" />
-									<input name="repeat_dom_26" id="repeat_dom_26" value="0" type="hidden" />
+									<input name="repeat_dom_26" id="repeat_dom_26" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_26" value="26" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_27" id="repeat_dom_27" value="0" type="hidden" />
+									<input name="repeat_dom_27" id="repeat_dom_27" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_27" value="27" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_28" id="repeat_dom_28" value="0" type="hidden" />
+									<input name="repeat_dom_28" id="repeat_dom_28" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_28" value="28" class="toggler_dom btn btn-default btn-xs" type="button" />
 									<br />
-									<input name="repeat_dom_29" id="repeat_dom_29" value="0" type="hidden" />
+									<input name="repeat_dom_29" id="repeat_dom_29" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_29" value="29" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_30" id="repeat_dom_30" value="0" type="hidden" />
+									<input name="repeat_dom_30" id="repeat_dom_30" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_30" value="30" class="toggler_dom btn btn-default btn-xs" type="button" />
-									<input name="repeat_dom_31" id="repeat_dom_31" value="0" type="hidden" />
+									<input name="repeat_dom_31" id="repeat_dom_31" class="repeat_dom_val" value="0" type="hidden" />
 									<input id="btn_dom_31" value="31" class="toggler_dom btn btn-default btn-xs" type="button" />
-								</div>
-
-								<div id="repeatUntilDate">
-									<label for="openingUntilDate" style="font-weight: normal; border-radius: 0;">
-										<strong>until</strong> <input type="text" id="openingUntilDate" name="openingUntilDate" class="form-inline" placeholder="mm/dd/yyyy" maxlength="10" value="02/03/2015" />
-										<!--value="<?php /*echo $s ? date_format(new DateTime($s->date_closes), "m/d/Y") : ''; */?>" />-->
-									</label>
 								</div>
 							</div>
 							<!-- end openingRepeaterControls -->
 						</div>
 					</div>
 
+					<div class="form-group form-group-sm" id="repeatUntilDate">
+						<label for="openingUntilControls" class="col-sm-3 control-label">Until?</label>
 
+						<div class="col-sm-9">
+							<input type="text" id="openingUntilDate" name="openingUntilDate" class="form-inline" placeholder="mm/dd/yyyy" maxlength="10" value="" />
+						</div>
+					</div>
 				</div>
+
 				<div class="modal-footer">
 					<button type="submit" id="btnOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
 					<button type="reset" id="btnOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
@@ -373,6 +387,6 @@
 		</div>
 	</div>
 </form>
-<!-- /Bootstrap Modal: Calendar Create Opening -->
+<!-- /Bootstrap Modal: Calendar Edit Opening -->
 
 <script type="text/javascript" src="../js/calendar_opening.js"></script>

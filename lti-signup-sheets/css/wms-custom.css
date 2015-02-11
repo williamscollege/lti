@@ -66,17 +66,18 @@ wms bootstrap-calendar-master extensions
 	display: none;
 }
 
-.calendar-cell-openings:hover .glyphicon-list-alt{
-display: none;
+.calendar-cell-openings:hover .glyphicon-list-alt {
+	display: none;
 }
+
 .calendar-cell-openings:hover {
-	width: 250px;
+	width: 200px;
 	height: 200px;
 	z-index: 10;
-	background-color: #fff;
+	background-color: #ffffff;
 	border: 1px solid #666;
 	padding: 0px;
-	margin-left: 4px;
+	margin-left: 5px;
 }
 
 .calendar-cell-openings h4, .calendar-cell-openings:hover .calendar-cell-openings-container {
@@ -91,36 +92,61 @@ display: none;
 }
 
 .opening-space-usage {
-	padding-left: 3px;
+	margin-left: 3px;
+	margin-right: 3px;
+	color: #008000;
 }
+
+/*.opening-time-range {*/
+	/*padding-left: 3px;*/
+/*}*/
 
 /* opening control links (edit, delete, add someone) */
-.edit-opening-link {
-	padding-right: 3px;
+.sus-edit-opening {
+	margin-left: 1px;
 	margin-right: 1px;
+	padding-left: 3px;
+	padding-right: 4px;
 }
 
-.edit-opening-link i:hover {
+.sus-edit-opening:hover {
+	margin-left: 1px;
+	margin-right: 1px;
 	background-color: #57D283;
+	padding-left: 3px;
+	padding-right: 4px;
 }
 
 .sus-delete-opening {
-	padding-right: 3px;
+	margin-left: 1px;
 	margin-right: 1px;
+	padding-left: 3px;
+	padding-right: 4px;
 	color: #ff0000;
 }
 
-.sus-delete-opening i:hover {
+.sus-delete-opening:hover {
+	margin-left: 1px;
+	margin-right: 1px;
 	background-color: #F7A9AD;
+	padding-left: 3px;
+	padding-right: 4px;
 	color: #ff0000;
 }
 
-.opening-time-range {
+.sus-add-someone-to-opening {
+	margin-left: 1px;
+	margin-right: 1px;
 	padding-left: 3px;
+	padding-right: 4px;
 }
 
-.add-someone-to-opening-link {
+.sus-add-someone-to-opening:hover {
+	margin-left: 1px;
+	margin-right: 1px;
+	background-color: #57D283;
 	padding-left: 3px;
+	padding-right: 4px;
 }
 
 /* ensure uniform btn sizes for repeating days of week */
@@ -130,6 +156,7 @@ display: none;
 	max-width: 40px !important;
 	margin: 2px 0px !important; /* top/bottom, right/left*/
 }
+
 /* ensure uniform btn sizes for repeating days of month */
 .toggler_dom {
 	width: 26px !important;
@@ -159,15 +186,17 @@ span[data-cal-date] {
 }
 
 /*.cal-month-box .cal-cell, .cal-month-day{*/
-.cal-cell{
+.cal-cell {
 	min-height: 65px !important;
 }
-.cal-month-day{
+
+.cal-month-day {
 	height: 65px !important;
 }
+
 /*#tabOpeningsCalendar .page-header,*/
 /*#calendar {*/
-	/*max-width: 463px !important;*/
+/*max-width: 463px !important;*/
 /*}*/
 
 /*=======================================

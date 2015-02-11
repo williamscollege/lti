@@ -220,32 +220,8 @@
 		</script>
 
 
-
-		<!-- Bootstrap Modal: Calendar Event Info -->
-		<form action="../ajax_actions/ajax_actions.php" id="frmAjaxCalEventInfo" name="frmAjaxCalEventInfo" class="form-horizontal" role="form" method="post">
-			<div id="events-modal" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ajaxCalEventInfoLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header bg-info">
-							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-							</button>
-							<h4 id="ajaxCalEventInfoLabel" class="modal-title">ABC</h4>
-						</div>
-						<div class="modal-body">
-							<!--CONTENTS HERE-->
-						</div>
-						<div class="modal-footer">
-							<button type="submit" id="btnAjaxCalEventInfoSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
-							<button type="reset" id="btnAjaxCalEventInfoCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</form>
-		<!-- /Bootstrap Modal: Calendar Event Info -->
-
 		<!-- Bootstrap Modal: Calendar Create Opening -->
-		<form action="../app_code/opening_proc.php" id="frmOpening" name="frmOpening" class="form-horizontal" role="form" method="post">
+		<form action="../app_code/opening_proc.php" id="frmCreateOpening" name="frmCreateOpening" class="form-horizontal" role="form" method="post">
 			<input type="hidden" id="openingSheetID" name="openingSheetID" value="<?php echo $s->sheet_id; ?>" />
 			<input type="hidden" id="openingID" name="openingID" value="NEW" />
 			<input type="hidden" id="openingDateStart" name="openingDateStart" value="" />
@@ -597,13 +573,6 @@
 											<input name="repeat_dom_31" id="repeat_dom_31" class="repeat_dom_val" value="0" type="hidden" />
 											<input id="btn_dom_31" value="31" class="toggler_dom btn btn-default btn-xs" type="button" />
 										</div>
-
-										<!--										<div id="repeatUntilDate">-->
-										<!--											<label for="openingUntilDate" style="font-weight: normal; border-radius: 0;">-->
-										<!--												<strong>until</strong> <input type="text" id="openingUntilDate" name="openingUntilDate" class="form-inline" placeholder="mm/dd/yyyy" maxlength="10" value="" />-->
-										<!--												<!--value="-->
-										<!--											</label>-->
-										<!--										</div>-->
 									</div>
 									<!-- end openingRepeaterControls -->
 								</div>
@@ -629,29 +598,7 @@
 		</form>
 		<!-- /Bootstrap Modal: Calendar Create Opening -->
 
-		<!-- Bootstrap Modal: Calendar Manage Opening -->
-		<form action="../ajax_actions/ajax_actions.php" id="frmAjaxCalManageOpening" name="frmAjaxCalManageOpening" class="form-horizontal" role="form" method="post">
-			<div id="modal-edit-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ajaxCalManageOpeningLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header bg-info">
-							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-							</button>
-							<h4 id="ajaxCalManageOpeningLabel" class="modal-title">456</h4>
-						</div>
-						<div class="modal-body">
-							<!--CONTENTS HERE-->
-						</div>
-						<div class="modal-footer">
-							<button type="submit" id="btnAjaxCalManageOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
-							<button type="reset" id="btnAjaxCalManageOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</form>
-		<!-- /Bootstrap Modal: Calendar Manage Opening -->
+
 
 		<script type="text/javascript" src="../js/calendar_opening.js"></script>
 

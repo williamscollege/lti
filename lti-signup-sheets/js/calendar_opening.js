@@ -10,6 +10,7 @@ $(document).ready(function () {
 	// helper functions
 	// ***************************
 
+	// TODO - Refactoring: Could probably refactor showConfirmBox() and updateDOM() into util.js file and remove a lot of redundant code
 	// BootBox jQuery helper function
 	function showConfirmBox(ary) {
 		//alert(ary['ajax_action'] + ', ' + ary['ajax_id']);
@@ -65,9 +66,21 @@ $(document).ready(function () {
 			if (ret) {
 				// show status
 				dfnUtil_setTransientAlert('success', 'Saved');
-				// remove element from calendar Overlay AND from List Openings
-				$('#list-opening-id-' + GLOBAL_confirmHandlerData).remove();
-				$('#tabOpeningsList #list-opening-id-' + GLOBAL_confirmHandlerData).remove();
+
+				// check to see if this the last opening on this date
+				var countRemainingOpenings = $('#list-opening-id-' + GLOBAL_confirmHandlerData).siblings(".list-opening").length;
+
+				if (countRemainingOpenings == 0){
+					// this is the last opening on this date!
+					// remove the list container from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
+					$('#list-opening-id-' + GLOBAL_confirmHandlerData).parent().parent(".calendar-cell-openings").remove();
+					$('#tabOpeningsList #list-opening-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
+				} else {
+					// additional openings still exist on this date...
+					// remove single opening from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
+					$('#list-opening-id-' + GLOBAL_confirmHandlerData).remove();
+					$('#tabOpeningsList #list-opening-id-' + GLOBAL_confirmHandlerData).remove();
+				}
 			}
 			else {
 				// error message
@@ -99,9 +112,17 @@ $(document).ready(function () {
 		yearRange: '-4:+4'
 	});
 
-	// populate modal form with calendar date of day clicked
+	// Create Openings: populate modal form with calendar date of day clicked
 	$(document).on('click', '.addOpeningLink', function(){
 		var dateClicked = $(this).attr('data-cal-date');
+		setupModalForm(dateClicked);
+	});
+
+	// Edit Opening: populate modal form using opening_id
+	$(document).on('click', '.sus-edit-opening, .sus-add-someone-to-opening', function(){
+		var openingID  = $(this).attr('data-for-opening-id');
+		console.log(openingID);
+		//var dateClicked = $(this).attr('data-cal-date');
 		setupModalForm(dateClicked);
 	});
 
@@ -143,7 +164,7 @@ $(document).ready(function () {
 		$('#link_hide_optional_opening_fields').click();
 
 		// reset non-dynamic form fields to defaults
-		$('#frmOpening').trigger("reset");
+		$('#frmCreateOpening').trigger("reset");
 	}
 
 	// ***************************
@@ -153,9 +174,14 @@ $(document).ready(function () {
 	// Delete opening
 	$(document).on("click", ".sus-delete-opening", function () {
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-opening-id');
+		var openingName = '';
+		if($(this).attr('data-for-name')){
+			var openingName = " (" + $(this).attr('data-for-name') + ")";
+		}
+
 		var params = {
 			title: "Delete Opening",
-			message: "Really delete this opening?<br /><br /><strong>&quot;" + $(this).next('.opening-time-range').html() + "&quot;</strong>",
+			message: "Really delete this opening?<br /><br /><strong>" + $(this).siblings('.opening-time-range').html() + "</strong>" + openingName,
 			label: "Delete Opening",
 			class: "btn btn-danger",
 			url: "../ajax_actions/ajax_actions.php",
@@ -295,16 +321,16 @@ $(document).ready(function () {
 	}
 
 	$('#btnOpeningCancel').click(function () {
-		cleanUpForm("frmOpening");
+		cleanUpForm("frmCreateOpening");
 
 		// manually clear modal values
 		//$("#openingID").val(0);
 		//$("#openingLabel").text('');
 		//$("#openingAction").val('');
-		//$("#frmOpening textarea").val('');
-		//$("#frmOpening input[type=text]").val('');
-		//$("#frmOpening input[type=radio]").attr("checked", false);
-		//$("#frmOpening select").val(0);
+		//$("#frmCreateOpening textarea").val('');
+		//$("#frmCreateOpening input[type=text]").val('');
+		//$("#frmCreateOpening input[type=radio]").attr("checked", false);
+		//$("#frmCreateOpening select").val(0);
 
 		// reset submit button (avoid disabled state)
 		$("#btnOpeningSubmit").button('reset');
