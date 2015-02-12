@@ -19,10 +19,10 @@
 					<button class="btn btn-primary btn-sm" data-calendar-nav="next">Next &gt;&gt;</button>
 				</div>
 				<div class="btn-group">
-					<!--					<button class="btn btn-warning btn-sm" data-calendar-view="year">Year</button>-->
-					<!--					<button class="btn btn-default btn-link btn-sm" data-calendar-view="month">View Month</button>-->
-					<!--					<button class="btn btn-warning btn-sm" data-calendar-view="week">Week</button>-->
-					<!--					<button class="btn btn-warning btn-sm" data-calendar-view="day">Day</button>-->
+					<!--<button class="btn btn-warning btn-sm" data-calendar-view="year">Year</button>-->
+					<!--<button class="btn btn-default btn-link btn-sm" data-calendar-view="month">View Month</button>-->
+					<!--<button class="btn btn-warning btn-sm" data-calendar-view="week">Week</button>-->
+					<!--<button class="btn btn-warning btn-sm" data-calendar-view="day">Day</button>-->
 				</div>
 			</div>
 
@@ -31,6 +31,7 @@
 
 		<div id="calendar"></div>
 
+		<!-- TODO - PUT THIS IN CONFIG FILE FOR easier maintenance and updating -->
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
 		<script type="text/javascript" src="../js/bootstrap-calendar-master/js/calendar.js"></script>
 		<script type="text/javascript">
@@ -136,7 +137,7 @@
 				// calendar functions
 				// ***************************
 
-				function setupMonth(){
+				function setupMonth() {
 					updateCalendarNavButtons();
 					processCurrentCalendarCells();
 					unbindDailyMode();
@@ -208,9 +209,9 @@
 					$('.cal-cell').unbind("dblclick");
 				}
 
-				function abbreviateDaysOfWeekLabels(){
+				function abbreviateDaysOfWeekLabels() {
 					// console.log( $(".cal-row-head .cal-cell1").html());
-					$(".cal-row-head .cal-cell1").each(function(idx,ele){
+					$(".cal-row-head .cal-cell1").each(function (idx, ele) {
 						$(this).html($(this).html().substring(0, 3));
 					});
 				}
@@ -221,11 +222,11 @@
 
 
 		<!-- Bootstrap Modal: Calendar Create Opening -->
-		<form action="../app_code/opening_proc.php" id="frmCreateOpening" name="frmCreateOpening" class="form-horizontal" role="form" method="post">
-			<input type="hidden" id="openingSheetID" name="openingSheetID" value="<?php echo $s->sheet_id; ?>" />
-			<input type="hidden" id="openingID" name="openingID" value="NEW" />
-			<input type="hidden" id="openingDateStart" name="openingDateStart" value="" />
-			<input type="hidden" id="openingTimeMode" name="openingTimeMode" value="" />
+		<form action="calendar_proc.php" id="frmCreateOpening" name="frmCreateOpening" class="form-horizontal" role="form" method="post">
+			<input type="hidden" id="new_OpeningSheetID" name="new_OpeningSheetID" value="<?php echo $s->sheet_id; ?>" />
+			<input type="hidden" id="new_OpeningID" name="new_OpeningID" value="NEW" />
+			<input type="hidden" id="new_OpeningDateStart" name="new_OpeningDateStart" value="" />
+			<input type="hidden" id="new_OpeningTimeMode" name="new_OpeningTimeMode" value="" />
 
 			<div id="modal-create-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="openingLabel" aria-hidden="true">
 				<div class="modal-dialog">
@@ -233,7 +234,7 @@
 						<div class="modal-header bg-info">
 							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 							</button>
-							<h4 id="openingLabel" class="modal-title">Creating openings on <span class="openingCalDate"></span></h4>
+							<h4 id="new_OpeningLabel" class="modal-title">Creating openings on <span class="openingCalDate"></span></h4>
 						</div>
 						<div class="modal-body">
 							<!-- TOGGLE LINK: Show Optional Fields -->
@@ -244,41 +245,41 @@
 								<a href="#" id="link_hide_optional_opening_fields" class="small" title="Hide optional fields">Hide optional fields</a>
 
 								<div class="form-group form-group-sm">
-									<label for="openingName" class="col-sm-3 control-label">Name</label>
+									<label for="openingName" class="col-sm-4 control-label">Name</label>
 
-									<div class="col-sm-9">
-										<input type="text" id="openingName" name="openingName" class="form-control" placeholder="Opening name" value="" />
+									<div class="col-sm-8">
+										<input type="text" id="new_OpeningName" name="new_OpeningName" class="form-control" placeholder="Opening name" value="" />
 									</div>
 								</div>
 								<div class="form-group form-group-sm">
-									<label for="openingDescription" class="col-sm-3 control-label">Description</label>
+									<label for="openingDescription" class="col-sm-4 control-label">Description</label>
 
-									<div class="col-sm-9">
-										<textarea id="openingDescription" name="openingDescription" class="form-control" placeholder="Opening description" rows="1"></textarea>
+									<div class="col-sm-8">
+										<textarea id="new_OpeningDescription" name="new_OpeningDescription" class="form-control" placeholder="Opening description" rows="1"></textarea>
 									</div>
 								</div>
 								<div class="form-group form-group-sm">
-									<label for="openingAdminNotes" class="col-sm-3 control-label">Admin&nbsp;Notes</label>
+									<label for="openingAdminNotes" class="col-sm-4 control-label">Admin&nbsp;Notes</label>
 
-									<div class="col-sm-9">
-										<textarea id="openingAdminNotes" name="openingAdminNotes" class="form-control" placeholder="Only the sheet admin can see these notes" rows="1"></textarea>
+									<div class="col-sm-8">
+										<textarea id="new_OpeningAdminNotes" name="new_OpeningAdminNotes" class="form-control" placeholder="Only the sheet admin can see these notes" rows="1"></textarea>
 									</div>
 								</div>
 								<div class="form-group form-group-sm">
-									<label for="openingLocation" class="col-sm-3 control-label">Location</label>
+									<label for="openingLocation" class="col-sm-4 control-label">Location</label>
 
-									<div class="col-sm-9">
-										<input type="text" id="openingLocation" name="openingLocation" class="form-control" placeholder="Opening location" value="" />
+									<div class="col-sm-8">
+										<input type="text" id="new_OpeningLocation" name="new_OpeningLocation" class="form-control" placeholder="Opening location" value="" />
 									</div>
 								</div>
 							</div>
 							<!-- end optional_opening_fields -->
 							<div class="form-group form-group-sm">
-								<label for="openingBeginTimeHour" class="col-sm-3 control-label">From</label>
+								<label for="openingBeginTimeHour" class="col-sm-4 control-label">From</label>
 
-								<div class="col-sm-9">
+								<div class="col-sm-8">
 									<!-- START 'HOURS' -->
-									<select id="openingBeginTimeHour" name="openingBeginTimeHour">
+									<select id="new_OpeningBeginTimeHour" name="new_OpeningBeginTimeHour">
 										<option value="1" selected="selected">1</option>
 										<option value="2">2</option>
 										<option value="3">3</option>
@@ -293,7 +294,7 @@
 										<option value="12">12</option>
 									</select>:
 									<!-- START 'MINUTES' -->
-									<select id="openingBeginTimeMinute" name="openingBeginTimeMinute">
+									<select id="new_OpeningBeginTimeMinute" name="new_OpeningBeginTimeMinute">
 										<option value="0" selected="selected">00</option>
 										<option value="5">05</option>
 										<option value="10">10</option>
@@ -308,7 +309,7 @@
 										<option value="55">55</option>
 									</select>
 									<!-- START 'AM/PM' -->
-									<select id="openingBeginTime_AMPM" name="openingBeginTime_AMPM">
+									<select id="new_OpeningBeginTime_AMPM" name="new_OpeningBeginTime_AMPM">
 										<option value="am">am</option>
 										<option value="pm" selected="selected">pm</option>
 									</select>
@@ -316,18 +317,19 @@
 									<!-- TOGGLE LINKS: Openings by duration / time-range -->
 									<a href="#" id="link_hide_time_range" class="openings_by_time_range small" title="Switch to openings by duration">Switch
 										to openings by duration</a>
-									<a href="#" id="link_hide_duration" class="openings_by_duration small" title="Switch to openings by time range">Switch to openings by
+									<a href="#" id="link_hide_duration" class="openings_by_duration small" title="Switch to openings by time range">Switch to
+										openings by
 										time range</a>
 								</div>
 							</div>
 							<div class="form-group form-group-sm">
-								<label for="openingEndTimeHour" class="col-sm-3 control-label">To</label>
+								<label for="openingEndTimeHour" class="col-sm-4 control-label">To</label>
 
-								<div class="col-sm-9">
+								<div class="col-sm-8">
 									<!-- TOGGLED RESULT: openings by time range -->
 									<div class="openings_by_time_range">
 										<!-- START 'HOURS' -->
-										<select id="openingEndTimeHour" name="openingEndTimeHour">
+										<select id="new_OpeningEndTimeHour" name="new_OpeningEndTimeHour">
 											<option value="1">1</option>
 											<option value="2" selected="selected">2</option>
 											<option value="3">3</option>
@@ -342,7 +344,7 @@
 											<option value="12">12</option>
 										</select>:
 										<!-- START 'MINUTES' -->
-										<select id="openingEndTimeMinute" name="openingEndTimeMinute">
+										<select id="new_OpeningEndTimeMinute" name="new_OpeningEndTimeMinute">
 											<option value="0" selected="selected">00</option>
 											<option value="5">05</option>
 											<option value="10">10</option>
@@ -357,14 +359,14 @@
 											<option value="55">55</option>
 										</select>
 										<!-- START 'AM/PM' -->
-										<select id="openingEndTimeMinute_AMPM" name="openingEndTimeMinute_AMPM">
+										<select id="new_OpeningEndTimeMinute_AMPM" name="new_OpeningEndTimeMinute_AMPM">
 											<option value="am">am</option>
 											<option value="pm" selected="selected">pm</option>
 										</select>
 									</div>
 									<!-- TOGGLED RESULT: openings by duration -->
 									<div class="openings_by_duration">
-										<select id="openingDurationEachOpening" name="openingDurationEachOpening">
+										<select id="new_OpeningDurationEachOpening" name="new_OpeningDurationEachOpening">
 											<option value="5" selected="selected">5</option>
 											<option value="10">10</option>
 											<option value="15">15</option>
@@ -389,10 +391,10 @@
 							</div>
 
 							<div class="form-group form-group-sm">
-								<label for="openingNumOpenings" class="col-sm-3 control-label">#&nbsp;Openings</label>
+								<label for="openingNumOpenings" class="col-sm-4 control-label">#&nbsp;Openings</label>
 
-								<div class="col-sm-9">
-									<select id="openingNumOpenings" name="openingNumOpenings">
+								<div class="col-sm-8">
+									<select id="new_OpeningNumOpenings" name="new_OpeningNumOpenings">
 										<option value="1" selected="selected">1</option>
 										<option value="2">2</option>
 										<option value="3">3</option>
@@ -421,10 +423,10 @@
 								</div>
 							</div>
 							<div class="form-group form-group-sm">
-								<label for="openingNumSignupsPerOpening" class="col-sm-3 control-label">&nbsp;Signups/Opening</label>
+								<label for="openingNumSignupsPerOpening" class="col-sm-4 control-label">Max&nbsp;Signups/Opening</label>
 
-								<div class="col-sm-9">
-									<select id="openingNumSignupsPerOpening" name="openingNumSignupsPerOpening">
+								<div class="col-sm-8">
+									<select id="new_OpeningNumSignupsPerOpening" name="new_OpeningNumSignupsPerOpening">
 										<option value="-1">unlimited</option>
 										<option value="1" selected="selected">1</option>
 										<option value="2">2</option>
@@ -460,22 +462,22 @@
 								</div>
 							</div>
 							<div class="form-group form-group-sm">
-								<label for="openingRepeaterControls" class="col-sm-3 control-label">Repeating?</label>
+								<label for="openingRepeaterControls" class="col-sm-4 control-label">Repeating?</label>
 
-								<div class="col-sm-9">
-									<div id="openingRepeaterControls">
+								<div class="col-sm-8">
+									<div id="new_OpeningRepeaterControls">
 
 										<div id="chooseRepeatType">
 											<div class="radio">
 												<label for="radioOpeningRepeatRate1">
-													<input id="radioOpeningRepeatRate1" name="openingRepeatRate" value="1" checked="checked" type="radio" />
+													<input id="radioOpeningRepeatRate1" name="new_OpeningRepeatRate" value="1" checked="checked" type="radio" />
 													Only on
-													<span class="openingCalDate">2014-12-23</span>
+													<span class="openingCalDate">mm/dd/yyyy</span>
 												</label>
 											</div>
 											<div class="radio">
 												<label for="radioOpeningRepeatRate2">
-													<input id="radioOpeningRepeatRate2" name="openingRepeatRate" value="2" type="radio" /> Repeat on days of the
+													<input id="radioOpeningRepeatRate2" name="new_OpeningRepeatRate" value="2" type="radio" /> Repeat on days of the
 													week
 												</label>
 											</div>
@@ -499,7 +501,7 @@
 
 											<div class="radio">
 												<label for="radioOpeningRepeatRate3">
-													<input id="radioOpeningRepeatRate3" name="openingRepeatRate" value="3" type="radio" /> Repeat on days of the
+													<input id="radioOpeningRepeatRate3" name="new_OpeningRepeatRate" value="3" type="radio" /> Repeat on days of the
 													month
 												</label>
 											</div>
@@ -579,17 +581,17 @@
 							</div>
 
 							<div class="form-group form-group-sm" id="repeatUntilDate">
-								<label for="openingUntilControls" class="col-sm-3 control-label">Until?</label>
+								<label for="openingUntilControls" class="col-sm-4 control-label">Until?</label>
 
-								<div class="col-sm-9">
-									<input type="text" id="openingUntilDate" name="openingUntilDate" class="form-inline" placeholder="mm/dd/yyyy" maxlength="10" value="" />
+								<div class="col-sm-8">
+									<input type="text" id="new_OpeningUntilDate" name="new_OpeningUntilDate" class="form-inline" placeholder="mm/dd/yyyy" maxlength="10" value="" />
 								</div>
 							</div>
 						</div>
 
 						<div class="modal-footer">
-							<button type="submit" id="btnOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
-							<button type="reset" id="btnOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
+							<button type="submit" id="btnNewOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
+							<button type="reset" id="btnNewOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
 							</button>
 						</div>
 					</div>
@@ -599,8 +601,216 @@
 		<!-- /Bootstrap Modal: Calendar Create Opening -->
 
 
+		<!-- Bootstrap Modal: Calendar Edit Opening -->
+		<form action="calendar_proc.php" id="frmEditOpening" name="frmEditOpening" class="form-horizontal" role="form" method="post">
+			<input type="hidden" id="edit_OpeningID" name="edit_OpeningID" value="0" />
+			<input type="hidden" id="edit_OpeningSheetID" name="edit_OpeningSheetID" value="<?php echo $s->sheet_id; ?>" />
 
-		<script type="text/javascript" src="../js/calendar_opening.js"></script>
+			<div id="modal-edit-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="openingLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header bg-info">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+							</button>
+							<h4 id="edit_OpeningLabel" class="modal-title">Edit opening</h4>
+						</div>
+						<div class="modal-body">
+							<!-- total col-sm per row should = 12 -->
+							<div class="container">
+								<!-- START COLUMN ONE -->
+								<div class="row col-sm-8 small">
+									<div class="col-sm-9">
+										<div class="form-group form-group-sm">
+											<label for="openingName" class="col-sm-3 control-label">Name</label>
+
+											<div class="col-sm-9">
+												<input type="text" id="edit_OpeningName" name="edit_OpeningName" class="form-control" placeholder="Opening name (optional)" value="" />
+											</div>
+										</div>
+										<div class="form-group form-group-sm">
+											<label for="openingDescription" class="col-sm-3 control-label">Description</label>
+
+											<div class="col-sm-9">
+												<textarea id="edit_OpeningDescription" name="edit_OpeningDescription" class="form-control" placeholder="Opening description (optional)" rows="1"></textarea>
+											</div>
+										</div>
+										<div class="form-group form-group-sm">
+											<label for="openingAdminNotes" class="col-sm-3 control-label">Admin&nbsp;Notes</label>
+
+											<div class="col-sm-9">
+												<textarea id="edit_OpeningAdminNotes" name="edit_OpeningAdminNotes" class="form-control" placeholder="Only the sheet admin can see these notes" rows="1"></textarea>
+											</div>
+										</div>
+										<div class="form-group form-group-sm">
+											<label for="openingLocation" class="col-sm-3 control-label">Location</label>
+
+											<div class="col-sm-9">
+												<input type="text" id="edit_OpeningLocation" name="edit_OpeningLocation" class="form-control" placeholder="Opening location (optional)" value="" />
+											</div>
+										</div>
+										<div class="form-group form-group-sm">
+											<label for="openingDateStart" class="col-sm-3 control-label">On</label>
+
+											<div class="col-sm-9">
+												<input type="text" id="edit_OpeningDateStart" name="edit_OpeningDateStart" class="form-inline" placeholder="mm/dd/yyyy" maxlength="10" value="" />
+											</div>
+										</div>
+
+										<!-- end optional_opening_fields -->
+										<div class="form-group form-group-sm">
+											<label for="openingBeginTimeHour" class="col-sm-3 control-label">From</label>
+
+											<div class="col-sm-9">
+												<!-- START 'HOURS' -->
+												<select id="edit_OpeningBeginTimeHour" name="edit_OpeningBeginTimeHour">
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="11">11</option>
+													<option value="12">12</option>
+												</select>:
+												<!-- START 'MINUTES' -->
+												<select id="edit_OpeningBeginTimeMinute" name="edit_OpeningBeginTimeMinute">
+													<option value="0">00</option>
+													<option value="5">05</option>
+													<option value="10">10</option>
+													<option value="15">15</option>
+													<option value="20">20</option>
+													<option value="25">25</option>
+													<option value="30">30</option>
+													<option value="35">35</option>
+													<option value="40">40</option>
+													<option value="45">45</option>
+													<option value="50">50</option>
+													<option value="55">55</option>
+												</select>
+												<!-- START 'AM/PM' -->
+												<select id="edit_OpeningBeginTime_AMPM" name="edit_OpeningBeginTime_AMPM">
+													<option value="am">am</option>
+													<option value="pm">pm</option>
+												</select>
+											</div>
+										</div>
+										<div class="form-group form-group-sm">
+											<label for="openingEndTimeHour" class="col-sm-3 control-label">To</label>
+
+											<div class="col-sm-9">
+												<!-- TOGGLED RESULT: openings by time range -->
+												<div class="openings_by_time_range">
+													<!-- START 'HOURS' -->
+													<select id="edit_OpeningEndTimeHour" name="edit_OpeningEndTimeHour">
+														<option value="1">1</option>
+														<option value="2">2</option>
+														<option value="3">3</option>
+														<option value="4">4</option>
+														<option value="5">5</option>
+														<option value="6">6</option>
+														<option value="7">7</option>
+														<option value="8">8</option>
+														<option value="9">9</option>
+														<option value="10">10</option>
+														<option value="11">11</option>
+														<option value="12">12</option>
+													</select>:
+													<!-- START 'MINUTES' -->
+													<select id="edit_OpeningEndTimeMinute" name="edit_OpeningEndTimeMinute">
+														<option value="0">00</option>
+														<option value="5">05</option>
+														<option value="10">10</option>
+														<option value="15">15</option>
+														<option value="20">20</option>
+														<option value="25">25</option>
+														<option value="30">30</option>
+														<option value="35">35</option>
+														<option value="40">40</option>
+														<option value="45">45</option>
+														<option value="50">50</option>
+														<option value="55">55</option>
+													</select>
+													<!-- START 'AM/PM' -->
+													<select id="edit_OpeningEndTimeMinute_AMPM" name="edit_OpeningEndTimeMinute_AMPM">
+														<option value="am">am</option>
+														<option value="pm">pm</option>
+													</select>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group form-group-sm">
+											<label for="openingNumSignupsPerOpening" class="col-sm-3 control-label">Max&nbsp;Signups</label>
+
+											<div class="col-sm-9">
+												<select id="edit_OpeningNumSignupsPerOpening" name="edit_OpeningNumSignupsPerOpening">
+													<option value="-1">unlimited</option>
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="11">11</option>
+													<option value="12">12</option>
+													<option value="13">13</option>
+													<option value="14">14</option>
+													<option value="15">15</option>
+													<option value="16">16</option>
+													<option value="17">17</option>
+													<option value="18">18</option>
+													<option value="19">19</option>
+													<option value="20">20</option>
+													<option value="21">21</option>
+													<option value="22">22</option>
+													<option value="23">23</option>
+													<option value="24">24</option>
+													<option value="25">25</option>
+													<option value="26">26</option>
+													<option value="27">27</option>
+													<option value="28">28</option>
+													<option value="29">29</option>
+													<option value="30">30</option>
+												</select>
+											</div>
+										</div>
+										<div class="form-group form-group-sm">
+											<label for="btnEditOpeningSubmit" class="col-sm-3 control-label">&nbsp;</label>
+
+											<div class="col-sm-9">
+												<button type="submit" id="btnEditOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
+												<button type="reset" id="btnEditOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- START COLUMN TWO -->
+								<div class="row col-sm-4">
+									col 2
+								</div>
+							</div>
+						</div>
+
+						<div class="modal-footer">
+							&nbsp;some footer here
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!-- /Bootstrap Modal: Calendar Edit Opening -->
+
+		<script type="text/javascript" src="../js/calendar.js"></script>
 
 	<?php
 	}

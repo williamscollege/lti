@@ -5,10 +5,11 @@ $(document).ready(function () {
 	// ***************************
 
 
-
 	// ***************************
 	// helper functions
 	// ***************************
+
+	// TODO - edit openings: btn_save_openings, cleanUpForm(), frmCreateOpening, frmEditOpening
 
 	// TODO - Refactoring: Could probably refactor showConfirmBox() and updateDOM() into util.js file and remove a lot of redundant code
 	// BootBox jQuery helper function
@@ -70,12 +71,13 @@ $(document).ready(function () {
 				// check to see if this the last opening on this date
 				var countRemainingOpenings = $('#list-opening-id-' + GLOBAL_confirmHandlerData).siblings(".list-opening").length;
 
-				if (countRemainingOpenings == 0){
+				if (countRemainingOpenings == 0) {
 					// this is the last opening on this date!
 					// remove the list container from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
 					$('#list-opening-id-' + GLOBAL_confirmHandlerData).parent().parent(".calendar-cell-openings").remove();
 					$('#tabOpeningsList #list-opening-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
-				} else {
+				}
+				else {
 					// additional openings still exist on this date...
 					// remove single opening from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
 					$('#list-opening-id-' + GLOBAL_confirmHandlerData).remove();
@@ -87,25 +89,25 @@ $(document).ready(function () {
 				$("#list-opening-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
 			}
 		}
-		else if (action == 'delete-sheet') {
-			if (ret) {
-				// show status
-				dfnUtil_setTransientAlert('success', 'Saved');
-				// remove element
-				$('#btn-edit-sheet-id-' + GLOBAL_confirmHandlerData).closest('TR').remove();
-			}
-			else {
-				// error message
-				$("#btn-edit-sheet-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
-			}
-		}
+		//else if (action == 'delete-sheet') {
+		//	if (ret) {
+		//		// show status
+		//		dfnUtil_setTransientAlert('success', 'Saved');
+		//		// remove element
+		//		$('#btn-edit-sheet-id-' + GLOBAL_confirmHandlerData).closest('TR').remove();
+		//	}
+		//	else {
+		//		// error message
+		//		$("#btn-edit-sheet-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+		//	}
+		//}
 	}
 
 
 	// ***************************
 	// Calendar datepicker
 	// ***************************
-	$("#openingUntilDate,#openingDateStart").datepicker({
+	$("#new_OpeningUntilDate,#edit_OpeningDateStart").datepicker({
 		showOtherMonths: true,
 		selectOtherMonths: true,
 		dateFormat: 'mm/dd/yy',
@@ -113,85 +115,109 @@ $(document).ready(function () {
 	});
 
 	// Create Openings: populate modal form with calendar date of day clicked
-	$(document).on('click', '.addOpeningLink', function(){
+	$(document).on('click', '.addOpeningLink', function () {
 		var dateClicked = $(this).attr('data-cal-date');
 		setupModalForm_CreateOpening(dateClicked);
 	});
 
 	// Edit Opening: populate modal form using opening_id
-	$(document).on('click', '.sus-edit-opening, .sus-add-someone-to-opening', function(){
-		var openingID = $(this).parent(".list-opening").attr('data-opening_id');
-		setupModalForm_EditOpening(openingID);
+	$(document).on('click', '.sus-edit-opening, .sus-add-someone-to-opening', function () {
+		var openingID = $(this).attr('data-opening-id');
+		var action = "edit";
+		if ($(this).hasClass('sus-add-someone-to-opening')) {
+			var action = "add";
+		}
+		setupModalForm_EditOpening(openingID, action);
 	});
 
-	function setupModalForm_EditOpening(openingID){
+	function setupModalForm_EditOpening(openingID, action) {
 		// reset non-dynamic form fields to defaults
 		$('#frmEditOpening').trigger("reset");
 
-		// variable that represents parent of the link clicked (i.e. edit or add link)
-		var parentOfClickedLink = $(".list-opening").attr('data-opening_id',openingID);
+		// div parent of the link clicked, which contains all of the data attributes for this opening
+		var parentOfClickedLink = $("#list-opening-id-" + openingID);
 
- 		// set initial form values; parent of clicked link contains all attributes for this opening
-		$("#openingID").val($(parentOfClickedLink).attr('data-opening_id'));
-		$("#openingName").val($(parentOfClickedLink).attr('data-name'));
-		$("#openingDescription").val($(parentOfClickedLink).attr('data-description'));
-		$("#openingAdminNotes").val($(parentOfClickedLink).attr('data-admin_comment'));
-		$("#openingLocation").val($(parentOfClickedLink).attr('data-location'));
-		$("#openingNumSignupsPerOpening").val($(parentOfClickedLink).attr('data-max_signups'));
+		// set initial form values; parent of clicked link contains all attributes for this opening
+		$("#edit_OpeningID").val($(parentOfClickedLink).attr('data-opening_id'));
+		$("#edit_OpeningName").val($(parentOfClickedLink).attr('data-name'));
+		$("#edit_OpeningDescription").val($(parentOfClickedLink).attr('data-description'));
+		$("#edit_OpeningAdminNotes").val($(parentOfClickedLink).attr('data-admin_comment'));
+		$("#edit_OpeningLocation").val($(parentOfClickedLink).attr('data-location'));
+		$("#edit_OpeningNumSignupsPerOpening").val($(parentOfClickedLink).attr('data-max_signups'));
+		console.log($(parentOfClickedLink).attr('data-opening_id'));
+		console.log($(parentOfClickedLink).attr('data-name'));
 
 		// split date/time values
 		var datetimeBeginAry = $(parentOfClickedLink).attr('data-begin_datetime').split(' ');
 		var datetimeEndAry = $(parentOfClickedLink).attr('data-end_datetime').split(' ');
 
-		// format dates: mm/dd/yyyy format (for datepicker)
-		var forDateBeginAry = datetimeBeginAry[0].split('-');
-		var forDateEndAry = datetimeEndAry[0].split('-');
-
-		var forDateBeginClean = forDateBeginAry[1]+'/'+forDateBeginAry[2]+'/'+forDateBeginAry[0];
-		var forDateEndClean = forDateEndAry[1]+'/'+forDateEndAry[2]+'/'+forDateEndAry[0];
+		// unnecessary computations: format dates: mm/dd/yyyy format (for datepicker)
+		// var forDateBeginAry = datetimeBeginAry[0].split('-');
+		// var forDateEndAry = datetimeEndAry[0].split('-');
+		// var forDateBeginClean = forDateBeginAry[1]+'/'+forDateBeginAry[2]+'/'+forDateBeginAry[0];
+		// var forDateEndClean = forDateEndAry[1]+'/'+forDateEndAry[2]+'/'+forDateEndAry[0];
 
 		// clean times: 12 hour format with AM/PM
 		var forTimeBeginAry = timeConvert24to12(datetimeBeginAry[1]).split(':');
 		var forTimeEndAry = timeConvert24to12(datetimeEndAry[1]).split(':');
+		console.log(forTimeBeginAry);
+		console.log(forTimeEndAry);
 
 		// set date/time values
-		$("#openingDateStart").attr('value',forDateBeginClean);
+		$("#edit_OpeningDateStart").attr('value', datetimeBeginAry[0]); // expected format is: "2015-02-24"
 
-		$("#openingBeginTimeHour").val(forTimeBeginAry[0]).prop('selected', true);
-		$("#openingBeginTimeMinute").val(forTimeBeginAry[1]).prop('selected', true);
-		$("#openingBeginTime_AMPM").val(forTimeBeginAry[3]).prop('selected', true);
+		$('#edit_OpeningBeginTimeHour option[value="' + forTimeBeginAry[0] + '"]').prop('selected', true);
+		$('#edit_OpeningBeginTimeMinute option[value="' + roundMinutesToNearestFiveUsingTwoDigits(forTimeBeginAry[1]) + '"]').attr('selected', 'selected');
+		$('#edit_OpeningBeginTime_AMPM option[value="' + forTimeBeginAry[3] + '"]').prop('selected', true);
 
-		$("#openingEndTimeHour").val(forTimeEndAry[0]).prop('selected', true);
-		$("#openingEndTimeMinute").val(forTimeEndAry[1]).prop('selected', true);
-		$("#openingEndTimeMinute_AMPM").val(forTimeEndAry[3]).prop('selected', true);
+		$('#edit_OpeningEndTimeHour option[value="' + forTimeEndAry[0] + '"]').prop('selected', true);
+		$('#edit_OpeningEndTimeMinute option[value="' + roundMinutesToNearestFiveUsingTwoDigits(forTimeEndAry[1]) + '"]').prop('selected', true);
+		$('#edit_OpeningEndTimeMinute_AMPM option[value="' + forTimeEndAry[3] + '"]').prop('selected', true);
+
+		if (action == "add") {
+			// display the Add Someone functionality
+			$("#edit_AddSomeone").click();
+		}
+	}
+
+	function roundMinutesToNearestFiveUsingTwoDigits(num) {
+		// round minutes to nearest 5 minute increment
+		var roundMinutes =  5 * Math.round(num/5);
+
+		// ensure that resultant has two digits
+		if (roundMinutes.toString().length == 1) {
+			roundMinutes = "0" + roundMinutes;
+		}
+		console.log(roundMinutes);
+		return parseInt(roundMinutes);
 	}
 
 	function timeConvert24to12(time) {
 		// Check correct time format and split into components
-		time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+		time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 
 		if (time.length > 1) { // If time format correct
-			time = time.slice (1);  // Remove full string match value
+			time = time.slice(1);  // Remove full string match value
 			time[5] = +time[0] < 12 ? ':am' : ':pm'; // Set am/pm
 			time[0] = +time[0] % 12 || 12; // Adjust hours
 		}
-		return time.join (''); // return adjusted time or original string
+		return time.join(''); // return adjusted time or original string
 	}
 
-	function setupModalForm_CreateOpening(forDateYYYYMMDD){
+	function setupModalForm_CreateOpening(forDateYYYYMMDD) {
 
 		var forDateAry = forDateYYYYMMDD.split('-');
-		var forDateClean = forDateAry[1]+'/'+forDateAry[2]+'/'+forDateAry[0];
+		var forDateClean = forDateAry[1] + '/' + forDateAry[2] + '/' + forDateAry[0];
 
 		var d = new Date(forDateYYYYMMDD);
-		var dow = (['mon','tue','wed','thu','fri','sat','sun'])[d.getDay()];
+		var dow = (['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'])[d.getDay()];
 		var dom = forDateAry[2] * 1;
 
-
 		// set up the date
-		$("#openingUntilDate").attr('value',forDateClean);
+		$("#new_OpeningUntilDate").attr('value', forDateClean);
+		console.log(forDateClean);
 
-		$("#openingDateStart").val(forDateYYYYMMDD);
+		$("#new_OpeningDateStart").val(forDateYYYYMMDD);
 		$(".openingCalDate").html(forDateClean);
 
 		// clear out & reset the day-of-week repeats
@@ -199,14 +225,14 @@ $(document).ready(function () {
 		$('.toggler_dow').removeClass('btn-success');
 		$('.toggler_dow').removeClass('btn-default');
 		$('.toggler_dow').addClass('btn-default');
-		$('#btn_'+dow).click();
+		$('#btn_' + dow).click();
 
 		// clear out & reset the day-of-month repeats
 		$('.repeat_dom_val').val(0);
 		$('.toggler_dom').removeClass('btn-success');
 		$('.toggler_dom').removeClass('btn-default');
 		$('.toggler_dom').addClass('btn-default');
-		$('#btn_dom_'+dom).click();
+		$('#btn_dom_' + dom).click();
 
 		// set the repeat option to be the default (only on)
 		$('#radioOpeningRepeatRate1').click();
@@ -228,7 +254,7 @@ $(document).ready(function () {
 		GLOBAL_confirmHandlerData = $(this).parent(".list-opening").attr('data-opening_id');
 
 		var openingName = '';
-		if($(this).parent(".list-opening").attr('data-name')){
+		if ($(this).parent(".list-opening").attr('data-name')) {
 			var openingName = " (" + $(this).parent(".list-opening").attr('data-name') + ")";
 		}
 
@@ -264,7 +290,7 @@ $(document).ready(function () {
 		$("label[for='openingEndTimeHour']").html("Make&nbsp;each&nbsp;opening");
 		$("#link_hide_duration").show();
 		$(".openings_by_duration").show();
-		$("#openingTimeMode").val('duration');
+		$("#new_OpeningTimeMode").val('duration');
 	});
 
 	$("#link_hide_duration").click(function () {
@@ -274,7 +300,7 @@ $(document).ready(function () {
 		$("label[for='openingEndTimeHour']").html("To");
 		$("#link_hide_time_range").show();
 		$(".openings_by_time_range").show();
-		$("#openingTimeMode").val('time_range');
+		$("#new_OpeningTimeMode").val('time_range');
 	});
 
 	$(".toggler_dow").click(function (event) {
@@ -327,18 +353,20 @@ $(document).ready(function () {
 	});
 
 
-	$("#btn_save_openings").click(function (event) {
-		if (($("#openingEndTimeHour").val() == '12')
-			&& ($("#openingEndTimeMinute").val() == '0')
-			&& ($("#openingEndTimeMinute_AMPM").val() == 'am')) {
+	// TODO - Is this still needed, now that an opening can 'wrap' around midnight? If obsolete, remove from codebase
+	// TODO - if needed, add class to:  #btnNewOpeningSubmit, #btnEditOpeningSubmit
+	$(".check_if_time_errors").click(function (event) {
+		if (($("#new_OpeningEndTimeHour").val() == '12')
+			&& ($("#new_OpeningEndTimeMinute").val() == '0')
+			&& ($("#new_OpeningEndTimeMinute_AMPM").val() == 'am')) {
 			customAlert("", "cannot end an opening at 12:00 AM");
 			return false;
 		}
 
 		// create start time string
 		// create end time string
-		var btime = valsToTimeString($("#openingBeginTimeHour").val(), $("#openingBeginTimeMinute").val(), $("#openingBeginTime_AMPM").val());
-		var etime = valsToTimeString($("#openingEndTimeHour").val(), $("#openingEndTimeMinute").val(), $("#openingEndTimeMinute_AMPM").val());
+		var btime = valsToTimeString($("#new_OpeningBeginTimeHour").val(), $("#new_OpeningBeginTimeMinute").val(), $("#new_OpeningBeginTime_AMPM").val());
+		var etime = valsToTimeString($("#new_OpeningEndTimeHour").val(), $("#new_OpeningEndTimeMinute").val(), $("#new_OpeningEndTimeMinute_AMPM").val());
 		//alert("time strings are "+btime+" and "+etime);
 
 		// if end <= start, that's a problem
@@ -373,20 +401,21 @@ $(document).ready(function () {
 		// $(".form-group").removeClass('success').removeClass('error');
 	}
 
-	$('#btnOpeningCancel').click(function () {
+	$('#btnNewOpeningCancel, #btnEditOpeningCancel').click(function () {
 		cleanUpForm("frmCreateOpening");
+		cleanUpForm("frmEditOpening");
 
 		// manually clear modal values
-		//$("#openingID").val(0);
-		//$("#openingLabel").text('');
-		//$("#openingAction").val('');
+		//$("#new_OpeningID").val(0);
+		//$("#new_OpeningLabel").text('');
+		//$("#new_OpeningAction").val('');
 		//$("#frmCreateOpening textarea").val('');
 		//$("#frmCreateOpening input[type=text]").val('');
 		//$("#frmCreateOpening input[type=radio]").attr("checked", false);
 		//$("#frmCreateOpening select").val(0);
 
 		// reset submit button (avoid disabled state)
-		$("#btnOpeningSubmit").button('reset');
+		$("#btnNewOpeningSubmit, #btnEditOpeningSubmit").button('reset');
 	});
 
 	// TODO - implement in ajax success callback

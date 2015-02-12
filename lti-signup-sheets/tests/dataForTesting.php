@@ -163,11 +163,11 @@
 		// 500 series ids
 		# SUS_Sheetgroup: 'sheetgroup_id', 'created_at', 'updated_at', 'flag_delete', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheetgroup::$dbTable . " VALUES
-			(501, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 501', 'Something to organize my math sheets', 1, 0),
-			(502, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 502', 'Something to organize my english sheets', 1, 0),
-			(503, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 503', 'Something to organize my spanish sheets', 1, 0),
-			(504, NOW(), NOW(), 0, 102, 0, 'Sheetgroup 504', 'Help me keep track of so many sheets', 1, 0),
-			(505, NOW(), NOW(), 0, 102, 1, 'Sheetgroup 505', 'Something to help me organize', 1, 0),
+			(501, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 501', 'Something to organize my math sheets', 1, 1),
+			(502, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 502', 'Something to organize my english sheets', 4, 2),
+			(503, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 503', 'Something to organize my spanish sheets', 6, 3),
+			(504, NOW(), NOW(), 0, 102, 0, 'Sheetgroup 504', 'Help me keep track of so many sheets', 1, 1),
+			(505, NOW(), NOW(), 0, 102, 1, 'Sheetgroup 505', 'Something to help me organize', 1, 1),
 			(506, NOW(), NOW(), 0, 103, 1, 'Sheetgroup 506', 'Something to help me organize', -1, -1),
 			(507, NOW(), NOW(), 0, 104, 1, 'Sheetgroup 507', 'Something to help me organize', -1, -1),
 			(508, NOW(), NOW(), 0, 105, 0, 'Sheetgroup 508', 'Something to help me organize', -1, -1),
@@ -191,8 +191,8 @@
 		# 'flag_alert_owner_imminent', 'flag_alert_admin_change', 'flag_alert_admin_signup', 'flag_alert_admin_imminent', 'flag_private_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheet::$dbTable . " VALUES
 			(601, NOW(), NOW(), 0, 101, 501, 'Sheet 601', 'Sheet 601, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 0, 0, 0, 0),
-			(602, NOW(), NOW(), 0, 101, 501, 'Sheet 602', 'Sheet 602, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, 1, 0, 0, 0, 0, 0, 0, 0),
-			(603, NOW(), NOW(), 0, 101, 501, 'Sheet 603', 'Sheet 603, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 1, 0, 0, 0, 0, 0, 0),
+			(602, NOW(), NOW(), 0, 101, 501, 'Sheet 602', 'Sheet 602, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 2, 3, 0, 0, 0, 0, 0, 0, 0),
+			(603, NOW(), NOW(), 0, 101, 501, 'Sheet 603', 'Sheet 603, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 4, 6, 1, 0, 0, 0, 0, 0, 0),
 			(604, NOW(), NOW(), 0, 101, 502, 'Sheet 604', 'Sheet 604, Sheetgroup 502', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 1, 0, 0, 0, 0, 0),
 			(605, NOW(), NOW(), 0, 101, 503, 'Sheet 605', 'Sheet 605, Sheetgroup 503', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 1, 0, 0, 0, 0),
 			(606, NOW(), NOW(), 0, 102, 504, 'Sheet 606', 'Sheet 606, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 1, 0, 0, 0),
@@ -218,14 +218,14 @@
 		$addTestSql  = "INSERT INTO " . SUS_Opening::$dbTable . " VALUES
 			(701, NOW(), NOW(), 0, 601, 0, 'Opening 701', 'Opening 701, Sheet 601, Sheetgroup 501', 8 , 'opening admin comment', TIMESTAMPADD(hour,4,NOW()),  TIMESTAMPADD(hour,5,NOW()), 'opening location at CET 256'),
 			(702, NOW(), NOW(), 0, 601, 0, 'Opening 702', 'Opening 702, Sheet 601, Sheetgroup 501', 2 , 'no comment', TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(hour,25,NOW()), 'CET MakerSpace'),
-			(703, NOW(), NOW(), 0, 602, 0, 'Opening 703', 'Opening 703, Sheet 602, Sheetgroup 501', 2 , 'no comment', TIMESTAMPADD(week,1,NOW()),  TIMESTAMPADD(month,1,NOW()), ''),
+			(703, NOW(), NOW(), 0, 602, 0, 'Opening 703', 'Opening 703, Sheet 602, Sheetgroup 501', 2 , 'no comment', TIMESTAMPADD(week,1,NOW()),  TIMESTAMPADD(hour,1,NOW()), ''),
 			(704, NOW(), NOW(), 0, 602, 0, 'Opening 704', 'Opening 704, Sheet 602, Sheetgroup 501', 2 , '', TIMESTAMPADD(hour,1,NOW()),  TIMESTAMPADD(hour,2,NOW()), ''),
 			(705, NOW(), NOW(), 0, 603, 0, 'Opening 705', 'Opening 705, Sheet 603, Sheetgroup 501', 4 , '', TIMESTAMPADD(hour,22,NOW()),  TIMESTAMPADD(hour,23,NOW()), ''),
-			(706, NOW(), NOW(), 0, 604, 0, 'Opening 706', 'Opening 706, Sheet 604, Sheetgroup 502', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), 'Faculty House'),
-			(707, NOW(), NOW(), 1, 605, 0, 'Opening 707', 'Opening 707, Sheet 605, Sheetgroup 503', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), 'Purple Pub'),
-			(708, NOW(), NOW(), 1, 606, 0, 'Opening 708', 'Opening 708, Sheet 606, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), ''),
-			(709, NOW(), NOW(), 0, 607, 0, 'Opening 709', 'Opening 709, Sheet 607, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), ''),
-			(710, NOW(), NOW(), 0, 610, 0, 'Opening 710', 'Opening 710, Sheet 610, Sheetgroup 510', 1 , '', NOW(),  TIMESTAMPADD(month,1,NOW()), '')
+			(706, NOW(), NOW(), 0, 604, 0, 'Opening 706', 'Opening 706, Sheet 604, Sheetgroup 502', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), 'Faculty House'),
+			(707, NOW(), NOW(), 1, 605, 0, 'Opening 707', 'Opening 707, Sheet 605, Sheetgroup 503', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), 'Purple Pub'),
+			(708, NOW(), NOW(), 1, 606, 0, 'Opening 708', 'Opening 708, Sheet 606, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), ''),
+			(709, NOW(), NOW(), 0, 607, 0, 'Opening 709', 'Opening 709, Sheet 607, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), ''),
+			(710, NOW(), NOW(), 0, 610, 0, 'Opening 710', 'Opening 710, Sheet 610, Sheetgroup 510', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), '')
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();

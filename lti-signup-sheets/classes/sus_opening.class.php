@@ -106,10 +106,15 @@
 			if (count($this->signups) < $this->max_signups) {
 				$customColorClass = " text-success ";
 			}
-			$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . count($this->signups) . '/' . $this->max_signups . ')</strong></span>';
-			$rendered .= '<a href="#" class="sus-edit-opening" data-toggle="modal" data-target="#modal-edit-opening" title="Edit opening"><i class="glyphicon glyphicon-wrench"></i></a>';
-			$rendered .= '<a href="#" class="sus-delete-opening" title="Delete opening"><i class="glyphicon glyphicon-remove"></i></a>';
-			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-toggle="modal" data-target="#modal-edit-opening" title="Add someone to opening"><i class="glyphicon glyphicon-plus"></i></a>';
+			$max_signups = $this->max_signups;
+			if ($max_signups == -1) {
+				$max_signups = "*";
+			}
+
+			$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . count($this->signups) . '/' . $max_signups . ')</strong></span>';
+			$rendered .= '<a href="#" class="sus-edit-opening" data-opening-id="'.$this->opening_id.'" data-toggle="modal" data-target="#modal-edit-opening" title="Edit opening"><i class="glyphicon glyphicon-wrench"></i></a>';
+			$rendered .= '<a href="#" class="sus-delete-opening" data-opening-id="'.$this->opening_id.'" title="Delete opening"><i class="glyphicon glyphicon-remove"></i></a>';
+			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-opening-id="'.$this->opening_id.'" data-toggle="modal" data-target="#modal-edit-opening" title="Add someone to opening"><i class="glyphicon glyphicon-plus"></i></a>';
 			$rendered .= '</div>';
 
 			return $rendered;

@@ -184,7 +184,7 @@
 							</select>
 							signups across all sheets in this group, and
 							<select id="ajaxSheetgroupMaxPending" name="ajaxSheetgroupMaxPending" class="">
-								<option selected="selected" value="0">any</option>
+								<option selected="selected" value="-1">any</option>
 								<option value="1">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
