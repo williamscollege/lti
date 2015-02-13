@@ -234,7 +234,7 @@
 						<div class="modal-header bg-info">
 							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 							</button>
-							<h4 id="new_OpeningLabel" class="modal-title">Creating openings on <span class="openingCalDate"></span></h4>
+							<h4 id="new_OpeningLabel" class="modal-title">Creating openings on <span class="openingCalDate">mm/dd/yyyy</span></h4>
 						</div>
 						<div class="modal-body">
 							<!-- TOGGLE LINK: Show Optional Fields -->

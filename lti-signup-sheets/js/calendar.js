@@ -144,27 +144,21 @@ $(document).ready(function () {
 		$("#edit_OpeningAdminNotes").val($(parentOfClickedLink).attr('data-admin_comment'));
 		$("#edit_OpeningLocation").val($(parentOfClickedLink).attr('data-location'));
 		$("#edit_OpeningNumSignupsPerOpening").val($(parentOfClickedLink).attr('data-max_signups'));
-		console.log($(parentOfClickedLink).attr('data-opening_id'));
-		console.log($(parentOfClickedLink).attr('data-name'));
 
 		// split date/time values
 		var datetimeBeginAry = $(parentOfClickedLink).attr('data-begin_datetime').split(' ');
 		var datetimeEndAry = $(parentOfClickedLink).attr('data-end_datetime').split(' ');
 
 		// unnecessary computations: format dates: mm/dd/yyyy format (for datepicker)
-		// var forDateBeginAry = datetimeBeginAry[0].split('-');
-		// var forDateEndAry = datetimeEndAry[0].split('-');
-		// var forDateBeginClean = forDateBeginAry[1]+'/'+forDateBeginAry[2]+'/'+forDateBeginAry[0];
-		// var forDateEndClean = forDateEndAry[1]+'/'+forDateEndAry[2]+'/'+forDateEndAry[0];
+		var forDateBeginAry = datetimeBeginAry[0].split('-'); // current format: 2015-02-24
+		var forDateBeginClean = forDateBeginAry[1] + '/' + forDateBeginAry[2] + '/' + forDateBeginAry[0]; // current format: 02/24/2015
 
 		// clean times: 12 hour format with AM/PM
 		var forTimeBeginAry = timeConvert24to12(datetimeBeginAry[1]).split(':');
 		var forTimeEndAry = timeConvert24to12(datetimeEndAry[1]).split(':');
-		console.log(forTimeBeginAry);
-		console.log(forTimeEndAry);
 
 		// set date/time values
-		$("#edit_OpeningDateStart").attr('value', datetimeBeginAry[0]); // expected format is: "2015-02-24"
+		$("#edit_OpeningDateStart").attr('value', forDateBeginClean);
 
 		$('#edit_OpeningBeginTimeHour option[value="' + forTimeBeginAry[0] + '"]').prop('selected', true);
 		$('#edit_OpeningBeginTimeMinute option[value="' + roundMinutesToNearestFiveUsingTwoDigits(forTimeBeginAry[1]) + '"]').attr('selected', 'selected');
@@ -188,7 +182,6 @@ $(document).ready(function () {
 		if (roundMinutes.toString().length == 1) {
 			roundMinutes = "0" + roundMinutes;
 		}
-		console.log(roundMinutes);
 		return parseInt(roundMinutes);
 	}
 
@@ -215,7 +208,6 @@ $(document).ready(function () {
 
 		// set up the date
 		$("#new_OpeningUntilDate").attr('value', forDateClean);
-		console.log(forDateClean);
 
 		$("#new_OpeningDateStart").val(forDateYYYYMMDD);
 		$(".openingCalDate").html(forDateClean);

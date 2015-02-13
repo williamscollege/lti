@@ -5,14 +5,14 @@
 
 
 	if ($IS_AUTHENTICATED) {
-		//		util_prePrintR($_POST); exit;
+		// util_prePrintR($_POST); exit;
 
 		// processing for either creating 'NEW' opening(s) or editing an existing opening_id
 		if (isset($_REQUEST["new_OpeningID"]) && $_REQUEST["new_OpeningID"] == "NEW") {
 			// Create New Opening
 			$openingSheetID     = htmlentities((isset($_REQUEST["new_OpeningSheetID"])) ? $_REQUEST["new_OpeningSheetID"] : 0);
 			$openingID          = htmlentities((isset($_REQUEST["new_OpeningID"])) ? $_REQUEST["new_OpeningID"] : 0);
-			$openingDateStart   = htmlentities((isset($_REQUEST["new_OpeningDateStart"])) ? $_REQUEST["new_OpeningDateStart"] : 0);
+			$openingDateStart   = htmlentities((isset($_REQUEST["new_OpeningDateStart"])) ? $_REQUEST["new_OpeningDateStart"] : 0); // current format: 2015-02-24
 			$openingTimeMode    = htmlentities((isset($_REQUEST["new_OpeningTimeMode"])) ? $_REQUEST["new_OpeningTimeMode"] : 0);
 			$openingName        = htmlentities((isset($_REQUEST["new_OpeningName"])) ? util_quoteSmart($_REQUEST["new_OpeningName"]) : 0);
 			$openingDescription = htmlentities((isset($_REQUEST["new_OpeningDescription"])) ? util_quoteSmart($_REQUEST["new_OpeningDescription"]) : 0);
@@ -43,7 +43,12 @@
 			// Edit Existing Opening
 			$openingSheetID     = htmlentities((isset($_REQUEST["edit_OpeningSheetID"])) ? $_REQUEST["edit_OpeningSheetID"] : 0);
 			$openingID          = htmlentities((isset($_REQUEST["edit_OpeningID"])) ? $_REQUEST["edit_OpeningID"] : 0);
-			$openingDateStart   = htmlentities((isset($_REQUEST["edit_OpeningDateStart"])) ? $_REQUEST["edit_OpeningDateStart"] : 0);
+
+			// reformat $openingDateStart to match expected format
+			$openingDateStart   = htmlentities((isset($_REQUEST["edit_OpeningDateStart"])) ? $_REQUEST["edit_OpeningDateStart"] : 0); // current format: 02/24/2015
+			$reformatDateAry = explode("/",$openingDateStart);
+			$openingDateStart = $reformatDateAry[2] . '-' . $reformatDateAry[0] . '-' . $reformatDateAry[1]; // current format: 2015-02-24
+
 			$openingTimeMode    = 'time_range'; // HARDCODED VALUE
 			$openingName        = htmlentities((isset($_REQUEST["edit_OpeningName"])) ? util_quoteSmart($_REQUEST["edit_OpeningName"]) : 0);
 			$openingDescription = htmlentities((isset($_REQUEST["edit_OpeningDescription"])) ? util_quoteSmart($_REQUEST["edit_OpeningDescription"]) : 0);
