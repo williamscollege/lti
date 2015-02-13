@@ -344,7 +344,7 @@
 
 										<!-- List: These People -->
 										<div class="wms_tiny_break"><br /></div>
-										<span class="small"><strong>These people: UNIX username(s)</strong><br /></span>
+										<span class="small"><strong>These people: Williams username(s)</strong><br /></span>
 										<?php
 											// create array of usernames where access type = 'byuser'
 											$byuser_ary = [];
@@ -409,7 +409,7 @@
 											<p><strong>Who can manage the sheet</strong></p>
 
 											<div class="wms_tiny_break"><br /></div>
-											<span class="small"><strong>These people: UNIX username(s)</strong><br /></span>
+											<span class="small"><strong>These people: Williams username(s)</strong><br /></span>
 											<?php
 												// create array of usernames where access type = 'adminbyuser'
 												$adminbyuser_ary = [];

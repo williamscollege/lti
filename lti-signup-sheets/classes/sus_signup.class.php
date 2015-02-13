@@ -18,6 +18,20 @@
 
 		}
 
+		// factory function
+		public static function createNewSignup($dbConnection) {
+			return new SUS_Signup([
+					'signup_id'      => 'NEW',
+					'created_at'     => util_currentDateTimeString_asMySQL(),
+					'updated_at'     => util_currentDateTimeString_asMySQL(),
+					'flag_delete'    => FALSE,
+					'opening_id'     => 0,
+					'signup_user_id' => 0,
+					'admin_comment'  => '',
+					'DB'             => $dbConnection]
+			);
+		}
+
 		public function clearCaches() {
 
 		}
@@ -42,7 +56,6 @@
 			// mark signup as deleted (at this time, deleting a single opening has no dependencies worth pursuing)
 			$this->doDelete();
 		}
-
 
 
 	}

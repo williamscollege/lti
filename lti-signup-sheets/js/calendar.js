@@ -133,6 +133,8 @@ $(document).ready(function () {
 	function setupModalForm_EditOpening(openingID, action) {
 		// reset non-dynamic form fields to defaults
 		$('#frmEditOpening').trigger("reset");
+		$('#btnEditOpeningCancelSignup').click();
+
 
 		// div parent of the link clicked, which contains all of the data attributes for this opening
 		var parentOfClickedLink = $("#list-opening-id-" + openingID);
@@ -170,13 +172,13 @@ $(document).ready(function () {
 
 		if (action == "add") {
 			// display the Add Someone functionality
-			$("#edit_AddSomeone").click();
+			$("#link_show_signup_controls").click();
 		}
 	}
 
 	function roundMinutesToNearestFiveUsingTwoDigits(num) {
 		// round minutes to nearest 5 minute increment
-		var roundMinutes =  5 * Math.round(num/5);
+		var roundMinutes = 5 * Math.round(num / 5);
 
 		// ensure that resultant has two digits
 		if (roundMinutes.toString().length == 1) {
@@ -367,6 +369,65 @@ $(document).ready(function () {
 			return false;
 		}
 		return true;
+	});
+
+
+	// ***************************
+	// Edit Opening: Signup someone to an opening
+	// ***************************
+	$("#btnEditOpeningAddSignup").click(function(){
+		var doAction = 'edit-opening-add-signup-user';
+
+		//var params = [username,note];
+		var params = {
+			ajaxVal_Action: doAction,
+			ajaxVal_Edit_ID: $("#edit_OpeningID").val(),
+			ajaxVal_Name: $("#signupUsername").val(),
+			ajaxVal_Description: $("#signupAdminNote").val()
+		};
+
+		//alert(ary['url'] + '\n ' + ary['ajax_action'] + '\n ' + ary['ajax_id'] + '\n' + ary['ajax_val']);
+		//console.log('to remote url: '+remoteUrl);
+		console.dir(params);
+		// show status
+		dfnUtil_setTransientAlert('progress', 'Saving...');
+		$.ajax({
+			type: 'GET',
+			url: "../ajax_actions/ajax_actions.php",
+			cache: false,
+			data: params,
+			dataType: 'json',
+			error: function (req, textStatus, err) {
+				dfnUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
+				console.dir(req);
+				console.dir(textStatus);
+				console.dir(err);
+			},
+			success: function (data) {
+				if (data.status == 'success') {
+					// remove element
+					dfnUtil_setTransientAlert('success', 'Saved');
+				}
+				else {
+					// error message
+					dfnUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
+				}
+			}
+			//, complete: function(req,textStatus) {
+			//	$("#"+target_id).prop("disabled", false);
+			//}
+		});
+	});
+
+	$("#link_show_signup_controls").click(function () {
+		$("#signupControls").show();
+		$(this).hide();
+	});
+
+	// Cancel cleanup
+	$('#btnEditOpeningCancelSignup').click(function () {
+		$("#signupControls").hide();
+		$("#link_show_signup_controls").show();
 	});
 
 

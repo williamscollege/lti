@@ -10,7 +10,7 @@
 		// processing for either creating 'NEW' opening(s) or editing an existing opening_id
 		if (isset($_REQUEST["new_OpeningID"]) && $_REQUEST["new_OpeningID"] == "NEW") {
 			// Create New Opening
-			$openingSheetID     = htmlentities((isset($_REQUEST["new_OpeningSheetID"])) ? $_REQUEST["new_OpeningSheetID"] : 0);
+			$openingSheetID     = htmlentities((isset($_REQUEST["new_SheetID"])) ? $_REQUEST["new_SheetID"] : 0);
 			$openingID          = htmlentities((isset($_REQUEST["new_OpeningID"])) ? $_REQUEST["new_OpeningID"] : 0);
 			$openingDateStart   = htmlentities((isset($_REQUEST["new_OpeningDateStart"])) ? $_REQUEST["new_OpeningDateStart"] : 0); // current format: 2015-02-24
 			$openingTimeMode    = htmlentities((isset($_REQUEST["new_OpeningTimeMode"])) ? $_REQUEST["new_OpeningTimeMode"] : 0);
@@ -41,7 +41,7 @@
 		}
 		elseif (isset($_REQUEST["edit_OpeningID"]) && $_REQUEST["edit_OpeningID"] > 0) {
 			// Edit Existing Opening
-			$openingSheetID     = htmlentities((isset($_REQUEST["edit_OpeningSheetID"])) ? $_REQUEST["edit_OpeningSheetID"] : 0);
+			$openingSheetID     = htmlentities((isset($_REQUEST["edit_SheetID"])) ? $_REQUEST["edit_SheetID"] : 0);
 			$openingID          = htmlentities((isset($_REQUEST["edit_OpeningID"])) ? $_REQUEST["edit_OpeningID"] : 0);
 
 			// reformat $openingDateStart to match expected format

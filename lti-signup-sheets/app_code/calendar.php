@@ -223,7 +223,7 @@
 
 		<!-- Bootstrap Modal: Calendar Create Opening -->
 		<form action="calendar_proc.php" id="frmCreateOpening" name="frmCreateOpening" class="form-horizontal" role="form" method="post">
-			<input type="hidden" id="new_OpeningSheetID" name="new_OpeningSheetID" value="<?php echo $s->sheet_id; ?>" />
+			<input type="hidden" id="new_SheetID" name="new_SheetID" value="<?php echo $s->sheet_id; ?>" />
 			<input type="hidden" id="new_OpeningID" name="new_OpeningID" value="NEW" />
 			<input type="hidden" id="new_OpeningDateStart" name="new_OpeningDateStart" value="" />
 			<input type="hidden" id="new_OpeningTimeMode" name="new_OpeningTimeMode" value="" />
@@ -477,7 +477,8 @@
 											</div>
 											<div class="radio">
 												<label for="radioOpeningRepeatRate2">
-													<input id="radioOpeningRepeatRate2" name="new_OpeningRepeatRate" value="2" type="radio" /> Repeat on days of the
+													<input id="radioOpeningRepeatRate2" name="new_OpeningRepeatRate" value="2" type="radio" /> Repeat on days of
+													the
 													week
 												</label>
 											</div>
@@ -501,7 +502,8 @@
 
 											<div class="radio">
 												<label for="radioOpeningRepeatRate3">
-													<input id="radioOpeningRepeatRate3" name="new_OpeningRepeatRate" value="3" type="radio" /> Repeat on days of the
+													<input id="radioOpeningRepeatRate3" name="new_OpeningRepeatRate" value="3" type="radio" /> Repeat on days of
+													the
 													month
 												</label>
 											</div>
@@ -590,7 +592,7 @@
 						</div>
 
 						<div class="modal-footer">
-							<button type="submit" id="btnNewOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
+							<button type="submit" id="btnNewOpeningSubmit" class="btn btn-success" data-loading-text="Saving...">Save</button>
 							<button type="reset" id="btnNewOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
 							</button>
 						</div>
@@ -604,7 +606,7 @@
 		<!-- Bootstrap Modal: Calendar Edit Opening -->
 		<form action="calendar_proc.php" id="frmEditOpening" name="frmEditOpening" class="form-horizontal" role="form" method="post">
 			<input type="hidden" id="edit_OpeningID" name="edit_OpeningID" value="0" />
-			<input type="hidden" id="edit_OpeningSheetID" name="edit_OpeningSheetID" value="<?php echo $s->sheet_id; ?>" />
+			<input type="hidden" id="edit_SheetID" name="edit_SheetID" value="<?php echo $s->sheet_id; ?>" />
 
 			<div id="modal-edit-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="openingLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
@@ -618,8 +620,8 @@
 							<!-- total col-sm per row should = 12 -->
 							<div class="container">
 								<!-- START COLUMN ONE -->
-								<div class="row col-sm-8 small">
-									<div class="col-sm-9">
+								<div class="row col-sm-5 small">
+									<div class="col-sm-12">
 										<div class="form-group form-group-sm">
 											<label for="openingName" class="col-sm-3 control-label">Name</label>
 
@@ -786,8 +788,10 @@
 											<label for="btnEditOpeningSubmit" class="col-sm-3 control-label">&nbsp;</label>
 
 											<div class="col-sm-9">
-												<button type="submit" id="btnEditOpeningSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save</button>
-												<button type="reset" id="btnEditOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
+												<button type="submit" id="btnEditOpeningSubmit" class="btn btn-success" data-loading-text="Saving...">Save
+												</button>
+												<button type="reset" id="btnEditOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">
+													Cancel
 												</button>
 											</div>
 										</div>
@@ -795,8 +799,48 @@
 								</div>
 
 								<!-- START COLUMN TWO -->
-								<div class="row col-sm-4">
-									col 2
+								<div class="row col-sm-4 small">
+									<div class="col-sm-12">
+										<div class="pull-right small signupSorters">Sort by:
+											<a href="#" id="signup_sort_by_last_name" title="Sort by last name">Last name</a> &#124;
+											<a href="#" id="signup_sort_by_signup_order" title="Sort by signup order">Signup order</a></div>
+										<h4 class="pull-left" id="signupHeader">Signups</h4>
+
+										<p class="small" style="clear: both;">Manager may override max signup limit</p>
+										<a href="#" id="link_show_signup_controls" title="Show signup controls">Sign someone up</a>
+
+										<div id="signupControls">
+											<div class="form-group form-group-sm">
+												<label for="signupUsername" class="col-sm-3 control-label">Username</label>
+
+												<div class="col-sm-9">
+													<input type="text" id="signupUsername" name="signupUsername" class="form-control" placeholder="Williams username" value="" />
+													<a href="http://www.williams.edu/people/" class="small" title="Find person's username" target="_blank">Find
+														person's username</a>
+												</div>
+											</div>
+											<div class="form-group form-group-sm">
+												<label for="openingLocation" class="col-sm-3 control-label">Admin&nbsp;note</label>
+
+												<div class="col-sm-9">
+													<textarea id="signupAdminNote" name="signupAdminNote" class="form-control" placeholder="Admin note (optional)" rows="2"></textarea>
+												</div>
+											</div>
+											<div class="form-group form-group-sm">
+												<label for="btnEditOpeningSubmit" class="col-sm-3 control-label">&nbsp;</label>
+
+												<div class="col-sm-9">
+													<a href="#" type="button" id="btnEditOpeningAddSignup" class="btn btn-success" data-loading-text="Saving..." title="Save signup">Signup</a>
+													<a href="#" type="button" id="btnEditOpeningCancelSignup" class="btn btn-default btn-link btn-cancel" title="Cancel">Cancel</a>
+												</div>
+											</div>
+										</div>
+
+										<div id="signupListing">
+											signups go here
+										</div>
+
+									</div>
 								</div>
 							</div>
 						</div>

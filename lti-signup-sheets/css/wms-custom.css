@@ -78,6 +78,8 @@ wms bootstrap-calendar-master extensions
 	border: 1px solid #666;
 	padding: 0px;
 	margin-left: 5px;
+	/* TODO - Saturday overlay bleeds off the edge of browser, causing horizontal scroll bar to appear only during hover action; consider centering the overlay */
+	/*margin-left: -60px;*/
 }
 
 .calendar-cell-openings h4, .calendar-cell-openings:hover .calendar-cell-openings-container {
@@ -164,6 +166,23 @@ wms bootstrap-calendar-master extensions
 	max-width: 26px !important;
 	margin: 2px 0px !important; /* top/bottom, right/left*/
 }
+
+/*=======================================
+Edit Opening: Signup someone to an opening
+==========================================*/
+#signupControls{
+	display: none;
+}
+#signupHeader{
+	margin-bottom: 10px;
+}
+.signupSorters {
+	margin-top: 16px;
+}
+#signupListing {
+	margin-top: 16px;
+}
+
 
 /*=======================================
 wms bootstrap-calendar-master overrides

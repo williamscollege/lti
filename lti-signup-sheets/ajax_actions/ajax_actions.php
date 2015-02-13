@@ -15,6 +15,7 @@
 	#------------------------------------------------#
 	# Fetch AJAX values
 	#------------------------------------------------#
+	// TODO - Can generalize some of these passed param values and reduce the number found here...
 	$action       = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
 	$ownerUserID  = htmlentities((isset($_REQUEST["ajaxVal_OwnerUserID"])) ? $_REQUEST["ajaxVal_OwnerUserID"] : 0);
 	$sheetgroupID = htmlentities((isset($_REQUEST["ajaxVal_SheetgroupID"])) ? $_REQUEST["ajaxVal_SheetgroupID"] : 0);
@@ -47,6 +48,7 @@
 
 		if ($sg->matchesDb) {
 			// error: matching record already exists
+			$results["notes"] = "matching record already exists";
 			echo json_encode($results);
 			exit;
 		}
@@ -81,6 +83,7 @@
 
 		if (!$sg->matchesDb) {
 			// error: no matching record found
+			$results["notes"] = "no matching record found";
 			echo json_encode($results);
 			exit;
 		}
@@ -103,6 +106,7 @@
 
 		if (!$sg->matchesDb) {
 			// error: no matching record found
+			$results["notes"] = "no matching record found";
 			echo json_encode($results);
 			exit;
 		}
@@ -123,6 +127,7 @@
 
 		if ($s->matchesDb) {
 			// error: matching record already exists
+			$results["notes"] = "matching record already exists";
 			echo json_encode($results);
 			exit;
 		}
@@ -159,6 +164,7 @@
 
 		if (!$s->matchesDb) {
 			// error: no matching record found
+			$results["notes"] = "no matching record found";
 			echo json_encode($results);
 			exit;
 		}
@@ -177,6 +183,7 @@
 
 		if (!$o->matchesDb) {
 			// error: no matching record found
+			$results["notes"] = "no matching record found";
 			echo json_encode($results);
 			exit;
 		}
@@ -190,11 +197,12 @@
 		}
 	}
 	//###############################################################
-		elseif ($action == 'delete-signup') {
+	elseif ($action == 'delete-signup') {
 		$s = SUS_Signup::getOneFromDb(['signup_id' => $deleteID], $DB);
 
 		if (!$s->matchesDb) {
 			// error: no matching record found
+			$results["notes"] = "no matching record found";
 			echo json_encode($results);
 			exit;
 		}
@@ -215,7 +223,7 @@
 
 		if (!$s->matchesDb) {
 			// error: no matching record found
-			$results["notes"] = "no matching record found in database";
+			$results["notes"] = "no matching record found";
 			echo json_encode($results);
 			exit;
 		}
@@ -349,10 +357,51 @@
 		}
 	}
 	//###############################################################
+	elseif ($action == 'edit-opening-add-signup-user') {
 
 
+		// 1. Is username valid (against big table of Williams usernames)
+		$u = User::getOneFromDb(['username' => $name], $DB);
+
+		// TODO TEST, FINISH UP. Make sure that no empty signup records are created if process balks
+		// TEST USERS: tusr2, tusr3
+
+		if (!$u->matchesDb) {
+			// error: no matching record found
+			$results["notes"] = "that username does not exist";
+			echo json_encode($results);
+			exit;
+		}
+		// create new signup for valid username
+		// TODO - could check if requested username already is signed up for this opening and then update it minimally
+		$s = SUS_Signup::createNewSignup([], $DB);
+
+		$s->opening_id     = $editID;
+		$s->signup_user_id = $u->user_id;
+		$s->admin_comment  = $description;
+
+		$s->updateDb();
+
+		if (!$s->matchesDb) {
+			// create record failed
+			$results["notes"] = "database error: could not save signup";
+			echo json_encode($results);
+			exit;
+		}
+		// TODO - return name
+		# Output
+		$results['status']       = 'success';
+		$results['which_action'] = 'edit-opening-add-signup-user';
+		# inject into DOM
+		//$results['html_output'] = "<li>placeholder name (and signed up date)</li>";
+		$results['html_output'] = "placeholder name (and signed up date)";
+	}
 	//###############################################################
-	//###############################################################
+
+
+	#------------------------------------------------#
+	# Helper functions
+	#------------------------------------------------#
 	function constraintForAccessTypeIsById($type) {
 		return ($type == 'byinstr') || ($type == 'bygradyear');
 	}
@@ -411,9 +460,6 @@
 
 		$results['status'] = 'success';
 	}
-
-	//###############################################################
-	//###############################################################
 
 
 	#------------------------------------------------#

@@ -147,7 +147,7 @@ $(document).ready(function () {
 	function updateSheetAccess(params) {
 		//alert(ary['url'] + '\n ' + ary['ajax_action'] + '\n ' + ary['ajax_id'] + '\n' + ary['ajax_val']);
 		//console.log('to remote url: '+remoteUrl);
-		console.dir(params);
+		//console.dir(params);
 		// show status
 		dfnUtil_setTransientAlert('progress', 'Saving...');
 		$.ajax({
@@ -158,9 +158,9 @@ $(document).ready(function () {
 			dataType: 'json',
 			error: function (req, textStatus, err) {
 				dfnUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
-				console.dir(req);
-				console.dir(textStatus);
-				console.dir(err);
+				//console.dir(req);
+				//console.dir(textStatus);
+				//console.dir(err);
 			},
 			success: function (data) {
 				if (data.status == 'success') {
