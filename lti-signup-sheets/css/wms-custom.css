@@ -136,6 +136,23 @@ wms bootstrap-calendar-master extensions
 	color: #ff0000;
 }
 
+/* for modal: Edit Opening / Signups */
+.wms-custom-delete {
+	margin-left: 1px;
+	margin-right: 1px;
+	padding-left: 3px;
+	padding-right: 2px;
+	color: #ff0000;
+}
+.wms-custom-delete:hover {
+	margin-left: 1px;
+	margin-right: 1px;
+	background-color: #F7A9AD;
+	padding-left: 3px;
+	padding-right: 2px;
+	color: #ff0000;
+}
+
 .sus-add-someone-to-opening {
 	margin-left: 1px;
 	margin-right: 1px;

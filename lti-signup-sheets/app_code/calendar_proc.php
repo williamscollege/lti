@@ -41,12 +41,12 @@
 		}
 		elseif (isset($_REQUEST["edit_OpeningID"]) && $_REQUEST["edit_OpeningID"] > 0) {
 			// Edit Existing Opening
-			$openingSheetID     = htmlentities((isset($_REQUEST["edit_SheetID"])) ? $_REQUEST["edit_SheetID"] : 0);
-			$openingID          = htmlentities((isset($_REQUEST["edit_OpeningID"])) ? $_REQUEST["edit_OpeningID"] : 0);
+			$openingSheetID = htmlentities((isset($_REQUEST["edit_SheetID"])) ? $_REQUEST["edit_SheetID"] : 0);
+			$openingID      = htmlentities((isset($_REQUEST["edit_OpeningID"])) ? $_REQUEST["edit_OpeningID"] : 0);
 
 			// reformat $openingDateStart to match expected format
-			$openingDateStart   = htmlentities((isset($_REQUEST["edit_OpeningDateStart"])) ? $_REQUEST["edit_OpeningDateStart"] : 0); // current format: 02/24/2015
-			$reformatDateAry = explode("/",$openingDateStart);
+			$openingDateStart = htmlentities((isset($_REQUEST["edit_OpeningDateStart"])) ? $_REQUEST["edit_OpeningDateStart"] : 0); // current format: 02/24/2015
+			$reformatDateAry  = explode("/", $openingDateStart);
 			$openingDateStart = $reformatDateAry[2] . '-' . $reformatDateAry[0] . '-' . $reformatDateAry[1]; // current format: 2015-02-24
 
 			$openingTimeMode    = 'time_range'; // HARDCODED VALUE
@@ -161,6 +161,7 @@
 						$newOpeningDateTimeEnd = clone $baseOpeningDateTime;
 						$newOpeningDateTimeEnd->modify('+' . round(($i + 1) * $openingDurationEachOpening) . ' minute');
 						// echo $newOpeningDateTimeBegin->format('Y-m-d h:i') . ' - ' . $newOpeningDateTimeEnd->format('Y-m-d h:i') . "\n";
+
 						$newOpening->opening_group_id = $opening_group_id;
 						$newOpening->name             = $openingName;
 						$newOpening->description      = $openingDescription;

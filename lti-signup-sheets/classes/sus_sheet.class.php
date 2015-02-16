@@ -23,27 +23,27 @@
 
 		public static function createNewSheet($owner_user_id, $dbConnection) {
 			return new SUS_Sheet([
-				'sheet_id' => 'NEW',
-				'created_at' => util_currentDateTimeString_asMySQL(),
-				'updated_at' => util_currentDateTimeString_asMySQL(),
-				'flag_delete' => FALSE,
-				'owner_user_id' => $owner_user_id,
-				'sheetgroup_id' => 0,
-				'name' => '',
-				'description' => '',
-				'type' => '',
-				'date_opens' => util_currentDateTimeString_asMySQL(),
-				'date_closes' => util_currentDateTimeString_asMySQL(),
-				'max_total_user_signups' => -1,
-				'max_pending_user_signups' => -1,
-				'flag_alert_owner_change' => 0,
-				'flag_alert_owner_signup' => 0,
-				'flag_alert_owner_imminent' => 0,
-				'flag_alert_admin_change' => 0,
-				'flag_alert_admin_signup' => 0,
-				'flag_alert_admin_imminent' => 0,
-				'flag_private_signups' => 0,
-				'DB' => $dbConnection]
+					'sheet_id'                  => 'NEW',
+					'created_at'                => util_currentDateTimeString_asMySQL(),
+					'updated_at'                => util_currentDateTimeString_asMySQL(),
+					'flag_delete'               => FALSE,
+					'owner_user_id'             => $owner_user_id,
+					'sheetgroup_id'             => 0,
+					'name'                      => '',
+					'description'               => '',
+					'type'                      => '',
+					'date_opens'                => util_currentDateTimeString_asMySQL(),
+					'date_closes'               => util_currentDateTimeString_asMySQL(),
+					'max_total_user_signups'    => -1,
+					'max_pending_user_signups'  => -1,
+					'flag_alert_owner_change'   => 0,
+					'flag_alert_owner_signup'   => 0,
+					'flag_alert_owner_imminent' => 0,
+					'flag_alert_admin_change'   => 0,
+					'flag_alert_admin_signup'   => 0,
+					'flag_alert_admin_imminent' => 0,
+					'flag_private_signups'      => 0,
+					'DB'                        => $dbConnection]
 			);
 		}
 

@@ -29,16 +29,16 @@
 		public static function createNewSheetgroupForUser($user_id, $name, $description, $dbconnection) {
 			// 'sheetgroup_id', 'created_at', 'updated_at', 'flag_delete', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
 			$n = new SUS_Sheetgroup([
-				'created_at' => util_currentDateTimeString_asMySQL(),
-				'updated_at' => util_currentDateTimeString_asMySQL(),
-				'flag_delete' => 0,
-				'owner_user_id' => $user_id,
-				'flag_is_default' => 1,
-				'name' => $name,
-				'description' => $description,
-				'max_g_total_user_signups' => -1,
+				'created_at'                 => util_currentDateTimeString_asMySQL(),
+				'updated_at'                 => util_currentDateTimeString_asMySQL(),
+				'flag_delete'                => 0,
+				'owner_user_id'              => $user_id,
+				'flag_is_default'            => 1,
+				'name'                       => $name,
+				'description'                => $description,
+				'max_g_total_user_signups'   => -1,
 				'max_g_pending_user_signups' => -1,
-				'DB'=>$dbconnection]);
+				'DB'                         => $dbconnection]);
 			return $n;
 		}
 
@@ -53,7 +53,7 @@
 
 		// cache provides data while eliminating unnecessary DB calls
 		public function cacheSheets() {
-			if (! $this->sheets) {
+			if (!$this->sheets) {
 				$this->loadSheets();
 			}
 		}

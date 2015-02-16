@@ -35,6 +35,7 @@
 			return ($a->broadness < $b->broadness) ? -1 : 1;
 		}
 
+		// static factory function to populate new object with desired base values
 		public static function createNewAccess($type,$forSheetId,$constraintId,$constraintData,$dbConnection) {
 			$broadness = -1;
 			switch ($type) {

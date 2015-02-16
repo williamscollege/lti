@@ -363,38 +363,133 @@
 		// 1. Is username valid (against big table of Williams usernames)
 		$u = User::getOneFromDb(['username' => $name], $DB);
 
-		// TODO TEST, FINISH UP. Make sure that no empty signup records are created if process balks
-		// TEST USERS: tusr2, tusr3
-
 		if (!$u->matchesDb) {
 			// error: no matching record found
 			$results["notes"] = "that username does not exist";
 			echo json_encode($results);
 			exit;
 		}
-		// create new signup for valid username
-		// TODO - could check if requested username already is signed up for this opening and then update it minimally
-		$s = SUS_Signup::createNewSignup([], $DB);
 
-		$s->opening_id     = $editID;
-		$s->signup_user_id = $u->user_id;
-		$s->admin_comment  = $description;
+		// check if submitted user already has a signup for this opening
+		$s = SUS_Signup::getOneFromDb(['opening_id' => $editID, 'signup_user_id' => $u->user_id], $DB);
 
-		$s->updateDb();
+		// update or create signup record
+		if ($s->matchesDb) {
+			// update preexisting record
+			//'signup_id', 'created_at', 'updated_at', 'flag_delete', 'opening_id', 'signup_user_id', 'admin_comment'
+			$s->flag_delete    = 0;
+			$s->updated_at     = util_currentDateTimeString_asMySQL();
+			$s->opening_id     = $editID;
+			$s->signup_user_id = $u->user_id;
+			$s->admin_comment  = $description;
 
-		if (!$s->matchesDb) {
-			// create record failed
-			$results["notes"] = "database error: could not save signup";
-			echo json_encode($results);
-			exit;
+			$s->updateDb();
+
+			if (!$s->matchesDb) {
+				// update record failed
+				$results["notes"] = "database error: could not update signup";
+				echo json_encode($results);
+				exit;
+			}
 		}
+		else {
+			// create new record
+			$s = SUS_Signup::createNewSignup($DB);
+
+			$s->opening_id     = $editID;
+			$s->signup_user_id = $u->user_id;
+			$s->admin_comment  = $description;
+
+			$s->updateDb();
+
+			if (!$s->matchesDb) {
+				// create record failed
+				$results["notes"] = "database error: could not save signup";
+				echo json_encode($results);
+				exit;
+			}
+		}
+
+		/*		// get all signups for this opening
+				$o = SUS_Opening::getAllFromDb(['opening_id'=>$s->opening_id], $DB);
+
+				if ($o) {
+					$o->cacheSignups();
+
+					foreach ($o->signups as $signup) {
+						$list_of_signups .= "<li data-for-firstname=\"" . $u->firstname . "\" data-for-lastname=\"" . $u->lastname . "\" data-for-signup-id=\"" . $s->signup_id . "\">";
+						$list_of_signups .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-signup-id=\"" . $s->signup_id . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>&nbsp;";
+						$list_of_signups .=  $u->first_name . " " . $u->last_name . "</li>";
+					}
+				}*/
+
+
 		// TODO - return name
 		# Output
 		$results['status']       = 'success';
 		$results['which_action'] = 'edit-opening-add-signup-user';
 		# inject into DOM
-		//$results['html_output'] = "<li>placeholder name (and signed up date)</li>";
-		$results['html_output'] = "placeholder name (and signed up date)";
+		$results['html_output'] = "<li data-for-firstname=\"" . $u->firstname . "\" data-for-lastname=\"" . $u->lastname . "\" data-for-signup-id=\"" . $s->signup_id . "\">";
+		$results['html_output'] .= "<a href=\"#\" class=\"sus-delete-signup\" data-bb=\"alert_callback\" data-for-signup-id=\"" . $s->signup_id . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>&nbsp;";
+		$results['html_output'] .= $u->first_name . " " . $u->last_name . "</li>";
+		//<li signuptime="1424113532" fname="David" lname="Keiser-Clark" id="signee_list_item_for_33305" signup_id="33305" class="signee_list_item"> <img for_opening="82024" for_signup="33305" title="remove signup" alt="remove signup" src="image/pix/t/delete.png" class="remove_signup_link nukeit">David Keiser-Clark
+		//		<span class="sus_very_small">(signed up 2015-02-16 02:05 PM)</span><br>
+		//    <label for="su_admin_comment_33305">Admin Note:</label><textarea id="su_admin_comment_33305" class="su_admin_comment" name="su_admin_comment_33305">note 1</textarea>  </li>
+		//$results['html_output'] = "placeholder name (and signed up date)";
+	}    //###############################################################
+	elseif ($action == 'fetch-signups-for-opening-id') {
+
+		// TODO - Create this at the class level, instead?
+
+		// get all signups for this opening
+		$o = SUS_Opening::getOneFromDb(['opening_id' => 701], $DB);
+
+		if (!$o->matchesDb) {
+			// error: no matching record found
+			$results["notes"] = "that opening does not exist";
+			echo json_encode($results);
+			exit;
+		}
+
+		$o->cacheSignups();
+		//util_prePrintR($o->signups);
+
+		// create hash of signup user_ids
+		$signupUserIdsAry = [];
+		foreach ($o->signups as $signup) {
+			if (!in_array($signup->signup_user_id, $signupUserIdsAry)) {
+				array_push($signupUserIdsAry, $signup->signup_user_id);
+			}
+		}
+
+		// fetch users
+		$users_info = User::getAllFromDb(['user_id' => $signupUserIdsAry], $DB);
+
+		$signups_list = "";
+		if ($o) {
+			foreach ($o->signups as $signup) {
+				foreach ($users_info as $user) {
+					if ($signup->signup_user_id == $user->user_id) {
+						$signups_list .= "<li data-for-firstname=\"" . $user->first_name . "\" data-for-lastname=\"" . $user->last_name . "\" data-for-signup-id=\"" . $signup->signup_id . "\">";
+						$signups_list .= "<a href=\"#\" class=\"sus-delete-signup wms-custom-delete\" data-bb=\"alert_callback\" data-for-signup-id=\"" . $signup->signup_id . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>&nbsp;";
+						$signups_list .= $user->first_name . " " . $user->last_name . "</li>";
+					}
+				}
+
+			}
+		}
+
+		// TODO - return signup names
+		# Output
+		$results['status']       = 'success';
+		$results['which_action'] = 'fetch-signups-for-opening-id';
+		# inject into DOM
+		$results['html_output'] = $signups_list;
+
+		//<li signuptime="1424113532" fname="David" lname="Keiser-Clark" id="signee_list_item_for_33305" signup_id="33305" class="signee_list_item"> <img for_opening="82024" for_signup="33305" title="remove signup" alt="remove signup" src="image/pix/t/delete.png" class="remove_signup_link nukeit">David Keiser-Clark
+		//		<span class="sus_very_small">(signed up 2015-02-16 02:05 PM)</span><br>
+		//    <label for="su_admin_comment_33305">Admin Note:</label><textarea id="su_admin_comment_33305" class="su_admin_comment" name="su_admin_comment_33305">note 1</textarea>  </li>
+		//$results['html_output'] = "placeholder name (and signed up date)";
 	}
 	//###############################################################
 

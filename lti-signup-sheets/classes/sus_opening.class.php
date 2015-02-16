@@ -19,24 +19,24 @@
 			$this->signups = array();
 		}
 
-		// factory function
+		// static factory function to populate new object with desired base values
 		public static function createNewOpening($sheet_id, $dbConnection) {
 			return new SUS_Opening([
-					'opening_id'       => 'NEW',
-					'created_at'       => util_currentDateTimeString_asMySQL(),
-					'updated_at'       => util_currentDateTimeString_asMySQL(),
-					'flag_delete'      => FALSE,
-					'sheet_id'         => $sheet_id,
-					'opening_group_id' => 0,
-					'name'             => '',
-					'description'      => '',
-					'max_signups'      => 0,
-					'admin_comment'    => '',
-					'begin_datetime'   => util_currentDateTimeString_asMySQL(),
-					'end_datetime'     => util_currentDateTimeString_asMySQL(),
-					'location'         => '',
-					'DB'               => $dbConnection]
-			);
+				'opening_id'       => 'NEW',
+				'created_at'       => util_currentDateTimeString_asMySQL(),
+				'updated_at'       => util_currentDateTimeString_asMySQL(),
+				'flag_delete'      => FALSE,
+				'sheet_id'         => $sheet_id,
+				'opening_group_id' => 0,
+				'name'             => '',
+				'description'      => '',
+				'max_signups'      => 0,
+				'admin_comment'    => '',
+				'begin_datetime'   => util_currentDateTimeString_asMySQL(),
+				'end_datetime'     => util_currentDateTimeString_asMySQL(),
+				'location'         => '',
+				'DB'               => $dbConnection
+			]);
 		}
 
 		public function clearCaches() {
@@ -112,9 +112,9 @@
 			}
 
 			$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . count($this->signups) . '/' . $max_signups . ')</strong></span>';
-			$rendered .= '<a href="#" class="sus-edit-opening" data-opening-id="'.$this->opening_id.'" data-toggle="modal" data-target="#modal-edit-opening" title="Edit opening"><i class="glyphicon glyphicon-wrench"></i></a>';
-			$rendered .= '<a href="#" class="sus-delete-opening" data-opening-id="'.$this->opening_id.'" title="Delete opening"><i class="glyphicon glyphicon-remove"></i></a>';
-			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-opening-id="'.$this->opening_id.'" data-toggle="modal" data-target="#modal-edit-opening" title="Add someone to opening"><i class="glyphicon glyphicon-plus"></i></a>';
+			$rendered .= '<a href="#" class="sus-edit-opening" data-opening-id="' . $this->opening_id . '" data-toggle="modal" data-target="#modal-edit-opening" title="Edit opening"><i class="glyphicon glyphicon-wrench"></i></a>';
+			$rendered .= '<a href="#" class="sus-delete-opening" data-opening-id="' . $this->opening_id . '" title="Delete opening"><i class="glyphicon glyphicon-remove"></i></a>';
+			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-opening-id="' . $this->opening_id . '" data-toggle="modal" data-target="#modal-edit-opening" title="Add someone to opening"><i class="glyphicon glyphicon-plus"></i></a>';
 			$rendered .= '</div>';
 
 			return $rendered;

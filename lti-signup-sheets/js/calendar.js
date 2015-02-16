@@ -174,6 +174,60 @@ $(document).ready(function () {
 			// display the Add Someone functionality
 			$("#link_show_signup_controls").click();
 		}
+
+		// signupListing: set data attribute
+		//$("#signupListing").data("for-opening-id", $(parentOfClickedLink).attr('data-opening_id'));
+		// console.log($("#signupListing").data("for-opening-id"));
+
+		// call function to populate "#signupListing" with list of current signups
+		fetchSignupsforOpening(openingID);
+	}
+
+	function fetchSignupsforOpening(openingID){
+		var doAction = 'fetch-signups-for-opening-id';
+		//console.log(doAction + ' = ' + openingID);
+
+		//var params = [username,note];
+		var params = {
+			ajaxVal_Action: doAction,
+			ajaxVal_Edit_ID: openingID
+		};
+
+		//alert(ary['url'] + '\n ' + ary['ajax_action'] + '\n ' + ary['ajax_id'] + '\n' + ary['ajax_val']);
+		//console.log('to remote url: '+remoteUrl);
+		console.dir(params);
+		// show status
+		// dfnUtil_setTransientAlert('progress', 'Saving...');
+		$.ajax({
+			type: 'GET',
+			url: "../ajax_actions/ajax_actions.php",
+			cache: false,
+			data: params,
+			dataType: 'json',
+			error: function (req, textStatus, err) {
+				dfnUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
+				console.dir(req);
+				console.dir(textStatus);
+				console.dir(err);
+			},
+			success: function (data) {
+				if (data.status == 'success') {
+					// remove element
+					//dfnUtil_setTransientAlert('success', 'Saved');
+
+					if(data.which_action == 'fetch-signups-for-opening-id'){
+						$("#signupListing UL").html(data.html_output);
+					}
+				}
+				else {
+					// error message
+					dfnUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
+				}
+			}
+			//, complete: function(req,textStatus) {
+			//	$("#"+target_id).prop("disabled", false);
+			//}
+		});
 	}
 
 	function roundMinutesToNearestFiveUsingTwoDigits(num) {
@@ -407,6 +461,10 @@ $(document).ready(function () {
 				if (data.status == 'success') {
 					// remove element
 					dfnUtil_setTransientAlert('success', 'Saved');
+
+					if(data.which_action == 'edit-opening-add-signup-user'){
+						$("#signupListing UL").append(data.html_output);
+					}
 				}
 				else {
 					// error message

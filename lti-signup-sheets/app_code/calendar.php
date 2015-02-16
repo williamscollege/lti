@@ -836,8 +836,10 @@
 											</div>
 										</div>
 
-										<div id="signupListing">
-											signups go here
+										<div id="signupListing" data-for-opening-id="0">
+											<ul class="list-unstyled">
+
+											</ul>
 										</div>
 
 									</div>
