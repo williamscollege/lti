@@ -197,7 +197,7 @@
 		}
 	}
 	//###############################################################
-	elseif ($action == 'delete-signup') {
+	elseif ($action == 'delete-signup' || $action == 'delete-signup-from-edit-opening-modal') {
 		$s = SUS_Signup::getOneFromDb(['signup_id' => $deleteID], $DB);
 
 		if (!$s->matchesDb) {
@@ -442,7 +442,7 @@
 		// TODO - Create this at the class level, instead?
 
 		// get all signups for this opening
-		$o = SUS_Opening::getOneFromDb(['opening_id' => 701], $DB);
+		$o = SUS_Opening::getOneFromDb(['opening_id' => $editID], $DB);
 
 		if (!$o->matchesDb) {
 			// error: no matching record found
@@ -453,6 +453,7 @@
 
 		$o->cacheSignups();
 		//util_prePrintR($o->signups);
+//		util_prePrintR($o);
 
 		// create hash of signup user_ids
 		$signupUserIdsAry = [];
@@ -461,23 +462,40 @@
 				array_push($signupUserIdsAry, $signup->signup_user_id);
 			}
 		}
+		if (! $signupUserIdsAry) {
+			$results['status']       = 'success';
+			$results['which_action'] = 'fetch-signups-for-opening-id';
+			# inject into DOM
+			$results['html_output'] = '<li>no signups</li>';
+			echo json_encode($results);
+			exit;
+		}
 
 		// fetch users
 		$users_info = User::getAllFromDb(['user_id' => $signupUserIdsAry], $DB);
+//		util_prePrintR($users_info);
 
 		$signups_list = "";
-		if ($o) {
-			foreach ($o->signups as $signup) {
-				foreach ($users_info as $user) {
-					if ($signup->signup_user_id == $user->user_id) {
-						$signups_list .= "<li data-for-firstname=\"" . $user->first_name . "\" data-for-lastname=\"" . $user->last_name . "\" data-for-signup-id=\"" . $signup->signup_id . "\">";
-						$signups_list .= "<a href=\"#\" class=\"sus-delete-signup wms-custom-delete\" data-bb=\"alert_callback\" data-for-signup-id=\"" . $signup->signup_id . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>&nbsp;";
-						$signups_list .= $user->first_name . " " . $user->last_name . "</li>";
-					}
-				}
+//		$user_info_reference = Db_Linked::arrayToPkHash($users_info);
+//		util_prePrintR($user_info_reference);
 
+		foreach ($o->signups as $signup) {
+//			$u = $user_info_reference[$signup->signup_user_id];
+//			$signups_list .= "<li data-for-firstname=\"" . $u->first_name . "\" data-for-lastname=\"" . $u->last_name . "\" data-for-signup-id=\"" . $signup->signup_id . "\">";
+//			$signups_list .= "<a href=\"#\" class=\"sus-delete-signup wms-custom-delete\" data-bb=\"alert_callback\" data-for-signup-id=\"" . $signup->signup_id . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>&nbsp;";
+//			$signups_list .= $u->first_name . " " . $u->last_name . "</li>";
+
+			foreach ($users_info as $user) {
+				if ($signup->signup_user_id == $user->user_id) {
+// TODO - refactor this as a render function
+					$signups_list .= "<li data-for-firstname=\"" . $user->first_name . "\" data-for-lastname=\"" . $user->last_name . "\" data-for-signup-id=\"" . $signup->signup_id . "\">";
+					$signups_list .= "<a href=\"#\" class=\"sus-delete-signup wms-custom-delete\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $o->opening_id . "\" data-for-signup-id=\"" . $signup->signup_id . "\" data-for-signup-name=\"" . $user->first_name . " " . $user->last_name . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>&nbsp;";
+					$signups_list .= $user->first_name . " " . $user->last_name . "</li>";
+				}
 			}
+
 		}
+
 
 		// TODO - return signup names
 		# Output
@@ -485,6 +503,7 @@
 		$results['which_action'] = 'fetch-signups-for-opening-id';
 		# inject into DOM
 		$results['html_output'] = $signups_list;
+		$results['html_render_opening'] = $o->renderAsHtmlShortWithControls();
 
 		//<li signuptime="1424113532" fname="David" lname="Keiser-Clark" id="signee_list_item_for_33305" signup_id="33305" class="signee_list_item"> <img for_opening="82024" for_signup="33305" title="remove signup" alt="remove signup" src="image/pix/t/delete.png" class="remove_signup_link nukeit">David Keiser-Clark
 		//		<span class="sus_very_small">(signed up 2015-02-16 02:05 PM)</span><br>

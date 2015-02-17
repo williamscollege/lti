@@ -1,3 +1,5 @@
+var GLOBAL_calendar_fetchSignupsforOpening = null;
+
 $(document).ready(function () {
 
 	// ***************************
@@ -10,98 +12,6 @@ $(document).ready(function () {
 	// ***************************
 
 	// TODO - edit openings: btn_save_openings, cleanUpForm(), frmCreateOpening, frmEditOpening
-
-	// TODO - Refactoring: Could probably refactor showConfirmBox() and updateDOM() into util.js file and remove a lot of redundant code
-	// BootBox jQuery helper function
-	function showConfirmBox(ary) {
-		//alert(ary['ajax_action'] + ', ' + ary['ajax_id']);
-		bootbox.dialog({
-			title: ary['title'],
-			message: ary['message'],
-			buttons: {
-				success: {
-					label: ary['label'],
-					className: ary['class'],
-					callback: function () {
-						// show status
-						dfnUtil_setTransientAlert('progress', 'Saving...');
-						$.ajax({
-							type: 'GET',
-							url: ary['url'],
-							cache: false,
-							data: {
-								'ajaxVal_Action': ary['ajax_action'],
-								'ajaxVal_Delete_ID': ary['ajax_id']
-							},
-							dataType: 'json',
-							success: function (data) {
-								if (data.status == 'success') {
-									// remove element
-									updateDOM(ary['ajax_action'], true);
-								}
-								else {
-									// error message
-									updateDOM(ary['ajax_action'], false);
-								}
-							}
-						});
-					}
-				},
-				cancel: {
-					label: "Cancel",
-					className: "btn btn-link btn-cancel",
-					callback: function () {
-						this.dismiss = "modal";
-					}
-				}
-			},
-			// modal options
-			animate: false,
-			backdrop: "static",
-			onEscape: true
-		});
-	}
-
-	function updateDOM(action, ret) {
-		if (action == 'delete-opening') {
-			if (ret) {
-				// show status
-				dfnUtil_setTransientAlert('success', 'Saved');
-
-				// check to see if this the last opening on this date
-				var countRemainingOpenings = $('#list-opening-id-' + GLOBAL_confirmHandlerData).siblings(".list-opening").length;
-
-				if (countRemainingOpenings == 0) {
-					// this is the last opening on this date!
-					// remove the list container from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
-					$('#list-opening-id-' + GLOBAL_confirmHandlerData).parent().parent(".calendar-cell-openings").remove();
-					$('#tabOpeningsList #list-opening-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
-				}
-				else {
-					// additional openings still exist on this date...
-					// remove single opening from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
-					$('#list-opening-id-' + GLOBAL_confirmHandlerData).remove();
-					$('#tabOpeningsList #list-opening-id-' + GLOBAL_confirmHandlerData).remove();
-				}
-			}
-			else {
-				// error message
-				$("#list-opening-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
-			}
-		}
-		//else if (action == 'delete-sheet') {
-		//	if (ret) {
-		//		// show status
-		//		dfnUtil_setTransientAlert('success', 'Saved');
-		//		// remove element
-		//		$('#btn-edit-sheet-id-' + GLOBAL_confirmHandlerData).closest('TR').remove();
-		//	}
-		//	else {
-		//		// error message
-		//		$("#btn-edit-sheet-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
-		//	}
-		//}
-	}
 
 
 	// ***************************
@@ -178,6 +88,7 @@ $(document).ready(function () {
 		// signupListing: set data attribute
 		//$("#signupListing").data("for-opening-id", $(parentOfClickedLink).attr('data-opening_id'));
 		// console.log($("#signupListing").data("for-opening-id"));
+		$("#signupListing ul").html("<li><em>loading data...</em></li>");
 
 		// call function to populate "#signupListing" with list of current signups
 		fetchSignupsforOpening(openingID);
@@ -229,6 +140,8 @@ $(document).ready(function () {
 			//}
 		});
 	}
+
+	GLOBAL_calendar_fetchSignupsforOpening = fetchSignupsforOpening;
 
 	function roundMinutesToNearestFiveUsingTwoDigits(num) {
 		// round minutes to nearest 5 minute increment
@@ -327,6 +240,28 @@ $(document).ready(function () {
 		$("#link_show_optional_opening_fields").show();
 	});
 
+	// Delete signup (from Edit Opening / Signups)
+	$(document).on("click", ".sus-delete-signup", function () {
+	//$("a.sus-delete-signup").click(function () {
+		GLOBAL_confirmHandlerData = $(this).attr('data-for-signup-id');
+		GLOBAL_confirmHandlerReference = $(this).attr('data-for-opening-id');
+		console.log('GLOBAL_confirmHandlerData=' + GLOBAL_confirmHandlerData + ', GLOBAL_confirmHandlerReference=' + GLOBAL_confirmHandlerReference)
+		var params = {
+			title: "Delete Signup",
+			message: "Really delete this signup for <strong>&quot;" + $(this).attr('data-for-signup-name') + "&quot;</strong>?",
+			label: "Delete Signup",
+			class: "btn btn-danger",
+			url: "../ajax_actions/ajax_actions.php",
+			ajax_action: "delete-signup-from-edit-opening-modal",
+			ajax_id: GLOBAL_confirmHandlerData
+		};
+//		console.log('line 253');
+		GLOBAL_util_showConfirmBox(params);
+	});
+
+	//function local_showConfirmBox(params) {
+	//	util_showConfirmBox(params);
+	//}
 
 	// ***************************
 	// default condition

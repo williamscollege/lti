@@ -100,7 +100,7 @@ wms bootstrap-calendar-master extensions
 }
 
 /*.opening-time-range {*/
-	/*padding-left: 3px;*/
+/*padding-left: 3px;*/
 /*}*/
 
 /* opening control links (edit, delete, add someone) */
@@ -136,23 +136,6 @@ wms bootstrap-calendar-master extensions
 	color: #ff0000;
 }
 
-/* for modal: Edit Opening / Signups */
-.wms-custom-delete {
-	margin-left: 1px;
-	margin-right: 1px;
-	padding-left: 3px;
-	padding-right: 2px;
-	color: #ff0000;
-}
-.wms-custom-delete:hover {
-	margin-left: 1px;
-	margin-right: 1px;
-	background-color: #F7A9AD;
-	padding-left: 3px;
-	padding-right: 2px;
-	color: #ff0000;
-}
-
 .sus-add-someone-to-opening {
 	margin-left: 1px;
 	margin-right: 1px;
@@ -166,6 +149,24 @@ wms bootstrap-calendar-master extensions
 	background-color: #57D283;
 	padding-left: 3px;
 	padding-right: 4px;
+}
+
+/* modal: Edit Opening / Signups */
+.wms-custom-delete {
+	margin-left: 1px;
+	margin-right: 1px;
+	padding-left: 3px;
+	padding-right: 2px;
+	color: #ff0000;
+}
+
+.wms-custom-delete:hover {
+	margin-left: 1px;
+	margin-right: 1px;
+	background-color: #F7A9AD;
+	padding-left: 3px;
+	padding-right: 2px;
+	color: #ff0000;
 }
 
 /* ensure uniform btn sizes for repeating days of week */
@@ -187,19 +188,21 @@ wms bootstrap-calendar-master extensions
 /*=======================================
 Edit Opening: Signup someone to an opening
 ==========================================*/
-#signupControls{
+#signupControls {
 	display: none;
 }
-#signupHeader{
+
+#signupHeader {
 	margin-bottom: 10px;
 }
+
 .signupSorters {
 	margin-top: 16px;
 }
+
 #signupListing {
 	margin-top: 16px;
 }
-
 
 /*=======================================
 wms bootstrap-calendar-master overrides
@@ -256,7 +259,7 @@ UL.unstyled LI, OL.unstyled LI {
 
 /* position placeholder message alert box */
 #page_alert_div {
-	z-index: 1;
+	z-index: 2000; /* must be > 1040 which is default z-index of bootstrap modal */
 	position: fixed;
 	top: 60px;
 	right: 20px;
@@ -352,11 +355,6 @@ Purpose: CSS that's NOT an extension / modification of the bootstrap framework
 
 .cursorPointer {
 	cursor: pointer;
-}
-
-a.show-hide-control {
-	font-size: 10px;
-	text-decoration: underline;
 }
 
 .ordering-controls-up-down {

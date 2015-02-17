@@ -838,7 +838,7 @@
 
 										<div id="signupListing" data-for-opening-id="0">
 											<ul class="list-unstyled">
-
+												<li><em>loading data...</em></li>
 											</ul>
 										</div>
 
@@ -856,7 +856,7 @@
 		</form>
 		<!-- /Bootstrap Modal: Calendar Edit Opening -->
 
-		<script type="text/javascript" src="../js/calendar.js"></script>
+		<script src="<?php echo APP_ROOT_PATH; ?>/js/calendar.js"></script>
 
 	<?php
 	}

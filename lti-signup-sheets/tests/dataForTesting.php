@@ -70,15 +70,15 @@
 		// 110 is admin?
 		$addTestSql  = "INSERT INTO " . User::$dbTable . " VALUES
             (101,'" . Auth_Base::$TEST_USERNAME . "','" . Auth_Base::$TEST_EMAIL . "','" . Auth_Base::$TEST_FNAME . "','" . Auth_Base::$TEST_LNAME . "',NOW(),NOW(),0,0,0),
-            (102,'tusr2','tusr2@williams.edu','tu2F','tu2L',NOW(),NOW(),0,0,0),
-            (103,'tusr3','tusr3@williams.edu','tu3F','tu3L',NOW(),NOW(),0,0,0),
-            (104,'tusr4','tusr4@williams.edu','tu4F','tu4L',NOW(),NOW(),0,0,0),
-            (105,'tusr5','tusr5@williams.edu','tu5F','tu5L',NOW(),NOW(),0,0,0),
-            (106,'tusr6','tusr6@williams.edu','tu6F','tu6L',NOW(),NOW(),1,0,0),
-            (107,'tusr7','tusr7@williams.edu','tu7F','tu7L',NOW(),NOW(),0,1,0),
-            (108,'tusr8','tusr8@williams.edu','tu8F','tu8L',NOW(),NOW(),0,0,1),
-            (109,'tusr9','tusr9@williams.edu','tu9F','tu9L',NOW(),NOW(),0,0,0),
-            (110,'tusr10','tusr10@williams.edu','tu10F','tuL',NOW(),NOW(),0,0,0)
+            (102,'tusr2','tusr2@williams.edu','Tu2F','Tu2L',NOW(),NOW(),0,0,0),
+            (103,'tusr3','tusr3@williams.edu','Tu3F','Tu3L',NOW(),NOW(),0,0,0),
+            (104,'tusr4','tusr4@williams.edu','Tu4F','Tu4L',NOW(),NOW(),0,0,0),
+            (105,'tusr5','tusr5@williams.edu','Tu5F','Tu5L',NOW(),NOW(),0,0,0),
+            (106,'tusr6','tusr6@williams.edu','Tu6F','Tu6L',NOW(),NOW(),1,0,0),
+            (107,'tusr7','tusr7@williams.edu','Tu7F','Tu7L',NOW(),NOW(),0,1,0),
+            (108,'tusr8','tusr8@williams.edu','Tu8F','Tu8L',NOW(),NOW(),0,0,1),
+            (109,'tusr9','tusr9@williams.edu','Tu9F','Tu9L',NOW(),NOW(),0,0,0),
+            (110,'tusr10','tusr10@williams.edu','Tu10F','TuL',NOW(),NOW(),0,0,0)
         ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
