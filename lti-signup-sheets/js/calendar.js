@@ -128,6 +128,7 @@ $(document).ready(function () {
 
 					if(data.which_action == 'fetch-signups-for-opening-id'){
 						$("#signupListing UL").html(data.html_output);
+						$("#list-opening-id-"+ params['ajaxVal_Edit_ID']).replaceWith(data['html_render_opening']);
 					}
 				}
 				else {
@@ -396,9 +397,10 @@ $(document).ready(function () {
 				if (data.status == 'success') {
 					// remove element
 					dfnUtil_setTransientAlert('success', 'Saved');
-
+console.dir(data);
 					if(data.which_action == 'edit-opening-add-signup-user'){
-						$("#signupListing UL").append(data.html_output);
+						//$("#signupListing UL").append(data.html_output);
+						GLOBAL_calendar_fetchSignupsforOpening(params['ajaxVal_Edit_ID']);
 					}
 				}
 				else {

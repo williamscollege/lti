@@ -15,7 +15,7 @@ $(document).ready(function () {
 	// create container to hold ajax messages; hide #page_alert_div
 	$('#parent_container').prepend('<div id="page_alert_div" class="alert alert-dismissible small" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span id="page_alert_message"></span></div>');
 	$('#page_alert_div').hide();
-//});
+});
 
 // ***************************
 // helper functions
@@ -43,14 +43,16 @@ $(document).ready(function () {
 								'ajaxVal_Delete_ID': ary['ajax_id']
 							},
 							dataType: 'json',
-							success: function (data) {
-								if (data.status == 'success') {
+							success: function (ajxdata, textStatus, jqhdr) {
+								console.log('inside of success fxn(ajxdata)');
+								console.dir(ajxdata);
+								if (ajxdata.status == 'success') {
 									// remove element
-									updateDOM(ary['ajax_action'], true);
+									updateDOM(ary['ajax_action'], true,ajxdata);
 								}
 								else {
 									// error message
-									updateDOM(ary['ajax_action'], false);
+									updateDOM(ary['ajax_action'], false,ajxdata);
 								}
 							}
 						});
@@ -73,7 +75,7 @@ $(document).ready(function () {
 
 	GLOBAL_util_showConfirmBox = showConfirmBox;
 
-	function updateDOM(action, ret) {
+	function updateDOM(action, ret, data) {
 		if (action == 'delete-sheetgroup') {
 			if (ret) {
 				// show status
@@ -150,9 +152,13 @@ $(document).ready(function () {
 			if (ret) {
 				// show status
 				dfnUtil_setTransientAlert('success', 'Saved');
-
+console.log('we are here before console dir');
+				console.dir(data);
 				// fetch count of remaining LI elements within this UL
 				GLOBAL_calendar_fetchSignupsforOpening(GLOBAL_confirmHandlerReference);
+
+				//$("#list-opening-id-"+ GLOBAL_confirmHandlerReference).replaceWith(data['html_render_opening']);
+
 				//if ( $('#group-signups-for-opening-id-' + GLOBAL_confirmHandlerReference + ' UL LI').length > 1 ){
 				// remove only this one LI item
 				// alert('remove only this one LI item');
@@ -228,5 +234,5 @@ $(document).ready(function () {
 		return text;
 	}
 
-});
+//});
 
