@@ -47,7 +47,7 @@ $(document).ready(function () {
 
 
 		// div parent of the link clicked, which contains all of the data attributes for this opening
-		var parentOfClickedLink = $("#list-opening-id-" + openingID);
+		var parentOfClickedLink = $(".list-opening-id-" + openingID);
 
 		// set initial form values; parent of clicked link contains all attributes for this opening
 		$("#edit_OpeningID").val($(parentOfClickedLink).attr('data-opening_id'));
@@ -128,7 +128,7 @@ $(document).ready(function () {
 
 					if(data.which_action == 'fetch-signups-for-opening-id'){
 						$("#signupListing UL").html(data.html_output);
-						$("#list-opening-id-"+ params['ajaxVal_Edit_ID']).replaceWith(data['html_render_opening']);
+						$(".list-opening-id-"+ params['ajaxVal_Edit_ID']).replaceWith(data['html_render_opening']);
 					}
 				}
 				else {

@@ -106,24 +106,24 @@ $(document).ready(function () {
 				dfnUtil_setTransientAlert('success', 'Saved');
 
 				// check to see if this the last opening on this date
-				var countRemainingOpenings = $('#list-opening-id-' + GLOBAL_confirmHandlerData).siblings(".list-opening").length;
+				var countRemainingOpenings = $('.list-opening-id-' + GLOBAL_confirmHandlerData).siblings(".list-opening").length;
 
 				if (countRemainingOpenings == 0) {
 					// this is the last opening on this date!
 					// remove the list container from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
-					$('#list-opening-id-' + GLOBAL_confirmHandlerData).parent().parent(".calendar-cell-openings").remove();
-					$('#tabOpeningsList #list-opening-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
+					$('.list-opening-id-' + GLOBAL_confirmHandlerData).parent().parent(".calendar-cell-openings").remove();
+					$('#tabOpeningsList .list-opening-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
 				}
 				else {
 					// additional openings still exist on this date...
 					// remove single opening from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
-					$('#list-opening-id-' + GLOBAL_confirmHandlerData).remove();
-					$('#tabOpeningsList #list-opening-id-' + GLOBAL_confirmHandlerData).remove();
+					$('.list-opening-id-' + GLOBAL_confirmHandlerData).remove();
+					$('#tabOpeningsList .list-opening-id-' + GLOBAL_confirmHandlerData).remove();
 				}
 			}
 			else {
 				// error message
-				$("#list-opening-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+				$(".list-opening-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
 			}
 		}
 		else if (action == 'delete-signup') {
@@ -157,7 +157,7 @@ console.log('we are here before console dir');
 				// fetch count of remaining LI elements within this UL
 				GLOBAL_calendar_fetchSignupsforOpening(GLOBAL_confirmHandlerReference);
 
-				//$("#list-opening-id-"+ GLOBAL_confirmHandlerReference).replaceWith(data['html_render_opening']);
+				//$(".list-opening-id-"+ GLOBAL_confirmHandlerReference).replaceWith(data['html_render_opening']);
 
 				//if ( $('#group-signups-for-opening-id-' + GLOBAL_confirmHandlerReference + ' UL LI').length > 1 ){
 				// remove only this one LI item

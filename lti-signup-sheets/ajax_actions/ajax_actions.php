@@ -450,6 +450,7 @@
 			echo json_encode($results);
 			exit;
 		}
+		$results['html_render_opening'] = $o->renderAsHtmlShortWithControls();
 
 		$o->cacheSignups();
 		//util_prePrintR($o->signups);
@@ -503,7 +504,6 @@
 		$results['which_action'] = 'fetch-signups-for-opening-id';
 		# inject into DOM
 		$results['html_output'] = $signups_list;
-		$results['html_render_opening'] = $o->renderAsHtmlShortWithControls();
 
 		//<li signuptime="1424113532" fname="David" lname="Keiser-Clark" id="signee_list_item_for_33305" signup_id="33305" class="signee_list_item"> <img for_opening="82024" for_signup="33305" title="remove signup" alt="remove signup" src="image/pix/t/delete.png" class="remove_signup_link nukeit">David Keiser-Clark
 		//		<span class="sus_very_small">(signed up 2015-02-16 02:05 PM)</span><br>
