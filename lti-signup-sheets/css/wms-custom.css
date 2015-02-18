@@ -241,6 +241,42 @@ span[data-cal-date] {
 	height: 65px !important;
 }
 
+/*=======================================*/
+/* openings list styles */
+/*=======================================*/
+
+#openings-list-container {
+	margin-top: -20px;
+	max-height: 591px;
+	overflow-y: scroll;
+	position: relative;
+}
+
+#scroll-to-todayish-openings {
+	margin: -96px 0 0 300px;
+}
+
+#openings-list-container .opening-list-for-date  {
+	padding: 0 0 6px 10px;
+	margin: 0 !important;
+}
+
+#openings-list-container .in-the-past {
+	background-color: #ddd;
+	/*border: 1px solid #fff;*/
+}
+
+#openings-list-container .in-the-present {
+	background-color: #f9fffb;
+	border: 1px solid #999;
+}
+
+#openings-list-container .in-the-future {
+	background-color: #f9fbff;
+	/*border: 1px solid #fff;*/
+}
+
+
 /*#tabOpeningsCalendar .page-header,*/
 /*#calendar {*/
 /*max-width: 463px !important;*/

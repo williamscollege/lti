@@ -468,26 +468,51 @@
 
 										<!--Start: List Openings -->
 										<div role="tabpanel" class="tab-pane fade" id="tabOpeningsList" aria-labelledby="tabOpeningsList">
+											<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-small">scroll to current date</a>
+											<div id="openings-list-container">
 
 											<?php
 												$s->cacheOpenings();
 												$lastOpeningDate = '';
+												$daysOpenings = [];
+												$todayYmd = explode(' ',util_currentDateTimeString())[0];
 												foreach ($s->openings as $opening) {
 													$curOpeningDate = explode(' ',$opening->begin_datetime)[0];
 													if ($curOpeningDate != $lastOpeningDate) {
+														// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
+														foreach ($daysOpenings as $op) {
+															echo $op->renderAsHtmlShortWithControls() . "\n";
+														}
+
 														if ($lastOpeningDate) {
 															echo '</div>'."\n";
 														}
-														echo '<div class="opening-list-for-date" data-for-date="'.$curOpeningDate.'"><h4>'.date_format(new DateTime($opening->begin_datetime), "m/d/Y").'</h4>';
+														$relative_time_class = 'in-the-past';
+														//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
+														//exit;
+														if ($curOpeningDate == $todayYmd) {
+															$relative_time_class = 'in-the-present';
+														} elseif ($curOpeningDate > $todayYmd) {
+															$relative_time_class = 'in-the-future';
+														}
+														echo '<div class="opening-list-for-date '.$relative_time_class.'" data-for-date="'.$curOpeningDate.'"><h4>'.date_format(new DateTime($opening->begin_datetime), "m/d/Y").'</h4>';
+														$daysOpenings = [];
 													}
-													echo $opening->renderAsHtmlShortWithControls()."\n";
+//													echo $opening->renderAsHtmlShortWithControls()."\n";
+													array_unshift($daysOpenings,$opening);
+
 													$lastOpeningDate = $curOpeningDate;
 //													util_prePrintR($opening);
 													//$s = substr('tmp', $lastOpeningDate);
 												}
+												// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
+												foreach ($daysOpenings as $op) {
+													echo $op->renderAsHtmlShortWithControls() . "\n";
+												}
 												echo '</div>'."\n";
 											?>
 
+											</div>
 										</div>
 										<!--End: List Openings -->
 									</div>

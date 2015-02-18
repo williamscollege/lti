@@ -139,7 +139,7 @@
 
 	# returns a string thats the current date and time, in format YYYY/MM/SS HH:MI
 	function util_currentDateTimeString() {
-		return date('Y/m/d H:i');
+		return date('Y-m-d H:i');
 	}
 
 	function util_currentDateTimeString_asMySQL() {

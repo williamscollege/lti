@@ -178,4 +178,29 @@ $(document).ready(function () {
 		});
 	}
 
+	$('#scroll-to-todayish-openings').click(function(){
+		scrollOpeningsListToTodayish();
+	});
+
+	function scrollOpeningsListToTodayish() {
+		var closestFutureOpeningsList = $('#openings-list-container .in-the-present');
+		//console.log(closestFutureOpeningsList);
+
+		if (! closestFutureOpeningsList.length) {
+			//console.log('no present - looking to the past');
+			closestFutureOpeningsList = $('#openings-list-container .in-the-past').prev();
+		}
+		//console.log(closestFutureOpeningsList);
+
+		if (! closestFutureOpeningsList.length) {
+			//console.log('no present nor past - looking to the future');
+			closestFutureOpeningsList = $('#openings-list-container .in-the-future').last();
+		}
+		//console.log(closestFutureOpeningsList);
+
+		if (closestFutureOpeningsList.length) {
+			$('#openings-list-container').scrollTop($('#openings-list-container').scrollTop() + $(closestFutureOpeningsList).position().top);
+		}
+	}
+
 });
