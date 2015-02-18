@@ -115,7 +115,16 @@
 		// if no repeat, then end date = $openingDateStart, else end date = $openingUntilDate
 		$validation_for_repetition = [];
 		if ($openingRepeatRate == 2 || $openingRepeatRate == 3) {
+
+			// constrain $openingUntilDate date to $dateSheetCloses date
+			$sheet = SUS_Sheet::getOneFromDb(['sheet_id'=>$openingSheetID], $DB);
+			//$dateSheetCloses =  DateTime::createFromFormat('Y-m-d g:i:s', $sheet->date_closes);
+			$dateSheetCloses =  DateTime::createFromFormat('Y-m-d', substr($sheet->date_closes,0,10));
 			$repeatEndDate = DateTime::createFromFormat('m/d/Y', $openingUntilDate);
+			if ($dateSheetCloses < $repeatEndDate){
+				$repeatEndDate = $dateSheetCloses;
+			}
+
 			if ($openingRepeatRate == 2) {
 				foreach (['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as $baseDow) {
 					if ($_REQUEST["repeat_dow_$baseDow"]) {

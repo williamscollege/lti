@@ -788,7 +788,7 @@
 											<label for="btnEditOpeningSubmit" class="col-sm-3 control-label">&nbsp;</label>
 
 											<div class="col-sm-9">
-												<button type="submit" id="btnEditOpeningSubmit" class="btn btn-success" data-loading-text="Saving...">Save
+												<button type="button" id="btnEditOpeningSubmit" class="btn btn-success" data-loading-text="Saving...">Save
 												</button>
 												<button type="reset" id="btnEditOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">
 													Cancel
@@ -827,7 +827,7 @@
 												</div>
 											</div>
 											<div class="form-group form-group-sm">
-												<label for="btnEditOpeningSubmit" class="col-sm-3 control-label">&nbsp;</label>
+												<label for="btnEditOpeningAddSignup" class="col-sm-3 control-label">&nbsp;</label>
 
 												<div class="col-sm-9">
 													<a href="#" type="button" id="btnEditOpeningAddSignup" class="btn btn-success" data-loading-text="Saving..." title="Save signup">Signup</a>

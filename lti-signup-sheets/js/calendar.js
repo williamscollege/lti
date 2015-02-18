@@ -336,6 +336,11 @@ $(document).ready(function () {
 		$("#repeatUntilDate").show();
 	});
 
+	$("#btnEditOpeningSubmit").click(function(){
+		// TODO -- DKC form validation: see russiansisters census_add.php
+		$("#frmEditOpening").submit(); // efficiency: trigger the native submit event to avoid re-validating the form
+	});
+
 
 	// TODO - Is this still needed, now that an opening can 'wrap' around midnight? If obsolete, remove from codebase
 	// TODO - if needed, add class to:  #btnNewOpeningSubmit, #btnEditOpeningSubmit
