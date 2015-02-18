@@ -488,10 +488,11 @@
 
 			foreach ($users_info as $user) {
 				if ($signup->signup_user_id == $user->user_id) {
+					$signups_list .= $signup->renderAsListItemShortWithControls($user);
 // TODO - refactor this as a render function
-					$signups_list .= "<li data-for-firstname=\"" . $user->first_name . "\" data-for-lastname=\"" . $user->last_name . "\" data-for-signup-id=\"" . $signup->signup_id . "\">";
-					$signups_list .= "<a href=\"#\" class=\"sus-delete-signup wms-custom-delete\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $o->opening_id . "\" data-for-signup-id=\"" . $signup->signup_id . "\" data-for-signup-name=\"" . $user->first_name . " " . $user->last_name . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>&nbsp;";
-					$signups_list .= $user->first_name . " " . $user->last_name . "</li>";
+//					$signups_list .= "<li data-for-firstname=\"" . $user->first_name . "\" data-for-lastname=\"" . $user->last_name . "\" data-for-signup-id=\"" . $signup->signup_id . "\">";
+//					$signups_list .= "<a href=\"#\" class=\"sus-delete-signup wms-custom-delete\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $o->opening_id . "\" data-for-signup-id=\"" . $signup->signup_id . "\" data-for-signup-name=\"" . $user->first_name . " " . $user->last_name . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>&nbsp;";
+//					$signups_list .= $user->first_name . " " . $user->last_name . "</li>";
 				}
 			}
 

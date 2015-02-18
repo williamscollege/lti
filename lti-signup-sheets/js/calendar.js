@@ -167,6 +167,11 @@ $(document).ready(function () {
 		return time.join(''); // return adjusted time or original string
 	}
 
+	function resetSignupFields() {
+		$("#signupUsername").val('');
+		$("#signupAdminNote").val('');
+	}
+
 	function setupModalForm_CreateOpening(forDateYYYYMMDD) {
 
 		var forDateAry = forDateYYYYMMDD.split('-');
@@ -241,9 +246,35 @@ $(document).ready(function () {
 		$("#link_show_optional_opening_fields").show();
 	});
 
+	// Edit signup (from Edit Opening / Signups)
+	$(document).on("click", ".sus-edit-signup", function () {
+		// ensure that input boxes are displayed
+		$("#link_show_signup_controls").click();
+
+		// populate data of input boxes
+		$("#signupUsername").val($(this).attr('data-for-username'));
+		$("#signupAdminNote").val($(this).attr('data-for-signup-admin-comment'));
+//
+//		console.log('GLOBAL_confirmHandlerData=' + GLOBAL_confirmHandlerData + ', GLOBAL_confirmHandlerReference=' + GLOBAL_confirmHandlerReference)
+//		var params = {
+//			title: "Delete Signup",
+//			message: "Really delete this signup for <strong>&quot;" + $(this).attr('data-for-signup-name') + "&quot;</strong>?",
+//			label: "Delete Signup",
+//			class: "btn btn-danger",
+//			url: "../ajax_actions/ajax_actions.php",
+//			ajax_action: "delete-signup-from-edit-opening-modal",
+//			ajax_id: GLOBAL_confirmHandlerData
+//		};
+////		console.log('line 253');
+//		GLOBAL_util_showConfirmBox(params);
+	});
+
+
 	// Delete signup (from Edit Opening / Signups)
 	$(document).on("click", ".sus-delete-signup", function () {
-	//$("a.sus-delete-signup").click(function () {
+		// reset input fields
+		resetSignupFields();
+
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-signup-id');
 		GLOBAL_confirmHandlerReference = $(this).attr('data-for-opening-id');
 		console.log('GLOBAL_confirmHandlerData=' + GLOBAL_confirmHandlerData + ', GLOBAL_confirmHandlerReference=' + GLOBAL_confirmHandlerReference)
@@ -259,6 +290,23 @@ $(document).ready(function () {
 //		console.log('line 253');
 		GLOBAL_util_showConfirmBox(params);
 	});
+
+	// singups: sort by last name
+	$("#signup_sort_by_last_name").click(function(){
+		$("#signupListing UL LI").sort(function (a, b){
+			return ($(b).data('for-lastname') + ' ' + $(b).data('for-firstname')) < ($(a).data('for-lastname') + ' ' + $(a).data('for-firstname')) ? 1 : -1;
+		}).appendTo('#signupListing UL');
+
+	});
+	$("#signup_sort_by_signup_order").click(function(){
+		$("#signupListing UL LI").sort(function (a, b){
+			return ($(b).data('for-signup-created_at')) < ($(a).data('for-signup-created_at')) ? 1 : -1;
+		}).appendTo('#signupListing UL');
+
+	});
+
+
+
 
 	//function local_showConfirmBox(params) {
 	//	util_showConfirmBox(params);
@@ -406,6 +454,8 @@ console.dir(data);
 					if(data.which_action == 'edit-opening-add-signup-user'){
 						//$("#signupListing UL").append(data.html_output);
 						GLOBAL_calendar_fetchSignupsforOpening(params['ajaxVal_Edit_ID']);
+						// reset input fields
+						resetSignupFields();
 					}
 				}
 				else {
@@ -422,12 +472,16 @@ console.dir(data);
 	$("#link_show_signup_controls").click(function () {
 		$("#signupControls").show();
 		$(this).hide();
+		// reset input fields
+		resetSignupFields();
 	});
 
 	// Cancel cleanup
 	$('#btnEditOpeningCancelSignup').click(function () {
 		$("#signupControls").hide();
 		$("#link_show_signup_controls").show();
+		// reset input fields
+		resetSignupFields();
 	});
 
 
