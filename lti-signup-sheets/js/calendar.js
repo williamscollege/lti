@@ -37,7 +37,37 @@ $(document).ready(function () {
 		if ($(this).hasClass('sus-add-someone-to-opening')) {
 			var action = "add";
 		}
+		console.log(openingID, action);
 		setupModalForm_EditOpening(openingID, action);
+	});
+
+	// Sheet Opening: sign me up for this opening_id
+	$(document).on('click', '.sus-add-me-to-opening', function () {
+		var openingID = $(this).attr('data-opening-id');
+		var doAction = 'sheet-opening-signup-add-me';
+
+		$.ajax({
+			type: 'GET',
+			url: "../ajax_actions/ajax_actions.php",
+			cache: false,
+			data: {
+				ajaxVal_Action: doAction,
+				ajaxVal_Edit_ID: openingID
+			},
+			dataType: 'json',
+			error: function (req, textStatus, err) {
+				dfnUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
+			},
+			success: function (data) {
+				if (data.status == 'success') {
+					dfnUtil_setTransientAlert('success', 'Saved');
+					$(".list-opening-id-" + openingID).replaceWith(data['html_render_opening']);
+				}
+				else {
+					dfnUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
+				}
+			}
+		});
 	});
 
 	function setupModalForm_EditOpening(openingID, action) {
@@ -45,9 +75,8 @@ $(document).ready(function () {
 		$('#frmEditOpening').trigger("reset");
 		$('#btnEditOpeningCancelSignup').click();
 
-
 		// div parent of the link clicked, which contains all of the data attributes for this opening
-		var parentOfClickedLink = $(".list-opening-id-" + openingID);
+		var parentOfClickedLink = $(".list-opening-id-" + openingID).last();
 
 		// set initial form values; parent of clicked link contains all attributes for this opening
 		$("#edit_OpeningID").val($(parentOfClickedLink).attr('data-opening_id'));
@@ -85,28 +114,20 @@ $(document).ready(function () {
 			$("#link_show_signup_controls").click();
 		}
 
-		// signupListing: set data attribute
-		//$("#signupListing").data("for-opening-id", $(parentOfClickedLink).attr('data-opening_id'));
-		// console.log($("#signupListing").data("for-opening-id"));
 		$("#signupListing ul").html("<li><em>loading data...</em></li>");
 
 		// call function to populate "#signupListing" with list of current signups
 		fetchSignupsforOpening(openingID);
 	}
 
-	function fetchSignupsforOpening(openingID){
+	function fetchSignupsforOpening(openingID) {
 		var doAction = 'fetch-signups-for-opening-id';
-		//console.log(doAction + ' = ' + openingID);
 
-		//var params = [username,note];
 		var params = {
 			ajaxVal_Action: doAction,
 			ajaxVal_Edit_ID: openingID
 		};
 
-		//alert(ary['url'] + '\n ' + ary['ajax_action'] + '\n ' + ary['ajax_id'] + '\n' + ary['ajax_val']);
-		//console.log('to remote url: '+remoteUrl);
-		console.dir(params);
 		// show status
 		// dfnUtil_setTransientAlert('progress', 'Saving...');
 		$.ajax({
@@ -117,22 +138,14 @@ $(document).ready(function () {
 			dataType: 'json',
 			error: function (req, textStatus, err) {
 				dfnUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
-				console.dir(req);
-				console.dir(textStatus);
-				console.dir(err);
 			},
 			success: function (data) {
 				if (data.status == 'success') {
-					// remove element
 					//dfnUtil_setTransientAlert('success', 'Saved');
-
-					if(data.which_action == 'fetch-signups-for-opening-id'){
-						$("#signupListing UL").html(data.html_output);
-						$(".list-opening-id-"+ params['ajaxVal_Edit_ID']).replaceWith(data['html_render_opening']);
-					}
+					$("#signupListing UL").html(data.html_output);
+					$(".list-opening-id-" + params['ajaxVal_Edit_ID']).replaceWith(data['html_render_opening']);
 				}
 				else {
-					// error message
 					dfnUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
 				}
 			}
@@ -254,19 +267,6 @@ $(document).ready(function () {
 		// populate data of input boxes
 		$("#signupUsername").val($(this).attr('data-for-username'));
 		$("#signupAdminNote").val($(this).attr('data-for-signup-admin-comment'));
-//
-//		console.log('GLOBAL_confirmHandlerData=' + GLOBAL_confirmHandlerData + ', GLOBAL_confirmHandlerReference=' + GLOBAL_confirmHandlerReference)
-//		var params = {
-//			title: "Delete Signup",
-//			message: "Really delete this signup for <strong>&quot;" + $(this).attr('data-for-signup-name') + "&quot;</strong>?",
-//			label: "Delete Signup",
-//			class: "btn btn-danger",
-//			url: "../ajax_actions/ajax_actions.php",
-//			ajax_action: "delete-signup-from-edit-opening-modal",
-//			ajax_id: GLOBAL_confirmHandlerData
-//		};
-////		console.log('line 253');
-//		GLOBAL_util_showConfirmBox(params);
 	});
 
 
@@ -287,30 +287,23 @@ $(document).ready(function () {
 			ajax_action: "delete-signup-from-edit-opening-modal",
 			ajax_id: GLOBAL_confirmHandlerData
 		};
-//		console.log('line 253');
 		GLOBAL_util_showConfirmBox(params);
 	});
 
 	// singups: sort by last name
-	$("#signup_sort_by_last_name").click(function(){
-		$("#signupListing UL LI").sort(function (a, b){
+	$("#signup_sort_by_last_name").click(function () {
+		$("#signupListing UL LI").sort(function (a, b) {
 			return ($(b).data('for-lastname') + ' ' + $(b).data('for-firstname')) < ($(a).data('for-lastname') + ' ' + $(a).data('for-firstname')) ? 1 : -1;
 		}).appendTo('#signupListing UL');
 
 	});
-	$("#signup_sort_by_signup_order").click(function(){
-		$("#signupListing UL LI").sort(function (a, b){
+	$("#signup_sort_by_signup_order").click(function () {
+		$("#signupListing UL LI").sort(function (a, b) {
 			return ($(b).data('for-signup-created_at')) < ($(a).data('for-signup-created_at')) ? 1 : -1;
 		}).appendTo('#signupListing UL');
 
 	});
 
-
-
-
-	//function local_showConfirmBox(params) {
-	//	util_showConfirmBox(params);
-	//}
 
 	// ***************************
 	// default condition
@@ -364,27 +357,24 @@ $(document).ready(function () {
 	});
 
 	$("#radioOpeningRepeatRate1").click(function (event) {
-		//alert("on 1");
 		$("#repeatWeekdayChooser").hide();
 		$("#repeatMonthdayChooser").hide();
 		$("#repeatUntilDate").hide();
 	});
 
 	$("#radioOpeningRepeatRate2").click(function (event) {
-		//alert("on 2");
 		$("#repeatWeekdayChooser").show();
 		$("#repeatMonthdayChooser").hide();
 		$("#repeatUntilDate").show();
 	});
 
 	$("#radioOpeningRepeatRate3").click(function (event) {
-		//alert("on 3");
 		$("#repeatWeekdayChooser").hide();
 		$("#repeatMonthdayChooser").show();
 		$("#repeatUntilDate").show();
 	});
 
-	$("#btnEditOpeningSubmit").click(function(){
+	$("#btnEditOpeningSubmit").click(function () {
 		// TODO -- DKC form validation: see russiansisters census_add.php
 		$("#frmEditOpening").submit(); // efficiency: trigger the native submit event to avoid re-validating the form
 	});
@@ -404,7 +394,6 @@ $(document).ready(function () {
 		// create end time string
 		var btime = valsToTimeString($("#new_OpeningBeginTimeHour").val(), $("#new_OpeningBeginTimeMinute").val(), $("#new_OpeningBeginTime_AMPM").val());
 		var etime = valsToTimeString($("#new_OpeningEndTimeHour").val(), $("#new_OpeningEndTimeMinute").val(), $("#new_OpeningEndTimeMinute_AMPM").val());
-		//alert("time strings are "+btime+" and "+etime);
 
 		// if end <= start, that's a problem
 		if (etime <= btime) {
@@ -418,10 +407,9 @@ $(document).ready(function () {
 	// ***************************
 	// Edit Opening: Signup someone to an opening
 	// ***************************
-	$("#btnEditOpeningAddSignup").click(function(){
+	$("#btnEditOpeningAddSignup").click(function () {
 		var doAction = 'edit-opening-add-signup-user';
 
-		//var params = [username,note];
 		var params = {
 			ajaxVal_Action: doAction,
 			ajaxVal_Edit_ID: $("#edit_OpeningID").val(),
@@ -429,9 +417,6 @@ $(document).ready(function () {
 			ajaxVal_Description: $("#signupAdminNote").val()
 		};
 
-		//alert(ary['url'] + '\n ' + ary['ajax_action'] + '\n ' + ary['ajax_id'] + '\n' + ary['ajax_val']);
-		//console.log('to remote url: '+remoteUrl);
-		console.dir(params);
 		// show status
 		dfnUtil_setTransientAlert('progress', 'Saving...');
 		$.ajax({
@@ -442,21 +427,13 @@ $(document).ready(function () {
 			dataType: 'json',
 			error: function (req, textStatus, err) {
 				dfnUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
-				console.dir(req);
-				console.dir(textStatus);
-				console.dir(err);
 			},
 			success: function (data) {
 				if (data.status == 'success') {
-					// remove element
 					dfnUtil_setTransientAlert('success', 'Saved');
-console.dir(data);
-					if(data.which_action == 'edit-opening-add-signup-user'){
-						//$("#signupListing UL").append(data.html_output);
-						GLOBAL_calendar_fetchSignupsforOpening(params['ajaxVal_Edit_ID']);
-						// reset input fields
-						resetSignupFields();
-					}
+					GLOBAL_calendar_fetchSignupsforOpening(params['ajaxVal_Edit_ID']);
+					// reset input fields
+					resetSignupFields();
 				}
 				else {
 					// error message
@@ -524,12 +501,6 @@ console.dir(data);
 		// reset submit button (avoid disabled state)
 		$("#btnNewOpeningSubmit, #btnEditOpeningSubmit").button('reset');
 	});
-
-	// TODO - implement in ajax success callback
-	//success: function (data) {
-	//	// hide and reset form
-	//	$("#btnOpeningCancel").click();
-
 	// END: Cancel and cleanup
 
 });

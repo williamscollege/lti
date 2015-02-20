@@ -28,8 +28,9 @@
 			$other_based_sheets  = [];
 			foreach ($USER->my_available_openings as $sheet) {
 
-				// popovers (bootstrap: must manually initialize popovers in JS file)
-				$base_sheet_link = "<a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Description:</strong> " . $sheet['s_description'] . "\">" . $sheet['s_name'] . "</a>";
+				// TODO - remove this 2 commented lines -- popovers (bootstrap: must manually initialize popovers in JS file)
+				// $base_sheet_link = "<a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Description:</strong> " . $sheet['s_description'] . "\">" . $sheet['s_name'] . "</a>";
+				$base_sheet_link = "<a href=\"sheet_openings.php?sheet=" . $sheet['s_id'] . "\"  class=\"\" title=\"Signup for Openings\">" . $sheet['s_name'] . "</a> (" . $sheet['s_description'] . ")";
 
 				// NOTE: the A) through G) leads on the keys are used to sort. The display trims the first 3 chars from the key.
 				switch ($sheet["a_type"]) {
@@ -165,4 +166,4 @@
 	require_once('../foot.php');
 ?>
 
-<script type="text/javascript" src="../js/my_available_openings.js"></script>
+<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/my_available_openings.js"></script>

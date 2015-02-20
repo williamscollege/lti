@@ -95,7 +95,7 @@
 					// TODO - DO NOT SHOW THIS WHEN AUTH'ed AS AN LTI
 					?>
 					<form id="frmSignout" class="navbar-form pull-right" method="post" action="<?php echo APP_ROOT_PATH; ?>/index.php">
-						<a href="account_management.php" title="My Account" class="wms_white"><?php echo $_SESSION['userdata']['username']; ?></a>&nbsp;
+						<a href="my_account.php" title="My Account" class="wms_white"><?php echo $_SESSION['userdata']['username']; ?></a>&nbsp;
 						<input type="submit" id="submit_signout" class="btn btn-default btn-sm" name="submit_signout" value="Sign out" />
 					</form>
 				<?php

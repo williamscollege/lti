@@ -406,4 +406,4 @@
 	require_once('../foot.php');
 ?>
 
-<script type="text/javascript" src="../js/help.js"></script>
+<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/help.js"></script>

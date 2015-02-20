@@ -1,17 +1,34 @@
 <?php
 	require_once('../app_setup.php');
-	$pageTitle = ucfirst(util_lang('calendar'));
-	require_once('../app_head.php');
+
+	#------------------------------------------------#
+	# primary function to call necessary child functions for page setup
+	#------------------------------------------------#
+	function renderCalendarWidget_EDIT($sheetID = 0) {
+		renderCalendarHead();
+		renderCalendarWidget();
+		renderCalendarJQuerySetup();
+//		renderCalendarModalCreateOpening($sheetID);
+//		renderCalendarModalEditOpening($sheetID);
+	}
+
+	function renderCalendarWidget_DOSIGNUP() {
+		renderCalendarHead();
+		renderCalendarWidget();
+		renderCalendarJQuerySetup();
+		// renderCalendarModalCreateOpening();
+		// renderCalendarModalEditOpening();
+	}
 
 
-	// calendar frame
-	if ($IS_AUTHENTICATED) {
-		// TODO - underscore is CDN. download for more direct service?
+	#------------------------------------------------#
+	# Helper functions
+	#------------------------------------------------#
+
+	// calendar CSS and Header
+	function renderCalendarHead() {
 		?>
-		<link rel="stylesheet" href="../js/bootstrap-calendar-master/css/calendar.css">
-
 		<div class="page-header">
-
 			<div class="pull-right form-inline">
 				<div class="btn-group">
 					<button class="btn btn-primary btn-sm" data-calendar-nav="prev">&lt;&lt; Prev</button>
@@ -25,15 +42,26 @@
 					<!--<button class="btn btn-warning btn-sm" data-calendar-view="day">Day</button>-->
 				</div>
 			</div>
-
 			<h3></h3>
 		</div>
+	<?php
+	}
 
+	function renderCalendarWidget() {
+		?>
 		<div id="calendar"></div>
 
+		<link rel="stylesheet" href="<?php echo APP_ROOT_PATH; ?>/js/bootstrap-calendar-master/css/calendar.css">
+		<!-- TODO - underscore is CDN. download for more direct service? -->
 		<!-- TODO - PUT THIS IN CONFIG FILE FOR easier maintenance and updating -->
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
-		<script type="text/javascript" src="../js/bootstrap-calendar-master/js/calendar.js"></script>
+		<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/bootstrap-calendar-master/js/calendar.js"></script>
+		<script src="<?php echo APP_ROOT_PATH; ?>/js/calendar.js"></script>
+	<?php
+	}
+
+	function renderCalendarJQuerySetup() {
+		?>
 		<script type="text/javascript">
 
 			$(document).ready(function () {
@@ -219,11 +247,14 @@
 
 			});
 		</script>
+	<?php
+	}
 
-
+	function renderCalendarModalCreateOpening($sheetID) {
+		?>
 		<!-- Bootstrap Modal: Calendar Create Opening -->
-		<form action="calendar_proc.php" id="frmCreateOpening" name="frmCreateOpening" class="form-horizontal" role="form" method="post">
-			<input type="hidden" id="new_SheetID" name="new_SheetID" value="<?php echo $s->sheet_id; ?>" />
+		<form action="calendar_setup_proc.php" id="frmCreateOpening" name="frmCreateOpening" class="form-horizontal" role="form" method="post">
+			<input type="hidden" id="new_SheetID" name="new_SheetID" value="<?php echo $sheetID; ?>" />
 			<input type="hidden" id="new_OpeningID" name="new_OpeningID" value="NEW" />
 			<input type="hidden" id="new_OpeningDateStart" name="new_OpeningDateStart" value="" />
 			<input type="hidden" id="new_OpeningTimeMode" name="new_OpeningTimeMode" value="" />
@@ -601,12 +632,15 @@
 			</div>
 		</form>
 		<!-- /Bootstrap Modal: Calendar Create Opening -->
+	<?php
+	}
 
-
+	function renderCalendarModalEditOpening($sheetID) {
+		?>
 		<!-- Bootstrap Modal: Calendar Edit Opening -->
-		<form action="calendar_proc.php" id="frmEditOpening" name="frmEditOpening" class="form-horizontal" role="form" method="post">
+		<form action="calendar_setup_proc.php" id="frmEditOpening" name="frmEditOpening" class="form-horizontal" role="form" method="post">
 			<input type="hidden" id="edit_OpeningID" name="edit_OpeningID" value="0" />
-			<input type="hidden" id="edit_SheetID" name="edit_SheetID" value="<?php echo $s->sheet_id; ?>" />
+			<input type="hidden" id="edit_SheetID" name="edit_SheetID" value="<?php echo $sheetID; ?>" />
 
 			<div id="modal-edit-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="openingLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
@@ -848,17 +882,24 @@
 						</div>
 
 						<div class="modal-footer">
-							&nbsp;some footer here
+							&nbsp;notifications functionality will go here
 						</div>
 					</div>
 				</div>
 			</div>
 		</form>
 		<!-- /Bootstrap Modal: Calendar Edit Opening -->
-
-		<script src="<?php echo APP_ROOT_PATH; ?>/js/calendar.js"></script>
-
 	<?php
 	}
+
 ?>
+
+
+
+
+
+
+
+
+
 

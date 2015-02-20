@@ -169,6 +169,24 @@ wms bootstrap-calendar-master extensions
 	color: #ff0000;
 }
 
+/* classes for renderAsHtmlShortWithControlAddSelf */
+.sus-add-me-to-opening {
+}
+
+.sus-add-me-to-opening:hover {
+	background-color: #57D283;
+}
+
+.sus-delete-me-from-opening {
+	color: #ff0000;
+}
+
+.sus-delete-me-from-opening:hover {
+	background-color: #F7A9AD;
+	color: #ff0000;
+}
+
+
 /* ensure uniform btn sizes for repeating days of week */
 .toggler_dow {
 	width: 40px !important;

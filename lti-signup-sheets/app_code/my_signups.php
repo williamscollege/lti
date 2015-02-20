@@ -94,4 +94,4 @@
 	require_once('../foot.php');
 ?>
 
-<script type="text/javascript" src="../js/my_signups.js"></script>
+<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/my_signups.js"></script>

@@ -19,6 +19,10 @@
 	}
 	require_once('../app_head.php');
 
+	// load calendar setup functions
+	require_once('calendar_setup.php');
+
+
 	// TODO - hitting this page directly (w/o QS or form values) causes different not-so-great issues in each of the 2 visible tabs
 	// TODO - http://localhost/GITHUB/lti/lti-signup-sheets/app_code/edit_sheet.php
 
@@ -460,7 +464,8 @@
 										<div role="tabpanel" class="tab-pane fade active in" id="tabOpeningsCalendar" aria-labelledby="tabOpeningsCalendar">
 
 											<?php
-												require_once('calendar.php');
+												renderCalendarWidget_EDIT($s->sheet_id);
+												//renderCalendarWidget(c1,c2,c3,axv);
 											?>
 
 										</div>
@@ -527,9 +532,13 @@
 
 		<?php
 		echo "</div>"; // end: div#parent_container
+
+		// Bootstrap Modal: Calendar Create Opening, Calendar Edit Opening
+		renderCalendarModalCreateOpening($s->sheet_id);
+		renderCalendarModalEditOpening($s->sheet_id);
 	}
 
 	require_once('../foot.php');
 ?>
 
-<script type="text/javascript" src="../js/edit_sheet.js"></script>
+<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/edit_sheet.js"></script>
