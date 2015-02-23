@@ -46,6 +46,8 @@ $(document).ready(function () {
 		var openingID = $(this).attr('data-opening-id');
 		var doAction = 'sheet-opening-signup-add-me';
 
+		dfnUtil_setTransientAlert('progress', 'Saving...');
+
 		$.ajax({
 			type: 'GET',
 			url: "../ajax_actions/ajax_actions.php",

@@ -222,12 +222,12 @@
 					//console.log(cell_date_str);
 					// get from the list data all events for this date
 					var openings = $(".opening-list-for-date[data-for-date=\"" + cell_date_str + "\"]").html();
-					//console.dir(openings);
-
+					// console.log(openings);
 					// if there are any, copy them into this cell
 					if (openings) {
 						// TODO - Consider changing custom div overlay to instead use bootstrap popover (hover)
 						$(cellElement).find('div').first().append('<div class="calendar-cell-openings"><span class="glyphicon glyphicon-list-alt pull-right" style="font-size: 24px;" aria-hidden="true"></span><div class="calendar-cell-openings-container">' + openings + '</div></div>');
+//						$(cellElement).find('div').first().append('<span class="glyphicon glyphicon-list-alt pull-right" style="font-size: 24px;" aria-hidden="true"><div class="calendar-cell-openings"><div class="calendar-cell-openings-container">' + openings + '</div></div></span>');
 					}
 				}
 

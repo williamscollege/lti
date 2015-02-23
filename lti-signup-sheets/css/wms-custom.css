@@ -66,20 +66,22 @@ wms bootstrap-calendar-master extensions
 	display: none;
 }
 
-.calendar-cell-openings:hover .glyphicon-list-alt {
-	display: none;
-}
+/*.calendar-cell-openings:hover .glyphicon-list-alt {*/
+	/*display: none;*/
+/*}*/
 
 .calendar-cell-openings:hover {
-	width: 210px;
-	min-height: 200px;
+	/*width: 255px;*/
+	width: 265px;
+	/*min-height: 200px;*/
+	min-height: 30px;
 	z-index: 10;
 	background-color: #ffffff;
 	border: 1px solid #666;
-	padding: 0px;
-	margin-left: 5px;
-	/* TODO - Saturday overlay bleeds off the edge of browser, causing horizontal scroll bar to appear only during hover action; consider centering the overlay */
-	/*margin-left: -60px;*/
+	padding: 5px;
+	margin-top: -5px;
+	margin-right: -5px;
+	float: right;
 }
 
 .calendar-cell-openings h4, .calendar-cell-openings:hover .calendar-cell-openings-container {
@@ -92,6 +94,12 @@ wms bootstrap-calendar-master extensions
 	font-size: 11px;
 	padding: 4px;
 }
+
+.calendar-cell-openings-container h4{
+	/*display: none;*/
+	padding-bottom: 10px;
+}
+
 
 .opening-space-usage {
 	margin-left: 3px;
@@ -224,10 +232,14 @@ Edit Opening: Signup someone to an opening
 
 .signup-admin-comment-display {
 	margin-left: 48px;
-	margin-top: -2spx;
+	margin-top: -2px;
 	margin-bottom: 4px;
 	font-size: 11px;
 	font-style: italic;
+}
+
+.own-signup {
+	font-weight: bold;
 }
 
 /*=======================================
@@ -253,11 +265,19 @@ span[data-cal-date] {
 /*.cal-month-box .cal-cell, .cal-month-day{*/
 .cal-cell {
 	min-height: 65px !important;
+	height: 65px !important;
+
 }
 
 .cal-month-day {
+	/*height: 65px !important;*/
+	min-height: 65px !important;
 	height: 65px !important;
 }
+/*.cal-month-box [class*="cal-cell"]{*/
+	/*min-height: 32px !important;*/
+	/*height: 32px !important;*/
+/*}*/
 
 /*=======================================*/
 /* openings list styles */

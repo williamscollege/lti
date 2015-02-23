@@ -12,7 +12,7 @@
 		// ***************************
 		// fetch sheet
 		// ***************************
-		$s = SUS_Sheet::getOneFromDb(['sheet_id'=> $_REQUEST["sheet"]], $DB);
+		$s = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
 	}
 
 	if (!$s->matchesDb) {
@@ -98,15 +98,24 @@
 												if ($curOpeningDate != $lastOpeningDate) {
 													// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 													foreach ($daysOpenings as $op) {
-														echo $op->renderAsHtmlShortWithControlAddSelf($USER->user_id) . "\n";
+														// show 'self' controls only on current and future dates (not past dates)
+
+														//date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A")
+														//echo '$op->begin_datetime : util_currentDateTimeString_asMySQL = ' . $op->begin_datetime . ':' . util_currentDateTimeString_asMySQL();
+														if ($op->begin_datetime >= util_currentDateTimeString_asMySQL()) {
+															echo $op->renderAsHtmlShortWithControlAddSelf($USER->user_id) . "\n";
+														}
+														else {
+															echo $op->renderAsHtmlShortWithNoControls($USER->user_id) . "\n";
+														}
 													}
 
 													if ($lastOpeningDate) {
 														echo '</div>' . "\n";
 													}
+
+													// determine: past/present/future
 													$relative_time_class = 'in-the-past';
-													//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
-													//exit;
 													if ($curOpeningDate == $todayYmd) {
 														$relative_time_class = 'in-the-present';
 													}
@@ -116,16 +125,19 @@
 													echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($opening->begin_datetime), "m/d/Y") . '</h4>';
 													$daysOpenings = [];
 												}
-												//													echo $opening->renderAsHtmlShortWithControlAddSelf()."\n";
 												array_unshift($daysOpenings, $opening);
 
 												$lastOpeningDate = $curOpeningDate;
-												//													util_prePrintR($opening);
-												//$s = substr('tmp', $lastOpeningDate);
 											}
 											// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 											foreach ($daysOpenings as $op) {
-												echo $op->renderAsHtmlShortWithControlAddSelf($USER->user_id) . "\n";
+												// show 'self' controls only on current and future dates (not past dates)
+												if ($op->begin_datetime >= util_currentDateTimeString_asMySQL()) {
+													echo $op->renderAsHtmlShortWithControlAddSelf($USER->user_id) . "\n";
+												}
+												else {
+													echo $op->renderAsHtmlShortWithNoControls($USER->user_id) . "\n";
+												}
 											}
 											echo '</div>' . "\n";
 										?>

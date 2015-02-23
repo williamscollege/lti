@@ -407,7 +407,7 @@
 		# Output
 		$results['status']       = 'success';
 		$results['which_action'] = 'sheet-opening-signup-add-me';
-		$results['html_render_opening'] = $o->renderAsHtmlShortWithControlAddSelf();
+		$results['html_render_opening'] = $o->renderAsHtmlShortWithControlAddSelf($USER->user_id);
 	}
 	//###############################################################
 	elseif ($action == 'edit-opening-add-signup-user') {

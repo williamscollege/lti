@@ -97,10 +97,15 @@
 			}
 		}
 
-		public function renderAsHtmlShortWithControls() {
+
+		private function _renderHtml_START($flag_is_for_self=false) {
 			$rendered = '';
 			$rendered .= '<div class="list-opening list-opening-id-' . $this->opening_id . '" ' . $this->fieldsAsDataAttribs() . '>';
-			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A") . '</span>';
+			$own_signup_class = '';
+			if ($flag_is_for_self) {
+				$own_signup_class = ' own-signup';
+			}
+			$rendered .= '<span class="opening-time-range'.$own_signup_class.'">' . date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A") . '</span>';
 			$this->cacheSignups();
 			$customColorClass = " text-danger ";
 			if (count($this->signups) < $this->max_signups) {
@@ -112,6 +117,28 @@
 			}
 
 			$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . count($this->signups) . '/' . $max_signups . ')</strong></span>';
+
+			return $rendered;
+		}
+
+
+		public function renderAsHtmlShortWithControls() {
+//			$rendered = '';
+//			$rendered .= '<div class="list-opening list-opening-id-' . $this->opening_id . '" ' . $this->fieldsAsDataAttribs() . '>';
+//			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A") . '</span>';
+//			$this->cacheSignups();
+//			$customColorClass = " text-danger ";
+//			if (count($this->signups) < $this->max_signups) {
+//				$customColorClass = " text-success ";
+//			}
+//			$max_signups = $this->max_signups;
+//			if ($max_signups == -1) {
+//				$max_signups = "*";
+//			}
+//
+//			$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . count($this->signups) . '/' . $max_signups . ')</strong></span>';
+			$rendered = $this->_renderHtml_START();
+
 			$rendered .= '<a href="#" class="sus-edit-opening" data-opening-id="' . $this->opening_id . '" data-toggle="modal" data-target="#modal-edit-opening" title="Edit opening"><i class="glyphicon glyphicon-wrench"></i></a>';
 			$rendered .= '<a href="#" class="sus-delete-opening" data-opening-id="' . $this->opening_id . '" title="Delete opening"><i class="glyphicon glyphicon-remove"></i></a>';
 			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-opening-id="' . $this->opening_id . '" data-toggle="modal" data-target="#modal-edit-opening" title="Add someone to opening"><i class="glyphicon glyphicon-plus"></i></a>';
@@ -121,28 +148,65 @@
 		}
 
 		public function renderAsHtmlShortWithControlAddSelf($UserId = 0) {
-			$rendered = '';
-			$rendered .= '<div class="list-opening list-opening-id-' . $this->opening_id . '" ' . $this->fieldsAsDataAttribs() . '>';
-			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A") . '</span>';
-			$this->cacheSignups();
-			$customColorClass = " text-danger ";
-			if (count($this->signups) < $this->max_signups) {
-				$customColorClass = " text-success ";
-			}
-			$max_signups = $this->max_signups;
-			if ($max_signups == -1) {
-				$max_signups = "*";
-			}
+//			$rendered = '';
+//			$rendered .= '<div class="list-opening list-opening-id-' . $this->opening_id . '" ' . $this->fieldsAsDataAttribs() . '>';
+//			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A") . '</span>';
+//			$this->cacheSignups();
+//			$customColorClass = " text-danger ";
+//			if (count($this->signups) < $this->max_signups) {
+//				$customColorClass = " text-success ";
+//			}
+//			$max_signups = $this->max_signups;
+//			if ($max_signups == -1) {
+//				$max_signups = "*";
+//			}
+//
+//			$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . count($this->signups) . '/' . $max_signups . ')</strong></span>';
 
-			$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . count($this->signups) . '/' . $max_signups . ')</strong></span>';
+			$this->cacheSignups();
+			$signedupUserIdsAry = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
+			$is_own_signup = in_array($UserId, $signedupUserIdsAry);
+
+			$rendered = $this->_renderHtml_START($is_own_signup);
 
 			// Signup or Delete: fetch array of user_id values for signups for this opening
-			$signedupUserIdsAry = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
 
-			if(in_array($UserId, $signedupUserIdsAry)) {
-				$rendered .= '<a href="#" class="sus-delete-me-from-opening" data-opening-id="' . $this->opening_id . '" title="Delete my signup"><i class="glyphicon glyphicon-remove"></i>&nbsp;Delete</a>';
+			if($is_own_signup) {
+				$rendered .= '<a href="#" class="sus-delete-me-from-opening" data-opening-id="' . $this->opening_id . '" title="Delete my signup"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel signup</a>';
 			} else{
 				$rendered .= '<a href="#" class="sus-add-me-to-opening" data-opening-id="' . $this->opening_id . '" title="Sign me up"><i class="glyphicon glyphicon-plus"></i>&nbsp;Signup</a>';
+			}
+			$rendered .= '</div>';
+
+			return $rendered;
+		}
+
+		public function renderAsHtmlShortWithNoControls($UserId = 0) {
+//			$rendered = '';
+//			$rendered .= '<div class="list-opening list-opening-id-' . $this->opening_id . '" ' . $this->fieldsAsDataAttribs() . '>';
+//			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A") . '</span>';
+//			$this->cacheSignups();
+//			$customColorClass = " text-danger ";
+//			if (count($this->signups) < $this->max_signups) {
+//				$customColorClass = " text-success ";
+//			}
+//			$max_signups = $this->max_signups;
+//			if ($max_signups == -1) {
+//				$max_signups = "*";
+//			}
+//
+//			$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . count($this->signups) . '/' . $max_signups . ')</strong></span>';
+
+			$this->cacheSignups();
+			$signedupUserIdsAry = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
+			$is_own_signup = in_array($UserId, $signedupUserIdsAry);
+
+			$rendered = $this->_renderHtml_START($is_own_signup);
+
+			// Am I signed up?: fetch array of user_id values for signups for this opening
+
+			if($is_own_signup) {
+				$rendered .= 'I signed up';
 			}
 			$rendered .= '</div>';
 
