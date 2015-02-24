@@ -357,8 +357,13 @@
 	//###############################################################
 	elseif ($action == 'sheet-opening-signup-add-me') {
 
+		// check if submitted user already has a signup for this opening (specify: flag_delete = TRUE)
+		$s = SUS_Signup::getOneFromDb(['opening_id' => $editID, 'signup_user_id' => $USER->user_id, 'flag_delete' => TRUE], $DB);
+
 		// check if submitted user already has a signup for this opening
-		$s = SUS_Signup::getOneFromDb(['opening_id' => $editID, 'signup_user_id' => $USER->user_id], $DB);
+		if (!$s->matchesDb) {
+			$s = SUS_Signup::getOneFromDb(['opening_id' => $editID, 'signup_user_id' => $USER->user_id], $DB);
+		}
 
 		// get all signups for this opening
 		$o = SUS_Opening::getOneFromDb(['opening_id' => $editID], $DB);
@@ -407,7 +412,46 @@
 		# Output
 		$results['status']       = 'success';
 		$results['which_action'] = 'sheet-opening-signup-add-me';
-		$results['html_render_opening'] = $o->renderAsHtmlShortWithControlAddSelf($USER->user_id);
+		$results['html_render_opening'] = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
+	}
+	//###############################################################
+	elseif ($action == 'sheet-opening-signup-delete-me') {
+
+		// check if submitted user already has a signup for this opening
+		$s = SUS_Signup::getOneFromDb(['opening_id' => $editID, 'signup_user_id' => $USER->user_id], $DB);
+
+		// get all signups for this opening
+		$o = SUS_Opening::getOneFromDb(['opening_id' => $editID], $DB);
+
+		if (!$o->matchesDb) {
+			// error: no matching record found
+			$results["notes"] = "that opening does not exist";
+			echo json_encode($results);
+			exit;
+		}
+
+		// delete signup record
+		if ($s->matchesDb) {
+			// update preexisting record
+			$s->flag_delete    = 1;
+			$s->updated_at     = util_currentDateTimeString_asMySQL();
+			$s->opening_id     = $editID;
+			$s->signup_user_id = $USER->user_id;
+
+			$s->updateDb();
+
+			if (!$s->matchesDb) {
+				// update record failed
+				$results["notes"] = "database error: could not update signup";
+				echo json_encode($results);
+				exit;
+			}
+		}
+
+		# Output
+		$results['status']       = 'success';
+		$results['which_action'] = 'sheet-opening-signup-add-me';
+		$results['html_render_opening'] = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
 	}
 	//###############################################################
 	elseif ($action == 'edit-opening-add-signup-user') {
@@ -483,7 +527,7 @@
 			exit;
 		}
 
-		$results['html_render_opening'] = $o->renderAsHtmlShortWithControls();
+		$results['html_render_opening'] = $o->renderAsHtmlShortWithFullControls();
 
 		$o->cacheSignups();
 

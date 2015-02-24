@@ -141,8 +141,12 @@ $(document).ready(function () {
 		updateSheetAccess(params);
 	});
 
+	// Copy DOM (onclick of glyph overlay) from calendar overlay to left nav for ease of seeing and printer output
+	$(".calendar-cell-openings").click(function () {
+		var dataset = $(this).html();
+		$("#signup_help_text").html(dataset);
+	});
 
-//	function handleBroadAccess()
 
 	function updateSheetAccess(params) {
 		//alert(ary['url'] + '\n ' + ary['ajax_action'] + '\n ' + ary['ajax_id'] + '\n' + ary['ajax_val']);

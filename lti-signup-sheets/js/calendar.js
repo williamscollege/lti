@@ -41,10 +41,13 @@ $(document).ready(function () {
 		setupModalForm_EditOpening(openingID, action);
 	});
 
-	// Sheet Opening: sign me up for this opening_id
-	$(document).on('click', '.sus-add-me-to-opening', function () {
+	// Sheet Opening: signup or cancel for this opening_id
+	$(document).on('click', '.sus-add-me-to-opening, .sus-delete-me-from-opening', function () {
 		var openingID = $(this).attr('data-opening-id');
-		var doAction = 'sheet-opening-signup-add-me';
+		var doAction = 'sheet-opening-signup-add-me'; //default condition
+		if($(this).hasClass('sus-delete-me-from-opening')){
+			doAction = 'sheet-opening-signup-delete-me';
+		}
 
 		dfnUtil_setTransientAlert('progress', 'Saving...');
 
@@ -112,7 +115,7 @@ $(document).ready(function () {
 		$('#edit_OpeningEndTimeMinute_AMPM option[value="' + forTimeEndAry[3] + '"]').prop('selected', true);
 
 		if (action == "add") {
-			// display the Add Someone functionality
+			// display the add signup functionality
 			$("#link_show_signup_controls").click();
 		}
 
@@ -434,8 +437,8 @@ $(document).ready(function () {
 				if (data.status == 'success') {
 					dfnUtil_setTransientAlert('success', 'Saved');
 					GLOBAL_calendar_fetchSignupsforOpening(params['ajaxVal_Edit_ID']);
-					// reset input fields
-					resetSignupFields();
+					// hide input fields (and reset them)
+					$("#btnEditOpeningCancelSignup").click();
 				}
 				else {
 					// error message

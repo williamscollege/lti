@@ -32,23 +32,21 @@
 				<div class="col-sm-5">
 					<div class="row">
 						<div class="tab-container" role="tabpanel" data-example-id="set1">
-							<div class="signup_help_text">
+							<div id="signup_help_text">
 								<b>Overview</b>
 
 								<p>To the right is a calendar showing all openings for this sheet. Hover over an openings icon
 									<span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size: 24px;"></span>
 									to see a summary of the openings on that day, and click on that icon to
-									get a more detailed list (which replaces this help text). In either
-									case, click&nbsp;&nbsp;
-									<a href="#" title="Add someone to opening"><i class="glyphicon glyphicon-plus"></i></a>
-									to sign up for a given opening, or
-									<a href="#" class="wms-custom-delete" title="Delete opening"><i class="glyphicon glyphicon-remove"></i></a>
+									get a more detailed list (which replaces this help text).
+									Click <a href="#" title="Sign up"><i class="glyphicon glyphicon-plus"></i>&nbsp;Signup</a>
+									to add yourself or
+									<a href="#" class="wms-custom-delete" title="Cancel signup"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel&nbsp;signup</a>
 									to remove yourself from a given opening.
 								</p>
 
 								<p>
-									To see all the openings for this sheet in a text-based list format instead of the graphical calendar display, click the
-									"Openings as List" tab above.
+									To see all the openings for this sheet in a text-based list, click the "List Openings" tab above.
 								</p>
 							</div>
 						</div>
@@ -103,7 +101,7 @@
 														//date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A")
 														//echo '$op->begin_datetime : util_currentDateTimeString_asMySQL = ' . $op->begin_datetime . ':' . util_currentDateTimeString_asMySQL();
 														if ($op->begin_datetime >= util_currentDateTimeString_asMySQL()) {
-															echo $op->renderAsHtmlShortWithControlAddSelf($USER->user_id) . "\n";
+															echo $op->renderAsHtmlShortWithLimitedControls($USER->user_id) . "\n";
 														}
 														else {
 															echo $op->renderAsHtmlShortWithNoControls($USER->user_id) . "\n";
@@ -133,7 +131,7 @@
 											foreach ($daysOpenings as $op) {
 												// show 'self' controls only on current and future dates (not past dates)
 												if ($op->begin_datetime >= util_currentDateTimeString_asMySQL()) {
-													echo $op->renderAsHtmlShortWithControlAddSelf($USER->user_id) . "\n";
+													echo $op->renderAsHtmlShortWithLimitedControls($USER->user_id) . "\n";
 												}
 												else {
 													echo $op->renderAsHtmlShortWithNoControls($USER->user_id) . "\n";

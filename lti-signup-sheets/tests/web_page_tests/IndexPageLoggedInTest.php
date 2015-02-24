@@ -42,11 +42,6 @@
 
 			//        $this->todo('check for notebook, plant, metadata structure, and metadata value sets links');
 
-			$this->assertEltByIdHasAttrOfValue('notebooks-splash-link', 'id', 'notebooks-splash-link');
-			$this->assertEltByIdHasAttrOfValue('plants-splash-link', 'id', 'plants-splash-link');
-			$this->assertEltByIdHasAttrOfValue('metadata-structures-splash-link', 'id', 'metadata-structures-splash-link');
-			$this->assertEltByIdHasAttrOfValue('metadata-term-sets-splash-link', 'id', 'metadata-term-sets-splash-link');
-
 			//        // page heading text
 			//        $this->assertText(ucfirst(util_lang('you_possesive')).' '.ucfirst(util_lang('notebooks')));
 			//
@@ -120,11 +115,6 @@
 			$this->assertPattern('/Signed in: \<a[^\>]*\>' . TESTINGUSER . '\<\/a\>/');
 			$this->assertNoPattern('/Sign in failed/i');
 			$this->assertEltByIdHasAttrOfValue('submit_signout', 'value', new PatternExpectation('/Sign\s?out/i'));
-
-			$this->assertEltByIdHasAttrOfValue('notebooks-splash-link', 'id', 'notebooks-splash-link');
-			$this->assertEltByIdHasAttrOfValue('plants-splash-link', 'id', 'plants-splash-link');
-			$this->assertEltByIdHasAttrOfValue('metadata-structures-splash-link', 'id', 'metadata-structures-splash-link');
-			$this->assertEltByIdHasAttrOfValue('metadata-term-sets-splash-link', 'id', 'metadata-term-sets-splash-link');
 
 			$this->todo('check for admin tool links');
 

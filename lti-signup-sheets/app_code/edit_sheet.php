@@ -288,10 +288,8 @@
 														$s->cacheAccess();
 														// iterate this user's enrollments
 														foreach ($USER->enrollments as $enr) {
-															// util_prePrintR($enr);
 															$checkboxSelected = "";
 
-															// util_prePrintR($s->access);
 															// fetch any user granted access values for these courses
 															foreach ($s->access as $a) {
 																if ($a->type == "bycourse" && $a->constraint_data == $enr->course_idstr) {
@@ -318,7 +316,6 @@
 														array_push($instr_uid_hash, $i->user_id);
 													}
 													$instr_users = User::getAllFromDb(['user_id' => $instr_uid_hash], $DB);
-													// util_prePrintR($instr_users);
 													usort($instr_users, 'User::cmp');
 
 													if (count($instr_users) == 0) {
@@ -327,12 +324,11 @@
 													else {
 														// fetch which courses, if any, that this user has already given access
 														$s->cacheAccess();
+
 														// iterate this user's enrollments
 														foreach ($instr_users as $u) {
-															// util_prePrintR($u);
 															$checkboxSelected = "";
 
-															//util_prePrintR($s->access);
 															// fetch any user granted access values for these courses
 															foreach ($s->access as $a) {
 																if ($a->type == "byinstr" && $a->constraint_id == $u->user_id) {
@@ -473,49 +469,52 @@
 
 										<!--Start: List Openings -->
 										<div role="tabpanel" class="tab-pane fade" id="tabOpeningsList" aria-labelledby="tabOpeningsList">
-											<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-small">scroll to current date</a>
+											<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-small">scroll to current
+												date</a>
+
 											<div id="openings-list-container">
 
-											<?php
-												$s->cacheOpenings();
-												$lastOpeningDate = '';
-												$daysOpenings = [];
-												$todayYmd = explode(' ',util_currentDateTimeString())[0];
-												foreach ($s->openings as $opening) {
-													$curOpeningDate = explode(' ',$opening->begin_datetime)[0];
-													if ($curOpeningDate != $lastOpeningDate) {
-														// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
-														foreach ($daysOpenings as $op) {
-															echo $op->renderAsHtmlShortWithControls() . "\n";
-														}
+												<?php
+													$s->cacheOpenings();
+													$lastOpeningDate = '';
+													$daysOpenings    = [];
+													$todayYmd        = explode(' ', util_currentDateTimeString())[0];
+													foreach ($s->openings as $opening) {
+														$curOpeningDate = explode(' ', $opening->begin_datetime)[0];
+														if ($curOpeningDate != $lastOpeningDate) {
+															// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
+															foreach ($daysOpenings as $op) {
+																echo $op->renderAsHtmlShortWithFullControls() . "\n";
+															}
 
-														if ($lastOpeningDate) {
-															echo '</div>'."\n";
+															if ($lastOpeningDate) {
+																echo '</div>' . "\n";
+															}
+															$relative_time_class = 'in-the-past';
+															//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
+															//exit;
+															if ($curOpeningDate == $todayYmd) {
+																$relative_time_class = 'in-the-present';
+															}
+															elseif ($curOpeningDate > $todayYmd) {
+																$relative_time_class = 'in-the-future';
+															}
+															echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($opening->begin_datetime), "m/d/Y") . '</h4>';
+															$daysOpenings = [];
 														}
-														$relative_time_class = 'in-the-past';
-														//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
-														//exit;
-														if ($curOpeningDate == $todayYmd) {
-															$relative_time_class = 'in-the-present';
-														} elseif ($curOpeningDate > $todayYmd) {
-															$relative_time_class = 'in-the-future';
-														}
-														echo '<div class="opening-list-for-date '.$relative_time_class.'" data-for-date="'.$curOpeningDate.'"><h4>'.date_format(new DateTime($opening->begin_datetime), "m/d/Y").'</h4>';
-														$daysOpenings = [];
+														//													echo $opening->renderAsHtmlShortWithFullControls()."\n";
+														array_unshift($daysOpenings, $opening);
+
+														$lastOpeningDate = $curOpeningDate;
+														//													util_prePrintR($opening);
+														//$s = substr('tmp', $lastOpeningDate);
 													}
-//													echo $opening->renderAsHtmlShortWithControls()."\n";
-													array_unshift($daysOpenings,$opening);
-
-													$lastOpeningDate = $curOpeningDate;
-//													util_prePrintR($opening);
-													//$s = substr('tmp', $lastOpeningDate);
-												}
-												// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
-												foreach ($daysOpenings as $op) {
-													echo $op->renderAsHtmlShortWithControls() . "\n";
-												}
-												echo '</div>'."\n";
-											?>
+													// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
+													foreach ($daysOpenings as $op) {
+														echo $op->renderAsHtmlShortWithFullControls() . "\n";
+													}
+													echo '</div>' . "\n";
+												?>
 
 											</div>
 										</div>

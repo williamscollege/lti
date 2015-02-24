@@ -43,12 +43,8 @@ wms bootstrap-calendar-master extensions
 
 /* help force 'create openings' link into top left corner */
 .addOpeningLink {
-	/*float: left;*/
-	/*float: right !important;*/
-	/*text-align: center;*/
 	margin-top: 5px;
 	margin-right: 3px;
-	/*margin: 5px auto !important;*/
 }
 
 .calendar-cell-openings {
@@ -66,15 +62,9 @@ wms bootstrap-calendar-master extensions
 	display: none;
 }
 
-/*.calendar-cell-openings:hover .glyphicon-list-alt {*/
-	/*display: none;*/
-/*}*/
-
 .calendar-cell-openings:hover {
-	/*width: 255px;*/
 	width: 265px;
-	/*min-height: 200px;*/
-	min-height: 30px;
+	min-height: 3px;
 	z-index: 10;
 	background-color: #ffffff;
 	border: 1px solid #666;
@@ -95,11 +85,10 @@ wms bootstrap-calendar-master extensions
 	padding: 4px;
 }
 
-.calendar-cell-openings-container h4{
+.calendar-cell-openings-container h4 {
 	/*display: none;*/
 	padding-bottom: 10px;
 }
-
 
 .opening-space-usage {
 	margin-left: 3px;
@@ -107,11 +96,7 @@ wms bootstrap-calendar-master extensions
 	color: #008000;
 }
 
-/*.opening-time-range {*/
-/*padding-left: 3px;*/
-/*}*/
-
-/* opening control links (edit, delete, add someone) */
+/* opening control links (edit, delete, add signup) */
 .sus-edit-opening, .sus-edit-signup {
 	margin-left: 1px;
 	margin-right: 1px;
@@ -177,7 +162,7 @@ wms bootstrap-calendar-master extensions
 	color: #ff0000;
 }
 
-/* classes for renderAsHtmlShortWithControlAddSelf */
+/* classes for renderAsHtmlShortWithLimitedControls */
 .sus-add-me-to-opening {
 }
 
@@ -193,7 +178,6 @@ wms bootstrap-calendar-master extensions
 	background-color: #F7A9AD;
 	color: #ff0000;
 }
-
 
 /* ensure uniform btn sizes for repeating days of week */
 .toggler_dow {
@@ -262,22 +246,15 @@ span[data-cal-date] {
 	display: none !important;
 }
 
-/*.cal-month-box .cal-cell, .cal-month-day{*/
 .cal-cell {
 	min-height: 65px !important;
 	height: 65px !important;
-
 }
 
 .cal-month-day {
-	/*height: 65px !important;*/
 	min-height: 65px !important;
 	height: 65px !important;
 }
-/*.cal-month-box [class*="cal-cell"]{*/
-	/*min-height: 32px !important;*/
-	/*height: 32px !important;*/
-/*}*/
 
 /*=======================================*/
 /* openings list styles */
@@ -294,7 +271,7 @@ span[data-cal-date] {
 	margin: -96px 0 0 300px;
 }
 
-#openings-list-container .opening-list-for-date  {
+#openings-list-container .opening-list-for-date {
 	padding: 0 0 6px 10px;
 	margin: 0 !important;
 }
@@ -315,11 +292,6 @@ span[data-cal-date] {
 }
 
 
-/*#tabOpeningsCalendar .page-header,*/
-/*#calendar {*/
-/*max-width: 463px !important;*/
-/*}*/
-
 /*=======================================
 Bootstrap.css tweaks are below
 ==========================================*/
@@ -333,6 +305,11 @@ div.form-group.success {
 UL.unstyled LI, OL.unstyled LI {
 	list-style-type: none;
 	margin-left: 0px;
+}
+
+UL.wms-signups {
+	margin: 0;
+	padding-left: 25px;
 }
 
 /*=======================================*/
@@ -412,7 +389,6 @@ H1, H2, H3, H4, H5 {
 
 .btn.btn-link.btn-cancel, .btn-link.btn-cancel {
 	color: #d15545 !important;
-	/*red-orange*/
 }
 
 .form-horizontal .control-group .display-only-controls {
@@ -453,117 +429,4 @@ Purpose: CSS that's NOT an extension / modification of the bootstrap framework
 
 .ordering-controls-up-down a.btn {
 	margin-top: -4px !important;
-}
-
-/***********************************************************************************/
-/* general embedding */
-
-.embedded {
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	border-width: 1px;
-	border-color: #999;
-	border-style: solid;
-
-	padding: 16px;
-	margin: 12px 0;
-}
-
-.embedded h1,
-.embedded h2,
-.embedded h3,
-.embedded h4,
-.embedded h5 {
-	margin-top: 0 !important;
-}
-
-.embedded h3 {
-	font-size: 18px;
-	line-height: 30px;
-}
-
-.embedded h3 input {
-	margin-bottom: 0 !important;
-	font-size: 18px !important;
-	height: 30px !important;
-	width: 300px;
-	padding-top: 0 !important;
-	padding-bottom: 0 !important;
-	margin-top: -2px !important;
-}
-
-.embedded img {
-	max-width: 180px;
-	max-height: 180px;
-}
-
-.embedded .details-info {
-	display: none;
-}
-
-/***********************************************************************************/
-/* home page */
-
-.splash-links {
-	width: 800px;
-	margin: 0 auto !important;
-}
-
-.splash-links a.splash-link {
-	font-weight: bold;
-	font-size: 20px;
-	margin: 0 12px;
-}
-
-/*-------------------------
-confirmation dialog*/
-.confirmationDialog {
-	border-width: 3px;
-	background-color: #FEB;
-	padding-bottom: 8px;
-	font-weight: bold;
-}
-
-.confirmationDialog .modal-header {
-	border: none;
-	padding: 0;
-}
-
-.confirmationDialog .modal-header .close {
-	width: 20px;
-	height: 20px;
-	margin: 6px 8px 0 0;
-	padding: 0;
-	color: #700;
-	border: 1px solid #700;
-	text-align: center;
-	vertical-align: middle;
-	/*text-shadow: none;*/
-	opacity: .9;
-	filter: alpha(opacity=90);
-	background-color: #DCC;
-}
-
-.confirmationDialog .modal-header .close:hover {
-	color: #B00;
-	background-color: #EBB;
-}
-
-.confirmationDialog .modal-body {
-	padding-bottom: 0;
-	border: none;
-}
-
-.confirmationDialog .modal-footer {
-	text-align: center;
-	padding: 6px;
-	border-width: 0;
-	background: none;
-	box-shadow: none;
-	-webkit-box-shadow: none;
-}
-
-.confirmationDialog .modal-footer .btn {
-	margin: 0 24px;
 }
