@@ -23,18 +23,19 @@
 
 	if ($IS_AUTHENTICATED) {
 		echo "<div id=\"parent_container\">"; // start: div#parent_container
-		echo "<h3>" . $pageTitle . "</h3>";
-		// echo "<p>Customize your signup sheet.</p>";
 		?>
 		<div class="container">
 			<div class="row">
 				<!-- Basic Sheet Info / Sheet Access -->
 				<div class="col-sm-5">
+					<?php
+						echo "<h3>" . $s->name . "</h3>";
+						echo "<p>" . $s->description . "</p>";
+					?>
+					<a id="signup_help_link" href="#" title="Show instructions">Show instructions</a>
 					<div class="row">
 						<div class="tab-container" role="tabpanel" data-example-id="set1">
 							<div id="signup_help_text">
-								<b>Overview</b>
-
 								<p>To the right is a calendar showing all openings for this sheet. Hover over an openings icon
 									<span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size: 24px;"></span>
 									to see a summary of the openings on that day, and click on that icon to
@@ -49,6 +50,7 @@
 									To see all the openings for this sheet in a text-based list, click the "List Openings" tab above.
 								</p>
 							</div>
+							<div id="signup_opening_details"></div>
 						</div>
 					</div>
 				</div>
