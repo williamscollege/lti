@@ -121,27 +121,37 @@
 			return $rendered;
 		}
 
-		private function _renderHtml_END($users = []) {
+		private function _renderHtml_END($usersIds = [], $forceUserListing = FALSE) {
 			$rendered = '';
 
 			$this->cacheSignups();
 
 			// display all signup users for this opening
-			if ($users) {
-				$signedupUsers = User::getAllFromDb(['user_id' => $users], $this->dbConnection);
-				if ($signedupUsers) {
-					$rendered .= "<ul class=\"wms-signups\">";
-					foreach ($signedupUsers as $u) {
-						$rendered .= "<li>" . $u->first_name . " " . $u->last_name;
-						// display date signup created
-						foreach ($this->signups as $signup) {
-							if ($signup->signup_user_id == $u->user_id) {
-								$rendered .= ' <span class="small">(' . util_datetimeFormatted($signup->created_at) . ')</span> ';
+			if ($usersIds) {
+
+				$doUserList = $forceUserListing;
+
+				if (! $doUserList) {
+					$displayUserNames = SUS_Sheet::getOneFromDb(['sheet_id'=>$this->sheet_id], $this->dbConnection);
+					$doUserList = ! $displayUserNames->flag_private_signups;
+				}
+
+				if ($doUserList) {
+					$signedupUsers = User::getAllFromDb(['user_id' => $usersIds], $this->dbConnection);
+					if ($signedupUsers) {
+						$rendered .= "<ul class=\"wms-signups\">";
+						foreach ($signedupUsers as $u) {
+							$rendered .= "<li>" . $u->first_name . " " . $u->last_name;
+							// display date signup created
+							foreach ($this->signups as $signup) {
+								if ($signup->signup_user_id == $u->user_id) {
+									$rendered .= ' <span class="small">(' . util_datetimeFormatted($signup->created_at) . ')</span> ';
+								}
 							}
+							$rendered .= "</li>";
 						}
-						$rendered .= "</li>";
+						$rendered .= "</ul>";
 					}
-					$rendered .= "</ul>";
 				}
 			}
 			$rendered .= '</div>';
@@ -158,7 +168,7 @@
 			$rendered .= '<a href="#" class="sus-edit-opening" data-opening-id="' . $this->opening_id . '" data-toggle="modal" data-target="#modal-edit-opening" title="Edit opening"><i class="glyphicon glyphicon-wrench"></i></a>';
 			$rendered .= '<a href="#" class="sus-delete-opening" data-opening-id="' . $this->opening_id . '" title="Cancel signup"><i class="glyphicon glyphicon-remove"></i></a>';
 			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-opening-id="' . $this->opening_id . '" data-toggle="modal" data-target="#modal-edit-opening" title="Sign up"><i class="glyphicon glyphicon-plus"></i></a>';
-			$rendered .= $this->_renderHtml_END($signedupUserIdsAry);
+			$rendered .= $this->_renderHtml_END($signedupUserIdsAry, TRUE);
 
 			return $rendered;
 		}
