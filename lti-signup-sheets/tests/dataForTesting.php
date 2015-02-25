@@ -163,7 +163,7 @@
 		// 500 series ids
 		# SUS_Sheetgroup: 'sheetgroup_id', 'created_at', 'updated_at', 'flag_delete', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheetgroup::$dbTable . " VALUES
-			(501, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 501', 'Something to organize my math sheets', 1, 1),
+			(501, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 501', 'Something to organize my math sheets', 10, 2),
 			(502, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 502', 'Something to organize my english sheets', 4, 2),
 			(503, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 503', 'Something to organize my spanish sheets', 6, 3),
 			(504, NOW(), NOW(), 0, 102, 0, 'Sheetgroup 504', 'Help me keep track of so many sheets', 1, 1),

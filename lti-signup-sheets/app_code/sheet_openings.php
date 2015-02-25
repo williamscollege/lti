@@ -20,6 +20,19 @@
 		exit;
 	}
 
+	function sus_grammatical_max_signups($num) {
+		if (!$num || $num < 0) {
+			return 'an unlimited number of signups';
+		}
+		else {
+			if ($num == 1) {
+				return "1 signup";
+			}
+			else {
+				return "$num signups";
+			}
+		}
+	}
 
 	if ($IS_AUTHENTICATED) {
 		echo "<div id=\"parent_container\">"; // start: div#parent_container
@@ -28,11 +41,63 @@
 			<div class="row">
 				<!-- Basic Sheet Info / Sheet Access -->
 				<div class="col-sm-5">
-					<?php
-						echo "<h3>" . $s->name . "</h3>";
-						echo "<p>" . $s->description . "</p>";
-					?>
-					<a id="signup_help_link" href="#" title="Show instructions">Show instructions</a>
+					<div id="sus_signup_on_sheet_info" class="small">
+						<?php
+							// alternate way:
+							// Prepare SQL using PDO
+							//$sql = "SELECT * FROM ".SUS_Sheetgroup::$dbTable;
+							//$sql  = "SELECT * FROM sus_sheetgroups INNER JOIN sus_sheets ON sus_sheetgroups.sheetgroup_id = sus_sheets.sheetgroup_id INNER JOIN sus_openings ON sus_openings.sheet_id = sus_sheets.sheet_id INNER JOIN sus_signups ON sus_signups.opening_id = sus_openings.opening_id WHERE sus_sheetgroups.sheetgroup_id = " . $s->sheetgroup_id . " AND  sus_signups.signup_user_id = " . $USER->user_id;
+							//$stmt = $DB->prepare($sql);
+							//$stmt->execute();
+							//$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+							//util_prePrintR($res);
+
+							// determine filtered subset of openings (fetch openings from sheets only from this sheetgroup)
+							$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $s->sheetgroup_id], $DB);
+							$sheets_in_sg         = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $sg->sheetgroup_id], $DB);
+							$list_sheet_ids_in_sg = Db_Linked::arrayOfAttrValues($sheets_in_sg, 'sheet_id');
+
+							$openings_in_sheets     = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg], $DB);
+							$list_opening_ids_in_sg = Db_Linked::arrayOfAttrValues($openings_in_sheets, 'opening_id');
+
+							$future_openings_in_sheets     = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg, 'begin_datetime >' >= util_currentDateTimeString_asMySQL()], $DB);
+							$future_list_opening_ids_in_sg = Db_Linked::arrayOfAttrValues($openings_in_sheets, 'opening_id');
+
+							$fetch_signups_in_openings        = SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_sg, 'signup_user_id' => $USER->user_id], $DB);
+							$future_fetch_signups_in_openings = SUS_Signup::getAllFromDb(['opening_id' => $future_list_opening_ids_in_sg, 'signup_user_id' => $USER->user_id], $DB);
+
+							$openings_in_one_sheet     = SUS_Opening::getAllFromDb(['sheet_id' => $s->sheet_id], $DB);
+							$list_opening_ids_in_one_sheet = Db_Linked::arrayOfAttrValues($openings_in_sheets, 'opening_id');
+
+							$future_openings_in_one_sheet     = SUS_Opening::getAllFromDb(['sheet_id' => $s->sheet_id, 'begin_datetime >' >= util_currentDateTimeString_asMySQL()], $DB);
+							$future_list_opening_ids_in_one_sheet = Db_Linked::arrayOfAttrValues($openings_in_sheets, 'opening_id');
+
+							$fetch_signups_in_sheet        = SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_one_sheet, 'signup_user_id' => $USER->user_id], $DB);
+							$future_fetch_signups_in_sheet = SUS_Signup::getAllFromDb(['opening_id' => $future_list_opening_ids_in_one_sheet, 'signup_user_id' => $USER->user_id], $DB);
+						?>
+
+						<h3><?php echo $s->name; ?></h3>
+						<?php echo $s->description; ?><br />
+						Group: <?php echo $sg->name; ?><br />
+
+						<div id="sheet_further_info">
+							You may use
+							<span class="badge"><?php echo(sus_grammatical_max_signups($sg->max_g_total_user_signups)); ?></span> across all sheets in this group;
+							<span class="badge"><?php echo(sus_grammatical_max_signups($sg->max_g_pending_user_signups)); ?></span> may be for future times.<br />
+							Currently you have used
+							<span class="badge"> <?php echo count($fetch_signups_in_openings) + 0; ?></span> in this group,
+							<span class="badge"><?php echo count($future_fetch_signups_in_openings) + 0; ?></span> of which are in the future.<br />
+							You may have
+							<span class="badge"><?php echo(sus_grammatical_max_signups($s->max_total_user_signups)); ?></span> on this sheet;
+							<span class="badge"><?php echo(sus_grammatical_max_signups($s->max_pending_user_signups)); ?></span> may be for future times.
+							Currently you have
+							<span class="badge"><?php echo count($fetch_signups_in_sheet) + 0; ?></span> on this sheet,
+							<span class="badge"><?php echo count($future_fetch_signups_in_sheet) + 0; ?></span> of which are in the future.<br />
+						</div>
+						<a id="signup_help_link" class="hidden" href="#" title="Show instructions">Show instructions</a>
+					</div>
+
+
 					<div class="row">
 						<div class="tab-container" role="tabpanel" data-example-id="set1">
 							<div id="signup_help_text">

@@ -45,7 +45,7 @@ $(document).ready(function () {
 	$(document).on('click', '.sus-add-me-to-opening, .sus-delete-me-from-opening', function () {
 		var openingID = $(this).attr('data-opening-id');
 		var doAction = 'sheet-opening-signup-add-me'; //default condition
-		if($(this).hasClass('sus-delete-me-from-opening')){
+		if ($(this).hasClass('sus-delete-me-from-opening')) {
 			doAction = 'sheet-opening-signup-delete-me';
 		}
 

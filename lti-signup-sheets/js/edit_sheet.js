@@ -2,7 +2,7 @@ $(document).ready(function () {
 
 	// initial default conditions
 	$("#input_sheet_name").focus().select();
-	$("#signup_help_link").hide();
+
 
 	// ***************************
 	// For performance reasons, the Tooltip and Popover data-apis are opt-in, meaning you must initialize them yourself.
@@ -146,14 +146,14 @@ $(document).ready(function () {
 	// Copy DOM (onclick of glyph overlay) from calendar overlay to left nav for ease of seeing and printer output
 	$(".calendar-cell-openings").click(function () {
 		var dataset = $(this).html();
+		$("#signup_help_link").removeClass('hidden').show();
 		$("#signup_help_text").hide();
-		$("#signup_help_link").show();
 		$("#signup_opening_details").show().html(dataset);
 	});
 
 	$("#signup_help_link").click(function(){
-		$("#signup_help_text").show();
 		$("#signup_help_link").hide();
+		$("#signup_help_text").show();
 		$("#signup_opening_details").hide();
 	});
 
