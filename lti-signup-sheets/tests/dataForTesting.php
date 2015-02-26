@@ -225,7 +225,8 @@
 			(707, NOW(), NOW(), 1, 605, 0, 'Opening 707', 'Opening 707, Sheet 605, Sheetgroup 503', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), 'Purple Pub'),
 			(708, NOW(), NOW(), 1, 606, 0, 'Opening 708', 'Opening 708, Sheet 606, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), ''),
 			(709, NOW(), NOW(), 0, 607, 0, 'Opening 709', 'Opening 709, Sheet 607, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), ''),
-			(710, NOW(), NOW(), 0, 610, 0, 'Opening 710', 'Opening 710, Sheet 610, Sheetgroup 510', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), '')
+			(710, NOW(), NOW(), 0, 608, 0, 'Opening 710', 'Opening 710, Sheet 608, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), ''),
+			(711, NOW(), NOW(), 0, 610, 0, 'Opening 711', 'Opening 711, Sheet 610, Sheetgroup 510', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), '')
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
@@ -284,10 +285,11 @@
 			(906, NOW(), NOW(), 601, 'byrole', 0, 'teacher', 60),
 			(907, NOW(), NOW(), 601, 'byhasaccount', 0, 'all', 60),
 			(908, NOW(), NOW(), 607, 'byuser', 0, 'mockUserJBond', 1),
-			(909, NOW(), NOW(), 608, 'adminbyuser', 0, 'tusr9', 1),
-			(910, NOW(), NOW(), 602, 'byrole', 0, 'teacher', 60),
-			(911, NOW(), NOW(), 601, 'byuser', 0, 'tusr5', 10),
-			(912, NOW(), NOW(), 601, 'byrole', 0, 'student', 60)
+			(909, NOW(), NOW(), 608, 'adminbyuser', 0, 'mockUserJBond', 1),
+			(910, NOW(), NOW(), 608, 'adminbyuser', 0, 'tusr9', 1),
+			(911, NOW(), NOW(), 602, 'byrole', 0, 'teacher', 60),
+			(912, NOW(), NOW(), 601, 'byuser', 0, 'tusr5', 10),
+			(913, NOW(), NOW(), 601, 'byrole', 0, 'student', 60)
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();

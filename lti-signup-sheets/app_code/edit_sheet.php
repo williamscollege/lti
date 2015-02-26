@@ -19,20 +19,39 @@
 	}
 	require_once('../app_head.php');
 
+
+	//###############################################################
+	// security: check if access allowed to this page
+	//###############################################################
+	if (!$sheetIsNew) {
+		// this is not a 'new' sheet
+		if (!$sheetIsDataIncoming) {
+			// this is not a 'postback'
+			if (!is_numeric($_REQUEST["sheet"])) {
+				// error: must be an integer
+				util_displayMessage('error', 'Invalid sheet request');
+				require_once('../foot.php');
+				exit;
+			}
+			elseif (!$USER->isUserAllowedToManageSheet($_REQUEST["sheet"])) {
+				// error: must have access to manage this sheet
+				util_displayMessage('error', 'You do not have permission to edit that sheet');
+				require_once('../foot.php');
+				exit;
+			}
+		}
+	}
+
+
 	// load calendar setup functions
 	require_once('calendar_setup.php');
-
-
-	// TODO - hitting this page directly (w/o QS or form values) causes different not-so-great issues in each of the 2 visible tabs
-	// TODO - http://localhost/GITHUB/lti/lti-signup-sheets/app_code/edit_sheet.php
 
 	if ($IS_AUTHENTICATED) {
 
 		$s = FALSE;
 
-		// postback
 		if ($sheetIsDataIncoming) {
-			// use cases:
+			// postback
 			// 1) postback for brand new sheet (record not yet in db)
 			// 2) postback for edited sheet (record exists in db)
 
@@ -248,7 +267,6 @@
 								</div>
 								<!-- End: Basic Sheet Info -->
 
-								<!-- TODO - need to update access record(s) in DB upon save -->
 								<!--Start: Sheet Access-->
 								<!--DKC IMPORTANT (normal): set class to: 'tab-pane fade'-->
 								<!--DKC IMPORTANT (testing): set class to: 'tab-pane fade active in'-->

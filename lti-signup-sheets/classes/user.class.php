@@ -10,6 +10,7 @@
 		public $course_roles;
 		public $enrollments;
 		public $sheetgroups;
+		public $sheets;
 		public $managed_sheets;
 		public $my_signups;
 		public $signups_on_my_sheets;
@@ -37,6 +38,7 @@
 			$this->course_roles          = array();
 			$this->enrollments           = array();
 			$this->sheetgroups           = array();
+			$this->sheets                = array();
 			$this->managed_sheets        = array();
 			$this->my_signups            = array();
 			$this->signups_on_my_sheets  = array();
@@ -47,6 +49,7 @@
 			$this->course_roles          = array();
 			$this->enrollments           = array();
 			$this->sheetgroups           = array();
+			$this->sheets                = array();
 			$this->managed_sheets        = array();
 			$this->my_signups            = array();
 			$this->signups_on_my_sheets  = array();
@@ -83,6 +86,7 @@
 			}
 			return $usersByRole;
 		}
+
 
 		/* public functions */
 
@@ -188,6 +192,48 @@
 			usort($this->sheetgroups, 'SUS_Sheetgroup::cmp');
 		}
 
+		// TODO - standardize/improve class names to be more humanly consistent and readable
+		public function cacheSheets() {
+			if (!$this->sheetgroups) {
+				$this->loadSheetgroups();
+			}
+			if (!$this->sheets) {
+				$this->loadSheets();
+			}
+		}
+
+		public function loadSheets() {
+			$this->cacheSheetgroups();
+			$sheetgroup_ids = Db_Linked::arrayOfAttrValues($this->sheetgroups, 'sheetgroup_id');
+
+			$this->sheets = [];
+			$this->sheets = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $sheetgroup_ids, 'owner_user_id' => $this->user_id], $this->dbConnection);
+			usort($this->sheets, 'SUS_Sheet::cmp');
+		}
+
+		// check if user owns or manages this sheet (param required): return boolean value
+		public function isUserAllowedToManageSheet($sheet_id = 0) {
+			$this->cacheSheets();
+			$this->cacheManagedSheets();
+
+			// fetch relevant hashes of sheet_id values
+			$fetch_sheet_ids = Db_Linked::arrayOfAttrValues($this->sheets, 'sheet_id');
+			$fetch_managed_sheet_ids = Db_Linked::arrayOfAttrValues($this->managed_sheets, 'sheet_id');
+
+//			util_prePrintR($fetch_sheet_ids);
+//			util_prePrintR($fetch_managed_sheet_ids);
+
+			if (in_array($sheet_id, $fetch_sheet_ids)) {
+				return TRUE;
+			}
+
+			if (in_array($sheet_id, $fetch_managed_sheet_ids)) {
+				return TRUE;
+			}
+
+			return FALSE;
+		}
+
 		public function cacheManagedSheets() {
 			if (!$this->managed_sheets) {
 				$this->loadManagedSheets();
@@ -206,10 +252,10 @@
 				array_push($this->managed_sheets, SUS_Sheet::getOneFromDb(['sheet_id' => $sheet->sheet_id], $this->dbConnection));
 
 				// attempted hack to resolve above issue... aborted.
-//				$one_sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $sheet->sheet_id], $this->dbConnection);
-//				if (isset($one_sheet->flag_delete)) {
-//					array_push($this->managed_sheets, $one_sheet);
-//				}
+				//				$one_sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $sheet->sheet_id], $this->dbConnection);
+				//				if (isset($one_sheet->flag_delete)) {
+				//					array_push($this->managed_sheets, $one_sheet);
+				//				}
 			}
 			usort($this->managed_sheets, 'SUS_Sheet::cmp');
 		}
@@ -383,7 +429,7 @@
 		// takes: an optional flag for whether access data should be included in the results
 		// returns: an array of sheet objects on which the current user has access to sign up
 		// $for_sheet_id = use this to show openings for 1 sheet
-		// TODO - veryify use of params with moodle use cases
+		// TODO - verify use of params with moodle use cases
 		public function loadMyAvailableOpenings($includeAccessRecords = TRUE, $for_user_id = 0, $for_sheet_id = 0, $for_access_id = 0) {
 			$this->my_available_openings = [];
 
