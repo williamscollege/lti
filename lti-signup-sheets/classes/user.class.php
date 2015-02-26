@@ -220,8 +220,8 @@
 			$fetch_sheet_ids = Db_Linked::arrayOfAttrValues($this->sheets, 'sheet_id');
 			$fetch_managed_sheet_ids = Db_Linked::arrayOfAttrValues($this->managed_sheets, 'sheet_id');
 
-//			util_prePrintR($fetch_sheet_ids);
-//			util_prePrintR($fetch_managed_sheet_ids);
+			util_prePrintR($fetch_sheet_ids);
+			util_prePrintR($fetch_managed_sheet_ids);
 
 			if (in_array($sheet_id, $fetch_sheet_ids)) {
 				return TRUE;

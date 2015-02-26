@@ -3,12 +3,32 @@
 	$pageTitle = ucfirst(util_lang('sheet_openings'));
 	require_once('../app_head.php');
 
+	//###############################################################
+	// begin security: check if access allowed to this page
+	//###############################################################
+	if ((!isset($_REQUEST["sheet"])) || (!is_numeric($_REQUEST["sheet"])) || ($_REQUEST["sheet"] <= 0)) {
+		// error: querystring 'sheet' must exist and be an integer
+		util_displayMessage('error', 'Invalid or missing sheet request');
+		require_once('../foot.php');
+		exit;
+	}
+	// TODO -- NEED TO IMPLEMENT THIS !!!!!
+	elseif (!$USER->isUserAllowedToSignup($_REQUEST["sheet"])) {
+		// error: must have access to manage this sheet
+		util_displayMessage('error', 'You do not have permission to edit that sheet');
+		require_once('../foot.php');
+		exit;
+	}
+
+
 	// load calendar setup functions
 	require_once('calendar_setup.php');
 
+	// TODO - add is_numeric() check to isset() and integer > 0 checks throughout site
+	// TODO - change error messagees like THIS: echo 'no matching record found in database'; exit; TO INSTEAD BE: util_displayMessage()
 
 	$s = '';
-	if (isset($_REQUEST["sheet"]) && $_REQUEST["sheet"] > 0) {
+	if ((isset($_REQUEST["sheet"])) && (is_numeric($_REQUEST["sheet"])) && ($_REQUEST["sheet"] > 0)) {
 		// ***************************
 		// fetch sheet
 		// ***************************
@@ -16,10 +36,11 @@
 	}
 
 	if (!$s->matchesDb) {
-		echo 'no matching record found in database';
+		util_displayMessage('error', 'No matching record found in database');
 		exit;
 	}
 
+	// helper function: usage details
 	function sus_grammatical_max_signups($num) {
 		if (!$num || $num < 0) {
 			return 'an unlimited number of signups';

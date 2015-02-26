@@ -3,14 +3,14 @@
 	$sheetIsNew          = FALSE;
 	$sheetIsDataIncoming = TRUE;
 
-	if (isset($_REQUEST["sheet"]) && $_REQUEST["sheet"] == "new") {
+	if ((isset($_REQUEST["sheet"])) && ($_REQUEST["sheet"] == "new")) {
 		$pageTitle           = ucfirst(util_lang('add_sheet'));
 		$sheetIsNew          = TRUE;
 		$sheetIsDataIncoming = FALSE;
 	}
 	else {
 		$pageTitle = ucfirst(util_lang('edit_sheet'));
-		if (isset($_REQUEST["hiddenAction"]) && $_REQUEST["hiddenAction"] == "savesheet") {
+		if ((isset($_REQUEST["hiddenAction"])) && ($_REQUEST["hiddenAction"] == "savesheet")) {
 			$sheetIsDataIncoming = TRUE;
 		}
 		else {
@@ -19,17 +19,16 @@
 	}
 	require_once('../app_head.php');
 
-
 	//###############################################################
-	// security: check if access allowed to this page
+	// begin security: check if access allowed to this page
 	//###############################################################
 	if (!$sheetIsNew) {
 		// this is not a 'new' sheet
 		if (!$sheetIsDataIncoming) {
 			// this is not a 'postback'
-			if (!is_numeric($_REQUEST["sheet"])) {
-				// error: must be an integer
-				util_displayMessage('error', 'Invalid sheet request');
+			if ((!isset($_REQUEST["sheet"])) || (!is_numeric($_REQUEST["sheet"]))) {
+				// error: querystring 'sheet' must exist and be an integer
+				util_displayMessage('error', 'Invalid or missing sheet request');
 				require_once('../foot.php');
 				exit;
 			}
@@ -41,7 +40,6 @@
 			}
 		}
 	}
-
 
 	// load calendar setup functions
 	require_once('calendar_setup.php');
