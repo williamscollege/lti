@@ -143,18 +143,29 @@ $(document).ready(function () {
 		updateSheetAccess(params);
 	});
 
-	// Copy DOM (onclick of glyph overlay) from calendar overlay to left nav for ease of seeing and printer output
+	// Display usage details for this group and sheet
+	$("#link_for_usage_quotas").click(function(){
+		if($("#toggle_usage_quotas").hasClass('hidden')){
+			$("#toggle_usage_quotas").removeClass('hidden');//.show();
+			$("#link_for_usage_quotas").text('Hide usage details');
+		} else{
+			$("#toggle_usage_quotas").addClass('hidden');//.show();
+			$("#link_for_usage_quotas").text('Show usage details');
+		}
+	});
+	
+	// Display opening signup details (Copy DOM from calendar overlay)
 	$(".calendar-cell-openings").click(function () {
 		var dataset = $(this).html();
-		$("#signup_help_link").removeClass('hidden').show();
-		$("#signup_help_text").hide();
-		$("#signup_opening_details").show().html(dataset);
+		$("#link_for_openings_instructions").removeClass('hidden').show();
+		$("#toggle_openings_instructions").hide();
+		$("#display_opening_signup_details").show().html(dataset);
 	});
 
-	$("#signup_help_link").click(function(){
-		$("#signup_help_link").hide();
-		$("#signup_help_text").show();
-		$("#signup_opening_details").hide();
+	$("#link_for_openings_instructions").click(function(){
+		$("#link_for_openings_instructions").hide();
+		$("#toggle_openings_instructions").show();
+		$("#display_opening_signup_details").hide();
 	});
 
 

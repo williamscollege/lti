@@ -4,11 +4,22 @@
 	require_once('../app_head.php');
 
     #############################
+    # 0. example of custom SQL using PDO
     # 1. figure out what action is being attempted (none/default is view for a single notebook, list for none specified)
     # 2. figure out which notebook is being acted on (if none specified then redirect to home page for actions other than list)
     # 3. confirm that the user is allowed to take that action on that object (if not, redirect them to the home page with an appropriate warning)
     # 4. branch behavior based on the action
     #############################
+
+    # 0. example of custom SQL using PDO
+    // alternate way:
+    // Prepare SQL using PDO
+    //$sql = "SELECT * FROM ".SUS_Sheetgroup::$dbTable;
+    //$sql  = "SELECT * FROM sus_sheetgroups INNER JOIN sus_sheets ON sus_sheetgroups.sheetgroup_id = sus_sheets.sheetgroup_id INNER JOIN sus_openings ON sus_openings.sheet_id = sus_sheets.sheet_id INNER JOIN sus_signups ON sus_signups.opening_id = sus_openings.opening_id WHERE sus_sheetgroups.sheetgroup_id = " . $s->sheetgroup_id . " AND  sus_signups.signup_user_id = " . $USER->user_id;
+    //$stmt = $DB->prepare($sql);
+    //$stmt->execute();
+    //$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    //util_prePrintR($res);
 
     # 1. figure out what action is being attempted (none/default is view); also, a bit of param validation
     $action = 'view';
