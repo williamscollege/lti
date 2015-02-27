@@ -63,22 +63,22 @@
 			$rendered .= "<a href=\"#\" class=\"sus-edit-signup\" data-for-opening-id=\"" . $this->opening_id . "\" data-for-signup-id=\"" . $this->signup_id . "\" data-for-username=\"" . $userDisplayUsername . "\"  data-for-signup-admin-comment=\"" . $this->admin_comment . "\" title=\"Edit signup\"><i class=\"glyphicon glyphicon-wrench\"></i> </a>";
 			$rendered .= "<a href=\"#\" class=\"sus-delete-signup wms-custom-delete\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $this->opening_id . "\" data-for-signup-id=\"" . $this->signup_id . "\" data-for-signup-name=\"" . $userDisplayFullname . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>";
 			$rendered .= $userDisplayFullname;
-			$rendered .= ' <span class="small">('.util_datetimeFormatted($this->created_at).')</span> ';
+			$rendered .= ' <span class="small">(' . util_datetimeFormatted($this->created_at) . ')</span> ';
 			if ($this->admin_comment) {
-				$rendered .= '<div class="signup-admin-comment-display">'.$this->admin_comment.'</div>';
+				$rendered .= '<div class="signup-admin-comment-display">' . $this->admin_comment . '</div>';
 			}
 
 			return $rendered;
 		}
 
-		public function renderAsListItemShortWithControls($userForThisSignup = ''){
-			if (! $userForThisSignup) {
-				$userForThisSignup = User::getOneFromDb(['user_id'=>$this->signup_user_id],$this->dbConnection);
+		public function renderAsListItemShortWithControls($userForThisSignup = '') {
+			if (!$userForThisSignup) {
+				$userForThisSignup = User::getOneFromDb(['user_id' => $this->signup_user_id], $this->dbConnection);
 			}
 
 			$rendered = '';
 
-			$rendered .= "<li  data-for-signup-created_at=\"".$this->created_at."\" data-for-firstname=\"" . $userForThisSignup->first_name . "\" data-for-lastname=\"" . $userForThisSignup->last_name . "\" data-for-signup-id=\"" . $this->signup_id . "\">";
+			$rendered .= "<li  data-for-signup-created_at=\"" . $this->created_at . "\" data-for-firstname=\"" . $userForThisSignup->first_name . "\" data-for-lastname=\"" . $userForThisSignup->last_name . "\" data-for-signup-id=\"" . $this->signup_id . "\">";
 			$rendered .= $this->renderAsHtmlShortWithFullControls($userForThisSignup->first_name . " " . $userForThisSignup->last_name, $userForThisSignup->username);
 			$rendered .= "</li>";
 

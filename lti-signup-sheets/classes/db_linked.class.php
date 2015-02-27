@@ -1,4 +1,5 @@
 <?php
+
 	/*
 
 	Db_Linked is a basic root class for objects that are tied to a DB record - e.g. users, eq_groups, eq_items, etc. It provides simple functions to select, insert, and update the DB record associated with the object. NOTE: it does NOT support a delete method, and it does NOT load associations (e.g. group membership). If that kind of functionality is needed it should be implemented in a sub-class (for now, anyway, we're trying to keep this pretty streamlined).
@@ -71,9 +72,9 @@
 		public static $fields = array();
 		public static $primaryKeyField = '';
 		public static $dbTable = '';
-        public static $entity_type_label = '';
+		public static $entity_type_label = '';
 
-        public static $SQL_RESERVED =  array('accessible', 'add', 'all', 'alter', 'analyze', 'and', 'as', 'asc', 'asensitive', 'before', 'between', 'bigint', 'binary', 'blob', 'both', 'by', 'call', 'cascade', 'case', 'change', 'char', 'character', 'check', 'collate', 'column', 'condition', 'connection', 'constraint', 'continue', 'convert', 'create', 'cross', 'current_date', 'current_time', 'current_timestamp', 'current_user', 'cursor', 'database', 'databases', 'day_hour', 'day_microsecond', 'day_minute', 'day_second', 'dec', 'decimal', 'declare', 'default', 'delayed', 'delete', 'desc', 'describe', 'deterministic', 'distinct', 'distinctrow', 'div', 'double', 'drop', 'dual', 'each', 'else', 'elseif', 'enclosed', 'escaped', 'exists', 'exit', 'explain', 'false', 'fetch', 'float', 'float4', 'float8', 'for', 'force', 'foreign', 'from', 'fulltext', 'goto', 'grant', 'group', 'having', 'high_priority', 'hour_microsecond', 'hour_minute', 'hour_second', 'if', 'ignore', 'in', 'index', 'infile', 'inner', 'inout', 'insensitive', 'insert', 'int', 'int1', 'int2', 'int3', 'int4', 'int8', 'integer', 'interval', 'into', 'is', 'iterate', 'join', 'key', 'keys', 'kill', 'label', 'leading', 'leave', 'left', 'like', 'limit', 'linear', 'lines', 'load', 'localtime', 'localtimestamp', 'lock', 'long', 'longblob', 'longtext', 'loop', 'low_priority', 'master_ssl_verify_server_cert', 'match', 'mediumblob', 'mediumint', 'mediumtext', 'middleint', 'minute_microsecond', 'minute_second', 'mod', 'modifies', 'natural', 'no_write_to_binlog', 'not', 'null', 'numeric', 'on', 'optimize', 'option', 'optionally', 'or', 'order', 'out', 'outer', 'outfile', 'precision', 'primary', 'procedure', 'purge', 'range', 'read', 'read_only', 'read_write', 'reads', 'real', 'references', 'regexp', 'release', 'rename', 'repeat', 'replace', 'require', 'reserved', 'restrict', 'return', 'revoke', 'right', 'rlike', 'schema', 'schemas', 'second_microsecond', 'select', 'sensitive', 'separator', 'set', 'show', 'smallint', 'spatial', 'specific', 'sql', 'sql_big_result', 'sql_calc_found_rows', 'sql_small_result', 'sqlexception', 'sqlstate', 'sqlwarning', 'ssl', 'starting', 'straight_join', 'table', 'terminated', 'then', 'tinyblob', 'tinyint', 'tinytext', 'to', 'trailing', 'trigger', 'true', 'undo', 'union', 'unique', 'unlock', 'unsigned', 'update', 'upgrade', 'usage', 'use', 'using', 'utc_date', 'utc_time', 'utc_timestamp', 'values', 'varbinary', 'varchar', 'varcharacter', 'varying', 'when', 'where', 'while', 'with', 'write', 'xor', 'year_month', 'zerofill', '__class__', '__compiler_halt_offset__', '__dir__', '__file__', '__function__', '__method__', '__namespace__', 'abday_1', 'abday_2', 'abday_3', 'abday_4', 'abday_5', 'abday_6', 'abday_7', 'abmon_1', 'abmon_10', 'abmon_11', 'abmon_12', 'abmon_2', 'abmon_3', 'abmon_4', 'abmon_5', 'abmon_6', 'abmon_7', 'abmon_8', 'abmon_9', 'abstract', 'alt_digits', 'am_str', 'array', 'assert_active', 'assert_bail', 'assert_callback', 'assert_quiet_eval', 'assert_warning', 'break', 'case_lower', 'case_upper', 'catch', 'cfunction', 'char_max', 'class', 'clone', 'codeset', 'connection_aborted', 'connection_normal', 'connection_timeout', 'const', 'count_normal', 'count_recursive', 'credits_all', 'credits_docs', 'credits_fullpage', 'credits_general', 'credits_group', 'credits_modules', 'credits_qa', 'credits_sapi', 'crncystr', 'crypt_blowfish', 'crypt_ext_des', 'crypt_md5', 'crypt_salt_length', 'crypt_std_des', 'currency_symbol', 'd_fmt', 'd_t_fmt', 'day_1', 'day_2', 'day_3', 'day_4', 'day_5', 'day_6', 'day_7', 'decimal_point', 'default_include_path', 'die', 'directory_separator', 'do', 'e_all', 'e_compile_error', 'e_compile_warning', 'e_core_error', 'e_core_warning', 'e_deprecated', 'e_error', 'e_notice', 'e_parse', 'e_strict', 'e_user_deprecated', 'e_user_error', 'e_user_notice', 'e_user_warning', 'e_warning', 'echo', 'empty', 'enddeclare', 'endfor', 'endforeach', 'endif', 'endswitch', 'endwhile', 'ent_compat', 'ent_noquotes', 'ent_quotes', 'era', 'era_d_fmt', 'era_d_t_fmt', 'era_t_fmt', 'era_year', 'eval', 'extends', 'extr_if_exists', 'extr_overwrite', 'extr_prefix_all', 'extr_prefix_if_exists', 'extr_prefix_invalid', 'extr_prefix_same', 'extr_skip', 'final', 'foreach', 'frac_digits', 'function', 'global', 'grouping', 'html_entities', 'html_specialchars', 'implements', 'include', 'include_once', 'info_all', 'info_configuration', 'info_credits', 'info_environment', 'info_general', 'info_license', 'info_modules', 'info_variables', 'ini_all', 'ini_perdir', 'ini_system', 'ini_user', 'instanceof', 'int_curr_symbol', 'int_frac_digits', 'interface', 'isset', 'lc_all', 'lc_collate', 'lc_ctype', 'lc_messages', 'lc_monetary', 'lc_numeric', 'lc_time', 'list', 'lock_ex', 'lock_nb', 'lock_sh', 'lock_un', 'log_alert', 'log_auth', 'log_authpriv', 'log_cons', 'log_crit', 'log_cron', 'log_daemon', 'log_debug', 'log_emerg', 'log_err', 'log_info', 'log_kern', 'log_local0', 'log_local1', 'log_local2', 'log_local3', 'log_local4', 'log_local5', 'log_local6', 'log_local7', 'log_lpr', 'log_mail', 'log_ndelay', 'log_news', 'log_notice', 'log_nowait', 'log_odelay', 'log_perror', 'log_pid', 'log_syslog', 'log_user', 'log_uucp', 'log_warning', 'm_1_pi', 'm_2_pi', 'm_2_sqrtpi', 'm_e', 'm_ln10', 'm_ln2', 'm_log10e', 'm_log2e', 'm_pi', 'm_pi_2', 'm_pi_4', 'm_sqrt1_2', 'm_sqrt2', 'mon_1', 'mon_10', 'mon_11', 'mon_12', 'mon_2', 'mon_3', 'mon_4', 'mon_5', 'mon_6', 'mon_7', 'mon_8', 'mon_9', 'mon_decimal_point', 'mon_grouping', 'mon_thousands_sep', 'n_cs_precedes', 'n_sep_by_space', 'n_sign_posn', 'namespace', 'negative_sign', 'new', 'noexpr', 'nostr', 'old_function', 'p_cs_precedes', 'p_sep_by_space', 'p_sign_posn', 'path_separator', 'pathinfo_basename', 'pathinfo_dirname', 'pathinfo_extension', 'pear_extension_dir', 'pear_install_dir', 'php_bindir', 'php_config_file_path', 'php_config_file_scan_dir', 'php_datadir', 'php_debug', 'php_eol', 'php_extension_dir', 'php_extra_version', 'php_int_max', 'php_int_size', 'php_libdir', 'php_localstatedir', 'php_major_version', 'php_maxpathlen', 'php_minor_version', 'php_os', 'php_output_handler_cont', 'php_output_handler_end', 'php_output_handler_start', 'php_prefix', 'php_release_version', 'php_sapi', 'php_shlib_suffix', 'php_sysconfdir', 'php_version', 'php_version_id', 'php_windows_nt_domain_controller', 'php_windows_nt_server', 'php_windows_nt_workstation', 'php_windows_version_build', 'php_windows_version_major', 'php_windows_version_minor', 'php_windows_version_platform', 'php_windows_version_producttype', 'php_windows_version_sp_major', 'php_windows_version_sp_minor', 'php_windows_version_suitemask', 'php_zts', 'pm_str', 'positive_sign', 'print', 'private', 'protected', 'public', 'radixchar', 'require_once', 'seek_cur', 'seek_end', 'seek_set', 'sort_asc', 'sort_desc', 'sort_numeric', 'sort_regular', 'sort_string', 'static', 'str_pad_both', 'str_pad_left', 'str_pad_right', 'switch', 't_fmt', 't_fmt_ampm', 'thousands_sep', 'thousep', 'throw', 'try', 'unset', 'var', 'yesexpr', 'yesstr');
+		public static $SQL_RESERVED = array('accessible', 'add', 'all', 'alter', 'analyze', 'and', 'as', 'asc', 'asensitive', 'before', 'between', 'bigint', 'binary', 'blob', 'both', 'by', 'call', 'cascade', 'case', 'change', 'char', 'character', 'check', 'collate', 'column', 'condition', 'connection', 'constraint', 'continue', 'convert', 'create', 'cross', 'current_date', 'current_time', 'current_timestamp', 'current_user', 'cursor', 'database', 'databases', 'day_hour', 'day_microsecond', 'day_minute', 'day_second', 'dec', 'decimal', 'declare', 'default', 'delayed', 'delete', 'desc', 'describe', 'deterministic', 'distinct', 'distinctrow', 'div', 'double', 'drop', 'dual', 'each', 'else', 'elseif', 'enclosed', 'escaped', 'exists', 'exit', 'explain', 'false', 'fetch', 'float', 'float4', 'float8', 'for', 'force', 'foreign', 'from', 'fulltext', 'goto', 'grant', 'group', 'having', 'high_priority', 'hour_microsecond', 'hour_minute', 'hour_second', 'if', 'ignore', 'in', 'index', 'infile', 'inner', 'inout', 'insensitive', 'insert', 'int', 'int1', 'int2', 'int3', 'int4', 'int8', 'integer', 'interval', 'into', 'is', 'iterate', 'join', 'key', 'keys', 'kill', 'label', 'leading', 'leave', 'left', 'like', 'limit', 'linear', 'lines', 'load', 'localtime', 'localtimestamp', 'lock', 'long', 'longblob', 'longtext', 'loop', 'low_priority', 'master_ssl_verify_server_cert', 'match', 'mediumblob', 'mediumint', 'mediumtext', 'middleint', 'minute_microsecond', 'minute_second', 'mod', 'modifies', 'natural', 'no_write_to_binlog', 'not', 'null', 'numeric', 'on', 'optimize', 'option', 'optionally', 'or', 'order', 'out', 'outer', 'outfile', 'precision', 'primary', 'procedure', 'purge', 'range', 'read', 'read_only', 'read_write', 'reads', 'real', 'references', 'regexp', 'release', 'rename', 'repeat', 'replace', 'require', 'reserved', 'restrict', 'return', 'revoke', 'right', 'rlike', 'schema', 'schemas', 'second_microsecond', 'select', 'sensitive', 'separator', 'set', 'show', 'smallint', 'spatial', 'specific', 'sql', 'sql_big_result', 'sql_calc_found_rows', 'sql_small_result', 'sqlexception', 'sqlstate', 'sqlwarning', 'ssl', 'starting', 'straight_join', 'table', 'terminated', 'then', 'tinyblob', 'tinyint', 'tinytext', 'to', 'trailing', 'trigger', 'true', 'undo', 'union', 'unique', 'unlock', 'unsigned', 'update', 'upgrade', 'usage', 'use', 'using', 'utc_date', 'utc_time', 'utc_timestamp', 'values', 'varbinary', 'varchar', 'varcharacter', 'varying', 'when', 'where', 'while', 'with', 'write', 'xor', 'year_month', 'zerofill', '__class__', '__compiler_halt_offset__', '__dir__', '__file__', '__function__', '__method__', '__namespace__', 'abday_1', 'abday_2', 'abday_3', 'abday_4', 'abday_5', 'abday_6', 'abday_7', 'abmon_1', 'abmon_10', 'abmon_11', 'abmon_12', 'abmon_2', 'abmon_3', 'abmon_4', 'abmon_5', 'abmon_6', 'abmon_7', 'abmon_8', 'abmon_9', 'abstract', 'alt_digits', 'am_str', 'array', 'assert_active', 'assert_bail', 'assert_callback', 'assert_quiet_eval', 'assert_warning', 'break', 'case_lower', 'case_upper', 'catch', 'cfunction', 'char_max', 'class', 'clone', 'codeset', 'connection_aborted', 'connection_normal', 'connection_timeout', 'const', 'count_normal', 'count_recursive', 'credits_all', 'credits_docs', 'credits_fullpage', 'credits_general', 'credits_group', 'credits_modules', 'credits_qa', 'credits_sapi', 'crncystr', 'crypt_blowfish', 'crypt_ext_des', 'crypt_md5', 'crypt_salt_length', 'crypt_std_des', 'currency_symbol', 'd_fmt', 'd_t_fmt', 'day_1', 'day_2', 'day_3', 'day_4', 'day_5', 'day_6', 'day_7', 'decimal_point', 'default_include_path', 'die', 'directory_separator', 'do', 'e_all', 'e_compile_error', 'e_compile_warning', 'e_core_error', 'e_core_warning', 'e_deprecated', 'e_error', 'e_notice', 'e_parse', 'e_strict', 'e_user_deprecated', 'e_user_error', 'e_user_notice', 'e_user_warning', 'e_warning', 'echo', 'empty', 'enddeclare', 'endfor', 'endforeach', 'endif', 'endswitch', 'endwhile', 'ent_compat', 'ent_noquotes', 'ent_quotes', 'era', 'era_d_fmt', 'era_d_t_fmt', 'era_t_fmt', 'era_year', 'eval', 'extends', 'extr_if_exists', 'extr_overwrite', 'extr_prefix_all', 'extr_prefix_if_exists', 'extr_prefix_invalid', 'extr_prefix_same', 'extr_skip', 'final', 'foreach', 'frac_digits', 'function', 'global', 'grouping', 'html_entities', 'html_specialchars', 'implements', 'include', 'include_once', 'info_all', 'info_configuration', 'info_credits', 'info_environment', 'info_general', 'info_license', 'info_modules', 'info_variables', 'ini_all', 'ini_perdir', 'ini_system', 'ini_user', 'instanceof', 'int_curr_symbol', 'int_frac_digits', 'interface', 'isset', 'lc_all', 'lc_collate', 'lc_ctype', 'lc_messages', 'lc_monetary', 'lc_numeric', 'lc_time', 'list', 'lock_ex', 'lock_nb', 'lock_sh', 'lock_un', 'log_alert', 'log_auth', 'log_authpriv', 'log_cons', 'log_crit', 'log_cron', 'log_daemon', 'log_debug', 'log_emerg', 'log_err', 'log_info', 'log_kern', 'log_local0', 'log_local1', 'log_local2', 'log_local3', 'log_local4', 'log_local5', 'log_local6', 'log_local7', 'log_lpr', 'log_mail', 'log_ndelay', 'log_news', 'log_notice', 'log_nowait', 'log_odelay', 'log_perror', 'log_pid', 'log_syslog', 'log_user', 'log_uucp', 'log_warning', 'm_1_pi', 'm_2_pi', 'm_2_sqrtpi', 'm_e', 'm_ln10', 'm_ln2', 'm_log10e', 'm_log2e', 'm_pi', 'm_pi_2', 'm_pi_4', 'm_sqrt1_2', 'm_sqrt2', 'mon_1', 'mon_10', 'mon_11', 'mon_12', 'mon_2', 'mon_3', 'mon_4', 'mon_5', 'mon_6', 'mon_7', 'mon_8', 'mon_9', 'mon_decimal_point', 'mon_grouping', 'mon_thousands_sep', 'n_cs_precedes', 'n_sep_by_space', 'n_sign_posn', 'namespace', 'negative_sign', 'new', 'noexpr', 'nostr', 'old_function', 'p_cs_precedes', 'p_sep_by_space', 'p_sign_posn', 'path_separator', 'pathinfo_basename', 'pathinfo_dirname', 'pathinfo_extension', 'pear_extension_dir', 'pear_install_dir', 'php_bindir', 'php_config_file_path', 'php_config_file_scan_dir', 'php_datadir', 'php_debug', 'php_eol', 'php_extension_dir', 'php_extra_version', 'php_int_max', 'php_int_size', 'php_libdir', 'php_localstatedir', 'php_major_version', 'php_maxpathlen', 'php_minor_version', 'php_os', 'php_output_handler_cont', 'php_output_handler_end', 'php_output_handler_start', 'php_prefix', 'php_release_version', 'php_sapi', 'php_shlib_suffix', 'php_sysconfdir', 'php_version', 'php_version_id', 'php_windows_nt_domain_controller', 'php_windows_nt_server', 'php_windows_nt_workstation', 'php_windows_version_build', 'php_windows_version_major', 'php_windows_version_minor', 'php_windows_version_platform', 'php_windows_version_producttype', 'php_windows_version_sp_major', 'php_windows_version_sp_minor', 'php_windows_version_suitemask', 'php_zts', 'pm_str', 'positive_sign', 'print', 'private', 'protected', 'public', 'radixchar', 'require_once', 'seek_cur', 'seek_end', 'seek_set', 'sort_asc', 'sort_desc', 'sort_numeric', 'sort_regular', 'sort_string', 'static', 'str_pad_both', 'str_pad_left', 'str_pad_right', 'switch', 't_fmt', 't_fmt_ampm', 'thousands_sep', 'thousep', 'throw', 'try', 'unset', 'var', 'yesexpr', 'yesstr');
 
 		// NOTE: this is a VERY IMPORTANT attribute - use it to make sure the record matches the database
 		public $matchesDb = FALSE;
@@ -183,27 +184,27 @@
 			return $pkHash;
 		}
 
-        public static function arrayOfAttrValues($arrayOfDbLinkedObjects,$attr_name) {
-            $valArray  = [];
-            foreach ($arrayOfDbLinkedObjects as $obj) {
-                $valArray[] = $obj->$attr_name;
-            }
-            return $valArray;
-        }
+		public static function arrayOfAttrValues($arrayOfDbLinkedObjects, $attr_name) {
+			$valArray = [];
+			foreach ($arrayOfDbLinkedObjects as $obj) {
+				$valArray[] = $obj->$attr_name;
+			}
+			return $valArray;
+		}
 
-        public static function sanitizeFieldName($fn) {
-            if (in_array($fn,Db_Linked::$SQL_RESERVED)) {
-                return '`'.$fn.'`';
-            }
-            return $fn;
-        }
+		public static function sanitizeFieldName($fn) {
+			if (in_array($fn, Db_Linked::$SQL_RESERVED)) {
+				return '`' . $fn . '`';
+			}
+			return $fn;
+		}
 
 		public static function checkStmtError($stmt) {
 			if ($stmt->errorInfo()[0] != '0000') {
 				$traceAr = debug_backtrace();
-				            echo "<pre>\n";
-				            print_r($traceAr);
-				            exit;
+				echo "<pre>\n";
+				print_r($traceAr);
+				exit;
 				$msg = "PDO statement error:\n\t" . $stmt->errorInfo()[0] . "\n\t" . $stmt->errorInfo()[1] . "\n\t" . $stmt->errorInfo()[2] . "\n";
 				for ($i = 1, $lmt = count($traceAr); $i < $lmt; ++$i) {
 					$msg .= $traceAr[$i]['function'];
@@ -223,7 +224,7 @@
 			}
 			$whichClass = get_called_class();
 			$fetchStmt  = self::_buildFetchStatement($searchHash, $usingDb);
-//			echo '<pre>';print_r($searchHash);echo'</pre>';
+			//			echo '<pre>';print_r($searchHash);echo'</pre>';
 			$fetchStmt->execute($searchHash);
 			$res = $fetchStmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $whichClass, [['DB' => $usingDb]]);
 			self::checkStmtError($fetchStmt);
@@ -268,10 +269,10 @@
 			//		print_r($identHash);
 
 			$fetchSql = static::buildFetchSql($identHash);
-//			            echo '<pre>';
-//			            print_r($identHash);
-//					    echo "\n$fetchSql\n";
-//			            echo'</pre>';
+			//			            echo '<pre>';
+			//			            print_r($identHash);
+			//					    echo "\n$fetchSql\n";
+			//			            echo'</pre>';
 
 			$fetchStmt = $usingDb->prepare($fetchSql);
 
@@ -284,11 +285,11 @@
 		public static function buildFetchSql(&$identHash) {
 			//echo "build sql start\n";
 			//		print_r($identHash);
-            $all_fields =  static::$fields;
-            $use_fields = array();
-            foreach ($all_fields as $field_name) {
-                array_push($use_fields,Db_Linked::sanitizeFieldName($field_name));
-            }
+			$all_fields = static::$fields;
+			$use_fields = array();
+			foreach ($all_fields as $field_name) {
+				array_push($use_fields, Db_Linked::sanitizeFieldName($field_name));
+			}
 			$fetchSql            = 'SELECT ' . implode(',', $use_fields) . ' FROM ' . static::$dbTable . ' WHERE 1=1';
 			$keys_to_remove      = [];
 			$key_vals_to_add     = [];
@@ -552,82 +553,87 @@
 			}
 		}
 
-        public function ID() {
-//            util_prePrintR($this);
-            return $this->fieldValues[static::$primaryKeyField];
-        }
+		public function ID() {
+			//            util_prePrintR($this);
+			return $this->fieldValues[static::$primaryKeyField];
+		}
 
-        public function setFromArray($vals_ar) {
-//            util_prePrintR($vals_ar);
+		public function setFromArray($vals_ar) {
+			//            util_prePrintR($vals_ar);
 
-            foreach (static::$fields as $field_name) {
-                $new_val_key = static::$entity_type_label.'-'.$field_name.'_'.$this->ID();
-//                util_prePrintR($new_val_key);
+			foreach (static::$fields as $field_name) {
+				$new_val_key = static::$entity_type_label . '-' . $field_name . '_' . $this->ID();
+				//                util_prePrintR($new_val_key);
 
-                if (array_key_exists($new_val_key,$vals_ar)) {
-//                    util_prePrintR('matched');
-                    $new_val = $vals_ar[$new_val_key];
-                    if (util_endsWith($field_name,"_id")) {
-                        if ($new_val < 1) {
-                            $new_val = 0;
-                        }
-                    }
-                    if ($this->fieldValues[$field_name] != $new_val) {
-                        $this->fieldValues[$field_name] = $new_val;
-                        $this->matchesDb = FALSE;
-//                        util_prePrintR('object updated');
-                    }
-                }
-            }
+				if (array_key_exists($new_val_key, $vals_ar)) {
+					//                    util_prePrintR('matched');
+					$new_val = $vals_ar[$new_val_key];
+					if (util_endsWith($field_name, "_id")) {
+						if ($new_val < 1) {
+							$new_val = 0;
+						}
+					}
+					if ($this->fieldValues[$field_name] != $new_val) {
+						$this->fieldValues[$field_name] = $new_val;
+						$this->matchesDb                = FALSE;
+						//                        util_prePrintR('object updated');
+					}
+				}
+			}
 
-//            $this->updateDb();
-//            util_prePrintR('DB updated');
-        }
+			//            $this->updateDb();
+			//            util_prePrintR('DB updated');
+		}
 
-        public function fieldsAsDataAttribs() {
-            $ret = '';
-            foreach (static::$fields as $k) {
-                if ($ret) { $ret .= ' '; }
-                $field_val = '&lt;DATA TOO LONG&gt;';
-                if ('flag' == substr($k,0,4)) {
-                    if ($this->fieldValues[$k]) {
-                        $field_val = 1;
-                    } else {
-                        $field_val = '0';
-                    }
-                } elseif (strlen($this->fieldValues[$k]) <= 255) {
-                    $field_val = htmlentities($this->fieldValues[$k]);
-                }
-                $ret .= "data-$k=\"$field_val\"";
-            }
-            return $ret;
-        }
+		public function fieldsAsDataAttribs() {
+			$ret = '';
+			foreach (static::$fields as $k) {
+				if ($ret) {
+					$ret .= ' ';
+				}
+				$field_val = '&lt;DATA TOO LONG&gt;';
+				if ('flag' == substr($k, 0, 4)) {
+					if ($this->fieldValues[$k]) {
+						$field_val = 1;
+					}
+					else {
+						$field_val = '0';
+					}
+				}
+				elseif (strlen($this->fieldValues[$k]) <= 255) {
+					$field_val = htmlentities($this->fieldValues[$k]);
+				}
+				$ret .= "data-$k=\"$field_val\"";
+			}
+			return $ret;
+		}
 
-        public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
-            return '<li>MUST BE IMPLEMENTED IN SUB-CLASS!</li>';
-        }
+		public function renderAsListItem($idstr = '', $classes_array = [], $other_attribs_hash = []) {
+			return '<li>MUST BE IMPLEMENTED IN SUB-CLASS!</li>';
+		}
 
-        public function renderAsView() {
-            return 'renderAsView MUST BE IMPLEMENTED IN SUB-CLASS!';
-        }
+		public function renderAsView() {
+			return 'renderAsView MUST BE IMPLEMENTED IN SUB-CLASS!';
+		}
 
-        public function renderAsViewEmbed() {
-            return 'renderAsViewEmbed MUST BE IMPLEMENTED IN SUB-CLASS!';
-        }
-        public function renderAsEdit() {
-            return 'renderAsEdit MUST BE IMPLEMENTED IN SUB-CLASS!';
-        }
+		public function renderAsViewEmbed() {
+			return 'renderAsViewEmbed MUST BE IMPLEMENTED IN SUB-CLASS!';
+		}
 
-        function renderAsButtonEdit() {
-            return 'renderAsButtonEdit MUST BE IMPLEMENTED IN SUB-CLASS!';
-        }
+		public function renderAsEdit() {
+			return 'renderAsEdit MUST BE IMPLEMENTED IN SUB-CLASS!';
+		}
 
-        function renderAsLink($action='view') {
-            return 'renderAsLink MUST BE IMPLEMENTED IN SUB-CLASS!';
-        }
+		function renderAsButtonEdit() {
+			return 'renderAsButtonEdit MUST BE IMPLEMENTED IN SUB-CLASS!';
+		}
 
-        public function renderAsHtml() {
-            return 'renderAsHtml MUST BE IMPLEMENTED IN SUB-CLASS!';
-        }
+		function renderAsLink($action = 'view') {
+			return 'renderAsLink MUST BE IMPLEMENTED IN SUB-CLASS!';
+		}
 
-    }
+		public function renderAsHtml() {
+			return 'renderAsHtml MUST BE IMPLEMENTED IN SUB-CLASS!';
+		}
+
+	}

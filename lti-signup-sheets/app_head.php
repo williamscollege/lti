@@ -44,7 +44,7 @@
 		?>
 		<div class="collapse navbar-collapse" id="wms-primary-navbar-1">
 			<ul class="nav navbar-nav">
-				<li class="<?php if (strpos($http_referer, "my_available_openings.php")) {
+				<li class="<?php if ((strpos($http_referer, "my_available_openings.php")) || (strpos($http_referer, "sheet_openings.php"))) {
 					echo "active";
 				} ?>">
 					<a id="link-available-openings" href="<?php echo APP_ROOT_PATH; ?>/app_code/my_available_openings.php">
@@ -60,7 +60,7 @@
 						<b><?php echo ucfirst(util_lang('my_signups')); ?></b>
 					</a>
 				</li>
-				<li class="<?php if (strpos($http_referer, "my_sheets.php")) {
+				<li class="<?php if ((strpos($http_referer, "my_sheets.php")) || (strpos($http_referer, "edit_sheet.php"))) {
 					echo "active";
 				} ?>">
 					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/my_sheets.php">

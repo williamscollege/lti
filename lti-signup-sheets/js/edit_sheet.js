@@ -144,16 +144,17 @@ $(document).ready(function () {
 	});
 
 	// Display usage details for this group and sheet
-	$("#link_for_usage_quotas").click(function(){
-		if($("#toggle_usage_quotas").hasClass('hidden')){
+	$("#link_for_usage_quotas").click(function () {
+		if ($("#toggle_usage_quotas").hasClass('hidden')) {
 			$("#toggle_usage_quotas").removeClass('hidden');//.show();
 			$("#link_for_usage_quotas").text('Hide usage details');
-		} else{
+		}
+		else {
 			$("#toggle_usage_quotas").addClass('hidden');//.show();
 			$("#link_for_usage_quotas").text('Show usage details');
 		}
 	});
-	
+
 	// Display opening signup details (Copy DOM from calendar overlay)
 	$(".calendar-cell-openings").click(function () {
 		var dataset = $(this).html();
@@ -162,7 +163,7 @@ $(document).ready(function () {
 		$("#display_opening_signup_details").show().html(dataset);
 	});
 
-	$("#link_for_openings_instructions").click(function(){
+	$("#link_for_openings_instructions").click(function () {
 		$("#link_for_openings_instructions").hide();
 		$("#toggle_openings_instructions").show();
 		$("#display_opening_signup_details").hide();
@@ -203,7 +204,7 @@ $(document).ready(function () {
 		});
 	}
 
-	$('#scroll-to-todayish-openings').click(function(){
+	$('#scroll-to-todayish-openings').click(function () {
 		scrollOpeningsListToTodayish();
 	});
 
@@ -211,13 +212,13 @@ $(document).ready(function () {
 		var closestFutureOpeningsList = $('#openings-list-container .in-the-present');
 		//console.log(closestFutureOpeningsList);
 
-		if (! closestFutureOpeningsList.length) {
+		if (!closestFutureOpeningsList.length) {
 			//console.log('no present - looking to the past');
 			closestFutureOpeningsList = $('#openings-list-container .in-the-past').prev();
 		}
 		//console.log(closestFutureOpeningsList);
 
-		if (! closestFutureOpeningsList.length) {
+		if (!closestFutureOpeningsList.length) {
 			//console.log('no present nor past - looking to the future');
 			closestFutureOpeningsList = $('#openings-list-container .in-the-future').last();
 		}

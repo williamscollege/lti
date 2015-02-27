@@ -192,7 +192,6 @@
 			usort($this->sheetgroups, 'SUS_Sheetgroup::cmp');
 		}
 
-		// TODO - standardize/improve class names to be more humanly consistent and readable
 		public function cacheSheets() {
 			if (!$this->sheetgroups) {
 				$this->loadSheetgroups();
@@ -209,29 +208,6 @@
 			$this->sheets = [];
 			$this->sheets = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $sheetgroup_ids, 'owner_user_id' => $this->user_id], $this->dbConnection);
 			usort($this->sheets, 'SUS_Sheet::cmp');
-		}
-
-		// check if user owns or manages this sheet (param required): return boolean value
-		public function isUserAllowedToManageSheet($sheet_id = 0) {
-			$this->cacheSheets();
-			$this->cacheManagedSheets();
-
-			// fetch relevant hashes of sheet_id values
-			$fetch_sheet_ids = Db_Linked::arrayOfAttrValues($this->sheets, 'sheet_id');
-			$fetch_managed_sheet_ids = Db_Linked::arrayOfAttrValues($this->managed_sheets, 'sheet_id');
-
-			util_prePrintR($fetch_sheet_ids);
-			util_prePrintR($fetch_managed_sheet_ids);
-
-			if (in_array($sheet_id, $fetch_sheet_ids)) {
-				return TRUE;
-			}
-
-			if (in_array($sheet_id, $fetch_managed_sheet_ids)) {
-				return TRUE;
-			}
-
-			return FALSE;
 		}
 
 		public function cacheManagedSheets() {
@@ -260,6 +236,8 @@
 			usort($this->managed_sheets, 'SUS_Sheet::cmp');
 		}
 
+		// TODO - IMPORTANT: standardize/improve class names to be more humanly consistent and readable
+		// TODO - IMPORTANT: add comments that describe all of these very similarly named class functions
 		public function cacheMySignups() {
 			if (!$this->my_signups) {
 				$this->loadMySignups();
@@ -635,5 +613,54 @@
 			$this->my_available_openings = $sheets_with_access_reasons;
 		}
 
+		#------------------------------------------------#
+		# access permissions
+		#------------------------------------------------#
+
+		// check if user owns or manages this sheet (param required): return boolean value
+		public function isUserAllowedToManageSheet($sheet_id = 0) {
+			$this->cacheSheets();
+			$this->cacheManagedSheets();
+
+			// fetch relevant hashes of sheet_id values
+			$fetch_sheet_ids         = Db_Linked::arrayOfAttrValues($this->sheets, 'sheet_id');
+			$fetch_managed_sheet_ids = Db_Linked::arrayOfAttrValues($this->managed_sheets, 'sheet_id');
+
+			// util_prePrintR($fetch_sheet_ids);
+			// util_prePrintR($fetch_managed_sheet_ids);
+
+			if (in_array($sheet_id, $fetch_sheet_ids)) {
+				return TRUE;
+			}
+
+			if (in_array($sheet_id, $fetch_managed_sheet_ids)) {
+				return TRUE;
+			}
+
+			return FALSE;
+		}
+
+		// check if user owns or manages this sheet (param required): return boolean value
+		public function isUserAllowedToSignupForOpening($sheet_id = 0) {
+			// TODO - complete this or remove. duplicate fxn?
+			$this->cacheMyAvailableOpenings();
+
+			// fetch relevant hashes of sheet_id values
+			$fetch_sheet_ids         = Db_Linked::arrayOfAttrValues($this->my_available_openings, 'sheet_id');
+			$fetch_managed_sheet_ids = Db_Linked::arrayOfAttrValues($this->managed_sheets, 'sheet_id');
+
+			util_prePrintR($fetch_sheet_ids);
+			util_prePrintR($fetch_managed_sheet_ids);
+
+			if (in_array($sheet_id, $fetch_sheet_ids)) {
+				return TRUE;
+			}
+
+			if (in_array($sheet_id, $fetch_managed_sheet_ids)) {
+				return TRUE;
+			}
+
+			return FALSE;
+		}
 
 	}

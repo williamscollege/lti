@@ -13,7 +13,7 @@
 		// fetch available openings
 		// ***************************
 		$USER->cacheMyAvailableOpenings();
-		// util_prePrintR($USER->my_available_openings); // debugging
+		util_prePrintR($USER->my_available_openings); // debugging
 
 		// display my_available_openings: "I can signup for..."
 		if (count($USER->my_available_openings) == 0) {

@@ -151,15 +151,14 @@
 	}
 
 
-
 	/**
 	 * @param $ts a time string of the form YYYY-MM-DD HH:MI:SS (i.e. as it comes from MySQL)
 	 * @return that datetime formatted per the application's standard style
 	 */
 	function util_datetimeFormatted($ts) {
 		$ts_info = util_processTimeString($ts);
-//		return $ts_info['YYYY'] . '/' . $ts_info['MM'] . '/' . $ts_info['DD'] . ' ' . $ts_info['hh'] . ':' . $ts_info['mi'];
-		return $ts_info['MM'] . '/' . $ts_info['DD'] . '/' . $ts_info['YYYY'] . ' '. $ts_info['hh'] . ':' . $ts_info['mi'];
+		//		return $ts_info['YYYY'] . '/' . $ts_info['MM'] . '/' . $ts_info['DD'] . ' ' . $ts_info['hh'] . ':' . $ts_info['mi'];
+		return $ts_info['MM'] . '/' . $ts_info['DD'] . '/' . $ts_info['YYYY'] . ' ' . $ts_info['hh'] . ':' . $ts_info['mi'];
 	}
 
 	/**
@@ -424,6 +423,8 @@
 	}
 
 	function util_getValueForCheckboxRequestData($fieldName) {
-		if (isset($_REQUEST[$fieldName]) && $_REQUEST[$fieldName]=='on') {return 1;}
+		if (isset($_REQUEST[$fieldName]) && $_REQUEST[$fieldName] == 'on') {
+			return 1;
+		}
 		return 0;
 	}

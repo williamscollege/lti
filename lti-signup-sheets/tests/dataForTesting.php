@@ -226,7 +226,7 @@
 			(708, NOW(), NOW(), 1, 606, 0, 'Opening 708', 'Opening 708, Sheet 606, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), ''),
 			(709, NOW(), NOW(), 0, 607, 0, 'Opening 709', 'Opening 709, Sheet 607, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), ''),
 			(710, NOW(), NOW(), 0, 608, 0, 'Opening 710', 'Opening 710, Sheet 608, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), ''),
-			(711, NOW(), NOW(), 0, 610, 0, 'Opening 711', 'Opening 711, Sheet 610, Sheetgroup 510', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), '')
+			(711, NOW(), NOW(), 0, 610, 0, 'Opening 711', 'Opening 711, Sheet 610, Sheetgroup 510', 1 , '', TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(hour,1,NOW()), '')
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();

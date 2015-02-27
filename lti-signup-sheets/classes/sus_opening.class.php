@@ -131,9 +131,9 @@
 
 				$doUserList = $forceUserListing;
 
-				if (! $doUserList) {
-					$displayUserNames = SUS_Sheet::getOneFromDb(['sheet_id'=>$this->sheet_id], $this->dbConnection);
-					$doUserList = ! $displayUserNames->flag_private_signups;
+				if (!$doUserList) {
+					$displayUserNames = SUS_Sheet::getOneFromDb(['sheet_id' => $this->sheet_id], $this->dbConnection);
+					$doUserList       = !$displayUserNames->flag_private_signups;
 				}
 
 				if ($doUserList) {
