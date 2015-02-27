@@ -37,13 +37,13 @@
 	<a href="#" data-toggle="dropdown" class="dropdown-toggle"><span class="caret"></span> <b><?php echo ucfirst(util_lang('go_to')); ?></b></a>
 	<ul class="dropdown-menu">
 		<li>
-			<a id="nav-notebooks" href="<?php echo APP_ROOT_PATH; ?>/app_code/notebook.php?action=list"><?php echo ucfirst(util_lang('my_available_openings')); ?></a>
+			<a id="nav-notebooks" href="<?php echo APP_ROOT_PATH; ?>/app_code/notebook.php?action=list"><?php echo ucfirst(util_lang('sheet_openings_all')); ?></a>
 		</li>
 		<li>
-			<a id="nav-metadata-structures" href="<?php echo APP_ROOT_PATH; ?>/app_code/metadata_structure.php?action=list"><?php echo ucfirst(util_lang('my_signups')); ?></a>
+			<a id="nav-metadata-structures" href="<?php echo APP_ROOT_PATH; ?>/app_code/metadata_structure.php?action=list"><?php echo ucfirst(util_lang('signups_all')); ?></a>
 		</li>
 		<li>
-			<a id="nav-metadata-values" href="<?php echo APP_ROOT_PATH; ?>/app_code/metadata_term_set.php?action=list"><?php echo ucfirst(util_lang('my_sheets')); ?></a>
+			<a id="nav-metadata-values" href="<?php echo APP_ROOT_PATH; ?>/app_code/metadata_term_set.php?action=list"><?php echo ucfirst(util_lang('sheets_all')); ?></a>
 		</li>
 	</ul>
 </li>

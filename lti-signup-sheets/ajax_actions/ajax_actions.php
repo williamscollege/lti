@@ -17,8 +17,8 @@
 	#------------------------------------------------#
 	// TODO - Can generalize some of these passed param values and reduce the number found here...
 	$action       = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
-	$ownerUserID  = htmlentities((isset($_REQUEST["ajaxVal_OwnerUserID"])) ? $_REQUEST["ajaxVal_OwnerUserID"] : 0);
-	$sheetgroupID = htmlentities((isset($_REQUEST["ajaxVal_SheetgroupID"])) ? $_REQUEST["ajaxVal_SheetgroupID"] : 0);
+	$ownerUserID  = htmlentities(((isset($_REQUEST["ajaxVal_OwnerUserID"])) && is_numeric($_REQUEST["ajaxVal_OwnerUserID"])) ? $_REQUEST["ajaxVal_OwnerUserID"] : 0);
+	$sheetgroupID = htmlentities(((isset($_REQUEST["ajaxVal_SheetgroupID"])) && is_numeric($_REQUEST["ajaxVal_SheetgroupID"])) ? $_REQUEST["ajaxVal_SheetgroupID"] : 0);
 	$sheetID      = htmlentities((isset($_REQUEST["ajaxVal_SheetID"])) ? $_REQUEST["ajaxVal_SheetID"] : 0);
 	$name         = htmlentities((isset($_REQUEST["ajaxVal_Name"])) ? util_quoteSmart($_REQUEST["ajaxVal_Name"]) : 0);
 	$description  = htmlentities((isset($_REQUEST["ajaxVal_Description"])) ? util_quoteSmart($_REQUEST["ajaxVal_Description"]) : 0);
@@ -66,13 +66,13 @@
 		# Output
 		$results['status']       = 'success';
 		$results['which_action'] = 'add-sheetgroup';
-		$results['html_output'] = '';
+		$results['html_output']  = '';
 		$results['html_output'] .= "<table class=\"table table-condensed table-bordered table-hover\"><tbody>";
 		$results['html_output'] .= "<tr class=\"info\"><th class=\"col-sm-11\">";
 		$results['html_output'] .= "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . $sheetgroup->sheetgroup_id . "\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . $sheetgroup->name . "\" data-for-sheetgroup-description=\"" . $sheetgroup->description . "\" data-for-sheetgroup-max-total=\"" . $sheetgroup->max_g_total_user_signups . "\" data-for-sheetgroup-max-pending=\"" . $sheetgroup->max_g_pending_user_signups . "\" title=\"Edit group\">" . $sheetgroup->name . "</a></th><th class=\"col-sm-1 text-right\"><a class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-trash\"></i> Group</a>&nbsp;";
 		$results['html_output'] .= "</th></tr>";
 		$results['html_output'] .= "<tr><td class=\"col-sm-12\" colspan=\"2\">";
-		$results['html_output'] .= "<a href=\"edit_sheet.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "&sheet=new\" class=\"btn btn-xs btn-success sus-add-sheet\" title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
+		$results['html_output'] .= "<a href=\"sheets_edit_one.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "&sheet=new\" class=\"btn btn-xs btn-success sus-add-sheet\" title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
 		$results['html_output'] .= "</td></tr>";
 		$results['html_output'] .= "</tbody></table>";
 	}
@@ -146,13 +146,13 @@
 		# Output
 		$results['status']       = 'success';
 		$results['which_action'] = 'add-sheetgroup';
-		$results['html_output'] = '';
+		$results['html_output']  = '';
 		$results['html_output'] .= "<table class=\"table table-condensed table-bordered table-hover\"><tbody>";
 		$results['html_output'] .= "<tr class=\"info\"><th class=\"col-sm-11\">";
 		$results['html_output'] .= "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . $sheetgroup->sheetgroup_id . "\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . $sheetgroup->name . "\" data-for-sheetgroup-description=\"" . $sheetgroup->description . "\" data-for-sheetgroup-max-total=\"" . $sheetgroup->max_g_total_user_signups . "\" data-for-sheetgroup-max-pending=\"" . $sheetgroup->max_g_pending_user_signups . "\" title=\"Edit group\">" . $sheetgroup->name . "</a></th><th class=\"col-sm-1 text-right\"><a class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-trash\"></i> Group</a>&nbsp;";
 		$results['html_output'] .= "</th></tr>";
 		$results['html_output'] .= "<tr><td class=\"col-sm-12\" colspan=\"2\">";
-		$results['html_output'] .= "<a href=\"edit_sheet.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "\" class=\"btn btn-xs btn-success sus-add-sheet\" title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
+		$results['html_output'] .= "<a href=\"sheets_edit_one.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "\" class=\"btn btn-xs btn-success sus-add-sheet\" title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
 		$results['html_output'] .= "</td></tr>";
 		$results['html_output'] .= "</tbody></table>";
 	}
@@ -410,8 +410,8 @@
 		}
 
 		# Output
-		$results['status']       = 'success';
-		$results['which_action'] = 'sheet-opening-signup-add-me';
+		$results['status']              = 'success';
+		$results['which_action']        = 'sheet-opening-signup-add-me';
 		$results['html_render_opening'] = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
 	}
 	//###############################################################
@@ -449,8 +449,8 @@
 		}
 
 		# Output
-		$results['status']       = 'success';
-		$results['which_action'] = 'sheet-opening-signup-add-me';
+		$results['status']              = 'success';
+		$results['which_action']        = 'sheet-opening-signup-add-me';
 		$results['html_render_opening'] = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
 	}
 	//###############################################################
@@ -508,7 +508,7 @@
 		# Output
 		$results['status']       = 'success';
 		$results['which_action'] = 'edit-opening-add-signup-user';
-		$results['html_output'] = "<li data-for-firstname=\"" . $u->firstname . "\" data-for-lastname=\"" . $u->lastname . "\" data-for-signup-id=\"" . $s->signup_id . "\">";
+		$results['html_output']  = "<li data-for-firstname=\"" . $u->firstname . "\" data-for-lastname=\"" . $u->lastname . "\" data-for-signup-id=\"" . $s->signup_id . "\">";
 		$results['html_output'] .= "<a href=\"#\" class=\"sus-delete-signup\" data-bb=\"alert_callback\" data-for-signup-id=\"" . $s->signup_id . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>&nbsp;";
 		$results['html_output'] .= $u->first_name . " " . $u->last_name . "</li>";
 	}
@@ -538,10 +538,10 @@
 				array_push($signupUserIdsAry, $signup->signup_user_id);
 			}
 		}
-		if (! $signupUserIdsAry) {
+		if (!$signupUserIdsAry) {
 			$results['status']       = 'success';
 			$results['which_action'] = 'fetch-signups-for-opening-id';
-			$results['html_output'] = '<li>no signups</li>';
+			$results['html_output']  = '<li>no signups</li>';
 			echo json_encode($results);
 			exit;
 		}
@@ -562,7 +562,7 @@
 		# Output
 		$results['status']       = 'success';
 		$results['which_action'] = 'fetch-signups-for-opening-id';
-		$results['html_output'] = $signups_list;
+		$results['html_output']  = $signups_list;
 	}
 	//###############################################################
 
@@ -642,4 +642,3 @@
 	echo json_encode($results);
 	exit;
 
-?>

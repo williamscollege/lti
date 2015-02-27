@@ -73,7 +73,7 @@
 //					, modal_title: function (e) {
 //						return e.title
 //					}
-					events_source: 'calendar-events.php', // unnecessary? optimize efficiency?
+					events_source: 'calendar_events.php', // unnecessary? optimize efficiency?
 					//events_source: 'events.json.php',
 					//events_source: function () { return []; }
 					view: 'month',

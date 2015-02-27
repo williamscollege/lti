@@ -1,6 +1,6 @@
 <?php
 	require_once('../app_setup.php');
-	$pageTitle = ucfirst(util_lang('my_signups'));
+	$pageTitle = ucfirst(util_lang('signups_all'));
 	require_once('../app_head.php');
 
 
@@ -13,10 +13,10 @@
 		// fetch signups: "I have signed up for"
 		// ***************************
 		$USER->cacheMySignups();
-		// util_prePrintR($USER->my_signups);
+		// util_prePrintR($USER->signups_all);
 
 		// ***************************
-		// fetch my_signups: "Signups on my Sheets"
+		// fetch signups_all: "Signups on my Sheets"
 		// ***************************
 		$USER->cacheSignupsOnMySheets();
 		// util_prePrintR($USER->signups_on_my_sheets);
@@ -30,12 +30,12 @@
 		echo "<tr><td>";
 
 		// TODO - if empty array, err msg: "Fatal error: an invalid value was given in the search hash in C:\xampp\htdocs\GITHUB\lti\lti-signup-sheets\classes\db_linked.class.php on line 299"
-		// display my_signups: "I've Signed up for..."
-		if (count($USER->my_signups) == 0) {
+		// display signups_all: "I've Signed up for..."
+		if (count($USER->signups_all) == 0) {
 			echo "<p class=\"col-sm-6 bg-warning\">You have not signed up for any openings.</p>";
 		}
 		else {
-			foreach ($USER->my_signups as $signup) {
+			foreach ($USER->signups_all as $signup) {
 				// date
 				echo "<p>";
 				echo "<strong>" . date('F d, Y', strtotime($signup['begin_datetime'])) . "</strong>";
@@ -94,4 +94,4 @@
 	require_once('../foot.php');
 ?>
 
-<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/my_signups.js"></script>
+<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/signups_all.js"></script>

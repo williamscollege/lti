@@ -44,28 +44,28 @@
 		?>
 		<div class="collapse navbar-collapse" id="wms-primary-navbar-1">
 			<ul class="nav navbar-nav">
-				<li class="<?php if ((strpos($http_referer, "my_available_openings.php")) || (strpos($http_referer, "sheet_openings.php"))) {
+				<li class="<?php if ((strpos($http_referer, "sheet_openings_all.php")) || (strpos($http_referer, "sheet_openings_edit_one.php"))) {
 					echo "active";
 				} ?>">
-					<a id="link-available-openings" href="<?php echo APP_ROOT_PATH; ?>/app_code/my_available_openings.php">
+					<a id="link-available-openings" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheet_openings_all.php">
 						<i class="glyphicon glyphicon-pencil"></i>
-						<b><?php echo ucfirst(util_lang('my_available_openings')); ?></b>
+						<b><?php echo ucfirst(util_lang('sheet_openings_all')); ?></b>
 					</a>
 				</li>
-				<li class="<?php if (strpos($http_referer, "my_signups.php")) {
+				<li class="<?php if (strpos($http_referer, "signups_all.php")) {
 					echo "active";
 				} ?>">
-					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/my_signups.php">
+					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/signups_all.php">
 						<i class="glyphicon glyphicon-list-alt"></i>
-						<b><?php echo ucfirst(util_lang('my_signups')); ?></b>
+						<b><?php echo ucfirst(util_lang('signups_all')); ?></b>
 					</a>
 				</li>
-				<li class="<?php if ((strpos($http_referer, "my_sheets.php")) || (strpos($http_referer, "edit_sheet.php"))) {
+				<li class="<?php if ((strpos($http_referer, "sheets_all.php")) || (strpos($http_referer, "sheets_edit_one.php"))) {
 					echo "active";
 				} ?>">
-					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/my_sheets.php">
+					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheets_all.php">
 						<i class="glyphicon glyphicon-wrench"></i>
-						<b><?php echo ucfirst(util_lang('my_sheets')); ?></b>
+						<b><?php echo ucfirst(util_lang('sheets_all')); ?></b>
 					</a>
 				</li>
 				<li class="<?php if (strpos($http_referer, "help.php")) {

@@ -1,6 +1,6 @@
 <?php
 	require_once('../app_setup.php');
-	$pageTitle = ucfirst(util_lang('sheet_openings'));
+	$pageTitle = ucfirst(util_lang('sheet_openings_edit_one'));
 	require_once('../app_head.php');
 
 	//###############################################################
@@ -254,4 +254,4 @@
 	require_once('../foot.php');
 ?>
 
-<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/edit_sheet.js"></script>
+<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/sheets_edit_one.js"></script>

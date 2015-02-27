@@ -192,11 +192,11 @@
 
 			$u1->cacheMySignups();
 
-			$this->assertEqual(3,count($u1->my_signups));
+			$this->assertEqual(3,count($u1->signups_all));
 			// note hash notation (instead of object property)
-			$this->assertEqual(705,$u1->my_signups[0]['opening_id']);
-			$this->assertEqual(701,$u1->my_signups[1]['opening_id']);
-			$this->assertEqual(704,$u1->my_signups[2]['opening_id']);
+			$this->assertEqual(705,$u1->signups_all[0]['opening_id']);
+			$this->assertEqual(701,$u1->signups_all[1]['opening_id']);
+			$this->assertEqual(704,$u1->signups_all[2]['opening_id']);
 		}
 
 		function testCacheSignupsOnMySheets() {
@@ -221,9 +221,9 @@
 
 			$u1->cacheMyAvailableOpenings();
 
-			$this->assertEqual(2, count($u1->my_available_openings));
-			$this->assertEqual(601, $u1->my_available_openings[0]['s_id']);
-			$this->assertEqual(602, $u1->my_available_openings[1]['s_id']);
+			$this->assertEqual(2, count($u1->sheet_openings_all));
+			$this->assertEqual(601, $u1->sheet_openings_all[0]['s_id']);
+			$this->assertEqual(602, $u1->sheet_openings_all[1]['s_id']);
 		}
 
 

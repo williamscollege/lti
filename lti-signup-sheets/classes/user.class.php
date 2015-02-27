@@ -12,9 +12,9 @@
 		public $sheetgroups;
 		public $sheets;
 		public $managed_sheets;
-		public $my_signups;
+		public $signups_all;
 		public $signups_on_my_sheets;
-		public $my_available_openings;
+		public $sheet_openings_all;
 
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);
@@ -40,9 +40,9 @@
 			$this->sheetgroups           = array();
 			$this->sheets                = array();
 			$this->managed_sheets        = array();
-			$this->my_signups            = array();
+			$this->signups_all            = array();
 			$this->signups_on_my_sheets  = array();
-			$this->my_available_openings = array();
+			$this->sheet_openings_all = array();
 		}
 
 		public function clearCaches() {
@@ -51,9 +51,9 @@
 			$this->sheetgroups           = array();
 			$this->sheets                = array();
 			$this->managed_sheets        = array();
-			$this->my_signups            = array();
+			$this->signups_all            = array();
 			$this->signups_on_my_sheets  = array();
-			$this->my_available_openings = array();
+			$this->sheet_openings_all = array();
 		}
 
 		/* static functions */
@@ -239,13 +239,13 @@
 		// TODO - IMPORTANT: standardize/improve class names to be more humanly consistent and readable
 		// TODO - IMPORTANT: add comments that describe all of these very similarly named class functions
 		public function cacheMySignups() {
-			if (!$this->my_signups) {
+			if (!$this->signups_all) {
 				$this->loadMySignups();
 			}
 		}
 
 		public function loadMySignups() {
-			$this->my_signups = [];
+			$this->signups_all = [];
 
 			// get my signups
 			$tmpMySignups = SUS_Signup::getAllFromDb(['signup_user_id' => $this->user_id], $this->dbConnection);
@@ -285,10 +285,10 @@
 			}
 
 			// this returns a hash, not an object; retrieve values from this hash by referencing keys, instead of by using object properties
-			$this->my_signups = $trimmed_array;
+			$this->signups_all = $trimmed_array;
 
 			// sort using the hash comparator fxn
-			usort($this->my_signups, 'SUS_Opening::cmp_hash');
+			usort($this->signups_all, 'SUS_Opening::cmp_hash');
 		}
 
 		public function cacheSignupsOnMySheets() {
@@ -399,7 +399,7 @@
 		}
 
 		public function cacheMyAvailableOpenings() {
-			if (!$this->my_available_openings) {
+			if (!$this->sheet_openings_all) {
 				$this->loadMyAvailableOpenings();
 			}
 		}
@@ -409,7 +409,7 @@
 		// $for_sheet_id = use this to show openings for 1 sheet
 		// TODO - verify use of params with moodle use cases
 		public function loadMyAvailableOpenings($includeAccessRecords = TRUE, $for_user_id = 0, $for_sheet_id = 0, $for_access_id = 0) {
-			$this->my_available_openings = [];
+			$this->sheet_openings_all = [];
 
 			$strServerName = $_SERVER['SERVER_NAME'];
 			if (($strServerName == "localhost") OR ($strServerName == "127.0.0.1")) {
@@ -610,7 +610,7 @@
 			mysqli_close($connString);
 
 			// this returns a hash, not an object; retrieve values from this hash by referencing keys, instead of by using object properties
-			$this->my_available_openings = $sheets_with_access_reasons;
+			$this->sheet_openings_all = $sheets_with_access_reasons;
 		}
 
 		#------------------------------------------------#
@@ -646,7 +646,7 @@
 			$this->cacheMyAvailableOpenings();
 
 			// fetch relevant hashes of sheet_id values
-			$fetch_sheet_ids         = Db_Linked::arrayOfAttrValues($this->my_available_openings, 'sheet_id');
+			$fetch_sheet_ids         = Db_Linked::arrayOfAttrValues($this->sheet_openings_all, 'sheet_id');
 			$fetch_managed_sheet_ids = Db_Linked::arrayOfAttrValues($this->managed_sheets, 'sheet_id');
 
 			util_prePrintR($fetch_sheet_ids);

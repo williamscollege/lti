@@ -232,6 +232,6 @@
 		}
 
 		// redirect
-		header('Location: ' . APP_FOLDER . '/app_code/edit_sheet.php?sheet=' . $openingSheetID);
+		header('Location: ' . APP_FOLDER . '/app_code/sheets_edit_one.php?sheet=' . $openingSheetID);
 
 	}

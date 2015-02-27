@@ -21,4 +21,4 @@
 	require_once('../foot.php');
 ?>
 
-<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/my_available_openings.js"></script>
+<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/sheet_openings_all.js"></script>

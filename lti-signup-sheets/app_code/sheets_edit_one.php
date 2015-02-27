@@ -9,7 +9,7 @@
 		$sheetIsDataIncoming = FALSE;
 	}
 	else {
-		$pageTitle = ucfirst(util_lang('edit_sheet'));
+		$pageTitle = ucfirst(util_lang('sheets_edit_one'));
 		if ((isset($_REQUEST["hiddenAction"])) && ($_REQUEST["hiddenAction"] == "savesheet")) {
 			$sheetIsDataIncoming = TRUE;
 		}
@@ -140,7 +140,7 @@
 								<!--DKC IMPORTANT (normal): set class to: 'tab-pane fade active in'-->
 								<!--DKC IMPORTANT (testing): set class to: 'tab-pane fade'-->
 								<div role="tabpanel" id="tabSheetInfo" class="tab-pane fade active in" aria-labelledby="tabSheetInfo">
-									<form action="edit_sheet.php" id="frmEditSheet" name="frmEditSheet" class="form-group" role="form" method="post">
+									<form action="sheets_edit_one.php" id="frmEditSheet" name="frmEditSheet" class="form-group" role="form" method="post">
 										<input type="hidden" id="hiddenSheetID" name="sheet" value="<?php echo $s ? $s->sheet_id : 0; ?>">
 										<input type="hidden" id="hiddenAction" name="hiddenAction" value="savesheet">
 
@@ -172,7 +172,7 @@
 													?>
 												</select>
 
-												<span class="small"><a href="my_sheets.php?sheetgroup=<?php echo $currentSheetgroupID; ?>" title="<?php echo $currentSheetgroupName . " (&quot;" . $currentSheetgroupDesc . "&quot;)"; ?>">Go
+												<span class="small"><a href="sheets_all.php?sheetgroup=<?php echo $currentSheetgroupID; ?>" title="<?php echo $currentSheetgroupName . " (&quot;" . $currentSheetgroupDesc . "&quot;)"; ?>">Go
 														to current group</a></span>
 											</div>
 										</div>
@@ -259,7 +259,7 @@
 												<button type="submit" id="btnSheetInfoSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save
 												</button>
 												<!-- TODO - global fix: correct all local/relative paths to APP_ROOT structure -->
-												<a href="my_sheets.php" id="btnSheetInfoCancel" class="btn btn-default btn-link btn-cancel">Cancel</a>
+												<a href="sheets_all.php" id="btnSheetInfoCancel" class="btn btn-default btn-link btn-cancel">Cancel</a>
 											</div>
 										</div>
 									</form>
@@ -557,4 +557,4 @@
 	require_once('../foot.php');
 ?>
 
-<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/edit_sheet.js"></script>
+<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/sheets_edit_one.js"></script>

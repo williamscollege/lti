@@ -43,4 +43,3 @@
         'note'   => 'unknown reason',
         'html_output'   => ''
     ];
-?>

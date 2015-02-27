@@ -1,6 +1,6 @@
 <?php
 	require_once('../app_setup.php');
-	$pageTitle = ucfirst(util_lang('my_available_openings'));
+	$pageTitle = ucfirst(util_lang('sheet_openings_all'));
 	require_once('../app_head.php');
 
 
@@ -13,10 +13,10 @@
 		// fetch available openings
 		// ***************************
 		$USER->cacheMyAvailableOpenings();
-		util_prePrintR($USER->my_available_openings); // debugging
+		util_prePrintR($USER->sheet_openings_all); // debugging
 
-		// display my_available_openings: "I can signup for..."
-		if (count($USER->my_available_openings) == 0) {
+		// display sheet_openings_all: "I can signup for..."
+		if (count($USER->sheet_openings_all) == 0) {
 			echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
 			echo "<tr class=\"\">";
 			echo "<th class=\"col-sm-6 bg-warning\">There are no sheets on which you can sign up.</th>";
@@ -26,11 +26,11 @@
 		else {
 			$course_based_sheets = [];
 			$other_based_sheets  = [];
-			foreach ($USER->my_available_openings as $sheet) {
+			foreach ($USER->sheet_openings_all as $sheet) {
 
 				// TODO - remove this 2 commented lines -- popovers (bootstrap: must manually initialize popovers in JS file)
 				// $base_sheet_link = "<a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Description:</strong> " . $sheet['s_description'] . "\">" . $sheet['s_name'] . "</a>";
-				$base_sheet_link = "<a href=\"sheet_openings.php?sheet=" . $sheet['s_id'] . "\"  class=\"\" title=\"Signup for Openings\">" . $sheet['s_name'] . "</a> (" . $sheet['s_description'] . ")";
+				$base_sheet_link = "<a href=\"sheet_openings_edit_one.php?sheet=" . $sheet['s_id'] . "\"  class=\"\" title=\"Signup for Openings\">" . $sheet['s_name'] . "</a> (" . $sheet['s_description'] . ")";
 
 				// NOTE: the A) through G) leads on the keys are used to sort. The display trims the first 3 chars from the key.
 				switch ($sheet["a_type"]) {
@@ -166,4 +166,4 @@
 	require_once('../foot.php');
 ?>
 
-<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/my_available_openings.js"></script>
+<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/sheet_openings_all.js"></script>
