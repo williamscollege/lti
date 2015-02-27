@@ -13,19 +13,17 @@
 		exit;
 	}
 	// TODO -- NEED TO IMPLEMENT THIS !!!!!
-	elseif (!$USER->isUserAllowedToSignup($_REQUEST["sheet"])) {
-		// error: must have access to manage this sheet
-		util_displayMessage('error', 'You do not have permission to edit that sheet');
-		require_once('../foot.php');
-		exit;
-	}
+//	elseif (!$USER->isUserAllowedToSignupForOpening($_REQUEST["sheet"])) {
+//		// error: must have access to manage this sheet
+//		util_displayMessage('error', 'You do not have permission to edit that sheet');
+//		require_once('../foot.php');
+//		exit;
+//	}
 
 
 	// load calendar setup functions
 	require_once('calendar_setup.php');
 
-	// TODO - add is_numeric() check to isset() and integer > 0 checks throughout site
-	// TODO - change error messagees like THIS: echo 'no matching record found in database'; exit; TO INSTEAD BE: util_displayMessage()
 
 	$s = '';
 	if ((isset($_REQUEST["sheet"])) && (is_numeric($_REQUEST["sheet"])) && ($_REQUEST["sheet"] > 0)) {
@@ -37,6 +35,7 @@
 
 	if (!$s->matchesDb) {
 		util_displayMessage('error', 'No matching record found in database');
+		require_once('../foot.php');
 		exit;
 	}
 
@@ -172,7 +171,7 @@
 
 									<?php
 										renderCalendarWidget_DOSIGNUP();
-										//renderCalendarWidget(c1,c2,c3,axv);
+										//e.g. renderCalendarWidget(c1,c2,c3,axv);
 									?>
 
 								</div>

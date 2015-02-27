@@ -1,10 +1,10 @@
 <?php
-//phpinfo();
+	//phpinfo();
 
-	# DEBUGGING FILE -- SCRAP THIS FILE LATER
+	# TODO - DEBUGGING FILE -- SCRAP THIS FILE LATER
 
 	require_once('app_setup.php');
-	$pageTitle =  ucfirst(util_lang('home'));
+	$pageTitle = ucfirst(util_lang('home'));
 	require_once('app_head.php');
 
 
@@ -22,15 +22,15 @@
 
 
 <!--
-<h2><?php /*echo LANG_INSTITUTION_NAME; */?></h2>
+<h2><?php /*echo LANG_INSTITUTION_NAME; */ ?></h2>
 
-<h1><?php /*echo LANG_APP_NAME; */?></h1>
+<h1><?php /*echo LANG_APP_NAME; */ ?></h1>
 
 <br />
 
-<p><?php /*echo util_lang('app_short_description'); */?></p>
+<p><?php /*echo util_lang('app_short_description'); */ ?></p>
 
-<p><?php /*echo util_lang('app_sign_in_msg'); */?></p>-->
+<p><?php /*echo util_lang('app_sign_in_msg'); */ ?></p>-->
 
 
 <li class="active">

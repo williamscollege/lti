@@ -7,7 +7,7 @@
 	if ($IS_AUTHENTICATED) {
 
 		// Auto-Click "Edit Sheetgroup Modal" if user arrived at this page by clicking "Edit current group" link from edit_sheet.php?sheetgroup=502 page
-		if (isset($_REQUEST['sheetgroup']) && $_REQUEST['sheetgroup'] && is_numeric($_REQUEST['sheetgroup'])) { ?>
+		if ((isset($_REQUEST['sheetgroup'])) && (is_numeric($_REQUEST['sheetgroup'])) && ($_REQUEST['sheetgroup'] > 0)) { ?>
 			<script>
 				$(document).ready(function () {
 					// this fxn is nearly identical to my_sheets.js listener for ".sus-edit-sheetgroup" clicks
@@ -84,7 +84,10 @@
 			$sg->updateDb();
 
 			if (!$sg->matchesDb) {
-				error('Initial sheet group creation/insert failed.');
+				// error: default sheet group failed to auto-create properly
+				util_displayMessage('error', 'Default sheet group failed to auto-create properly.');
+				require_once('../foot.php');
+				exit;
 			}
 
 			// fetch sheetgroups (use efficient cache function)

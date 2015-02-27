@@ -3,8 +3,6 @@
 	$pageTitle = ucfirst(util_lang('home'));
 	require_once('app_head.php');
 
-	//    $notebooks = $USER->getAccessibleNotebooks(Action::getOneFromDb(['name'=>'view'],$DB));
-	//    $num_notebooks = count($notebooks);
 
 	if ($IS_AUTHENTICATED) {
 		// SECTION: authenticated
@@ -31,25 +29,8 @@
 
 			<p><?php echo util_lang('app_sign_in_msg'); ?></p>
 		</div>
-		<?php
-		//        if ($num_notebooks > 0) {
-		//            echo "<hr />\n";
-		//            echo '<h3>'.ucfirst(util_lang('public')).' '.ucfirst(util_lang('my_available_openings')).'</h3>';
-		//        }
+	<?php
 	}
-
-	//    if ($num_notebooks > 0) {
-	//        $counter = 0;
-	//        echo "<ul class=\"unstyled\" id=\"list-of-user-notebooks\" data-notebook-count=\"$num_notebooks\">\n";
-	//        foreach ($notebooks as $notebook) {
-	//            $counter++;
-	//            echo $notebook->renderAsListItem('notebook-item-'.$counter)."\n";
-	//        }
-	//        echo "</ul>\n";
-	//    }
-
-	//    if ($USER->canActOnTarget($ACTIONS['create'],new Notebook(['DB'=>$DB]))) {
-	//    }
 
 	require_once('foot.php');
 ?>

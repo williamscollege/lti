@@ -19,9 +19,10 @@
 	}
 	require_once('../app_head.php');
 
-	//###############################################################
-	// begin security: check if access allowed to this page
-	//###############################################################
+
+	#------------------------------------------------#
+	# begin security: check if access allowed to this page
+	#------------------------------------------------#
 	if (!$sheetIsNew) {
 		// this is not a 'new' sheet
 		if (!$sheetIsDataIncoming) {
@@ -43,6 +44,7 @@
 
 	// load calendar setup functions
 	require_once('calendar_setup.php');
+
 
 	if ($IS_AUTHENTICATED) {
 
@@ -97,7 +99,6 @@
 
 		echo "<div id=\"parent_container\">"; // start: div#parent_container
 		echo "<h3>" . $pageTitle . "</h3>";
-		// echo "<p>Customize your signup sheet.</p>";
 
 
 		// ***************************

@@ -8,7 +8,7 @@
 		// util_prePrintR($_POST); exit;
 
 		// processing for either creating 'NEW' opening(s) or editing an existing opening_id
-		if (isset($_REQUEST["new_OpeningID"]) && $_REQUEST["new_OpeningID"] == "NEW") {
+		if ((isset($_REQUEST["new_OpeningID"])) && ($_REQUEST["new_OpeningID"] == "NEW")) {
 			// Create New Opening
 			$openingSheetID     = htmlentities((isset($_REQUEST["new_SheetID"])) ? $_REQUEST["new_SheetID"] : 0);
 			$openingID          = htmlentities((isset($_REQUEST["new_OpeningID"])) ? $_REQUEST["new_OpeningID"] : 0);
@@ -39,9 +39,9 @@
 			// notes: DOW = repeat_dow_sun, repeat_dow_mon, repeat_dow_tue, ...
 			// notes: DOM = repeat_dom_1, repeat_dom_2, ..., repeat_dom_10, ..., repeat_dom_31
 		}
-		elseif (isset($_REQUEST["edit_OpeningID"]) && $_REQUEST["edit_OpeningID"] > 0) {
+		elseif ((isset($_REQUEST["edit_OpeningID"])) && (is_numeric($_REQUEST["edit_OpeningID"])) && ($_REQUEST["edit_OpeningID"] > 0)) {
 			// Edit Existing Opening
-			$openingSheetID = htmlentities((isset($_REQUEST["edit_SheetID"])) ? $_REQUEST["edit_SheetID"] : 0);
+			$openingSheetID = htmlentities(((isset($_REQUEST["edit_SheetID"])) && (is_numeric($_REQUEST["edit_SheetID"]))) ? $_REQUEST["edit_SheetID"] : 0);
 			$openingID      = htmlentities((isset($_REQUEST["edit_OpeningID"])) ? $_REQUEST["edit_OpeningID"] : 0);
 
 			// reformat $openingDateStart to match expected format
@@ -74,7 +74,9 @@
 			$openingUntilDate            = ''; // this value not used in edit mode
 		}
 		else {
-			echo 'Invalid condition reached. You appear to be attempting to do something other than create or edit an opening.';
+			// error: invalid $openingID value
+			util_displayMessage('error', 'Request failed. You appear to be attempting to do something other than create or edit an opening.');
+			require_once('../foot.php');
 			exit;
 		}
 
@@ -117,11 +119,11 @@
 		if ($openingRepeatRate == 2 || $openingRepeatRate == 3) {
 
 			// constrain $openingUntilDate date to $dateSheetCloses date
-			$sheet = SUS_Sheet::getOneFromDb(['sheet_id'=>$openingSheetID], $DB);
+			$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $openingSheetID], $DB);
 			//$dateSheetCloses =  DateTime::createFromFormat('Y-m-d g:i:s', $sheet->date_closes);
-			$dateSheetCloses =  DateTime::createFromFormat('Y-m-d', substr($sheet->date_closes,0,10));
-			$repeatEndDate = DateTime::createFromFormat('m/d/Y', $openingUntilDate);
-			if ($dateSheetCloses < $repeatEndDate){
+			$dateSheetCloses = DateTime::createFromFormat('Y-m-d', substr($sheet->date_closes, 0, 10));
+			$repeatEndDate   = DateTime::createFromFormat('m/d/Y', $openingUntilDate);
+			if ($dateSheetCloses < $repeatEndDate) {
 				$repeatEndDate = $dateSheetCloses;
 			}
 
@@ -197,8 +199,8 @@
 
 						if (!$editOpening->matchesDb) {
 							// error: matching record does not exist
-							// TODO - improve error handling and redirect someplace useful
-							echo 'Error: No matching Opening record found. Attempt to edit opening record failed.';
+							util_displayMessage('error', 'Error: No matching Opening record found. Attempt to edit opening record failed.');
+							require_once('../foot.php');
 							exit;
 						}
 
