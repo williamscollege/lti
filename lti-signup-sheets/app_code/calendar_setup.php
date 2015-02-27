@@ -8,16 +8,12 @@
 		renderCalendarHead();
 		renderCalendarWidget();
 		renderCalendarJQuerySetup();
-		//		renderCalendarModalCreateOpening($sheetID);
-		//		renderCalendarModalEditOpening($sheetID);
 	}
 
 	function renderCalendarWidget_DOSIGNUP() {
 		renderCalendarHead();
 		renderCalendarWidget();
 		renderCalendarJQuerySetup();
-		// renderCalendarModalCreateOpening();
-		// renderCalendarModalEditOpening();
 	}
 
 

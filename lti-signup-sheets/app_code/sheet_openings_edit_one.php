@@ -13,12 +13,12 @@
 		exit;
 	}
 	// TODO -- NEED TO IMPLEMENT THIS !!!!!
-//	elseif (!$USER->isUserAllowedToSignupForOpening($_REQUEST["sheet"])) {
-//		// error: must have access to manage this sheet
-//		util_displayMessage('error', 'You do not have permission to edit that sheet');
-//		require_once('../foot.php');
-//		exit;
-//	}
+	//	elseif (!$USER->isUserAllowedToSignupForOpening($_REQUEST["sheet"])) {
+	//		// error: must have access to manage this sheet
+	//		util_displayMessage('error', 'You do not have permission to edit that sheet');
+	//		require_once('../foot.php');
+	//		exit;
+	//	}
 
 
 	// load calendar setup functions
