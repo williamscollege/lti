@@ -12,8 +12,9 @@
 		// ***************************
 		// fetch available openings
 		// ***************************
-		$USER->cacheMyAvailableOpenings();
-		util_prePrintR($USER->sheet_openings_all); // debugging
+		$USER->cacheMyAvailableSheetOpenings();
+		// util_prePrintR($USER->sheet_openings_all); // debugging
+
 
 		// display sheet_openings_all: "I can signup for..."
 		if (count($USER->sheet_openings_all) == 0) {
@@ -30,7 +31,7 @@
 
 				// TODO - remove this 2 commented lines -- popovers (bootstrap: must manually initialize popovers in JS file)
 				// $base_sheet_link = "<a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Description:</strong> " . $sheet['s_description'] . "\">" . $sheet['s_name'] . "</a>";
-				$base_sheet_link = "<a href=\"sheet_openings_edit_one.php?sheet=" . $sheet['s_id'] . "\"  class=\"\" title=\"Signup for Openings\">" . $sheet['s_name'] . "</a> (" . $sheet['s_description'] . ")";
+				$base_sheet_link = "<a href=\"sheet_openings_signup.php?sheet=" . $sheet['s_id'] . "\"  class=\"\" title=\"Signup for Openings\">" . $sheet['s_name'] . "</a> (" . $sheet['s_description'] . ")";
 
 				// NOTE: the A) through G) leads on the keys are used to sort. The display trims the first 3 chars from the key.
 				switch ($sheet["a_type"]) {

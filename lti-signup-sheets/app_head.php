@@ -44,7 +44,7 @@
 		?>
 		<div class="collapse navbar-collapse" id="wms-primary-navbar-1">
 			<ul class="nav navbar-nav">
-				<li class="<?php if ((strpos($http_referer, "sheet_openings_all.php")) || (strpos($http_referer, "sheet_openings_edit_one.php"))) {
+				<li class="<?php if ((strpos($http_referer, "sheet_openings_all.php")) || (strpos($http_referer, "sheet_openings_signup.php"))) {
 					echo "active";
 				} ?>">
 					<a id="link-available-openings" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheet_openings_all.php">

@@ -216,10 +216,10 @@
 			$this->assertEqual(809,$u1->signups_on_my_sheets[1]['array_signups'][1]['signup_id']);
 		}
 
-		function testCacheMyAvailableOpenings() {
+		function testCacheMyAvailableSheetOpenings() {
 			$u1 = User::getOneFromDb(['user_id'=>101], $this->DB);
 
-			$u1->cacheMyAvailableOpenings();
+			$u1->cacheMyAvailableSheetOpenings();
 
 			$this->assertEqual(2, count($u1->sheet_openings_all));
 			$this->assertEqual(601, $u1->sheet_openings_all[0]['s_id']);

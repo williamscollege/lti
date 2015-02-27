@@ -1,37 +1,35 @@
 <?php
 	require_once('../app_setup.php');
-	$pageTitle = ucfirst(util_lang('sheet_openings_edit_one'));
+	$pageTitle = ucfirst(util_lang('sheet_openings_signup'));
 	require_once('../app_head.php');
 
-	//###############################################################
-	// begin security: check if access allowed to this page
-	//###############################################################
+	#------------------------------------------------#
+	# begin security: check if access allowed to this page
+	#------------------------------------------------#
 	if ((!isset($_REQUEST["sheet"])) || (!is_numeric($_REQUEST["sheet"])) || ($_REQUEST["sheet"] <= 0)) {
 		// error: querystring 'sheet' must exist and be an integer
 		util_displayMessage('error', 'Invalid or missing sheet request');
 		require_once('../foot.php');
 		exit;
 	}
-	// TODO -- NEED TO IMPLEMENT THIS !!!!!
-	//	elseif (!$USER->isUserAllowedToSignupForOpening($_REQUEST["sheet"])) {
-	//		// error: must have access to manage this sheet
-	//		util_displayMessage('error', 'You do not have permission to edit that sheet');
-	//		require_once('../foot.php');
-	//		exit;
-	//	}
+	elseif (!$USER->isUserAllowedToSignupForOpening($_REQUEST["sheet"])) {
+		// error: must have access to signup on this sheet
+		util_displayMessage('error', 'You do not have permission to signup on this sheet');
+		require_once('../foot.php');
+		exit;
+	}
 
 
 	// load calendar setup functions
 	require_once('calendar_setup.php');
 
 
-	$s = '';
-	if ((isset($_REQUEST["sheet"])) && (is_numeric($_REQUEST["sheet"])) && ($_REQUEST["sheet"] > 0)) {
-		// ***************************
-		// fetch sheet
-		// ***************************
-		$s = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
-	}
+	// ***************************
+	// fetch sheet
+	// ***************************
+	// $s = '';
+	$s = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
+
 
 	if (!$s->matchesDb) {
 		util_displayMessage('error', 'No matching record found in database');
@@ -197,6 +195,7 @@
 
 														//date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A")
 														//echo '$op->begin_datetime : util_currentDateTimeString_asMySQL = ' . $op->begin_datetime . ':' . util_currentDateTimeString_asMySQL();
+														// TODO - enforce signup limits per usage details
 														if ($op->begin_datetime >= util_currentDateTimeString_asMySQL()) {
 															echo $op->renderAsHtmlShortWithLimitedControls($USER->user_id) . "\n";
 														}

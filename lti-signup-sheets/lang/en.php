@@ -72,7 +72,7 @@ $LANGUAGE['en'] = [
     'invalid_string_base_chars_only' => 'only A-Z, a-z, and 0-9 allowed',
 
 	# Terms below are specific to this project: Signup Sheets
-	'sheet_openings_edit_one' => 'Sheet Openings',
+	'sheet_openings_signup' => 'Sheet Openings',
 	'my_account' => 'My Account',
 	'sheet_openings_all' => 'My Available Openings',
     'signups_all' => 'My Signups',

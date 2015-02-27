@@ -35,7 +35,7 @@
 			}
 			elseif (!$USER->isUserAllowedToManageSheet($_REQUEST["sheet"])) {
 				// error: must have access to manage this sheet
-				util_displayMessage('error', 'You do not have permission to edit that sheet');
+				util_displayMessage('error', 'You do not have permission to edit this sheet');
 				require_once('../foot.php');
 				exit;
 			}

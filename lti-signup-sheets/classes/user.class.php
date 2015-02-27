@@ -35,25 +35,25 @@
 			//				die("This user does not exist in the database. Abort.");
 			//			}
 
-			$this->course_roles          = array();
-			$this->enrollments           = array();
-			$this->sheetgroups           = array();
-			$this->sheets                = array();
-			$this->managed_sheets        = array();
-			$this->signups_all            = array();
-			$this->signups_on_my_sheets  = array();
-			$this->sheet_openings_all = array();
+			$this->course_roles         = array();
+			$this->enrollments          = array();
+			$this->sheetgroups          = array();
+			$this->sheets               = array();
+			$this->managed_sheets       = array();
+			$this->signups_all          = array();
+			$this->signups_on_my_sheets = array();
+			$this->sheet_openings_all   = array();
 		}
 
 		public function clearCaches() {
-			$this->course_roles          = array();
-			$this->enrollments           = array();
-			$this->sheetgroups           = array();
-			$this->sheets                = array();
-			$this->managed_sheets        = array();
-			$this->signups_all            = array();
-			$this->signups_on_my_sheets  = array();
-			$this->sheet_openings_all = array();
+			$this->course_roles         = array();
+			$this->enrollments          = array();
+			$this->sheetgroups          = array();
+			$this->sheets               = array();
+			$this->managed_sheets       = array();
+			$this->signups_all          = array();
+			$this->signups_on_my_sheets = array();
+			$this->sheet_openings_all   = array();
 		}
 
 		/* static functions */
@@ -398,9 +398,9 @@
 			//util_prePrintR($this->signups_on_my_sheets);
 		}
 
-		public function cacheMyAvailableOpenings() {
+		public function cacheMyAvailableSheetOpenings() {
 			if (!$this->sheet_openings_all) {
-				$this->loadMyAvailableOpenings();
+				$this->loadMyAvailableSheetOpenings();
 			}
 		}
 
@@ -408,7 +408,7 @@
 		// returns: an array of sheet objects on which the current user has access to sign up
 		// $for_sheet_id = use this to show openings for 1 sheet
 		// TODO - verify use of params with moodle use cases
-		public function loadMyAvailableOpenings($includeAccessRecords = TRUE, $for_user_id = 0, $for_sheet_id = 0, $for_access_id = 0) {
+		public function loadMyAvailableSheetOpenings($includeAccessRecords = TRUE, $for_user_id = 0, $for_sheet_id = 0, $for_access_id = 0) {
 			$this->sheet_openings_all = [];
 
 			$strServerName = $_SERVER['SERVER_NAME'];
@@ -584,18 +584,18 @@
 				($includeAccessRecords ? '
 				,ac.broadness DESC;' : ';');
 
-			$resultsMyAvailableOpenings = mysqli_query($connString, $sql) or
+			$resultsMyAvailableSheetOpenings = mysqli_query($connString, $sql) or
 			die(mysqli_error($connString));
 
 			// debugging
 			// echo "\n<pre>$sql</pre>\n\n"; // debugging
-			// echo "<br />rows_returned = " . $resultsMyAvailableOpenings->num_rows . "<hr />";  // debugging
+			// echo "<br />rows_returned = " . $resultsMyAvailableSheetOpenings->num_rows . "<hr />";  // debugging
 
 			$sheets_with_access_reasons = [];
 			$last_sheet_id              = -1;
 			// iterate over rs
-			$resultsMyAvailableOpenings->data_seek(0);
-			while ($row = $resultsMyAvailableOpenings->fetch_assoc()) {
+			$resultsMyAvailableSheetOpenings->data_seek(0);
+			while ($row = $resultsMyAvailableSheetOpenings->fetch_assoc()) {
 				if ($row['s_id'] != $last_sheet_id) {
 					$sheets_with_access_reasons[] = $row;
 				}
@@ -625,7 +625,6 @@
 			// fetch relevant hashes of sheet_id values
 			$fetch_sheet_ids         = Db_Linked::arrayOfAttrValues($this->sheets, 'sheet_id');
 			$fetch_managed_sheet_ids = Db_Linked::arrayOfAttrValues($this->managed_sheets, 'sheet_id');
-
 			// util_prePrintR($fetch_sheet_ids);
 			// util_prePrintR($fetch_managed_sheet_ids);
 
@@ -640,24 +639,15 @@
 			return FALSE;
 		}
 
-		// check if user owns or manages this sheet (param required): return boolean value
+		// check if user has been granted access to signup on this sheet_id
 		public function isUserAllowedToSignupForOpening($sheet_id = 0) {
-			// TODO - complete this or remove. duplicate fxn?
-			$this->cacheMyAvailableOpenings();
+			$this->cacheMyAvailableSheetOpenings();
+			// util_prePrintR($this->sheet_openings_all);
 
-			// fetch relevant hashes of sheet_id values
-			$fetch_sheet_ids         = Db_Linked::arrayOfAttrValues($this->sheet_openings_all, 'sheet_id');
-			$fetch_managed_sheet_ids = Db_Linked::arrayOfAttrValues($this->managed_sheets, 'sheet_id');
-
-			util_prePrintR($fetch_sheet_ids);
-			util_prePrintR($fetch_managed_sheet_ids);
-
-			if (in_array($sheet_id, $fetch_sheet_ids)) {
-				return TRUE;
-			}
-
-			if (in_array($sheet_id, $fetch_managed_sheet_ids)) {
-				return TRUE;
+			foreach ($this->sheet_openings_all as $sheet) {
+				if ($sheet_id == $sheet['s_id']) {
+					return TRUE;
+				}
 			}
 
 			return FALSE;
