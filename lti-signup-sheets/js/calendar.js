@@ -66,6 +66,7 @@ $(document).ready(function () {
 			success: function (data) {
 				if (data.status == 'success') {
 					dfnUtil_setTransientAlert('success', 'Saved');
+					$("#contents_usage_quotas").replaceWith(data['html_render_usage_details']);
 					$(".list-opening-id-" + openingID).replaceWith(data['html_render_opening']);
 				}
 				else {

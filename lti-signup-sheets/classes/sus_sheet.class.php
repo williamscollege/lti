@@ -106,4 +106,98 @@
 			}
 		}
 
+		// for this sheetgroup: determine total and future signup limits, as well as current counts of each
+		// for this sheet: determine total and future signup limits, as well as current counts of each
+		public function renderAsHtmlUsageDetails($UserId = 0) {
+			$fetch_signups_in_openings_all    = 0;
+			$fetch_signups_in_openings_future = 0;
+			$fetch_signups_in_sheet_all       = 0;
+			$fetch_signups_in_sheet_future    = 0;
+
+			// 1) sheetgroup: determine number of signups on sheets in this sheetgroup
+			$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $this->sheetgroup_id], $this->dbConnection);
+
+			$sheets_in_sg         = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $sg->sheetgroup_id], $this->dbConnection);
+			$list_sheet_ids_in_sg = Db_Linked::arrayOfAttrValues($sheets_in_sg, 'sheet_id');
+
+			$openings_in_sg_all         = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg], $this->dbConnection);
+			$list_opening_ids_in_sg_all = Db_Linked::arrayOfAttrValues($openings_in_sg_all, 'opening_id');
+
+			$openings_in_sg_future         = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg, 'begin_datetime >=' => util_currentDateTimeString_asMySQL()], $this->dbConnection);
+			$list_opening_ids_in_sg_future = Db_Linked::arrayOfAttrValues($openings_in_sg_future, 'opening_id');
+
+			if ($list_opening_ids_in_sg_all) {
+				$fetch_signups_in_openings_all = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_sg_all, 'signup_user_id' => $UserId], $this->dbConnection));
+			}
+			if ($list_opening_ids_in_sg_future) {
+				$fetch_signups_in_openings_future = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_sg_future, 'signup_user_id' => $UserId], $this->dbConnection));
+			}
+
+			// 2) sheet: determine number of signups on this sheet
+			$openings_in_one_sheet_all         = SUS_Opening::getAllFromDb(['sheet_id' => $this->sheet_id], $this->dbConnection);
+			$list_opening_ids_in_one_sheet_all = Db_Linked::arrayOfAttrValues($openings_in_one_sheet_all, 'opening_id');
+
+			$openings_in_one_sheet_future         = SUS_Opening::getAllFromDb(['sheet_id' => $this->sheet_id, 'begin_datetime >=' => util_currentDateTimeString_asMySQL()], $this->dbConnection);
+			$list_opening_ids_in_one_sheet_future = Db_Linked::arrayOfAttrValues($openings_in_one_sheet_future, 'opening_id');
+
+			if ($list_opening_ids_in_one_sheet_all) {
+				$fetch_signups_in_sheet_all = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_one_sheet_all, 'signup_user_id' => $UserId], $this->dbConnection));
+			}
+			if ($list_opening_ids_in_one_sheet_future) {
+				$fetch_signups_in_sheet_future = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_one_sheet_future, 'signup_user_id' => $UserId], $this->dbConnection));
+			}
+
+			$rendered = "<div id=\"contents_usage_quotas\">";
+			$rendered .= "You may use <span class=\"badge\">" . $this->sus_grammatical_max_signups($sg->max_g_total_user_signups) . "</span> across all sheets in this group, ";
+			$rendered .= "of which <span class=\"badge\">" . $this->sus_grammatical_max_signups_less_verbose($sg->max_g_pending_user_signups) . "</span> may be for future times. ";
+			$rendered .= "Currently you have used ";
+			$rendered .= "<span class=\"badge\">" . $this->sus_grammatical_max_signups($fetch_signups_in_openings_all) . "</span> in this group, ";
+			$rendered .= "<span class=\"badge\">" . $this->sus_grammatical_max_signups_less_verbose($fetch_signups_in_openings_future) . "</span> of which are in the future. ";
+			$rendered .= "You may have";
+			$rendered .= "<span class=\"badge\">" . $this->sus_grammatical_max_signups($this->max_total_user_signups) . "</span> on this sheet, of which ";
+			$rendered .= "<span class=\"badge\">" . $this->sus_grammatical_max_signups_less_verbose($this->max_pending_user_signups) . "</span> may be for future times. ";
+			$rendered .= "Currently you have ";
+			$rendered .= "<span class=\"badge\">" . $this->sus_grammatical_max_signups($fetch_signups_in_sheet_all) . "</span> on this sheet, ";
+			$rendered .= "<span class=\"badge\">" . $this->sus_grammatical_max_signups_less_verbose($fetch_signups_in_sheet_future) . "</span> of which are in the future.";
+			$rendered .= "</div>";
+
+			// echo doesUserHaveSignupsRemaining($sg->max_g_total_user_signups, $sg->max_g_pending_user_signups, $s->max_total_user_signups, $s->max_pending_user_signups, $fetch_signups_in_openings_all, $fetch_signups_in_openings_future, $fetch_signups_in_sheet_all, $fetch_signups_in_sheet_future);
+
+			return $rendered;
+		}
+
+		// ***************************
+		// helper functions
+		// ***************************
+
+		// grammar for usage details (verbose)
+		private function sus_grammatical_max_signups($num) {
+			if (intval($num) < 0) {
+				return 'an unlimited number of signups';
+			}
+			else {
+				if (intval($num) == 1) {
+					return "1 signup";
+				}
+				else {
+					return "$num signups";
+				}
+			}
+		}
+
+		// grammar for usage details (less verbose)
+		private function sus_grammatical_max_signups_less_verbose($num) {
+			if (intval($num) < 0) {
+				return 'an unlimited number';
+			}
+			else {
+				if (intval($num) == 1) {
+					return "1";
+				}
+				else {
+					return "$num";
+				}
+			}
+		}
+
 	}

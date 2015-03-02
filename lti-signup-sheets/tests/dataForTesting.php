@@ -163,7 +163,7 @@
 		// 500 series ids
 		# SUS_Sheetgroup: 'sheetgroup_id', 'created_at', 'updated_at', 'flag_delete', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheetgroup::$dbTable . " VALUES
-			(501, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 501', 'Something to organize my math sheets', 10, 2),
+			(501, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 501', 'Something to organize my math sheets', 8, 2),
 			(502, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 502', 'Something to organize my english sheets', 4, 2),
 			(503, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 503', 'Something to organize my spanish sheets', 6, 3),
 			(504, NOW(), NOW(), 0, 102, 0, 'Sheetgroup 504', 'Help me keep track of so many sheets', 1, 1),
@@ -224,9 +224,10 @@
 			(706, NOW(), NOW(), 0, 604, 0, 'Opening 706', 'Opening 706, Sheet 604, Sheetgroup 502', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), 'Faculty House'),
 			(707, NOW(), NOW(), 1, 605, 0, 'Opening 707', 'Opening 707, Sheet 605, Sheetgroup 503', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), 'Purple Pub'),
 			(708, NOW(), NOW(), 1, 606, 0, 'Opening 708', 'Opening 708, Sheet 606, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), ''),
-			(709, NOW(), NOW(), 0, 607, 0, 'Opening 709', 'Opening 709, Sheet 607, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), ''),
-			(710, NOW(), NOW(), 0, 608, 0, 'Opening 710', 'Opening 710, Sheet 608, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), ''),
-			(711, NOW(), NOW(), 0, 610, 0, 'Opening 711', 'Opening 711, Sheet 610, Sheetgroup 510', 1 , '', TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(hour,1,NOW()), '')
+			(709, NOW(), NOW(), 0, 607, 0, 'Opening 709', 'Opening 709, Sheet 607, Sheetgroup 504', 1 , '', TIMESTAMPADD(day,2,NOW()),  TIMESTAMPADD(hour,1,NOW()), ''),
+			(710, NOW(), NOW(), 0, 607, 0, 'Opening 710', 'Opening 710, Sheet 607, Sheetgroup 504', 1 , '', TIMESTAMPADD(day,4,NOW()),  TIMESTAMPADD(hour,1,NOW()), ''),
+			(711, NOW(), NOW(), 0, 608, 0, 'Opening 711', 'Opening 711, Sheet 608, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), ''),
+			(712, NOW(), NOW(), 0, 610, 0, 'Opening 712', 'Opening 712, Sheet 610, Sheetgroup 510', 1 , '', TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(hour,1,NOW()), '')
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();

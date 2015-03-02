@@ -27,30 +27,44 @@
 	// ***************************
 	// fetch sheet
 	// ***************************
-	// $s = '';
 	$s = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
 
-
 	if (!$s->matchesDb) {
-		util_displayMessage('error', 'No matching record found in database');
+		util_displayMessage('error', 'No matching sheet record found in database');
 		require_once('../foot.php');
 		exit;
 	}
 
-	// helper function: usage details
-	function sus_grammatical_max_signups($num) {
-		if (!$num || $num < 0) {
-			return 'an unlimited number of signups';
-		}
-		else {
-			if ($num == 1) {
-				return "1 signup";
-			}
-			else {
-				return "$num signups";
-			}
-		}
+	$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $s->sheetgroup_id], $DB);
+	if (!$sg->matchesDb) {
+		util_displayMessage('error', 'No matching sheetgroup record found in database');
+		require_once('../foot.php');
+		exit;
 	}
+
+
+	// determine if user has any signups remaining
+	function doesUserHaveSignupsRemaining($max_sg_total = 0, $max_sg_future = 0, $max_s_total = 0, $max_s_future = 0, $count_sg_total, $count_sg_future, $count_s_total, $count_s_future) {
+//		$max_sg_total    = intval($max_sg_total);
+//		$max_sg_future   = intval($max_sg_future);
+//		$max_s_total     = intval($max_s_total);
+//		$max_s_future    = intval($max_s_future);
+//		$count_sg_total  = intval($count_sg_total);
+//		$count_sg_future = intval($count_sg_future);
+//		$count_s_total   = intval($count_s_total);
+//		$count_s_future  = intval($count_s_future);
+//
+//		return $count_sg_total;
+
+//		// check sheetgroup limits
+//		isSheetgroupTotalSignupLimitReached();
+//		isSheetgroupFutureSignupLimitReached();
+//
+//		// check sheet limits
+//		isSheetTotalSignupLimitReached();
+//		isSheetFutureSignupLimitReached();
+	}
+
 
 	if ($IS_AUTHENTICATED) {
 		echo "<div id=\"parent_container\">"; // start: div#parent_container
@@ -60,47 +74,6 @@
 				<!-- Basic Sheet Info / Sheet Access -->
 				<div class="col-sm-5">
 					<div id="sus_signup_on_sheet_info" class="small">
-						<?php
-							// determine separate counts of signups within: sheetgroup; this sheet
-							$fetch_signups_in_openings_all    = [];
-							$fetch_signups_in_openings_future = [];
-							$fetch_signups_in_sheet_all       = [];
-							$fetch_signups_in_sheet_future    = [];
-
-							$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $s->sheetgroup_id], $DB);
-
-							// 1) determine count of signups on sheets in this sheetgroup
-							$sheets_in_sg         = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $sg->sheetgroup_id], $DB);
-							$list_sheet_ids_in_sg = Db_Linked::arrayOfAttrValues($sheets_in_sg, 'sheet_id');
-
-							$openings_in_sg_all         = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg], $DB);
-							$list_opening_ids_in_sg_all = Db_Linked::arrayOfAttrValues($openings_in_sg_all, 'opening_id');
-
-							$openings_in_sg_future         = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg, 'begin_datetime >=' => util_currentDateTimeString_asMySQL()], $DB);
-							$list_opening_ids_in_sg_future = Db_Linked::arrayOfAttrValues($openings_in_sg_future, 'opening_id');
-
-							if ($list_opening_ids_in_sg_all) {
-								$fetch_signups_in_openings_all = SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_sg_all, 'signup_user_id' => $USER->user_id], $DB);
-							}
-							if ($list_opening_ids_in_sg_future) {
-								$fetch_signups_in_openings_future = SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_sg_future, 'signup_user_id' => $USER->user_id], $DB);
-							}
-
-							// 2) determine count of signups on this sheet
-							$openings_in_one_sheet_all         = SUS_Opening::getAllFromDb(['sheet_id' => $s->sheet_id], $DB);
-							$list_opening_ids_in_one_sheet_all = Db_Linked::arrayOfAttrValues($openings_in_one_sheet_all, 'opening_id');
-
-							$openings_in_one_sheet_future         = SUS_Opening::getAllFromDb(['sheet_id' => $s->sheet_id, 'begin_datetime >=' => util_currentDateTimeString_asMySQL()], $DB);
-							$list_opening_ids_in_one_sheet_future = Db_Linked::arrayOfAttrValues($openings_in_one_sheet_future, 'opening_id');
-
-							if ($list_opening_ids_in_one_sheet_all) {
-								$fetch_signups_in_sheet_all = SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_one_sheet_all, 'signup_user_id' => $USER->user_id], $DB);
-							}
-							if ($list_opening_ids_in_one_sheet_future) {
-								$fetch_signups_in_sheet_future = SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_one_sheet_future, 'signup_user_id' => $USER->user_id], $DB);
-							}
-						?>
-
 						<h3><?php echo $s->name; ?></h3>
 						<?php echo $s->description; ?><br />
 						Group: <?php echo $sg->name; ?><br />
@@ -108,19 +81,9 @@
 						<p><a id="link_for_usage_quotas" href="#" title="Usage details">Show usage details</a></p>
 
 						<div id="toggle_usage_quotas" class="hidden">
-							You may use
-							<span class="badge"><?php echo(sus_grammatical_max_signups($sg->max_g_total_user_signups)); ?></span> across all sheets in this
-							group;
-							<span class="badge"><?php echo(sus_grammatical_max_signups($sg->max_g_pending_user_signups)); ?></span> may be for future times.
-							Currently you have used
-							<span class="badge"> <?php echo count($fetch_signups_in_openings_all) + 0; ?></span> in this group,
-							<span class="badge"><?php echo count($fetch_signups_in_openings_future) + 0; ?></span> of which are in the future.
-							You may have
-							<span class="badge"><?php echo(sus_grammatical_max_signups($s->max_total_user_signups)); ?></span> on this sheet;
-							<span class="badge"><?php echo(sus_grammatical_max_signups($s->max_pending_user_signups)); ?></span> may be for future times.
-							Currently you have
-							<span class="badge"><?php echo count($fetch_signups_in_sheet_all) + 0; ?></span> on this sheet,
-							<span class="badge"><?php echo count($fetch_signups_in_sheet_future) + 0; ?></span> of which are in the future.
+
+							<?php echo $s->renderAsHtmlUsageDetails($USER->user_id); ?>
+
 						</div>
 						<p><a id="link_for_openings_instructions" class="hidden" href="#" title="Instructions">Show instructions</a></p>
 					</div>

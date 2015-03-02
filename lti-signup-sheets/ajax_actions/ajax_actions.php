@@ -409,10 +409,13 @@
 			}
 		}
 
+		// must get sheet object to enable render fxn
+		$sheet = SUS_Sheet::getOneFromDb(['sheet_id'=>$o->sheet_id], $DB);
+
 		# Output
 		$results['status']              = 'success';
-		$results['which_action']        = 'sheet-opening-signup-add-me';
 		$results['html_render_opening'] = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
+		$results['html_render_usage_details'] = $sheet->renderAsHtmlUsageDetails($USER->user_id);
 	}
 	//###############################################################
 	elseif ($action == 'sheet-opening-signup-delete-me') {
@@ -448,10 +451,13 @@
 			}
 		}
 
+		// must get sheet object to enable render fxn
+		$sheet = SUS_Sheet::getOneFromDb(['sheet_id'=>$o->sheet_id], $DB);
+
 		# Output
 		$results['status']              = 'success';
-		$results['which_action']        = 'sheet-opening-signup-add-me';
 		$results['html_render_opening'] = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
+		$results['html_render_usage_details'] = $sheet->renderAsHtmlUsageDetails($USER->user_id);
 	}
 	//###############################################################
 	elseif ($action == 'edit-opening-add-signup-user') {

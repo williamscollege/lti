@@ -159,7 +159,6 @@
 			return $rendered;
 		}
 
-
 		public function renderAsHtmlShortWithFullControls() {
 			$this->cacheSignups();
 			$signedupUserIdsAry = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
@@ -205,6 +204,5 @@
 
 			return $rendered;
 		}
-
 
 	}
