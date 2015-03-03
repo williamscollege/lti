@@ -357,6 +357,15 @@
 	//###############################################################
 	elseif ($action == 'sheet-opening-signup-add-me') {
 
+		// TODO - is this the optimal place to call this method?
+		// SECURITY: method to enforce ability of signup to be able to signup, or not
+		if (!$USER->isUserAllowedToAddNewSignup(0, $editID)) {
+			// error: user may not signup on this sheet group or sheet
+			$results["notes"] = "you lack permission to signup at the present time";
+			echo json_encode($results);
+			exit;
+		}
+
 		// check if submitted user already has a signup for this opening (specify: flag_delete = TRUE)
 		$s = SUS_Signup::getOneFromDb(['opening_id' => $editID, 'signup_user_id' => $USER->user_id, 'flag_delete' => TRUE], $DB);
 

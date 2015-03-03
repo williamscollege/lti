@@ -623,7 +623,7 @@
 
 			// 1) sheetgroup: determine max and pending signup limits, and current counts of each
 
-			$s = SUS_Sheet::getOneFromDb(['sheet_id' => $SheetId], $this->dbConnection);
+			$s  = SUS_Sheet::getOneFromDb(['sheet_id' => $SheetId], $this->dbConnection);
 			$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $s->sheetgroup_id], $this->dbConnection);
 
 			$sheets_in_sg         = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $sg->sheetgroup_id], $this->dbConnection);
@@ -672,6 +672,35 @@
 			return $resultant_array;
 		}
 
+		// method to enforce ability of signup to be able to signup, or not
+		public function isUserAllowedToAddNewSignup($SheetId = 0, $OpeningId = 0) {
+
+			// if only opening_id was provided, then fetch sheet_id
+			if($SheetId == 0 && $OpeningId > 0){
+				$s = SUS_Sheet::getOneFromDb(['opening_id'=>$OpeningId], $this->dbConnection);
+				$SheetId = $s->sheet_id;
+			}
+
+			// fetch usage details
+			$usage_ary = $this->fetchUserSignupUsageData($SheetId);
+
+			// notation: '_g_' signifies '_group_'
+			if (($usage_ary['sg_max_g_total_user_signups'] != -1) && ($usage_ary['sg_count_g_total_user_signups'] >= $usage_ary['sg_max_g_total_user_signups'])) {
+				return FALSE;
+			}
+			if (($usage_ary['sg_max_g_pending_user_signups'] != -1) && ($usage_ary['sg_count_g_pending_user_signups'] >= $usage_ary['sg_max_g_pending_user_signups'])) {
+				return FALSE;
+			}
+			if (($usage_ary['s_max_total_user_signups'] != -1) && ($usage_ary['s_count_total_user_signups'] >= $usage_ary['s_max_total_user_signups'])) {
+				return FALSE;
+			}
+			if (($usage_ary['s_max_pending_user_signups'] != -1) && ($usage_ary['s_count_pending_user_signups'] >= $usage_ary['s_max_pending_user_signups'])) {
+				return FALSE;
+			}
+
+			return TRUE;
+		}
+
 		// check if user owns or manages this sheet (param required): return boolean value
 		public function isUserAllowedToManageSheet($sheet_id = 0) {
 			$this->cacheSheets();
@@ -695,7 +724,7 @@
 		}
 
 		// check if user has been granted access to signup on this sheet_id
-		public function isUserAllowedToSignupForOpening($sheet_id = 0) {
+		public function isUserAllowedToAccessSheet($sheet_id = 0) {
 			$this->cacheMyAvailableSheetOpenings();
 			// util_prePrintR($this->sheet_openings_all);
 

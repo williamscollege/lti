@@ -12,7 +12,7 @@
 		require_once('../foot.php');
 		exit;
 	}
-	elseif (!$USER->isUserAllowedToSignupForOpening($_REQUEST["sheet"])) {
+	elseif (!$USER->isUserAllowedToAccessSheet($_REQUEST["sheet"])) {
 		// error: must have access to signup on this sheet
 		util_displayMessage('error', 'You do not have permission to signup on this sheet');
 		require_once('../foot.php');
