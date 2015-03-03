@@ -617,6 +617,61 @@
 		# access permissions
 		#------------------------------------------------#
 
+		// determine this sheetgroup's max and pending signup limits, and current counts of each
+		// determine this sheet's max and pending signup limits, and current counts of each
+		public function fetchUserSignupUsageData($SheetId = 0) {
+
+			// 1) sheetgroup: determine max and pending signup limits, and current counts of each
+
+			$s = SUS_Sheet::getOneFromDb(['sheet_id' => $SheetId], $this->dbConnection);
+			$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $s->sheetgroup_id], $this->dbConnection);
+
+			$sheets_in_sg         = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $sg->sheetgroup_id], $this->dbConnection);
+			$list_sheet_ids_in_sg = Db_Linked::arrayOfAttrValues($sheets_in_sg, 'sheet_id');
+
+			$openings_in_sg_all         = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg], $this->dbConnection);
+			$list_opening_ids_in_sg_all = Db_Linked::arrayOfAttrValues($openings_in_sg_all, 'opening_id');
+
+			$openings_in_sg_future         = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg, 'begin_datetime >=' => util_currentDateTimeString_asMySQL()], $this->dbConnection);
+			$list_opening_ids_in_sg_future = Db_Linked::arrayOfAttrValues($openings_in_sg_future, 'opening_id');
+
+			if ($list_opening_ids_in_sg_all) {
+				$sg_count_g_total_user_signups = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_sg_all, 'signup_user_id' => $this->user_id], $this->dbConnection));
+			}
+			if ($list_opening_ids_in_sg_future) {
+				$sg_count_g_pending_user_signups = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_sg_future, 'signup_user_id' => $this->user_id], $this->dbConnection));
+			}
+
+			// 2) sheet: determine max and pending signup limits, and current counts of each
+			$openings_in_one_sheet_all         = SUS_Opening::getAllFromDb(['sheet_id' => $s->sheet_id], $this->dbConnection);
+			$list_opening_ids_in_one_sheet_all = Db_Linked::arrayOfAttrValues($openings_in_one_sheet_all, 'opening_id');
+
+			$openings_in_one_sheet_future         = SUS_Opening::getAllFromDb(['sheet_id' => $s->sheet_id, 'begin_datetime >=' => util_currentDateTimeString_asMySQL()], $this->dbConnection);
+			$list_opening_ids_in_one_sheet_future = Db_Linked::arrayOfAttrValues($openings_in_one_sheet_future, 'opening_id');
+
+			if ($list_opening_ids_in_one_sheet_all) {
+				$s_count_total_user_signups = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_one_sheet_all, 'signup_user_id' => $this->user_id], $this->dbConnection));
+			}
+
+			if ($list_opening_ids_in_one_sheet_future) {
+				$s_count_pending_user_signups = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_one_sheet_future, 'signup_user_id' => $this->user_id], $this->dbConnection));
+			}
+
+			// build array and pass it back
+			$resultant_array = [
+				'sg_max_g_total_user_signups'     => $sg->max_g_total_user_signups,
+				'sg_count_g_total_user_signups'   => $sg_count_g_total_user_signups,
+				'sg_max_g_pending_user_signups'   => $sg->max_g_pending_user_signups,
+				'sg_count_g_pending_user_signups' => $sg_count_g_pending_user_signups,
+				's_max_total_user_signups'        => $s->max_total_user_signups,
+				's_count_total_user_signups'      => $s_count_total_user_signups,
+				's_max_pending_user_signups'      => $s->max_pending_user_signups,
+				's_count_pending_user_signups'    => $s_count_pending_user_signups
+			];
+
+			return $resultant_array;
+		}
+
 		// check if user owns or manages this sheet (param required): return boolean value
 		public function isUserAllowedToManageSheet($sheet_id = 0) {
 			$this->cacheSheets();

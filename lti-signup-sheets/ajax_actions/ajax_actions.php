@@ -415,8 +415,8 @@
 		# Output
 		$results['status']              = 'success';
 		$results['html_render_opening'] = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
-		$results['html_render_usage_alert'] = $sheet->renderAsHtmlUsageAlert($USER->user_id);
-		$results['html_render_usage_details'] = $sheet->renderAsHtmlUsageDetails($USER->user_id);
+		$results['html_render_usage_alert'] = $sheet->renderAsHtmlUsageAlert($USER);
+		$results['html_render_usage_details'] = $sheet->renderAsHtmlUsageDetails($USER);
 	}
 	//###############################################################
 	elseif ($action == 'sheet-opening-signup-delete-me') {
@@ -458,8 +458,8 @@
 		# Output
 		$results['status']              = 'success';
 		$results['html_render_opening'] = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
-		$results['html_render_usage_alert'] = $sheet->renderAsHtmlUsageAlert($USER->user_id);
-		$results['html_render_usage_details'] = $sheet->renderAsHtmlUsageDetails($USER->user_id);
+		$results['html_render_usage_alert'] = $sheet->renderAsHtmlUsageAlert($USER);
+		$results['html_render_usage_details'] = $sheet->renderAsHtmlUsageDetails($USER);
 	}
 	//###############################################################
 	elseif ($action == 'edit-opening-add-signup-user') {

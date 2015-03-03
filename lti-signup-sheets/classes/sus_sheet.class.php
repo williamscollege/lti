@@ -107,10 +107,12 @@
 		}
 
 		// render as html the usage details concerning max and pending signup limits, and current counts of each
-		public function renderAsHtmlUsageDetails($UserId = 0) {
+		public function renderAsHtmlUsageDetails() {
+			// explicitly call the global session variable for use here
+			global $USER;
 
 			// fetch usage details
-			$usage_ary = $this->fetchUserSignupUsageData($UserId);
+			$usage_ary = $USER->fetchUserSignupUsageData($this->sheet_id);
 
 			$rendered = "<div id=\"contents_usage_quotas\"><p>";
 			$rendered .= "You may use <span class=\"badge\">" . $this->sus_grammatical_max_signups($usage_ary['sg_max_g_total_user_signups']) . "</span> across all sheets in this group, ";
@@ -131,15 +133,17 @@
 
 		// determine if user has any signups remaining
 		//public function checkUserHasSignupsRemaining($UserId = 0) {
-		public function renderAsHtmlUsageAlert($UserId = 0) {
+		public function renderAsHtmlUsageAlert() {
+			// explicitly call the global session variable for use here
+			global $USER;
 
-			// TODO - enforce ability to signup or not based on param passed back (pretty error code and boolean value)
+			// TODO - Serverside: enforce ability to signup or not based on param passed back (pretty error code and boolean value)
 
 			// default condition
 			$status = '<div id="alert_usage_quotas"></div>';
 
 			// fetch usage details
-			$usage_ary = $this->fetchUserSignupUsageData($UserId);
+			$usage_ary = $USER->fetchUserSignupUsageData($this->sheet_id);
 
 			// notation: '_g_' signifies '_group_'
 			if (($usage_ary['sg_max_g_total_user_signups'] != -1) && ($usage_ary['sg_count_g_total_user_signups'] >= $usage_ary['sg_max_g_total_user_signups'])) {
@@ -165,59 +169,6 @@
 		// ***************************
 		// private helper functions
 		// ***************************
-
-		// determine this sheetgroup's max and pending signup limits, and current counts of each
-		// determine this sheet's max and pending signup limits, and current counts of each
-		private function fetchUserSignupUsageData($UserId = 0) {
-
-			// 1) sheetgroup: determine max and pending signup limits, and current counts of each
-			$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $this->sheetgroup_id], $this->dbConnection);
-
-			$sheets_in_sg         = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $sg->sheetgroup_id], $this->dbConnection);
-			$list_sheet_ids_in_sg = Db_Linked::arrayOfAttrValues($sheets_in_sg, 'sheet_id');
-
-			$openings_in_sg_all         = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg], $this->dbConnection);
-			$list_opening_ids_in_sg_all = Db_Linked::arrayOfAttrValues($openings_in_sg_all, 'opening_id');
-
-			$openings_in_sg_future         = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg, 'begin_datetime >=' => util_currentDateTimeString_asMySQL()], $this->dbConnection);
-			$list_opening_ids_in_sg_future = Db_Linked::arrayOfAttrValues($openings_in_sg_future, 'opening_id');
-
-			if ($list_opening_ids_in_sg_all) {
-				$sg_count_g_total_user_signups = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_sg_all, 'signup_user_id' => $UserId], $this->dbConnection));
-			}
-			if ($list_opening_ids_in_sg_future) {
-				$sg_count_g_pending_user_signups = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_sg_future, 'signup_user_id' => $UserId], $this->dbConnection));
-			}
-
-			// 2) sheet: determine max and pending signup limits, and current counts of each
-			$openings_in_one_sheet_all         = SUS_Opening::getAllFromDb(['sheet_id' => $this->sheet_id], $this->dbConnection);
-			$list_opening_ids_in_one_sheet_all = Db_Linked::arrayOfAttrValues($openings_in_one_sheet_all, 'opening_id');
-
-			$openings_in_one_sheet_future         = SUS_Opening::getAllFromDb(['sheet_id' => $this->sheet_id, 'begin_datetime >=' => util_currentDateTimeString_asMySQL()], $this->dbConnection);
-			$list_opening_ids_in_one_sheet_future = Db_Linked::arrayOfAttrValues($openings_in_one_sheet_future, 'opening_id');
-
-			if ($list_opening_ids_in_one_sheet_all) {
-				$s_count_total_user_signups = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_one_sheet_all, 'signup_user_id' => $UserId], $this->dbConnection));
-			}
-
-			if ($list_opening_ids_in_one_sheet_future) {
-				$s_count_pending_user_signups = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_one_sheet_future, 'signup_user_id' => $UserId], $this->dbConnection));
-			}
-
-			// build array and pass it back
-			$resultant_array = [
-				'sg_max_g_total_user_signups'     => $sg->max_g_total_user_signups,
-				'sg_count_g_total_user_signups'   => $sg_count_g_total_user_signups,
-				'sg_max_g_pending_user_signups'   => $sg->max_g_pending_user_signups,
-				'sg_count_g_pending_user_signups' => $sg_count_g_pending_user_signups,
-				's_max_total_user_signups'        => $this->max_total_user_signups,
-				's_count_total_user_signups'      => $s_count_total_user_signups,
-				's_max_pending_user_signups'      => $this->max_pending_user_signups,
-				's_count_pending_user_signups'    => $s_count_pending_user_signups
-			];
-
-			return $resultant_array;
-		}
 
 		// grammar for usage details (verbose)
 		private function sus_grammatical_max_signups($num) {

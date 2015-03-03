@@ -58,15 +58,15 @@
 							Group: <?php echo $sg->name; ?>
 						</p>
 
-						<!-- will display only if a limit has been reached (and no more signups are available) -->
+						<!-- alert will display only if a limit has been reached (meaning: no more signups are available) -->
 						<div id="toggle_usage_alert">
-							<?php echo $s->renderAsHtmlUsageAlert($USER->user_id); ?>
+							<?php echo $s->renderAsHtmlUsageAlert(); ?>
 						</div>
 
 						<p><a id="link_for_usage_quotas" href="#" title="Usage details">Show usage details</a></p>
 
 						<div id="toggle_usage_quotas" class="hidden">
-							<?php echo $s->renderAsHtmlUsageDetails($USER->user_id); ?>
+							<?php echo $s->renderAsHtmlUsageDetails(); ?>
 						</div>
 						<p><a id="link_for_openings_instructions" class="hidden" href="#" title="Instructions">Show instructions</a></p>
 					</div>
