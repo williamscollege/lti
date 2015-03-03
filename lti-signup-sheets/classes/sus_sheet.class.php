@@ -136,26 +136,26 @@
 			// TODO - enforce ability to signup or not based on param passed back (pretty error code and boolean value)
 
 			// default condition
-			$status = '<div id="alert_usage_quotas">0) You may signup as you please</div>';
+			$status = '<div id="alert_usage_quotas"></div>';
 
 			// fetch usage details
 			$usage_ary = $this->fetchUserSignupUsageData($UserId);
 
 			// notation: '_g_' signifies '_group_'
 			if (($usage_ary['sg_max_g_total_user_signups'] != -1) && ($usage_ary['sg_count_g_total_user_signups'] >= $usage_ary['sg_max_g_total_user_signups'])) {
-				$status = '<div id="alert_usage_quotas">1) SORRY - you have used all allowable total signups in this sheetgroup</div>';
+				$status = '<div id="alert_usage_quotas"><p><span class="wms-reached-signup-limit label label-danger">You have 0 signups remaining in this sheet group</span></p></div>';
 				return $status;
 			}
 			if (($usage_ary['sg_max_g_pending_user_signups'] != -1) && ($usage_ary['sg_count_g_pending_user_signups'] >= $usage_ary['sg_max_g_pending_user_signups'])) {
-				$status = '<div id="alert_usage_quotas">2) SORRY - you have used all allowable future signups in this sheetgroup</div>';
+				$status = '<div id="alert_usage_quotas"><p><span class="wms-reached-signup-limit label label-danger">You have 0 future signups remaining in this sheet group</span></p></div>';
 				return $status;
 			}
 			if (($usage_ary['s_max_total_user_signups'] != -1) && ($usage_ary['s_count_total_user_signups'] >= $usage_ary['s_max_total_user_signups'])) {
-				$status = '<div id="alert_usage_quotas">3) SORRY - you have used all allowable total signups in this sheet</div>';
+				$status = '<div id="alert_usage_quotas"><p><span class="wms-reached-signup-limit label label-danger">You have 0 signups remaining in this sheet</span></p></div>';
 				return $status;
 			}
 			if (($usage_ary['s_max_pending_user_signups'] != -1) && ($usage_ary['s_count_pending_user_signups'] >= $usage_ary['s_max_pending_user_signups'])) {
-				$status = '<div id="alert_usage_quotas">4) SORRY - you have used all allowable future signups in this sheet</div>';
+				$status = '<div id="alert_usage_quotas"><p><span class="wms-reached-signup-limit label label-danger">You have 0 future signups remaining in this sheet</span></p></div>';
 				return $status;
 			}
 

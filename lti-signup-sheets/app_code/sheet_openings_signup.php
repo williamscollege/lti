@@ -52,8 +52,11 @@
 				<div class="col-sm-5">
 					<div id="sus_signup_on_sheet_info" class="small">
 						<h3><?php echo $s->name; ?></h3>
-						<?php echo $s->description; ?><br />
-						Group: <?php echo $sg->name; ?><br />
+
+						<p>
+							<?php echo $s->description; ?><br />
+							Group: <?php echo $sg->name; ?>
+						</p>
 
 						<!-- will display only if a limit has been reached (and no more signups are available) -->
 						<div id="toggle_usage_alert">

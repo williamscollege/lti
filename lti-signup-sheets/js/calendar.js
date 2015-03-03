@@ -6,6 +6,8 @@ $(document).ready(function () {
 	// onload actions
 	// ***************************
 
+	hasUserReachedSignupLimit(); // remove display of signup links (if condition is met)
+
 
 	// ***************************
 	// helper functions
@@ -66,9 +68,10 @@ $(document).ready(function () {
 			success: function (data) {
 				if (data.status == 'success') {
 					dfnUtil_setTransientAlert('success', 'Saved');
-					$("#alert_usage_quotas").replaceWith(data['html_render_usage_alert']);
-					$("#contents_usage_quotas").replaceWith(data['html_render_usage_details']);
-					$(".list-opening-id-" + openingID).replaceWith(data['html_render_opening']);
+					//$("#alert_usage_quotas").replaceWith(data['html_render_usage_alert']);
+					//$("#contents_usage_quotas").replaceWith(data['html_render_usage_details']);
+					//$(".list-opening-id-" + openingID).replaceWith(data['html_render_opening']);
+					updateUserSignupUsageDetailsInDOM(data['html_render_usage_alert'], data['html_render_usage_details'], data['html_render_opening'],openingID);
 				}
 				else {
 					dfnUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
@@ -76,6 +79,27 @@ $(document).ready(function () {
 			}
 		});
 	});
+
+	// helper function to enable updating of DOM for ajax success
+	function updateUserSignupUsageDetailsInDOM(render_usage_alert,render_usage_details, render_opening, openingID) {
+		$("#alert_usage_quotas").replaceWith(render_usage_alert);
+		$("#contents_usage_quotas").replaceWith(render_usage_details);
+		$(".list-opening-id-" + openingID).replaceWith(render_opening);
+
+		// remove display of signup links (if condition is met)
+		hasUserReachedSignupLimit();
+	}
+
+	// remove display of signup links (if condition is met)
+	function hasUserReachedSignupLimit() {
+		if ($(".wms-reached-signup-limit").length) {
+			// console.log('wms-reached-signup-limit found');
+			$(".sus-add-me-to-opening").hide();
+		}
+		else {
+			$(".sus-add-me-to-opening").show();
+		}
+	}
 
 	function setupModalForm_EditOpening(openingID, action) {
 		// reset non-dynamic form fields to defaults
