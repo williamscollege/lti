@@ -43,29 +43,6 @@
 	}
 
 
-	// determine if user has any signups remaining
-	function doesUserHaveSignupsRemaining($max_sg_total = 0, $max_sg_future = 0, $max_s_total = 0, $max_s_future = 0, $count_sg_total, $count_sg_future, $count_s_total, $count_s_future) {
-//		$max_sg_total    = intval($max_sg_total);
-//		$max_sg_future   = intval($max_sg_future);
-//		$max_s_total     = intval($max_s_total);
-//		$max_s_future    = intval($max_s_future);
-//		$count_sg_total  = intval($count_sg_total);
-//		$count_sg_future = intval($count_sg_future);
-//		$count_s_total   = intval($count_s_total);
-//		$count_s_future  = intval($count_s_future);
-//
-//		return $count_sg_total;
-
-//		// check sheetgroup limits
-//		isSheetgroupTotalSignupLimitReached();
-//		isSheetgroupFutureSignupLimitReached();
-//
-//		// check sheet limits
-//		isSheetTotalSignupLimitReached();
-//		isSheetFutureSignupLimitReached();
-	}
-
-
 	if ($IS_AUTHENTICATED) {
 		echo "<div id=\"parent_container\">"; // start: div#parent_container
 		?>
@@ -78,12 +55,15 @@
 						<?php echo $s->description; ?><br />
 						Group: <?php echo $sg->name; ?><br />
 
+						<!-- will display only if a limit has been reached (and no more signups are available) -->
+						<div id="toggle_usage_alert">
+							<?php echo $s->renderAsHtmlUsageAlert($USER->user_id); ?>
+						</div>
+
 						<p><a id="link_for_usage_quotas" href="#" title="Usage details">Show usage details</a></p>
 
 						<div id="toggle_usage_quotas" class="hidden">
-
 							<?php echo $s->renderAsHtmlUsageDetails($USER->user_id); ?>
-
 						</div>
 						<p><a id="link_for_openings_instructions" class="hidden" href="#" title="Instructions">Show instructions</a></p>
 					</div>

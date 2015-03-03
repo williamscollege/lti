@@ -415,6 +415,7 @@
 		# Output
 		$results['status']              = 'success';
 		$results['html_render_opening'] = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
+		$results['html_render_usage_alert'] = $sheet->renderAsHtmlUsageAlert($USER->user_id);
 		$results['html_render_usage_details'] = $sheet->renderAsHtmlUsageDetails($USER->user_id);
 	}
 	//###############################################################
@@ -457,6 +458,7 @@
 		# Output
 		$results['status']              = 'success';
 		$results['html_render_opening'] = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
+		$results['html_render_usage_alert'] = $sheet->renderAsHtmlUsageAlert($USER->user_id);
 		$results['html_render_usage_details'] = $sheet->renderAsHtmlUsageDetails($USER->user_id);
 	}
 	//###############################################################
