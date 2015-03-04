@@ -259,6 +259,11 @@
 			// get openings (using hash of IDs)
 			$tmpOpenings = SUS_Opening::getAllFromDb(['opening_id' => $tmpOpeningIDs], $this->dbConnection);
 
+			// get sheets (using hash of IDs)
+			$tmpSheetIDs = Db_Linked::arrayOfAttrValues($tmpOpenings, 'sheet_id');
+			$tmpSheets   = SUS_Sheet::getAllFromDb(['sheet_id' => $tmpSheetIDs], $this->dbConnection);
+			//util_prePrintR($tmpSheets);
+
 			// get everyone's signups for each opening (using hash of IDs)
 			$tmpAllSignups = SUS_Signup::getAllFromDb(['opening_id' => $tmpOpeningIDs], $this->dbConnection);
 
@@ -270,16 +275,25 @@
 			// create hash for output and trim out cruft
 			$trimmed_array = [];
 			foreach ($tmpOpenings as $opening) {
+
+				// fetch sheet name
+				foreach ($tmpSheets as $sheet) {
+					if ($sheet->sheet_id == $opening->sheet_id) {
+						$sheet_name = $sheet->name;
+					}
+				}
+
 				array_push($trimmed_array,
 					array(
-						'opening_id'      => $opening->opening_id,
-						'begin_datetime'  => $opening->begin_datetime,
-						'end_datetime'    => $opening->end_datetime,
-						'current_signups' => $countSignupsPerOpening[$opening->opening_id],
-						'max_signups'     => $opening->max_signups,
-						'description'     => $opening->description,
-						'location'        => $opening->location,
-						'name'            => $opening->name
+						'opening_id'          => $opening->opening_id,
+						'begin_datetime'      => $opening->begin_datetime,
+						'end_datetime'        => $opening->end_datetime,
+						'current_signups'     => $countSignupsPerOpening[$opening->opening_id],
+						'opening_max_signups' => $opening->max_signups,
+						'opening_description' => $opening->description,
+						'opening_location'    => $opening->location,
+						'opening_name'        => $opening->name,
+						'sheet_name'          => $sheet_name
 					)
 				);
 			}

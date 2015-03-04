@@ -30,11 +30,13 @@
 		echo "<tr><td>";
 
 		// TODO - if empty array, err msg: "Fatal error: an invalid value was given in the search hash in C:\xampp\htdocs\GITHUB\lti\lti-signup-sheets\classes\db_linked.class.php on line 299"
-		// display signups_all: "I've Signed up for..."
+		// COLUMN 1: "I've Signed up for..."
 		if (count($USER->signups_all) == 0) {
 			echo "<p class=\"col-sm-6 bg-warning\">You have not signed up for any openings.</p>";
 		}
 		else {
+			// obsolete - original code
+			util_prePrintR($USER->signups_all);
 			foreach ($USER->signups_all as $signup) {
 				// date
 				echo "<p>";
@@ -43,16 +45,68 @@
 				// time opening
 				echo "&nbsp;&nbsp;&nbsp;&nbsp;" . date('g:i:A', strtotime($signup['begin_datetime'])) . " - " . date('g:i:A', strtotime($signup['end_datetime']));
 				// display x of y total signups for this opening
-				echo "&nbsp;(" . $signup['current_signups'] . "/" . $signup['max_signups'] . ")";
+				echo "&nbsp;(" . $signup['current_signups'] . "/" . $signup['opening_max_signups'] . ")";
 				// popovers (bootstrap: must manually initialize popovers in JS file)
-				echo "<a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Description:</strong> " . $signup['description'] . "<br /><strong>Where:</strong> " . $signup['location'] . "\">" . $signup['name'] . "</a>";
+				echo " for <a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Opening Name:</strong> " . $signup['opening_name'] . "<br /><strong>Description:</strong> " . $signup['opening_description'] . "<br /><strong>Where:</strong> " . $signup['opening_location'] . "\">" . $signup['sheet_name'] . "</a>";
 				echo "</p>";
 			}
+
+			// new code
+			?>
+			<div id="openings-list-container">
+
+				<?php
+/*
+					//$s->cacheOpenings();
+					$lastOpeningDate = '';
+					$daysOpenings    = [];
+					$todayYmd        = explode(' ', util_currentDateTimeString())[0];
+					//					foreach ($s->openings as $opening) {
+					foreach ($USER->signups_all as $signup) {
+						$curOpeningDate = explode(' ', $opening->begin_datetime)[0];
+						if ($curOpeningDate != $lastOpeningDate) {
+							// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
+							foreach ($daysOpenings as $op) {
+								echo $op->renderAsHtmlShortWithFullControls() . "\n";
+							}
+
+							if ($lastOpeningDate) {
+								echo '</div>' . "\n";
+							}
+							$relative_time_class = 'in-the-past';
+							//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
+							//exit;
+							if ($curOpeningDate == $todayYmd) {
+								$relative_time_class = 'in-the-present';
+							}
+							elseif ($curOpeningDate > $todayYmd) {
+								$relative_time_class = 'in-the-future';
+							}
+							echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($opening->begin_datetime), "m/d/Y") . '</h4>';
+							$daysOpenings = [];
+						}
+						//													echo $opening->renderAsHtmlShortWithFullControls()."\n";
+						array_unshift($daysOpenings, $opening);
+
+						$lastOpeningDate = $curOpeningDate;
+						//													util_prePrintR($opening);
+						//$s = substr('tmp', $lastOpeningDate);
+					}
+					// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
+					foreach ($daysOpenings as $op) {
+						echo $op->renderAsHtmlShortWithFullControls() . "\n";
+					}
+					echo '</div>' . "\n";*/
+
+				?>
+
+			</div>
+		<?php
 		}
 		echo "</td>";
 
 		echo "<td>";
-		// display signups_on_my_sheets: "Sign-ups on my Sheets..."
+		// COLUMN 2: "Sign-ups on my Sheets..."
 		// TODO - if empty array, err msg: "Fatal error: an invalid value was given in the search hash in C:\xampp\htdocs\GITHUB\lti\lti-signup-sheets\classes\db_linked.class.php on line 299"
 		if (count($USER->signups_on_my_sheets) == 0) {
 			echo "<p class=\"col-sm-6 bg-warning\">No one has signed up on your sheets.</p>";
