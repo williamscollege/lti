@@ -123,7 +123,7 @@
 
 								<!--Start: List Openings -->
 								<div role="tabpanel" class="tab-pane fade" id="tabOpeningsList" aria-labelledby="tabOpeningsList">
-									<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-small">scroll to current date</a>
+									<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-small" title="scroll to current date">current date</a>
 
 									<div id="openings-list-container">
 

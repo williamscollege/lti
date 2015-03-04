@@ -821,7 +821,7 @@
 								</div>
 
 								<!-- START COLUMN TWO -->
-								<div class="row col-sm-4 small">
+								<div class="row col-sm-5 small">
 									<div class="col-sm-12">
 										<div class="pull-right small signupSorters">Sort by:
 											<a href="#" id="signup_sort_by_last_name" title="Sort by last name">Last name</a> &#124;

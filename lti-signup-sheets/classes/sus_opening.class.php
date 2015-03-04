@@ -145,7 +145,7 @@
 							// display date signup created
 							foreach ($this->signups as $signup) {
 								if ($signup->signup_user_id == $u->user_id) {
-									$rendered .= ' <span class="small">(' . util_datetimeFormatted($signup->created_at) . ')</span> ';
+									$rendered .= ' <span class="small">(' . $u->username . ', ' .util_datetimeFormatted($signup->created_at) . ')</span> ';
 								}
 							}
 							$rendered .= "</li>";

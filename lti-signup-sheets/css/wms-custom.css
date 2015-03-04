@@ -309,6 +309,7 @@ UL.unstyled LI, OL.unstyled LI {
 UL.wms-signups {
 	margin: 0;
 	padding-left: 25px;
+	display: inline-block;
 }
 
 /*=======================================*/
