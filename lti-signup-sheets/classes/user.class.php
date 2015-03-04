@@ -672,7 +672,7 @@
 			return $resultant_array;
 		}
 
-		// method to enforce ability of signup to be able to signup, or not
+		// SECURITY: enforce whether user may create a new signup
 		public function isUserAllowedToAddNewSignup($SheetId) {
 
 			// fetch usage details
@@ -695,7 +695,7 @@
 			return TRUE;
 		}
 
-		// check if user owns or manages this sheet (param required): return boolean value
+		// SECURITY: check if user owns or manages this sheet (param required): return boolean value
 		public function isUserAllowedToManageSheet($sheet_id = 0) {
 			$this->cacheSheets();
 			$this->cacheManagedSheets();
@@ -717,7 +717,7 @@
 			return FALSE;
 		}
 
-		// check if user has been granted access to signup on this sheet_id
+		// SECURITY: check if user has been granted access to signup on this sheet_id
 		public function isUserAllowedToAccessSheet($sheet_id = 0) {
 			$this->cacheMyAvailableSheetOpenings();
 			// util_prePrintR($this->sheet_openings_all);

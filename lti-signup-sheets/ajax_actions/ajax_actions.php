@@ -356,7 +356,7 @@
 	}
 	//###############################################################
 	elseif ($action == 'sheet-opening-signup-add-me') {
-		// get all signups for this opening
+		// get opening object
 		$o = SUS_Opening::getOneFromDb(['opening_id' => $editID], $DB);
 		if (!$o->matchesDb) {
 			// error: no matching record found
@@ -365,7 +365,7 @@
 			exit;
 		}
 
-		// SECURITY: method to enforce ability of signup to be able to signup, or not
+		// SECURITY: enforce whether user may create a new signup
 		if (!$USER->isUserAllowedToAddNewSignup($o->sheet_id)) {
 			// error: user may not signup on this sheet group or sheet
 			$results["notes"] = "you are already at your limit for signups on this sheet";
@@ -380,9 +380,6 @@
 		if (!$s->matchesDb) {
 			$s = SUS_Signup::getOneFromDb(['opening_id' => $editID, 'signup_user_id' => $USER->user_id], $DB);
 		}
-
-
-
 
 		// update or create signup record
 		if ($s->matchesDb) {
