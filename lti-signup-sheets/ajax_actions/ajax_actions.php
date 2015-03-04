@@ -356,12 +356,19 @@
 	}
 	//###############################################################
 	elseif ($action == 'sheet-opening-signup-add-me') {
+		// get all signups for this opening
+		$o = SUS_Opening::getOneFromDb(['opening_id' => $editID], $DB);
+		if (!$o->matchesDb) {
+			// error: no matching record found
+			$results["notes"] = "that opening does not exist";
+			echo json_encode($results);
+			exit;
+		}
 
-		// TODO - is this the optimal place to call this method?
 		// SECURITY: method to enforce ability of signup to be able to signup, or not
-		if (!$USER->isUserAllowedToAddNewSignup(0, $editID)) {
+		if (!$USER->isUserAllowedToAddNewSignup($o->sheet_id)) {
 			// error: user may not signup on this sheet group or sheet
-			$results["notes"] = "you lack permission to signup at the present time";
+			$results["notes"] = "you are already at your limit for signups on this sheet";
 			echo json_encode($results);
 			exit;
 		}
@@ -374,15 +381,8 @@
 			$s = SUS_Signup::getOneFromDb(['opening_id' => $editID, 'signup_user_id' => $USER->user_id], $DB);
 		}
 
-		// get all signups for this opening
-		$o = SUS_Opening::getOneFromDb(['opening_id' => $editID], $DB);
 
-		if (!$o->matchesDb) {
-			// error: no matching record found
-			$results["notes"] = "that opening does not exist";
-			echo json_encode($results);
-			exit;
-		}
+
 
 		// update or create signup record
 		if ($s->matchesDb) {

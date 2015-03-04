@@ -673,13 +673,7 @@
 		}
 
 		// method to enforce ability of signup to be able to signup, or not
-		public function isUserAllowedToAddNewSignup($SheetId = 0, $OpeningId = 0) {
-
-			// if only opening_id was provided, then fetch sheet_id
-			if($SheetId == 0 && $OpeningId > 0){
-				$s = SUS_Sheet::getOneFromDb(['opening_id'=>$OpeningId], $this->dbConnection);
-				$SheetId = $s->sheet_id;
-			}
+		public function isUserAllowedToAddNewSignup($SheetId) {
 
 			// fetch usage details
 			$usage_ary = $this->fetchUserSignupUsageData($SheetId);
