@@ -100,65 +100,66 @@ wms bootstrap-calendar-master extensions
 .sus-edit-opening, .sus-edit-signup {
 	margin-left: 1px;
 	margin-right: 1px;
-	padding-left: 3px;
-	padding-right: 4px;
+	padding: 0px 3px;
 }
 
 .sus-edit-opening:hover, .sus-edit-signup:hover {
-	margin-left: 1px;
-	margin-right: 1px;
 	background-color: #57D283;
-	padding-left: 3px;
-	padding-right: 4px;
 }
 
 .sus-delete-opening {
 	margin-left: 1px;
 	margin-right: 1px;
-	padding-left: 3px;
-	padding-right: 4px;
+	padding: 0px 3px;
 	color: #ff0000;
 }
 
 .sus-delete-opening:hover {
-	margin-left: 1px;
-	margin-right: 1px;
 	background-color: #F7A9AD;
-	padding-left: 3px;
-	padding-right: 4px;
+	color: #ff0000;
+}
+
+.sus-delete-signup {
+	margin-right: 5px;
+	padding: 0px 3px;
+	border: none;
+	background-color: transparent;
+	color: #ff0000;
+}
+
+.sus-delete-signup:hover {
+	background-color: #F7A9AD;
 	color: #ff0000;
 }
 
 .sus-add-someone-to-opening {
 	margin-left: 1px;
 	margin-right: 1px;
-	padding-left: 3px;
-	padding-right: 4px;
+	padding: 0px 3px;
 }
 
 .sus-add-someone-to-opening:hover {
-	margin-left: 1px;
-	margin-right: 1px;
 	background-color: #57D283;
-	padding-left: 3px;
-	padding-right: 4px;
 }
 
 /* modal: Edit Opening / Signups */
+.wms-custom-add {
+	margin: 0px 1px;
+	padding: 0px 3px;
+}
+
+.wms-custom-add:hover {
+	background-color: #57D283;
+}
+
 .wms-custom-delete {
-	margin-left: 1px;
-	margin-right: 1px;
-	padding-left: 3px;
-	padding-right: 2px;
+	margin: 0px 1px;
+	padding: 0px 3px;
 	color: #ff0000;
 }
 
 .wms-custom-delete:hover {
-	margin-left: 1px;
-	margin-right: 1px;
 	background-color: #F7A9AD;
-	padding-left: 3px;
-	padding-right: 2px;
 	color: #ff0000;
 }
 
@@ -260,35 +261,44 @@ span[data-cal-date] {
 /* openings list styles */
 /*=======================================*/
 
-#openings-list-container {
+#openings-list-container, #signups-list-container-01, #signups-list-container-02 {
 	margin-top: -20px;
 	max-height: 591px;
 	overflow-y: scroll;
 	position: relative;
 }
 
-#scroll-to-todayish-openings {
-	margin: -96px 0 0 300px;
-}
-
-#openings-list-container .opening-list-for-date {
+#openings-list-container .opening-list-for-date, #signups-list-container-01 .opening-list-for-date, #signups-list-container-02 .opening-list-for-date {
 	padding: 0 0 6px 10px;
 	margin: 0 !important;
 }
 
-#openings-list-container .in-the-past {
+#openings-list-container .in-the-past, #signups-list-container-01 .in-the-past, #signups-list-container-02 .in-the-past {
 	background-color: #ddd;
 	/*border: 1px solid #fff;*/
 }
 
-#openings-list-container .in-the-present {
+#openings-list-container .in-the-present, #signups-list-container-01 .in-the-present, #signups-list-container-02 .in-the-present {
 	background-color: #f9fffb;
 	border: 1px solid #999;
 }
 
-#openings-list-container .in-the-future {
+#openings-list-container .in-the-future, #signups-list-container-01 .in-the-future, #signups-list-container-02 .in-the-future {
 	background-color: #f9fbff;
 	/*border: 1px solid #fff;*/
+}
+
+/* button ids: scroll to 'current date' */
+#scroll-to-todayish-openings {
+	margin: -96px 0 0 300px;
+}
+
+#scroll-to-todayish-signups-01 {
+	margin: -89px 0 0 200px;
+}
+
+#scroll-to-todayish-signups-02 {
+	margin: -89px 0 0 237px;
 }
 
 /*=======================================

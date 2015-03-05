@@ -4,10 +4,36 @@
 	require_once('../app_head.php');
 
 
+	function renderAsHtmlShortWithMinimalControls($signup) {
+		$rendered = '<div class="list-opening signups-01-list-opening-id-' . $signup['opening_id'] . '">';
+		$rendered .= '<span class="">';
+		if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
+			// TODO - alter the IDs and target IDs
+			$rendered .= "<a href=\"#\" id=\"btn-remove-signup-id-" . $signup['signup_id'] . "\"  class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $signup['opening_id'] . "\" data-for-signup-id=\"" . $signup['signup_id'] . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
+		}
+		$rendered .= '</span>';
+		$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($signup['begin_datetime']), "h:i A") . ' - ' . date_format(new DateTime($signup['end_datetime']), "h:i A") . '</span>';
+
+		$customColorClass = " text-danger ";
+		if ($signup['current_signups'] < $signup['opening_max_signups']) { //count($signup['current_signups'])
+			$customColorClass = " text-success ";
+		}
+		$max_signups = $signup['opening_max_signups'];
+		if ($max_signups == -1) {
+			$max_signups = "*";
+		}
+		$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . $signup['current_signups'] . '/' . $max_signups . ')</strong></span>';
+		$rendered .= " for <a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Opening Name:</strong> " . $signup['opening_name'] . "<br /><strong>Description:</strong> " . $signup['opening_description'] . "<br /><strong>Where:</strong> " . $signup['opening_location'] . "\">" . $signup['sheet_name'] . "</a>";
+		$rendered .= '</div>';
+
+		return $rendered;
+	}
+
+
 	if ($IS_AUTHENTICATED) {
-		echo "<div id=\"parent_container\">"; // start: div#parent_container
+		echo "<div id=\"parent_container\">"; // begin: div#parent_container
 		echo "<h3>" . $pageTitle . "</h3>";
-		echo "<p>&nbsp;</p>";
+
 
 		// ***************************
 		// fetch signups: "I have signed up for"
@@ -21,92 +47,97 @@
 		$USER->cacheSignupsOnMySheets();
 		// util_prePrintR($USER->signups_on_my_sheets);
 
+		?>
+<div class="container">
+	<div class="row">
+		<!-- Begin: My Signups -->
+		<div class="col-sm-5">
+			<div class="row">
+				<div class="tab-container" role="tabpanel" data-example-id="set1">
+					<ul id="boxMySignupsHeader" class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active">
+							<strong>I've Signed up for...</strong>
+						</li>
+					</ul>
+					<div id="boxMySignupsContent" class="tab-content">
+						<!-- Begin: My Signups (Content) -->
+						<div role="tabpanel" id="tabMySignups" class="tab-pane fade active in" aria-labelledby="tabMySignups">
+							<a href="#" id="scroll-to-todayish-signups-01" type="button" class="btn btn-success btn-small" title="scroll to current date">current date</a>
 
-		echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
-		echo "<tr class=\"\">";
-		echo "<th class=\"col-sm-6 info\">I've Signed up for...</th>";
-		echo "<th class=\"col-sm-6 info\">Sign-ups on my Sheets...</th>";
-		echo "</tr>";
-		echo "<tr><td>";
-
+<?php
+		// PANEL 1: "My Signups..."
 		// TODO - if empty array, err msg: "Fatal error: an invalid value was given in the search hash in C:\xampp\htdocs\GITHUB\lti\lti-signup-sheets\classes\db_linked.class.php on line 299"
-		// COLUMN 1: "I've Signed up for..."
 		if (count($USER->signups_all) == 0) {
-			echo "<p class=\"col-sm-6 bg-warning\">You have not signed up for any openings.</p>";
+			echo "<p class=\"col-sm-6 bg-warning\">You have not signed up for any sheet openings.</p>";
 		}
 		else {
-			// obsolete - original code
-			util_prePrintR($USER->signups_all);
+			echo '<div id="signups-list-container-01">' . "\n";
+
+			//$s->cacheOpenings();
+			$lastOpeningDate = '';
+			$daysOpenings    = [];
+			$todayYmd        = explode(' ', util_currentDateTimeString())[0];
+			// foreach ($s->openings as $opening) {
 			foreach ($USER->signups_all as $signup) {
-				// date
-				echo "<p>";
-				echo "<strong>" . date('F d, Y', strtotime($signup['begin_datetime'])) . "</strong>";
-				echo "<br />";
-				// time opening
-				echo "&nbsp;&nbsp;&nbsp;&nbsp;" . date('g:i:A', strtotime($signup['begin_datetime'])) . " - " . date('g:i:A', strtotime($signup['end_datetime']));
-				// display x of y total signups for this opening
-				echo "&nbsp;(" . $signup['current_signups'] . "/" . $signup['opening_max_signups'] . ")";
-				// popovers (bootstrap: must manually initialize popovers in JS file)
-				echo " for <a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Opening Name:</strong> " . $signup['opening_name'] . "<br /><strong>Description:</strong> " . $signup['opening_description'] . "<br /><strong>Where:</strong> " . $signup['opening_location'] . "\">" . $signup['sheet_name'] . "</a>";
-				echo "</p>";
-			}
-
-			// new code
-			?>
-			<div id="openings-list-container">
-
-				<?php
-/*
-					//$s->cacheOpenings();
-					$lastOpeningDate = '';
-					$daysOpenings    = [];
-					$todayYmd        = explode(' ', util_currentDateTimeString())[0];
-					//					foreach ($s->openings as $opening) {
-					foreach ($USER->signups_all as $signup) {
-						$curOpeningDate = explode(' ', $opening->begin_datetime)[0];
-						if ($curOpeningDate != $lastOpeningDate) {
-							// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
-							foreach ($daysOpenings as $op) {
-								echo $op->renderAsHtmlShortWithFullControls() . "\n";
-							}
-
-							if ($lastOpeningDate) {
-								echo '</div>' . "\n";
-							}
-							$relative_time_class = 'in-the-past';
-							//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
-							//exit;
-							if ($curOpeningDate == $todayYmd) {
-								$relative_time_class = 'in-the-present';
-							}
-							elseif ($curOpeningDate > $todayYmd) {
-								$relative_time_class = 'in-the-future';
-							}
-							echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($opening->begin_datetime), "m/d/Y") . '</h4>';
-							$daysOpenings = [];
-						}
-						//													echo $opening->renderAsHtmlShortWithFullControls()."\n";
-						array_unshift($daysOpenings, $opening);
-
-						$lastOpeningDate = $curOpeningDate;
-						//													util_prePrintR($opening);
-						//$s = substr('tmp', $lastOpeningDate);
-					}
-					// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
+				$curOpeningDate = explode(' ', $signup['begin_datetime'])[0];
+				if ($curOpeningDate != $lastOpeningDate) {
+					// render signups for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 					foreach ($daysOpenings as $op) {
-						echo $op->renderAsHtmlShortWithFullControls() . "\n";
+						echo renderAsHtmlShortWithMinimalControls($op);
 					}
-					echo '</div>' . "\n";*/
 
-				?>
+					if ($lastOpeningDate) {
+						echo '</div>' . "\n";
+					}
+					$relative_time_class = 'in-the-past';
+					//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
+					if ($curOpeningDate == $todayYmd) {
+						$relative_time_class = 'in-the-present';
+					}
+					elseif ($curOpeningDate > $todayYmd) {
+						$relative_time_class = 'in-the-future';
+					}
+					echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($signup['begin_datetime']), "m/d/Y") . '</h4>';
+					$daysOpenings = [];
+				}
+				array_unshift($daysOpenings, $signup);
+				$lastOpeningDate = $curOpeningDate;
+			}
+			// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
+			foreach ($daysOpenings as $op) {
+				echo renderAsHtmlShortWithMinimalControls($op);
+			}
+			echo '</div>' . "\n";
+			?>
 
 			</div>
 		<?php
 		}
-		echo "</td>";
+		?>
+						</div>
+						<!-- End: My Signups (Content) -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End: My Signups -->
+		<div class="col-sm-1">&nbsp;</div>
+		<!-- Begin: Signups on my Sheets -->
+		<div class="col-sm-6">
+			<div class="row">
+				<div class="tab-container" role="tabpanel" data-example-id="set2">
+					<ul id="boxSignupsOnMySheetsHeader" class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active">
+							<strong>Sign-ups on my Sheets...</strong>
+						</li>
+					</ul>
+					<div id="boxSignupsOnMySheetsContent" class="tab-content">
+						<!--Begin: Signups on my Sheets (Content) -->
+						<div role="tabpanel" id="tabSignupsOnMySheets" class="tab-pane fade active in" aria-labelledby="tabSignupsOnMySheets">
+							<a href="#" id="scroll-to-todayish-signups-02" type="button" class="btn btn-success btn-small" title="scroll to current date">current date</a>
 
-		echo "<td>";
-		// COLUMN 2: "Sign-ups on my Sheets..."
+							<?php
+		// PANEL 2: "Sign-ups on my Sheets..."
 		// TODO - if empty array, err msg: "Fatal error: an invalid value was given in the search hash in C:\xampp\htdocs\GITHUB\lti\lti-signup-sheets\classes\db_linked.class.php on line 299"
 		if (count($USER->signups_on_my_sheets) == 0) {
 			echo "<p class=\"col-sm-6 bg-warning\">No one has signed up on your sheets.</p>";
@@ -138,11 +169,21 @@
 				echo "</div>";
 			}
 		}
-		echo "</td>";
-		echo "</tr>";
-		echo "</table>";
+		?>
 
+						</div>
+						<!--End: Signups on my Sheets (Content) -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End: Signups on my Sheets -->
+</div> <!-- end: div.container -->
+
+	<?php
 		echo "</div>"; // end: div#parent_container
+
 	}
 
 	require_once('../foot.php');

@@ -7,11 +7,6 @@ $(document).ready(function () {
 
 
 	// ***************************
-	// helper functions
-	// ***************************
-
-
-	// ***************************
 	// Listeners
 	// ***************************
 
@@ -30,5 +25,61 @@ $(document).ready(function () {
 		};
 		showConfirmBox(params);
 	});
+
+
+	$('#scroll-to-todayish-signups-01').click(function () {
+		scrollListToTodayishSignups_01();
+	});
+
+	$('#scroll-to-todayish-signups-02').click(function () {
+		scrollListToTodayishSignups_02();
+	});
+
+
+	// ***************************
+	// helper functions
+	// ***************************
+
+	function scrollListToTodayishSignups_01() {
+		var closestFutureOpeningsList = $('#signups-list-container-01 .in-the-present');
+		//console.log(closestFutureOpeningsList);
+
+		if (!closestFutureOpeningsList.length) {
+			//console.log('no present - looking to the past');
+			closestFutureOpeningsList = $('#signups-list-container-01 .in-the-past').prev();
+		}
+		//console.log(closestFutureOpeningsList);
+
+		if (!closestFutureOpeningsList.length) {
+			//console.log('no present nor past - looking to the future');
+			closestFutureOpeningsList = $('#signups-list-container-01 .in-the-future').last();
+		}
+		//console.log(closestFutureOpeningsList);
+
+		if (closestFutureOpeningsList.length) {
+			$('#signups-list-container-01').scrollTop($('#signups-list-container-01').scrollTop() + $(closestFutureOpeningsList).position().top);
+		}
+	}
+
+	function scrollListToTodayishSignups_02() {
+		var closestFutureOpeningsList = $('#signups-list-container-02 .in-the-present');
+		//console.log(closestFutureOpeningsList);
+
+		if (!closestFutureOpeningsList.length) {
+			//console.log('no present - looking to the past');
+			closestFutureOpeningsList = $('#signups-list-container-02 .in-the-past').prev();
+		}
+		//console.log(closestFutureOpeningsList);
+
+		if (!closestFutureOpeningsList.length) {
+			//console.log('no present nor past - looking to the future');
+			closestFutureOpeningsList = $('#signups-list-container-02 .in-the-future').last();
+		}
+		//console.log(closestFutureOpeningsList);
+
+		if (closestFutureOpeningsList.length) {
+			$('#signups-list-container-02').scrollTop($('#signups-list-container-02').scrollTop() + $(closestFutureOpeningsList).position().top);
+		}
+	}
 
 });

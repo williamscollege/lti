@@ -100,6 +100,18 @@
 			return '<div class="rendered-object user-render user-render-minimal user-render-' . $this->user_id . '" data-for-user="' . $this->user_id . '" data-user_full_name="' . htmlentities($this->last_name) . ', ' . htmlentities($this->first_name) . '">' . $enclosed . '</div>';
 		}
 
+
+		// TODO - SCRAP this bit
+		//		// returns: a very basic HTML representation of the object
+		//		public function renderAsHtmlShortWithNoControls($flag_linked = FALSE) {
+		//			$rendered = htmlentities($this->last_name) . ', ' . htmlentities($this->first_name);
+		//			if ($flag_linked) {
+		//				$rendered = '<a href="' . APP_ROOT_PATH . '/app_code/user.php?user_id=' . $this->user_id . '">' . $rendered . '</a>';
+		//			}
+		//
+		//			return '<div class="rendered-object user-render user-render-minimal user-render-' . $this->user_id . '" data-for-user="' . $this->user_id . '" data-user_full_name="' . htmlentities($this->last_name) . ', ' . htmlentities($this->first_name) . '">' . $rendered . '</div>';
+		//		}
+
 		public function updateDbFromAuth($auth) {
 			//echo "doing db update<br/>\n";
 			//$this->refreshFromDb();
@@ -245,6 +257,73 @@
 		}
 
 		public function loadMySignups() {
+			$this->signups_all = [];
+
+			// get my signups
+			$my_signups_ary = SUS_Signup::getAllFromDb(['signup_user_id' => $this->user_id], $this->dbConnection);
+
+			// create hash of opening_id's
+			$openingIDs = Db_Linked::arrayOfAttrValues($my_signups_ary, 'opening_id');
+			// get openings (using hash of IDs)
+			$openings_ary = SUS_Opening::getAllFromDb(['opening_id' => $openingIDs], $this->dbConnection);
+
+			// get sheets (using hash of IDs)
+			$sheetIDs   = Db_Linked::arrayOfAttrValues($openings_ary, 'sheet_id');
+			$sheets_ary = SUS_Sheet::getAllFromDb(['sheet_id' => $sheetIDs], $this->dbConnection);
+			//util_prePrintR($sheets_ary);
+
+			// get everyone's signups for each opening (using hash of IDs)
+			$all_signups_ary = SUS_Signup::getAllFromDb(['opening_id' => $openingIDs], $this->dbConnection);
+
+			// count total signup_id's per each opening_id
+			$countSignupsPerOpening = array_count_values(array_map(function ($item) {
+				return $item->opening_id;
+			}, $all_signups_ary));
+
+			// create hash for output and trim out cruft
+			$trimmed_array = [];
+			foreach ($openings_ary as $opening) {
+
+				// fetch signup_id
+				$signup_id = 0;
+				foreach ($my_signups_ary as $signup) {
+					if ($signup->opening_id == $opening->opening_id) {
+						$signup_id = $signup->signup_id;
+					}
+				}
+
+				// fetch sheet name
+				$sheet_name = '';
+				foreach ($sheets_ary as $sheet) {
+					if ($sheet->sheet_id == $opening->sheet_id) {
+						$sheet_name = $sheet->name;
+					}
+				}
+
+				array_push($trimmed_array,
+					array(
+						'opening_id'          => $opening->opening_id,
+						'begin_datetime'      => $opening->begin_datetime,
+						'end_datetime'        => $opening->end_datetime,
+						'current_signups'     => $countSignupsPerOpening[$opening->opening_id],
+						'opening_max_signups' => $opening->max_signups,
+						'opening_description' => $opening->description,
+						'opening_location'    => $opening->location,
+						'opening_name'        => $opening->name,
+						'signup_id'           => $signup_id,
+						'sheet_name'          => $sheet_name
+					)
+				);
+			}
+
+			// this returns a hash, not an object; retrieve values from this hash by referencing keys, instead of by using object properties
+			$this->signups_all = $trimmed_array;
+
+			// sort using the hash comparator fxn
+			usort($this->signups_all, 'SUS_Opening::cmp_hash');
+		}
+
+		public function loadMySignups_original_scrap() {
 			$this->signups_all = [];
 
 			// get my signups

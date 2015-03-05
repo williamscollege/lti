@@ -97,7 +97,7 @@
 		}
 
 
-		echo "<div id=\"parent_container\">"; // start: div#parent_container
+		echo "<div id=\"parent_container\">"; // begin: div#parent_container
 		echo "<h3>" . $pageTitle . "</h3>";
 
 
@@ -110,11 +110,11 @@
 		?>
 		<div class="container">
 			<div class="row">
-				<!-- Basic Sheet Info / Sheet Access -->
+				<!-- Begin: Basic Sheet Info / Sheet Access -->
 				<div class="col-sm-5">
 					<div class="row">
 						<div class="tab-container" role="tabpanel" data-example-id="set1">
-							<ul id="boxSheet" class="nav nav-tabs" role="tablist">
+							<ul id="boxSheetHeader" class="nav nav-tabs" role="tablist">
 								<!--DKC IMPORTANT (normal): set class to: 'active'-->
 								<!--DKC IMPORTANT (testing): set class to: ''-->
 								<li role="presentation" class="active">
@@ -136,7 +136,7 @@
 							</ul>
 							<div id="boxSheetContent" class="tab-content">
 
-								<!-- Start: Basic Sheet Info -->
+								<!-- Begin: Basic Sheet Info -->
 								<!--DKC IMPORTANT (normal): set class to: 'tab-pane fade active in'-->
 								<!--DKC IMPORTANT (testing): set class to: 'tab-pane fade'-->
 								<div role="tabpanel" id="tabSheetInfo" class="tab-pane fade active in" aria-labelledby="tabSheetInfo">
@@ -266,7 +266,7 @@
 								</div>
 								<!-- End: Basic Sheet Info -->
 
-								<!--Start: Sheet Access-->
+								<!--Begin: Sheet Access-->
 								<!--DKC IMPORTANT (normal): set class to: 'tab-pane fade'-->
 								<!--DKC IMPORTANT (testing): set class to: 'tab-pane fade active in'-->
 								<div role="tabpanel" id="tabSheetAccess" class="tab-pane fade" aria-labelledby="tabSheetAccess">
@@ -452,16 +452,17 @@
 						</div>
 					</div>
 				</div>
+				<!-- End: Basic Sheet Info / Sheet Access -->
 				<div class="col-sm-1">&nbsp;</div>
+				<!-- Begin: Calendar Openings / List Openings -->
 				<?php
 					// for a new sheet: hide advanced settings
 					if (!$sheetIsNew) {
 						?>
-						<!-- Calendar Openings / List Openings -->
 						<div class="col-sm-6">
 							<div class="row">
 								<div class="tab-container" role="tabpanel" data-example-id="set2">
-									<ul id="boxOpenings" class="nav nav-tabs" role="tablist">
+									<ul id="boxOpeningsHeader" class="nav nav-tabs" role="tablist">
 										<li role="presentation" class="active">
 											<a href="#tabOpeningsCalendar" role="tab" data-toggle="tab" aria-controls="tabOpeningsCalendar" aria-expanded="false">Calendar
 												Openings</a>
@@ -473,8 +474,8 @@
 									</ul>
 									<div id="boxOpeningsContent" class="tab-content">
 
-										<!--Start: Calendar Openings -->
-										<div role="tabpanel" class="tab-pane fade active in" id="tabOpeningsCalendar" aria-labelledby="tabOpeningsCalendar">
+										<!--Begin: Calendar Openings -->
+										<div role="tabpanel" id="tabOpeningsCalendar" class="tab-pane fade active in" aria-labelledby="tabOpeningsCalendar">
 
 											<?php
 												renderCalendarWidget_EDIT($s->sheet_id);
@@ -484,9 +485,10 @@
 										</div>
 										<!--End: Calendar Openings -->
 
-										<!--Start: List Openings -->
-										<div role="tabpanel" class="tab-pane fade" id="tabOpeningsList" aria-labelledby="tabOpeningsList">
-											<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-small" title="scroll to current date">current date</a>
+										<!--Begin: List Openings -->
+										<div role="tabpanel" id="tabOpeningsList" class="tab-pane fade" aria-labelledby="tabOpeningsList">
+											<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-small" title="scroll to current date">current
+												date</a>
 
 											<div id="openings-list-container">
 
@@ -508,7 +510,6 @@
 															}
 															$relative_time_class = 'in-the-past';
 															//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
-															//exit;
 															if ($curOpeningDate == $todayYmd) {
 																$relative_time_class = 'in-the-present';
 															}
@@ -518,12 +519,9 @@
 															echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($opening->begin_datetime), "m/d/Y") . '</h4>';
 															$daysOpenings = [];
 														}
-														//													echo $opening->renderAsHtmlShortWithFullControls()."\n";
 														array_unshift($daysOpenings, $opening);
 
 														$lastOpeningDate = $curOpeningDate;
-														//													util_prePrintR($opening);
-														//$s = substr('tmp', $lastOpeningDate);
 													}
 													// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 													foreach ($daysOpenings as $op) {
@@ -542,6 +540,7 @@
 					<?php
 					}
 				?>
+				<!-- End: Calendar Openings / List Openings -->
 			</div>
 		</div> <!-- end: div.container -->
 

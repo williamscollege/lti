@@ -822,7 +822,7 @@
 
 								<!-- START COLUMN TWO -->
 								<div class="row col-sm-5 small">
-									<div class="col-sm-12">
+									<div class="col-sm-11">
 										<div class="pull-right small signupSorters">Sort by:
 											<a href="#" id="signup_sort_by_last_name" title="Sort by last name">Last name</a> &#124;
 											<a href="#" id="signup_sort_by_signup_order" title="Sort by signup order">Signup order</a></div>
@@ -835,7 +835,7 @@
 											<div class="form-group form-group-sm">
 												<label for="signupUsername" class="col-sm-3 control-label">Username</label>
 
-												<div class="col-sm-9">
+												<div class="col-sm-8">
 													<input type="text" id="signupUsername" name="signupUsername" class="form-control" placeholder="Williams username" value="" />
 													<a href="http://www.williams.edu/people/" class="small" title="Find person's username" target="_blank">Find
 														person's username</a>
@@ -844,14 +844,14 @@
 											<div class="form-group form-group-sm">
 												<label for="openingLocation" class="col-sm-3 control-label">Admin&nbsp;note</label>
 
-												<div class="col-sm-9">
+												<div class="col-sm-8">
 													<textarea id="signupAdminNote" name="signupAdminNote" class="form-control" placeholder="Admin note (optional)" rows="2"></textarea>
 												</div>
 											</div>
 											<div class="form-group form-group-sm">
 												<label for="btnEditOpeningAddSignup" class="col-sm-3 control-label">&nbsp;</label>
 
-												<div class="col-sm-9">
+												<div class="col-sm-8">
 													<a href="#" type="button" id="btnEditOpeningAddSignup" class="btn btn-success" data-loading-text="Saving..." title="Save signup">Save</a>
 													<a href="#" type="button" id="btnEditOpeningCancelSignup" class="btn btn-default btn-link btn-cancel" title="Cancel">Cancel</a>
 												</div>

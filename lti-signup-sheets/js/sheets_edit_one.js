@@ -169,6 +169,11 @@ $(document).ready(function () {
 		$("#display_opening_signup_details").hide();
 	});
 
+
+	// ***************************
+	// helper functions
+	// ***************************
+
 	function updateSheetAccess(params) {
 		//alert(ary['url'] + '\n ' + ary['ajax_action'] + '\n ' + ary['ajax_id'] + '\n' + ary['ajax_val']);
 		//console.log('to remote url: '+remoteUrl);
