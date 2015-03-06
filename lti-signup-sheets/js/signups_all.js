@@ -13,10 +13,10 @@ $(document).ready(function () {
 	// Delete signup
 	$(document).on("click", ".sus-delete-signup-from-mine", function () {
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-signup-id');
-		//GLOBAL_confirmHandlerReference = $(this).attr('data-for-opening-id');
+		GLOBAL_confirmHandlerReference = $(this).attr('data-for-opening-id');
 		var params = {
 			title: "Delete Signup",
-			message: "Really delete <strong>your</strong> signup for <strong>&quot;" + $(this).attr('data-for-sheet-name') + "&quot;</strong>?",
+			message: "Really delete your signup for <strong>&quot;" + $(this).attr('data-for-sheet-name') + "&quot;</strong>?",
 			label: "Delete Signup",
 			class: "btn btn-danger",
 			url: "../ajax_actions/ajax_actions.php",

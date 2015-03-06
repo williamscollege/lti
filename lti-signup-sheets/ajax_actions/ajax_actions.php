@@ -416,12 +416,12 @@
 		}
 
 		// must get sheet object to enable render fxn
-		$sheet = SUS_Sheet::getOneFromDb(['sheet_id'=>$o->sheet_id], $DB);
+		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
 
 		# Output
-		$results['status']              = 'success';
-		$results['html_render_opening'] = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
-		$results['html_render_usage_alert'] = $sheet->renderAsHtmlUsageAlert($USER);
+		$results['status']                    = 'success';
+		$results['html_render_opening']       = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
+		$results['html_render_usage_alert']   = $sheet->renderAsHtmlUsageAlert($USER);
 		$results['html_render_usage_details'] = $sheet->renderAsHtmlUsageDetails($USER);
 	}
 	//###############################################################
@@ -459,12 +459,12 @@
 		}
 
 		// must get sheet object to enable render fxn
-		$sheet = SUS_Sheet::getOneFromDb(['sheet_id'=>$o->sheet_id], $DB);
+		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
 
 		# Output
-		$results['status']              = 'success';
-		$results['html_render_opening'] = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
-		$results['html_render_usage_alert'] = $sheet->renderAsHtmlUsageAlert($USER);
+		$results['status']                    = 'success';
+		$results['html_render_opening']       = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
+		$results['html_render_usage_alert']   = $sheet->renderAsHtmlUsageAlert($USER);
 		$results['html_render_usage_details'] = $sheet->renderAsHtmlUsageDetails($USER);
 	}
 	//###############################################################

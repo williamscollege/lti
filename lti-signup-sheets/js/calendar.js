@@ -39,7 +39,7 @@ $(document).ready(function () {
 		if ($(this).hasClass('sus-add-someone-to-opening')) {
 			var action = "add";
 		}
-		console.log(openingID, action);
+		//console.log(openingID, action);
 		setupModalForm_EditOpening(openingID, action);
 	});
 
@@ -308,7 +308,7 @@ $(document).ready(function () {
 
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-signup-id');
 		GLOBAL_confirmHandlerReference = $(this).attr('data-for-opening-id');
-		console.log('GLOBAL_confirmHandlerData=' + GLOBAL_confirmHandlerData + ', GLOBAL_confirmHandlerReference=' + GLOBAL_confirmHandlerReference)
+		//console.log('GLOBAL_confirmHandlerData=' + GLOBAL_confirmHandlerData + ', GLOBAL_confirmHandlerReference=' + GLOBAL_confirmHandlerReference)
 		var params = {
 			title: "Delete Signup",
 			message: "Really delete this signup for <strong>&quot;" + $(this).attr('data-for-signup-name') + "&quot;</strong>?",

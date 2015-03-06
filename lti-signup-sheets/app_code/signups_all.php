@@ -5,7 +5,7 @@
 
 
 	function renderAsHtmlShortForSignupsMine($signup) {
-		$rendered = '<div class="list-signups list-opening-id-' . $signup['opening_id'] . '">';
+		$rendered = '<div class="list-signups list-signup-id-' . $signup['signup_id'] . '">';
 		$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($signup['begin_datetime']), "h:i A") . ' - ' . date_format(new DateTime($signup['end_datetime']), "h:i A") . '</span>';
 
 		$customColorClass = " text-danger ";
@@ -81,7 +81,7 @@
 										// PANEL 1: "My Signups..."
 										// TODO - if empty array, err msg: "Fatal error: an invalid value was given in the search hash in C:\xampp\htdocs\GITHUB\lti\lti-signup-sheets\classes\db_linked.class.php on line 299"
 										if (count($USER->signups_all) == 0) {
-											echo "<p class=\"col-sm-6 bg-warning\">You have not signed up for any sheet openings.</p>";
+											echo "<div class='bg-warning'>You have not yet signed up for any sheet openings.<br />To sign-up, click on &quot;My Available Openings&quot; (above).</div>";
 										}
 										else {
 											echo '<div id="signups-list-container-mine">' . "\n";
@@ -151,7 +151,7 @@
 										// PANEL 2: "Sign-ups on my Sheets..."
 										// TODO - if empty array, err msg: "Fatal error: an invalid value was given in the search hash in C:\xampp\htdocs\GITHUB\lti\lti-signup-sheets\classes\db_linked.class.php on line 299"
 										if (count($USER->signups_on_my_sheets) == 0) {
-											echo "<p class=\"col-sm-6 bg-warning\">No one has signed up on your sheets.</p>";
+											echo "<div class='bg-warning'>No one has signed up on your sheets.</div>";
 										}
 										else {
 											foreach ($USER->signups_on_my_sheets as $scheduled) {

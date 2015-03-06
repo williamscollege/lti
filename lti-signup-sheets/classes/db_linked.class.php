@@ -297,26 +297,32 @@
 			foreach ($identHash as $k => $v) {
 				if (is_array($v)) {
 					if (count($v) <= 0) {
-						trigger_error(Db_Linked::$ERR_MSG_BAD_SEARCH_PARAM, E_USER_ERROR);
-						return;
+						// original code (now obsolete): trigger_error(Db_Linked::$ERR_MSG_BAD_SEARCH_PARAM, E_USER_ERROR);
+						// original code (now obsolete): return;
+						// Bug fix by CSW: 20150306 - if an empty hash is passed in, then exit gracefully, rather than throwing an error
+						array_push($keys_to_remove, $k);
+						$fetchSql .= ' AND 1=0';
 					}
-					array_push($keys_to_remove, $k);
-					$fetchSql .= ' AND ' . Db_Linked::sanitizeFieldName($k) . ' IN (';
-					for ($i = 0, $numElts = count($v); $i < $numElts; $i++) {
-						$newKey          = "__$k$i";
-						$key_use_counter = 1;
-						if (array_key_exists($newKey, $param_keys_counters)) {
-							$key_use_counter = $param_keys_counters[$newKey] + 1;
-							$newKey          = $newKey . '__' . $key_use_counter;
+					else {
+						array_push($keys_to_remove, $k);
+						$fetchSql .= ' AND ' . Db_Linked::sanitizeFieldName($k) . ' IN (';
+						for ($i = 0, $numElts = count($v); $i < $numElts; $i++) {
+							$newKey          = "__$k$i";
+							$key_use_counter = 1;
+							if (array_key_exists($newKey, $param_keys_counters)) {
+								$key_use_counter = $param_keys_counters[$newKey] + 1;
+								$newKey          = $newKey . '__' . $key_use_counter;
+							}
+							$param_keys_counters["__$k$i"] = $key_use_counter;
+							$key_vals_to_add[$newKey]      = $v[$i];
+							if ($i > 0) {
+								$fetchSql .= ',';
+							}
+							$fetchSql .= ":$newKey";
 						}
-						$param_keys_counters["__$k$i"] = $key_use_counter;
-						$key_vals_to_add[$newKey]      = $v[$i];
-						if ($i > 0) {
-							$fetchSql .= ',';
-						}
-						$fetchSql .= ":$newKey";
+						$fetchSql .= ')';
+
 					}
-					$fetchSql .= ')';
 				}
 				else {
 					$k_parts     = preg_split('/\s+/', $k);

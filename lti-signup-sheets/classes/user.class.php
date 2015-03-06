@@ -323,73 +323,13 @@
 			usort($this->signups_all, 'SUS_Opening::cmp_hash');
 		}
 
-		public function loadMySignups_original_scrap() {
-			$this->signups_all = [];
-
-			// get my signups
-			$tmpMySignups = SUS_Signup::getAllFromDb(['signup_user_id' => $this->user_id], $this->dbConnection);
-
-			// create hash of opening_id's
-			$tmpOpeningIDs = [];
-			foreach ($tmpMySignups as $signup) {
-				array_push($tmpOpeningIDs, $signup->opening_id);
-			}
-
-			// get openings (using hash of IDs)
-			$tmpOpenings = SUS_Opening::getAllFromDb(['opening_id' => $tmpOpeningIDs], $this->dbConnection);
-
-			// get sheets (using hash of IDs)
-			$tmpSheetIDs = Db_Linked::arrayOfAttrValues($tmpOpenings, 'sheet_id');
-			$tmpSheets   = SUS_Sheet::getAllFromDb(['sheet_id' => $tmpSheetIDs], $this->dbConnection);
-			//util_prePrintR($tmpSheets);
-
-			// get everyone's signups for each opening (using hash of IDs)
-			$tmpAllSignups = SUS_Signup::getAllFromDb(['opening_id' => $tmpOpeningIDs], $this->dbConnection);
-
-			// count total signup_id's per each opening_id
-			$countSignupsPerOpening = array_count_values(array_map(function ($item) {
-				return $item->opening_id;
-			}, $tmpAllSignups));
-
-			// create hash for output and trim out cruft
-			$trimmed_array = [];
-			foreach ($tmpOpenings as $opening) {
-
-				// fetch sheet name
-				foreach ($tmpSheets as $sheet) {
-					if ($sheet->sheet_id == $opening->sheet_id) {
-						$sheet_name = $sheet->name;
-					}
-				}
-
-				array_push($trimmed_array,
-					array(
-						'opening_id'          => $opening->opening_id,
-						'begin_datetime'      => $opening->begin_datetime,
-						'end_datetime'        => $opening->end_datetime,
-						'current_signups'     => $countSignupsPerOpening[$opening->opening_id],
-						'opening_max_signups' => $opening->max_signups,
-						'opening_description' => $opening->description,
-						'opening_location'    => $opening->location,
-						'opening_name'        => $opening->name,
-						'sheet_name'          => $sheet_name
-					)
-				);
-			}
-
-			// this returns a hash, not an object; retrieve values from this hash by referencing keys, instead of by using object properties
-			$this->signups_all = $trimmed_array;
-
-			// sort using the hash comparator fxn
-			usort($this->signups_all, 'SUS_Opening::cmp_hash');
-		}
-
 		public function cacheSignupsOnMySheets() {
 			if (!$this->signups_on_my_sheets) {
 				$this->loadSignupsOnMySheets();
 			}
 		}
 
+		// TODO - rename variables. see loadMySignups() as a good example of better named variables
 		public function loadSignupsOnMySheets() {
 			$this->signups_on_my_sheets = [];
 
