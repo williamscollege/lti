@@ -329,44 +329,44 @@
 			}
 		}
 
-		// TODO - rename variables. see loadMySignups() as a good example of better named variables
 		public function loadSignupsOnMySheets() {
 			$this->signups_on_my_sheets = [];
 
 			// get my sheets
-			$tmpSheets = SUS_Sheet::getAllFromDb(['owner_user_id' => $this->user_id], $this->dbConnection);
+			$sheets_ary = SUS_Sheet::getAllFromDb(['owner_user_id' => $this->user_id], $this->dbConnection);
 
+			// todo - use dblinked arrayAttributes fsn here
 			// create hash of sheet_id's
-			$tmpSheetIDs = [];
-			foreach ($tmpSheets as $sheet) {
-				array_push($tmpSheetIDs, $sheet->sheet_id);
+			$sheetIDs = [];
+			foreach ($sheets_ary as $sheet) {
+				array_push($sheetIDs, $sheet->sheet_id);
 			}
 
-			// get openings on my sheets
-			$tmpOpenings = SUS_Opening::getAllFromDb(['sheet_id' => $tmpSheetIDs], $this->dbConnection);
+			// get openings on my sheets (using hash of IDs)
+			$openings_ary = SUS_Opening::getAllFromDb(['sheet_id' => $sheetIDs], $this->dbConnection);
 
 			// create hash of opening_id's
-			$tmpOpeningIDs = [];
-			foreach ($tmpOpenings as $opening) {
-				array_push($tmpOpeningIDs, $opening->opening_id);
+			$openingIDs = [];
+			foreach ($openings_ary as $opening) {
+				array_push($openingIDs, $opening->opening_id);
 			}
 
-			// get signups on my openings
-			$tmpSignups = SUS_Signup::getAllFromDb(['opening_id' => $tmpOpeningIDs], $this->dbConnection);
+			// get signups on my openings (using hash of IDs)
+			$signups_ary = SUS_Signup::getAllFromDb(['opening_id' => $openingIDs], $this->dbConnection);
 
 			// create hash of signup_user_id's
-			$tmpSignupUserIDs = [];
-			foreach ($tmpSignups as $signup) {
-				array_push($tmpSignupUserIDs, $signup->signup_user_id);
+			$signupUserIDs = [];
+			foreach ($signups_ary as $signup) {
+				array_push($signupUserIDs, $signup->signup_user_id);
 			}
 
-			// get user names
-			$tmpUsers = User::getAllFromDb(['user_id' => $tmpSignupUserIDs], $this->dbConnection);
+			// get user names (using hash of IDs)
+			$users_ary = User::getAllFromDb(['user_id' => $signupUserIDs], $this->dbConnection);
 
 			// create hash of user information
-			$tmpUserInfo = [];
-			foreach ($tmpUsers as $user) {
-				$tmpUserInfo[$user->user_id] = array(
+			$user_info_ary = [];
+			foreach ($users_ary as $user) {
+				$user_info_ary[$user->user_id] = array(
 					'user_id'   => $user->user_id,
 					'full_name' => $user->first_name . ' ' . $user->last_name,
 					'email'     => $user->email,
@@ -377,32 +377,32 @@
 			// count total signup_id's per each opening_id
 			$countSignupsPerOpening = array_count_values(array_map(function ($item) {
 				return $item->opening_id;
-			}, $tmpSignups));
+			}, $signups_ary));
 
 			// create hash of signups, include user information (hash), and trim out cruft
-			$tmpSignupsWithUserInfo = [];
-			foreach ($tmpSignups as $signup) {
-				array_push($tmpSignupsWithUserInfo,
+			$signups_with_user_info_ary = [];
+			foreach ($signups_ary as $signup) {
+				array_push($signups_with_user_info_ary,
 					array(
 						// signup information
 						'opening_id'        => $signup->opening_id,
 						'signup_id'         => $signup->signup_id,
 						'signup_created_at' => $signup->created_at,
 						// user information
-						'user_id'           => $tmpUserInfo[$signup->signup_user_id]['user_id'],
-						'full_name'         => $tmpUserInfo[$signup->signup_user_id]['full_name'],
-						'email'             => $tmpUserInfo[$signup->signup_user_id]['email'],
-						'username'          => $tmpUserInfo[$signup->signup_user_id]['username']
+						'user_id'           => $user_info_ary[$signup->signup_user_id]['user_id'],
+						'full_name'         => $user_info_ary[$signup->signup_user_id]['full_name'],
+						'email'             => $user_info_ary[$signup->signup_user_id]['email'],
+						'username'          => $user_info_ary[$signup->signup_user_id]['username']
 					)
 				);
 			}
 
 			// create hash for output and trim out cruft
 			$trimmed_array = [];
-			foreach ($tmpOpenings as $opening) {
+			foreach ($openings_ary as $opening) {
 				// create a hash of signups for each opening
 				$signups_for_this_opening = [];
-				foreach ($tmpSignupsWithUserInfo as $item) {
+				foreach ($signups_with_user_info_ary as $item) {
 					if ($item['opening_id'] == $opening->opening_id) {
 						$signups_for_this_opening[] = $item;    // 'user_id' => $item['user_id']
 					}

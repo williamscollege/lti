@@ -45,20 +45,6 @@
 	if ($IS_AUTHENTICATED) {
 		echo "<div id=\"parent_container\">"; // begin: div#parent_container
 		echo "<h3>" . $pageTitle . "</h3>";
-
-
-		// ***************************
-		// fetch signups: "I have signed up for"
-		// ***************************
-		$USER->cacheMySignups();
-		// util_prePrintR($USER->signups_all);
-
-		// ***************************
-		// fetch signups_all: "Signups on my Sheets"
-		// ***************************
-		$USER->cacheSignupsOnMySheets();
-		// util_prePrintR($USER->signups_on_my_sheets);
-
 		?>
 		<div class="container">
 			<div class="row">
@@ -78,15 +64,16 @@
 										date</a>
 
 									<?php
+										$USER->cacheMySignups();
+										// util_prePrintR($USER->signups_all);
+
 										// PANEL 1: "My Signups..."
-										// TODO - if empty array, err msg: "Fatal error: an invalid value was given in the search hash in C:\xampp\htdocs\GITHUB\lti\lti-signup-sheets\classes\db_linked.class.php on line 299"
 										if (count($USER->signups_all) == 0) {
 											echo "<div class='bg-warning'>You have not yet signed up for any sheet openings.<br />To sign-up, click on &quot;My Available Openings&quot; (above).</div>";
 										}
 										else {
 											echo '<div id="signups-list-container-mine">' . "\n";
 
-											//$s->cacheOpenings();
 											$lastOpeningDate = '';
 											$daysOpenings    = [];
 											$todayYmd        = explode(' ', util_currentDateTimeString())[0];
@@ -148,8 +135,10 @@
 										date</a>
 
 									<?php
+										$USER->cacheSignupsOnMySheets();
+										// util_prePrintR($USER->signups_on_my_sheets);
+
 										// PANEL 2: "Sign-ups on my Sheets..."
-										// TODO - if empty array, err msg: "Fatal error: an invalid value was given in the search hash in C:\xampp\htdocs\GITHUB\lti\lti-signup-sheets\classes\db_linked.class.php on line 299"
 										if (count($USER->signups_on_my_sheets) == 0) {
 											echo "<div class='bg-warning'>No one has signed up on your sheets.</div>";
 										}
