@@ -126,49 +126,64 @@ function updateDOM(action, ret, data) {
 			$(".list-opening-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
 		}
 	}
-	else if (action == 'delete-signup') {
+	else if (action == 'delete-signup-from-mine') {
 		if (ret) {
 			// show status
 			dfnUtil_setTransientAlert('success', 'Saved');
 
-			// fetch count of remaining LI elements within this UL
-			if ($('#group-signups-for-opening-id-' + GLOBAL_confirmHandlerReference + ' UL LI').length > 1) {
-				// remove only this one LI item
-				// alert('remove only this one LI item');
-				$('#btn-remove-signup-id-' + GLOBAL_confirmHandlerData).closest('LI').remove();
+			// check to see if this the last opening on this date
+			var countRemainingSignups = $('.list-opening-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
+
+			if (countRemainingSignups == 0) {
+				// this is the last signup on this opening
+				// remove the list container from DOM
+				$('#tabSignupsMine .list-opening-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
 			}
 			else {
-				// remove entire container shell (this is the last LI item in this group)
-				// alert('this is the last LI item in this group; remove the entire container shell');
-				$('#group-signups-for-opening-id-' + GLOBAL_confirmHandlerReference).remove();
+				// additional signups still exist on this opening...
+				// remove single signup from DOM
+				$('#tabSignupsMine .list-opening-id-' + GLOBAL_confirmHandlerData).remove();
 			}
 		}
 		else {
 			// error message
-			$("#btn-remove-signup-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+			// TODO - change this to utilize dfnUtil_setTransientAlert()?
+			$("#btn-remove-signup-mine-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+		}
+	}
+	else if (action == 'delete-signup-from-others') {
+		if (ret) {
+			// show status
+			dfnUtil_setTransientAlert('success', 'Saved');
+
+			// check to see if this the last opening on this date
+			var countRemainingSignups = $('.list-opening-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
+
+			if (countRemainingSignups == 0) {
+				// this is the last signup on this opening
+				// remove the list container from DOM
+				$('#tabSignupsOthers .list-opening-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
+			}
+			else {
+				// additional signups still exist on this opening...
+				// remove single signup from DOM
+				$('#tabSignupsOthers .list-opening-id-' + GLOBAL_confirmHandlerData).remove();
+			}
+		}
+		else {
+			// error message
+			// TODO - change this to utilize dfnUtil_setTransientAlert()?
+			$("#btn-remove-signup-mine-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
 		}
 	}
 	else if (action == 'delete-signup-from-edit-opening-modal') {
 		if (ret) {
 			// show status
 			dfnUtil_setTransientAlert('success', 'Saved');
-			console.log('we are here before console dir');
-			console.dir(data);
+			// console.log('we are here before console dir');
+			// console.dir(data);
 			// fetch count of remaining LI elements within this UL
 			GLOBAL_calendar_fetchSignupsforOpening(GLOBAL_confirmHandlerReference);
-
-			//$(".list-opening-id-"+ GLOBAL_confirmHandlerReference).replaceWith(data['html_render_opening']);
-
-			//if ( $('#group-signups-for-opening-id-' + GLOBAL_confirmHandlerReference + ' UL LI').length > 1 ){
-			// remove only this one LI item
-			// alert('remove only this one LI item');
-			//$('#btn-remove-signup-id-' + GLOBAL_confirmHandlerData).closest('LI').remove();
-			//}
-			//else{
-			//	// remove entire container shell (this is the last LI item in this group)
-			//	// alert('this is the last LI item in this group; remove the entire container shell');
-			//	$('#group-signups-for-opening-id-' + GLOBAL_confirmHandlerReference).remove();
-			//}
 		}
 		else {
 			// error message

@@ -166,7 +166,7 @@
 			$rendered = $this->_renderHtml_START();
 			$rendered .= '<a href="#" class="sus-edit-opening" data-opening-id="' . $this->opening_id . '" data-toggle="modal" data-target="#modal-edit-opening" title="Edit opening"><i class="glyphicon glyphicon-wrench"></i></a>';
 			$rendered .= '<a href="#" class="sus-delete-opening" data-opening-id="' . $this->opening_id . '" title="Cancel signup"><i class="glyphicon glyphicon-remove"></i></a>';
-			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-opening-id="' . $this->opening_id . '" data-toggle="modal" data-target="#modal-edit-opening" title="Sign up"><i class="glyphicon glyphicon-plus"></i></a>';
+			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-opening-id="' . $this->opening_id . '" data-toggle="modal" data-target="#modal-edit-opening" title="Sign up"><i class="glyphicon glyphicon-plus"></i></a><br/>';
 			$rendered .= $this->_renderHtml_END($signedupUserIdsAry, TRUE);
 
 			return $rendered;
@@ -183,7 +183,7 @@
 				$rendered .= '<a href="#" class="sus-delete-me-from-opening" data-opening-id="' . $this->opening_id . '" title="Delete my signup"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel signup</a>';
 			}
 			else {
-				$rendered .= '<a href="#" class="sus-add-me-to-opening" data-opening-id="' . $this->opening_id . '" title="Sign me up"><i class="glyphicon glyphicon-plus"></i>&nbsp;Signup</a>';
+				$rendered .= '<a href="#" class="sus-add-me-to-opening" data-opening-id="' . $this->opening_id . '" title="Sign me up"><i class="glyphicon glyphicon-plus"></i>&nbsp;Signup</a><br/>';
 			}
 			$rendered .= $this->_renderHtml_END($signedupUserIdsAry);
 
