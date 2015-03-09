@@ -11,41 +11,41 @@ $(document).ready(function () {
 	// ***************************
 
 	// Delete signup
-	$(document).on("click", ".sus-delete-signup-from-mine", function () {
+	$(document).on("click", ".sus-delete-my-signup", function () {
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-signup-id');
 		GLOBAL_confirmHandlerReference = $(this).attr('data-for-opening-id');
 		var params = {
 			title: "Delete Signup",
-			message: "Really delete your signup for <strong>&quot;" + $(this).attr('data-for-sheet-name') + "&quot;</strong>?",
+			message: "Really delete your signup for:<br /><strong>&quot;" + $(this).attr('data-for-sheet-name') + "&quot;</strong>?",
 			label: "Delete Signup",
 			class: "btn btn-danger",
 			url: "../ajax_actions/ajax_actions.php",
-			ajax_action: "delete-signup-from-mine",
+			ajax_action: "delete-my-signup",
 			ajax_id: GLOBAL_confirmHandlerData
 		};
 		showConfirmBox(params);
 	});
 
-	$(document).on("click", ".sus-delete-signup-from-others", function () {
+	$(document).on("click", ".sus-delete-others-signup", function () {
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-signup-id');
 		//GLOBAL_confirmHandlerReference = $(this).attr('data-for-opening-id');
 		var params = {
 			title: "Delete Signup",
-			message: "Really delete <strong>" + $(this).attr('data-for-signup-name') + "'s</strong> signup for <strong>&quot;" + $(this).attr('data-for-sheet-name') + "&quot;</strong>?",
+			message: "Really delete <strong>" + $(this).attr('data-for-signup-name') + "'s</strong> signup for:<br /><strong>&quot;" + $(this).attr('data-for-sheet-name') + "&quot;</strong>?",
 			label: "Delete Signup",
 			class: "btn btn-danger",
 			url: "../ajax_actions/ajax_actions.php",
-			ajax_action: "delete-signup-from-others",
+			ajax_action: "delete-others-signup",
 			ajax_id: GLOBAL_confirmHandlerData
 		};
 		showConfirmBox(params);
 	});
 
-	$('#scroll-to-todayish-signups-mine').click(function () {
+	$('#scroll-to-todayish-my-signups').click(function () {
 		scrollListToTodayishSignups_01();
 	});
 
-	$('#scroll-to-todayish-signups-others').click(function () {
+	$('#scroll-to-todayish-others-signups').click(function () {
 		scrollListToTodayishSignups_02();
 	});
 
@@ -55,44 +55,44 @@ $(document).ready(function () {
 	// ***************************
 
 	function scrollListToTodayishSignups_01() {
-		var closestFutureOpeningsList = $('#signups-list-container-mine .in-the-present');
+		var closestFutureOpeningsList = $('#my-signups-list-container .in-the-present');
 		//console.log(closestFutureOpeningsList);
 
 		if (!closestFutureOpeningsList.length) {
 			//console.log('no present - looking to the past');
-			closestFutureOpeningsList = $('#signups-list-container-mine .in-the-past').prev();
+			closestFutureOpeningsList = $('#my-signups-list-container .in-the-past').prev();
 		}
 		//console.log(closestFutureOpeningsList);
 
 		if (!closestFutureOpeningsList.length) {
 			//console.log('no present nor past - looking to the future');
-			closestFutureOpeningsList = $('#signups-list-container-mine .in-the-future').last();
+			closestFutureOpeningsList = $('#my-signups-list-container .in-the-future').last();
 		}
 		//console.log(closestFutureOpeningsList);
 
 		if (closestFutureOpeningsList.length) {
-			$('#signups-list-container-mine').scrollTop($('#signups-list-container-mine').scrollTop() + $(closestFutureOpeningsList).position().top);
+			$('#my-signups-list-container').scrollTop($('#my-signups-list-container').scrollTop() + $(closestFutureOpeningsList).position().top);
 		}
 	}
 
 	function scrollListToTodayishSignups_02() {
-		var closestFutureOpeningsList = $('#signups-list-container-others .in-the-present');
+		var closestFutureOpeningsList = $('#others-signups-list-container .in-the-present');
 		//console.log(closestFutureOpeningsList);
 
 		if (!closestFutureOpeningsList.length) {
 			//console.log('no present - looking to the past');
-			closestFutureOpeningsList = $('#signups-list-container-others .in-the-past').prev();
+			closestFutureOpeningsList = $('#others-signups-list-container .in-the-past').prev();
 		}
 		//console.log(closestFutureOpeningsList);
 
 		if (!closestFutureOpeningsList.length) {
 			//console.log('no present nor past - looking to the future');
-			closestFutureOpeningsList = $('#signups-list-container-others .in-the-future').last();
+			closestFutureOpeningsList = $('#others-signups-list-container .in-the-future').last();
 		}
 		//console.log(closestFutureOpeningsList);
 
 		if (closestFutureOpeningsList.length) {
-			$('#signups-list-container-others').scrollTop($('#signups-list-container-others').scrollTop() + $(closestFutureOpeningsList).position().top);
+			$('#others-signups-list-container').scrollTop($('#others-signups-list-container').scrollTop() + $(closestFutureOpeningsList).position().top);
 		}
 	}
 

@@ -335,30 +335,20 @@
 			// get my sheets
 			$sheets_ary = SUS_Sheet::getAllFromDb(['owner_user_id' => $this->user_id], $this->dbConnection);
 
-			// todo - use dblinked arrayAttributes fsn here
-			// create hash of sheet_id's
-			$sheetIDs = [];
-			foreach ($sheets_ary as $sheet) {
-				array_push($sheetIDs, $sheet->sheet_id);
-			}
+			// get sheets (using hash of IDs)
+			$sheetIDs = Db_Linked::arrayOfAttrValues($sheets_ary, 'sheet_id');
 
 			// get openings on my sheets (using hash of IDs)
 			$openings_ary = SUS_Opening::getAllFromDb(['sheet_id' => $sheetIDs], $this->dbConnection);
 
-			// create hash of opening_id's
-			$openingIDs = [];
-			foreach ($openings_ary as $opening) {
-				array_push($openingIDs, $opening->opening_id);
-			}
+			// get openings (using hash of IDs)
+			$openingIDs = Db_Linked::arrayOfAttrValues($openings_ary, 'opening_id');
 
 			// get signups on my openings (using hash of IDs)
 			$signups_ary = SUS_Signup::getAllFromDb(['opening_id' => $openingIDs], $this->dbConnection);
 
-			// create hash of signup_user_id's
-			$signupUserIDs = [];
-			foreach ($signups_ary as $signup) {
-				array_push($signupUserIDs, $signup->signup_user_id);
-			}
+			// get signup_user_id's (using hash of IDs)
+			$signupUserIDs = Db_Linked::arrayOfAttrValues($signups_ary, 'signup_user_id');
 
 			// get user names (using hash of IDs)
 			$users_ary = User::getAllFromDb(['user_id' => $signupUserIDs], $this->dbConnection);
@@ -407,18 +397,28 @@
 						$signups_for_this_opening[] = $item;    // 'user_id' => $item['user_id']
 					}
 				}
+
+				// fetch sheet name
+				$sheet_name = '';
+				foreach ($sheets_ary as $sheet) {
+					if ($sheet->sheet_id == $opening->sheet_id) {
+						$sheet_name = $sheet->name;
+					}
+				}
+
 				// omit openings that contain zero signups
 				if (isset($countSignupsPerOpening[$opening->opening_id])) {
 					$trimmed_array[] = array(
-						'opening_id'      => $opening->opening_id,
-						'begin_datetime'  => $opening->begin_datetime,
-						'end_datetime'    => $opening->end_datetime,
-						'current_signups' => $countSignupsPerOpening[$opening->opening_id],
-						'max_signups'     => $opening->max_signups,
-						'description'     => $opening->description,
-						'location'        => $opening->location,
-						'name'            => $opening->name,
-						'array_signups'   => $signups_for_this_opening
+						'opening_id'          => $opening->opening_id,
+						'begin_datetime'      => $opening->begin_datetime,
+						'end_datetime'        => $opening->end_datetime,
+						'current_signups'     => $countSignupsPerOpening[$opening->opening_id],
+						'opening_max_signups' => $opening->max_signups,
+						'opening_description' => $opening->description,
+						'opening_location'    => $opening->location,
+						'opening_name'        => $opening->name,
+						'sheet_name'          => $sheet_name,
+						'array_signups'       => $signups_for_this_opening
 					);
 				}
 			}

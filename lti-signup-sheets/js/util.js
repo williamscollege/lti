@@ -127,7 +127,7 @@ function updateDOM(action, ret, data) {
 			$(".list-opening-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
 		}
 	}
-	else if (action == 'delete-signup-from-mine') {
+	else if (action == 'delete-my-signup') {
 		if (ret) {
 			// show status
 			dfnUtil_setTransientAlert('success', 'Saved');
@@ -147,44 +147,46 @@ function updateDOM(action, ret, data) {
 			}
 
 			// check if none exist, then restore default text
-			if ($('#signups-list-container-mine').siblings(".list-signups").length == 0) {
-				$('#signups-list-container-mine').html("<div class='bg-warning'>You have not yet signed up for any sheet openings.<br />To sign-up, click on &quot;My Available Openings&quot; (above).</div>");
+			if ($('#my-signups-list-container').siblings(".list-signups").length == 0) {
+				$('#my-signups-list-container').html("<div class='bg-warning'>You have not yet signed up for any sheet openings.<br />To sign-up, click on &quot;My Available Openings&quot; (above).</div>");
 			}
 		}
 		else {
 			// error message
 			// TODO - change this to utilize dfnUtil_setTransientAlert()?
-			$("#btn-remove-signup-mine-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+			$("#btn-remove-my-signup-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
 		}
 	}
-	else if (action == 'delete-signup-from-others') {
+	else if (action == 'delete-others-signup') {
 		if (ret) {
 			// show status
 			dfnUtil_setTransientAlert('success', 'Saved');
 
 			// check to see if this the last opening on this date
-			var countRemainingSignups = $('.list-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
-
+			//var countRemainingSignups = $('.list-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
+			var countRemainingSignups = $('#list-others-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
+console.log(countRemainingSignups);
 			if (countRemainingSignups == 0) {
 				// this is the last signup on this opening
 				// remove the list container from DOM
-				$('#tabSignupsOthers .list-signup-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
+				//$('#tabSignupsOthers .list-others-signup-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
+				$('#tabSignupsOthers .list-others-signup-id-' + GLOBAL_confirmHandlerData).parent(".list-opening-signups").remove();
 			}
 			else {
 				// additional signups still exist on this opening...
 				// remove single signup from DOM
-				$('#tabSignupsOthers .list-signup-id-' + GLOBAL_confirmHandlerData).remove();
+				$('#tabSignupsOthers .list-others-signup-id-' + GLOBAL_confirmHandlerData).remove();
 			}
 
 			// check if none exist, then restore default text
-			if($('#signups-list-container-others').siblings(".list-signups").length == 0) {
-				$('#signups-list-container-others').html("<div class='bg-warning'>No one has signed up on your sheets.</div>");
+			if($('#others-signups-list-container').siblings(".list-signups").length == 0) {
+				$('#others-signups-list-container').html("<div class='bg-warning'>No one has signed up on your sheets.</div>");
 			}
 		}
 		else {
 			// error message
 			// TODO - change this to utilize dfnUtil_setTransientAlert()?
-			$("#btn-remove-signup-mine-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+			$("#btn-remove-others-signup-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
 		}
 	}
 	else if (action == 'delete-signup-from-edit-opening-modal') {

@@ -123,7 +123,7 @@ wms bootstrap-calendar-master extensions
 	color: #ff0000;
 }
 
-.sus-delete-signup, .sus-delete-signup-from-mine, .sus-delete-signup-from-others {
+.sus-delete-signup, .sus-delete-my-signup, .sus-delete-others-signup {
 	margin-right: 5px;
 	padding: 0px 3px;
 	border: none;
@@ -131,7 +131,7 @@ wms bootstrap-calendar-master extensions
 	color: #ff0000;
 }
 
-.sus-delete-signup:hover, .sus-delete-signup-from-mine:hover, .sus-delete-signup-from-others:hover {
+.sus-delete-signup:hover, .sus-delete-my-signup:hover, .sus-delete-others-signup:hover {
 	background-color: #F7A9AD;
 	color: #ff0000;
 }
@@ -265,29 +265,29 @@ span[data-cal-date] {
 /* openings list styles */
 /*=======================================*/
 
-#openings-list-container, #signups-list-container-mine, #signups-list-container-others {
+#openings-list-container, #my-signups-list-container, #others-signups-list-container {
 	margin-top: -20px;
 	max-height: 591px;
 	overflow-y: scroll;
 	position: relative;
 }
 
-#openings-list-container .opening-list-for-date, #signups-list-container-mine .opening-list-for-date, #signups-list-container-others .opening-list-for-date {
+#openings-list-container .opening-list-for-date, #my-signups-list-container .opening-list-for-date, #others-signups-list-container .opening-list-for-date {
 	padding: 0 0 6px 10px;
 	margin: 0 !important;
 }
 
-#openings-list-container .in-the-past, #signups-list-container-mine .in-the-past, #signups-list-container-others .in-the-past {
+#openings-list-container .in-the-past, #my-signups-list-container .in-the-past, #others-signups-list-container .in-the-past {
 	background-color: #ddd;
 	/*border: 1px solid #fff;*/
 }
 
-#openings-list-container .in-the-present, #signups-list-container-mine .in-the-present, #signups-list-container-others .in-the-present {
+#openings-list-container .in-the-present, #my-signups-list-container .in-the-present, #others-signups-list-container .in-the-present {
 	background-color: #f9fffb;
 	border: 1px solid #999;
 }
 
-#openings-list-container .in-the-future, #signups-list-container-mine .in-the-future, #signups-list-container-others .in-the-future {
+#openings-list-container .in-the-future, #my-signups-list-container .in-the-future, #others-signups-list-container .in-the-future {
 	background-color: #f9fbff;
 	/*border: 1px solid #fff;*/
 }
@@ -297,11 +297,11 @@ span[data-cal-date] {
 	margin: -96px 0 0 300px;
 }
 
-#scroll-to-todayish-signups-mine {
+#scroll-to-todayish-my-signups {
 	margin: -89px 0 0 200px;
 }
 
-#scroll-to-todayish-signups-others {
+#scroll-to-todayish-others-signups {
 	margin: -89px 0 0 237px;
 }
 
@@ -324,6 +324,9 @@ UL.wms-signups {
 	margin: 0;
 	padding-left: 25px;
 	display: inline-block;
+}
+UL.wms-signups LI {
+	list-style-type: disc;
 }
 
 /*=======================================*/
