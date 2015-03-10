@@ -4,8 +4,8 @@
 	require_once('../app_head.php');
 
 
-	function renderAsHtmlForSignupsMine($signup) {
-		$rendered = '<div class="list-signups list-signup-id-' . $signup['signup_id'] . '">';
+	function renderAsHtmlForMySignups($signup) {
+		$rendered = '<div class="list-signups list-my-signup-id-' . $signup['signup_id'] . '">';
 		$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($signup['begin_datetime']), "h:i A") . ' - ' . date_format(new DateTime($signup['end_datetime']), "h:i A") . '</span>';
 
 		$customColorClass = " text-danger ";
@@ -43,8 +43,8 @@
 		return $rendered;
 	}
 
-	function renderAsHtmlForSignupsOthers($signup) {
-		$rendered = '<div class="list-opening-signups list-opening-id-' . $signup['opening_id'] . '">';
+	function renderAsHtmlForOthersSignups($signup) {
+		$rendered = '<div class="list-opening-signups list-others-opening-id-' . $signup['opening_id'] . '">';
 		$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($signup['begin_datetime']), "h:i A") . ' - ' . date_format(new DateTime($signup['end_datetime']), "h:i A") . '</span>';
 
 		$customColorClass = " text-danger ";
@@ -71,7 +71,6 @@
 		}
 		$rendered .= '</li>';
 		// begin: loop through signed up users
-		//		util_prePrintR($signup['array_signups']);
 		if ($signup['array_signups']) {
 			$rendered .= '<li>';
 			$rendered .= renderAsHtmlListSignups($signup);
@@ -89,19 +88,15 @@
 		$signedupUsers = $signup['array_signups'];
 		$rendered      = "<ul class=\"wms-signups\">";
 		foreach ($signedupUsers as $u) {
-			$rendered .= "<li id=\"list-others-signup-id-\"" . $u['signup_id'] . "\" class='list-signups'>" . $u['full_name'];
-			// display date signup created
-			//					foreach ($this->signups as $u) {
-			//						if ($u->signup_user_id == $u->user_id) {
+			$rendered .= "<li class=\"list-others-signup-id-" . $u['signup_id'] . " list-signups\">" . $u['full_name'];
+			// display full_name, username and date signup_created_at
 			$rendered .= ' <span class="small">(' . $u['username'] . ', ' . util_datetimeFormatted($u['signup_created_at']) . ')</span> ';
 			$rendered .= '<span class="">';
 			if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
-				$rendered .= "<a href=\"#\" id=\"btn-remove-others-signup-id-" . $u['signup_id'] . "\"  class=\"btn btn-xs btn-danger sus-delete-others-signup\" data-bb=\"alert_callback\" data-for-signup-id=\"" . $u['signup_id'] . "\" data-for-signup-name=\"" . $u['full_name'] . "\" data-for-sheet-name=\"" . $signup['sheet_name'] . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
-				// scrap tidbit: data-for-opening-id=\"" . $signup['opening_id'] . "\"
+				// TODO - add functionality to link click through
+				$rendered .= "<a href=\"#\" id=\"btn-remove-others-signup-id-" . $u['signup_id'] . "\"  class=\"btn btn-xs btn-danger sus-delete-others-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $signup['opening_id'] . "\" data-for-signup-id=\"" . $u['signup_id'] . "\" data-for-signup-name=\"" . $u['full_name'] . "\" data-for-sheet-name=\"" . $signup['sheet_name'] . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
 			}
 			$rendered .= '</span>';
-			//						}
-			//					}
 			$rendered .= "</li>";
 		}
 		$rendered .= "</ul>";
@@ -127,7 +122,7 @@
 							</ul>
 							<div id="boxMySignupsContent" class="tab-content">
 								<!-- Begin: My Signups (Content) -->
-								<div role="tabpanel" id="tabSignupsMine" class="tab-pane fade active in" aria-labelledby="tabSignupsMine">
+								<div role="tabpanel" id="tabMySignups" class="tab-pane fade active in" aria-labelledby="tabMySignups">
 									<a href="#" id="scroll-to-todayish-my-signups" type="button" class="btn btn-success btn-small" title="scroll to current date">current
 										date</a>
 
@@ -145,13 +140,12 @@
 											$lastOpeningDate = '';
 											$daysOpenings    = [];
 											$todayYmd        = explode(' ', util_currentDateTimeString())[0];
-											// foreach ($s->openings as $opening) {
 											foreach ($USER->signups_all as $signup) {
 												$curOpeningDate = explode(' ', $signup['begin_datetime'])[0];
 												if ($curOpeningDate != $lastOpeningDate) {
 													// render signups for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 													foreach ($daysOpenings as $op) {
-														echo renderAsHtmlForSignupsMine($op);
+														echo renderAsHtmlForMySignups($op);
 													}
 
 													if ($lastOpeningDate) {
@@ -173,7 +167,7 @@
 											}
 											// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 											foreach ($daysOpenings as $op) {
-												echo renderAsHtmlForSignupsMine($op);
+												echo renderAsHtmlForMySignups($op);
 											}
 											echo '</div>' . "\n"; // end: .opening-list-for-date
 											echo '</div>' . "\n"; // end: #my-signups-list-container
@@ -198,7 +192,7 @@
 							</ul>
 							<div id="boxSignupsOnMySheetsContent" class="tab-content">
 								<!--Begin: Signups on my Sheets (Content) -->
-								<div role="tabpanel" id="tabSignupsOthers" class="tab-pane fade active in" aria-labelledby="tabSignupsOthers">
+								<div role="tabpanel" id="tabOthersSignups" class="tab-pane fade active in" aria-labelledby="tabOthersSignups">
 									<a href="#" id="scroll-to-todayish-others-signups" type="button" class="btn btn-success btn-small" title="scroll to current date">current
 										date</a>
 
@@ -216,13 +210,12 @@
 											$lastOpeningDate = '';
 											$daysOpenings    = [];
 											$todayYmd        = explode(' ', util_currentDateTimeString())[0];
-											// foreach ($s->openings as $opening) {
 											foreach ($USER->signups_on_my_sheets as $signup) {
 												$curOpeningDate = explode(' ', $signup['begin_datetime'])[0];
 												if ($curOpeningDate != $lastOpeningDate) {
 													// render signups for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 													foreach ($daysOpenings as $op) {
-														echo renderAsHtmlForSignupsOthers($op);
+														echo renderAsHtmlForOthersSignups($op);
 													}
 
 													if ($lastOpeningDate) {
@@ -244,39 +237,12 @@
 											}
 											// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 											foreach ($daysOpenings as $op) {
-												util_prePrintR($op);
-												echo renderAsHtmlForSignupsOthers($op);
+												// util_prePrintR($op);
+												echo renderAsHtmlForOthersSignups($op);
 											}
 											echo '</div>' . "\n"; // end: .opening-list-for-date
 											echo '</div>' . "\n"; // end: #others-signups-list-container
 										}
-
-										//											foreach ($USER->signups_on_my_sheets as $scheduled) {
-										//												// date
-										//												echo "<div id=\"group-signups-for-opening-id-" . $scheduled['opening_id'] . "\">";
-										//												echo "<strong>" . date('F d, Y', strtotime($scheduled['begin_datetime'])) . "</strong>";
-										//												echo "<br />";
-										//												// time opening
-										//												echo "&nbsp;&nbsp;&nbsp;&nbsp;" . date('g:i:A', strtotime($scheduled['begin_datetime'])) . " - " . date('g:i:A', strtotime($scheduled['end_datetime']));
-										//												// display x of y total signups for this opening
-										//												echo "&nbsp;(" . $scheduled['current_signups'] . "/" . $scheduled['opening_max_signups'] . ")";
-										//												// link to edit
-										//												// TODO - add functionality to link click through
-										//												echo "&nbsp;<a href=\"edit_opening.php?opening_id=" . $scheduled['opening_id'] . "\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Description:</strong> " . $scheduled['opening_description'] . "<br /><strong>Where:</strong> " . $scheduled['opening_location'] . "\">" . $scheduled['opening_name'] . "</a>";
-										//												// list signups
-										//												echo "<ul class=\"unstyled\">";
-										//												foreach ($scheduled['array_signups'] as $person) {
-										//													//util_prePrintR($person);
-										//													echo "<li>";
-										//													// dkc says: could tighten-up UI, if needed: by btn-link instead of btn btn-xs. can color the remove icon red, manually/automatically?
-										//													echo "<a href=\"#\" id=\"btn-remove-signup-id-" . $person['signup_id'] . "\"  class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $person['opening_id'] . "\" data-for-signup-name=\"" . $person['full_name'] . "\" data-for-signup-id=\"" . $person['signup_id'] . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
-										//													echo "<a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>User:</strong>&nbsp; " . $person['username'] . "<br /><strong>Email:</strong> " . $person['email'] . "<br /><strong>Signed up:</strong> " . date('n/j/Y g:i:A', strtotime($person['signup_created_at'])) . "\">" . $person['full_name'] . "</a>";
-										//													echo "</li>";
-										//												}
-										//												echo "</ul>";
-										//												echo "</div>";
-										//											}
-										//										}
 									?>
 
 								</div>

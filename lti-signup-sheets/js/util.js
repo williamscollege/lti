@@ -3,13 +3,11 @@
 // ***************************
 var GLOBAL_confirmHandlerData = -1; // data value of element
 var GLOBAL_confirmHandlerReference = -1; // data value of reference element (i.e. container, parent, etc.)
+var GLOBAL_util_showConfirmBox = null; // hack to enable passing of JS values between fxns in different files
 
 
 // ***************************
 // Listeners: (NOTE: could put this directly in the HTML or in a footer file or some such, but doing it here consolidates the code)
-
-var GLOBAL_util_showConfirmBox = null;
-
 // ***************************
 $(document).ready(function () {
 	// create container to hold ajax messages; hide #page_alert_div
@@ -23,7 +21,7 @@ $(document).ready(function () {
 
 // BootBox jQuery confirm box (helper function)
 function showConfirmBox(ary) {
-	// console.dir(ary);
+	console.dir(ary);
 	bootbox.dialog({
 		title: ary['title'],
 		message: ary['message'],
@@ -50,6 +48,7 @@ function showConfirmBox(ary) {
 								// remove element
 								//console.log('AA - inside of ajxdata success')
 								updateDOM(ary['ajax_action'], true, ajxdata);
+								//updateDOM(ary, true, ajxdata); // pass entire array instead of just one element
 							}
 							else {
 								// error message
@@ -77,6 +76,7 @@ function showConfirmBox(ary) {
 GLOBAL_util_showConfirmBox = showConfirmBox;
 
 function updateDOM(action, ret, data) {
+	console.dir(action);
 	if (action == 'delete-sheetgroup') {
 		if (ret) {
 			// show status
@@ -133,17 +133,15 @@ function updateDOM(action, ret, data) {
 			dfnUtil_setTransientAlert('success', 'Saved');
 
 			// check to see if this the last opening on this date
-			var countRemainingSignups = $('.list-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
+			var countRemainingSignups = $('.list-my-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
 
 			if (countRemainingSignups == 0) {
-				// this is the last signup on this opening
-				// remove the list container from DOM
-				$('#tabSignupsMine .list-signup-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
+				// this is the last signup on this opening: remove the list container from DOM
+				$('#tabMySignups .list-my-signup-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
 			}
 			else {
-				// additional signups still exist on this opening...
-				// remove single signup from DOM
-				$('#tabSignupsMine .list-signup-id-' + GLOBAL_confirmHandlerData).remove();
+				// additional signups still exist on this opening: remove single signup from DOM
+				$('#tabMySignups .list-my-signup-id-' + GLOBAL_confirmHandlerData).remove();
 			}
 
 			// check if none exist, then restore default text
@@ -163,23 +161,26 @@ function updateDOM(action, ret, data) {
 			dfnUtil_setTransientAlert('success', 'Saved');
 
 			// check to see if this the last opening on this date
-			//var countRemainingSignups = $('.list-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
-			var countRemainingSignups = $('#list-others-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
-console.log(countRemainingSignups);
+			var countRemainingSignups = $('.list-others-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
+
 			if (countRemainingSignups == 0) {
-				// this is the last signup on this opening
-				// remove the list container from DOM
-				//$('#tabSignupsOthers .list-others-signup-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
-				$('#tabSignupsOthers .list-others-signup-id-' + GLOBAL_confirmHandlerData).parent(".list-opening-signups").remove();
+				// this is the last signup on this either this opening or this date: remove the list container from DOM
+				if ($('.list-others-opening-id-' + GLOBAL_confirmHandlerReference).siblings(".list-opening-signups").length == 0) {
+					// this is the last opening on this date: remove the 'opening-list-for-date' from DOM
+					$('.list-others-opening-id-' + GLOBAL_confirmHandlerReference).parent('.opening-list-for-date').remove();
+				}
+				else {
+					// this is the last signup on this opening: remove the list container from DOM
+					$('.list-others-opening-id-' + GLOBAL_confirmHandlerReference).remove();
+				}
 			}
 			else {
-				// additional signups still exist on this opening...
-				// remove single signup from DOM
-				$('#tabSignupsOthers .list-others-signup-id-' + GLOBAL_confirmHandlerData).remove();
+				// additional signups still exist on this opening: remove single signup from DOM
+				$('.list-others-signup-id-' + GLOBAL_confirmHandlerData).remove();
 			}
 
 			// check if none exist, then restore default text
-			if($('#others-signups-list-container').siblings(".list-signups").length == 0) {
+			if ($('#others-signups-list-container').find(".list-signups").length == 0) {
 				$('#others-signups-list-container').html("<div class='bg-warning'>No one has signed up on your sheets.</div>");
 			}
 		}
@@ -193,7 +194,6 @@ console.log(countRemainingSignups);
 		if (ret) {
 			// show status
 			dfnUtil_setTransientAlert('success', 'Saved');
-			// console.log('we are here before console dir');
 			// console.dir(data);
 			// fetch count of remaining LI elements within this UL
 			GLOBAL_calendar_fetchSignupsforOpening(GLOBAL_confirmHandlerReference);

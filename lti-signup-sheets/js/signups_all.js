@@ -28,7 +28,7 @@ $(document).ready(function () {
 
 	$(document).on("click", ".sus-delete-others-signup", function () {
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-signup-id');
-		//GLOBAL_confirmHandlerReference = $(this).attr('data-for-opening-id');
+		GLOBAL_confirmHandlerReference = $(this).attr('data-for-opening-id');
 		var params = {
 			title: "Delete Signup",
 			message: "Really delete <strong>" + $(this).attr('data-for-signup-name') + "'s</strong> signup for:<br /><strong>&quot;" + $(this).attr('data-for-sheet-name') + "&quot;</strong>?",
@@ -36,7 +36,8 @@ $(document).ready(function () {
 			class: "btn btn-danger",
 			url: "../ajax_actions/ajax_actions.php",
 			ajax_action: "delete-others-signup",
-			ajax_id: GLOBAL_confirmHandlerData
+			ajax_id: GLOBAL_confirmHandlerData,
+			opening_id: GLOBAL_confirmHandlerReference
 		};
 		showConfirmBox(params);
 	});
