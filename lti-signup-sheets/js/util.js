@@ -133,15 +133,15 @@ function updateDOM(action, ret, data) {
 			dfnUtil_setTransientAlert('success', 'Saved');
 
 			// check to see if this the last opening on this date
-			var countRemainingSignups = $('.list-my-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
+			var countRemainingSignups = $('.list-my-opening-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
 
 			if (countRemainingSignups == 0) {
 				// this is the last signup on this opening: remove the list container from DOM
-				$('#tabMySignups .list-my-signup-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
+				$('#tabMySignups .list-my-opening-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
 			}
 			else {
 				// additional signups still exist on this opening: remove single signup from DOM
-				$('#tabMySignups .list-my-signup-id-' + GLOBAL_confirmHandlerData).remove();
+				$('#tabMySignups .list-my-opening-id-' + GLOBAL_confirmHandlerData).remove();
 			}
 
 			// check if none exist, then restore default text
@@ -151,8 +151,7 @@ function updateDOM(action, ret, data) {
 		}
 		else {
 			// error message
-			// TODO - change this to utilize dfnUtil_setTransientAlert()?
-			$("#btn-remove-my-signup-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+			dfnUtil_setTransientAlert('error', 'Failed: No matching record found in database.');
 		}
 	}
 	else if (action == 'delete-others-signup') {
@@ -162,6 +161,9 @@ function updateDOM(action, ret, data) {
 
 			// check to see if this the last opening on this date
 			var countRemainingSignups = $('.list-others-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
+
+// HACK. REDO BETTER
+			$("#tabMySignups .list-my-opening-id-" + GLOBAL_confirmHandlerData).parent('.opening-list-for-date').remove();
 
 			if (countRemainingSignups == 0) {
 				// this is the last signup on this either this opening or this date: remove the list container from DOM
@@ -186,8 +188,7 @@ function updateDOM(action, ret, data) {
 		}
 		else {
 			// error message
-			// TODO - change this to utilize dfnUtil_setTransientAlert()?
-			$("#btn-remove-others-signup-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+			dfnUtil_setTransientAlert('error', 'Failed: No matching record found in database.');
 		}
 	}
 	else if (action == 'delete-signup-from-edit-opening-modal') {

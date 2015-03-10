@@ -264,11 +264,14 @@
 
 			// create hash of opening_id's
 			$openingIDs = Db_Linked::arrayOfAttrValues($my_signups_ary, 'opening_id');
+
 			// get openings (using hash of IDs)
 			$openings_ary = SUS_Opening::getAllFromDb(['opening_id' => $openingIDs], $this->dbConnection);
 
 			// get sheets (using hash of IDs)
-			$sheetIDs   = Db_Linked::arrayOfAttrValues($openings_ary, 'sheet_id');
+			$sheetIDs = Db_Linked::arrayOfAttrValues($openings_ary, 'sheet_id');
+
+			// get sheets (using hash of IDs)
 			$sheets_ary = SUS_Sheet::getAllFromDb(['sheet_id' => $sheetIDs], $this->dbConnection);
 			//util_prePrintR($sheets_ary);
 
@@ -288,7 +291,8 @@
 				$signup_id = 0;
 				foreach ($my_signups_ary as $signup) {
 					if ($signup->opening_id == $opening->opening_id) {
-						$signup_id = $signup->signup_id;
+						$signup_id         = $signup->signup_id;
+						$signup_created_at = $signup->created_at;
 					}
 				}
 
@@ -311,6 +315,7 @@
 						'opening_location'    => $opening->location,
 						'opening_name'        => $opening->name,
 						'signup_id'           => $signup_id,
+						'signup_created_at'   => $signup_created_at,
 						'sheet_name'          => $sheet_name
 					)
 				);
