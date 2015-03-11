@@ -123,7 +123,7 @@ wms bootstrap-calendar-master extensions
 	color: #ff0000;
 }
 
-.sus-delete-signup, .sus-delete-my-signup, .sus-delete-others-signup {
+.sus-delete-signup {
 	margin-right: 5px;
 	padding: 0px 3px;
 	border: none;
@@ -131,7 +131,7 @@ wms bootstrap-calendar-master extensions
 	color: #ff0000;
 }
 
-.sus-delete-signup:hover, .sus-delete-my-signup:hover, .sus-delete-others-signup:hover {
+.sus-delete-signup:hover {
 	background-color: #F7A9AD;
 	color: #ff0000;
 }
@@ -265,29 +265,29 @@ span[data-cal-date] {
 /* openings list styles */
 /*=======================================*/
 
-#openings-list-container, #my-signups-list-container, #others-signups-list-container {
+#openings-list-container, #container-my-signups, #container-others-signups {
 	margin-top: -20px;
 	max-height: 591px;
 	overflow-y: scroll;
 	position: relative;
 }
 
-#openings-list-container .opening-list-for-date, #my-signups-list-container .opening-list-for-date, #others-signups-list-container .opening-list-for-date {
+#openings-list-container .opening-list-for-date, #container-my-signups .opening-list-for-date, #container-others-signups .opening-list-for-date {
 	padding: 0 0 6px 10px;
 	margin: 0 !important;
 }
 
-#openings-list-container .in-the-past, #my-signups-list-container .in-the-past, #others-signups-list-container .in-the-past {
+#openings-list-container .in-the-past, #container-my-signups .in-the-past, #container-others-signups .in-the-past {
 	background-color: #ddd;
 	/*border: 1px solid #fff;*/
 }
 
-#openings-list-container .in-the-present, #my-signups-list-container .in-the-present, #others-signups-list-container .in-the-present {
+#openings-list-container .in-the-present, #container-my-signups .in-the-present, #container-others-signups .in-the-present {
 	background-color: #f9fffb;
 	border: 1px solid #999;
 }
 
-#openings-list-container .in-the-future, #my-signups-list-container .in-the-future, #others-signups-list-container .in-the-future {
+#openings-list-container .in-the-future, #container-my-signups .in-the-future, #container-others-signups .in-the-future {
 	background-color: #f9fbff;
 	/*border: 1px solid #fff;*/
 }

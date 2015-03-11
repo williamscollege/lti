@@ -307,6 +307,7 @@
 				array_push($trimmed_array,
 					array(
 						'opening_id'          => $opening->opening_id,
+						'sheet_id'            => $opening->sheet_id,
 						'begin_datetime'      => $opening->begin_datetime,
 						'end_datetime'        => $opening->end_datetime,
 						'current_signups'     => $countSignupsPerOpening[$opening->opening_id],
@@ -415,6 +416,7 @@
 				if (isset($countSignupsPerOpening[$opening->opening_id])) {
 					$trimmed_array[] = array(
 						'opening_id'          => $opening->opening_id,
+						'sheet_id'            => $opening->sheet_id,
 						'begin_datetime'      => $opening->begin_datetime,
 						'end_datetime'        => $opening->end_datetime,
 						'current_signups'     => $countSignupsPerOpening[$opening->opening_id],

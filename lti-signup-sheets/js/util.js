@@ -21,7 +21,7 @@ $(document).ready(function () {
 
 // BootBox jQuery confirm box (helper function)
 function showConfirmBox(ary) {
-	console.dir(ary);
+	// console.dir(ary);
 	bootbox.dialog({
 		title: ary['title'],
 		message: ary['message'],
@@ -76,7 +76,7 @@ function showConfirmBox(ary) {
 GLOBAL_util_showConfirmBox = showConfirmBox;
 
 function updateDOM(action, ret, data) {
-	console.dir(action);
+	// console.dir(action);
 	if (action == 'delete-sheetgroup') {
 		if (ret) {
 			// show status
@@ -127,64 +127,62 @@ function updateDOM(action, ret, data) {
 			$(".list-opening-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
 		}
 	}
-	else if (action == 'delete-my-signup') {
+	else if (action == 'delete-signup') {
 		if (ret) {
 			// show status
 			dfnUtil_setTransientAlert('success', 'Saved');
 
-			// check to see if this the last opening on this date
-			var countRemainingSignups = $('.list-my-opening-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
+			// count remaining signups within this opening
+			var countMySignupsRemaining = $('#tabMySignups .list-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
+			var countOthersSignupsRemaining = $('#tabOthersSignups .list-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
+			// console.log('countMySignupsRemaining = ' + countMySignupsRemaining + ', countOthersSignupsRemaining = ' + countOthersSignupsRemaining);
 
-			if (countRemainingSignups == 0) {
-				// this is the last signup on this opening: remove the list container from DOM
-				$('#tabMySignups .list-my-opening-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
-			}
-			else {
-				// additional signups still exist on this opening: remove single signup from DOM
-				$('#tabMySignups .list-my-opening-id-' + GLOBAL_confirmHandlerData).remove();
-			}
-
-			// check if none exist, then restore default text
-			if ($('#my-signups-list-container').siblings(".list-signups").length == 0) {
-				$('#my-signups-list-container').html("<div class='bg-warning'>You have not yet signed up for any sheet openings.<br />To sign-up, click on &quot;My Available Openings&quot; (above).</div>");
-			}
-		}
-		else {
-			// error message
-			dfnUtil_setTransientAlert('error', 'Failed: No matching record found in database.');
-		}
-	}
-	else if (action == 'delete-others-signup') {
-		if (ret) {
-			// show status
-			dfnUtil_setTransientAlert('success', 'Saved');
-
-			// check to see if this the last opening on this date
-			var countRemainingSignups = $('.list-others-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
-
-// HACK. REDO BETTER
-			$("#tabMySignups .list-my-opening-id-" + GLOBAL_confirmHandlerData).parent('.opening-list-for-date').remove();
-
-			if (countRemainingSignups == 0) {
-				// this is the last signup on this either this opening or this date: remove the list container from DOM
-				if ($('.list-others-opening-id-' + GLOBAL_confirmHandlerReference).siblings(".list-opening-signups").length == 0) {
-					// this is the last opening on this date: remove the 'opening-list-for-date' from DOM
-					$('.list-others-opening-id-' + GLOBAL_confirmHandlerReference).parent('.opening-list-for-date').remove();
+			// My Signups: determine if signup_id exists in DOM
+			if ($('#tabMySignups .list-signup-id-' + GLOBAL_confirmHandlerData).length > 0) {
+				if (countMySignupsRemaining == 0) {
+					// is this the last opening on this date?
+					if ($('#tabMySignups .list-opening-id-' + GLOBAL_confirmHandlerReference).siblings(".list-openings").length == 0) {
+						// this is the last opening on this date: remove this date from DOM
+						$('#tabMySignups .list-opening-id-' + GLOBAL_confirmHandlerReference).parent('.opening-list-for-date').remove();
+					}
+					else {
+						// this is the last signup on this opening: remove this opening from DOM
+						$('#tabMySignups .list-opening-id-' + GLOBAL_confirmHandlerReference).remove();
+					}
 				}
 				else {
-					// this is the last signup on this opening: remove the list container from DOM
-					$('.list-others-opening-id-' + GLOBAL_confirmHandlerReference).remove();
+					// additional signups still exist on this opening: remove only this signup from DOM
+					$('#tabMySignups .list-signup-id-' + GLOBAL_confirmHandlerData).remove();
 				}
 			}
-			else {
-				// additional signups still exist on this opening: remove single signup from DOM
-				$('.list-others-signup-id-' + GLOBAL_confirmHandlerData).remove();
+
+			// Sign-ups on my Sheets: determine if signup_id exists in DOM
+			if ($('#tabOthersSignups .list-signup-id-' + GLOBAL_confirmHandlerData).length > 0) {
+				if (countOthersSignupsRemaining == 0) {
+					// is this the last opening on this date?
+					if ($('#tabOthersSignups .list-opening-id-' + GLOBAL_confirmHandlerReference).siblings(".list-openings").length == 0) {
+						// this is the last opening on this date: remove this date from DOM
+						$('#tabOthersSignups .list-opening-id-' + GLOBAL_confirmHandlerReference).parent('.opening-list-for-date').remove();
+					}
+					else {
+						// this is the last signup on this opening: remove this opening from DOM
+						$('#tabOthersSignups .list-opening-id-' + GLOBAL_confirmHandlerReference).remove();
+					}
+				}
+				else {
+					// additional signups still exist on this opening: remove only this signup from DOM
+					$('#tabOthersSignups .list-signup-id-' + GLOBAL_confirmHandlerData).remove();
+				}
 			}
 
-			// check if none exist, then restore default text
-			if ($('#others-signups-list-container').find(".list-signups").length == 0) {
-				$('#others-signups-list-container').html("<div class='bg-warning'>No one has signed up on your sheets.</div>");
+			// restore default text if no signups remain in either container
+			if ($('#container-my-signups .list-signups').length == 0) {
+				$('#container-my-signups').html("<div class='bg-warning'>You have not yet signed up for any sheet openings.<br />To sign-up, click on &quot;My Available Openings&quot; (above).</div>");
 			}
+			if ($('#container-others-signups .list-signups').length == 0) {
+				$('#container-others-signups').html("<div class='bg-warning'>No one has signed up on your sheets.</div>");
+			}
+			// console.log('container-my-signups = ' + $('#container-my-signups .list-signups').length + ', container-others-signups = ' + $('#container-others-signups .list-signups').length);
 		}
 		else {
 			// error message

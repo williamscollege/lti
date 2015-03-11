@@ -195,7 +195,7 @@
 		}
 	}
 	//###############################################################
-	elseif ($action == 'delete-signup' || $action == 'delete-signup-from-edit-opening-modal' || $action == 'delete-my-signup' || $action == 'delete-others-signup') {
+	elseif ($action == 'delete-signup' || $action == 'delete-signup-from-edit-opening-modal') {
 		$s = SUS_Signup::getOneFromDb(['signup_id' => $deleteID], $DB);
 
 		if (!$s->matchesDb) {
