@@ -35,6 +35,29 @@ $(document).ready(function () {
 		scrollListToTodayishSignups_02();
 	});
 
+	// Display optional details for openings
+	$("#link_for_opening_details_1").click(function () {
+		if ($("#tabMySignups .toggle_opening_details").hasClass('hidden')) {
+			$("#tabMySignups .toggle_opening_details").removeClass('hidden');//.show();
+			$("#link_for_opening_details_1").text('hide details');
+		}
+		else {
+			$("#tabMySignups .toggle_opening_details").addClass('hidden');//.show();
+			$("#link_for_opening_details_1").text('show details');
+		}
+	});
+
+	$("#link_for_opening_details_2").click(function () {
+		if ($("#tabOthersSignups .toggle_opening_details").hasClass('hidden')) {
+			$("#tabOthersSignups .toggle_opening_details").removeClass('hidden');//.show();
+			$("#link_for_opening_details_2").text('hide details');
+		}
+		else {
+			$("#tabOthersSignups .toggle_opening_details").addClass('hidden');//.show();
+			$("#link_for_opening_details_2").text('show details');
+		}
+	});
+
 
 	// ***************************
 	// helper functions

@@ -298,11 +298,19 @@ span[data-cal-date] {
 }
 
 #scroll-to-todayish-my-signups {
-	margin: -89px 0 0 200px;
+	margin: -80px 0 0 160px;
 }
 
 #scroll-to-todayish-others-signups {
-	margin: -89px 0 0 237px;
+	margin: -80px 0 0 190px;
+}
+
+/*toggle links: show optional details*/
+a#link_for_opening_details_1 {
+	margin: -119px 0 0 250px;
+}
+#link_for_opening_details_2 {
+	margin: -119px 0 0 280px;
 }
 
 /*=======================================

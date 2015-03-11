@@ -24,7 +24,7 @@
 
 	function _renderList_MYSELF($signup) {
 		global $USER;
-		$rendered = "<ul class=\"unstyled small\"><li>";
+		$rendered = "<ul class=\"unstyled small\"><li class=\"toggle_opening_details\">";
 		$rendered .= "<strong>Sheet:</strong> " . $signup['sheet_name'] . "<br />";
 		if ($signup['opening_name'] != '') {
 			$rendered .= "<strong>Opening:</strong> " . $signup['opening_name'] . "<br />";
@@ -58,7 +58,7 @@
 	}
 
 	function _renderList_OTHERS($signup) {
-		$rendered = "<ul class=\"unstyled small\"><li>";
+		$rendered = "<ul class=\"unstyled small\"><li class=\"toggle_opening_details\">";
 		$rendered .= "<strong>Sheet:</strong> <a href=\"sheets_edit_one.php?sheet=" . $signup['sheet_id'] . "\" class=\"\" title=\"Edit sheet\">" . $signup['sheet_name'] . "</a><br />";
 		if ($signup['opening_name'] != '') {
 			$rendered .= "<strong>Opening:</strong> " . $signup['opening_name'] . "<br />";
@@ -128,9 +128,10 @@
 							<div id="boxMySignupsContent" class="tab-content">
 								<!-- Begin: My Signups (Content) -->
 								<div role="tabpanel" id="tabMySignups" class="tab-pane fade active in" aria-labelledby="tabMySignups">
-									<a href="#" id="scroll-to-todayish-my-signups" type="button" class="btn btn-success btn-small" title="scroll to current date">current
+									<a href="#" id="scroll-to-todayish-my-signups" type="button" class="btn btn-success btn-xs" title="scroll to current date">current
 										date</a>
-
+									<!-- TOGGLE LINK: Show optional details -->
+									<a href="#" id="link_for_opening_details_1"  type="button" class="btn btn-info btn-xs" title="toggle optional details">hide details</a>
 									<?php
 										$USER->cacheMySignups();
 										// util_prePrintR($USER->signups_all);
@@ -198,9 +199,10 @@
 							<div id="boxSignupsOnMySheetsContent" class="tab-content">
 								<!--Begin: Signups on my Sheets (Content) -->
 								<div role="tabpanel" id="tabOthersSignups" class="tab-pane fade active in" aria-labelledby="tabOthersSignups">
-									<a href="#" id="scroll-to-todayish-others-signups" type="button" class="btn btn-success btn-small" title="scroll to current date">current
+									<a href="#" id="scroll-to-todayish-others-signups" type="button" class="btn btn-success btn-xs" title="scroll to current date">current
 										date</a>
-
+									<!-- TOGGLE LINK: Show optional details -->
+									<a href="#" id="link_for_opening_details_2"  type="button" class="btn btn-info btn-xs" title="toggle optional details">hide details</a>
 									<?php
 										$USER->cacheSignupsOnMySheets();
 										// util_prePrintR($USER->signups_on_my_sheets);
