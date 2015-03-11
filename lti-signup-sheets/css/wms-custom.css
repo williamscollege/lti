@@ -294,23 +294,23 @@ span[data-cal-date] {
 
 /* button ids: scroll to 'current date' */
 #scroll-to-todayish-openings {
-	margin: -96px 0 0 300px;
+	margin: -94px 0 0 300px;
 }
 
 #scroll-to-todayish-my-signups {
-	margin: -80px 0 0 160px;
+	margin: -81px 0 0 160px;
 }
 
 #scroll-to-todayish-others-signups {
-	margin: -80px 0 0 190px;
+	margin: -81px 0 0 190px;
 }
 
 /*toggle links: show optional details*/
 a#link_for_opening_details_1 {
-	margin: -119px 0 0 250px;
+	margin: -121px 0 0 250px;
 }
 #link_for_opening_details_2 {
-	margin: -119px 0 0 280px;
+	margin: -121px 0 0 280px;
 }
 
 /*=======================================
