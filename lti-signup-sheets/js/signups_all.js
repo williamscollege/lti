@@ -37,23 +37,26 @@ $(document).ready(function () {
 
 	// Display optional details for openings
 	$("#link_for_opening_details_1").click(function () {
-		if ($("#tabMySignups .toggle_opening_details").hasClass('hidden')) {
-			$("#tabMySignups .toggle_opening_details").removeClass('hidden');//.show();
+		// (alternative: instead of using jqueryUI, we could simply use class 'hidden' instead of wmsToggle)
+		if ($("#tabMySignups .toggle_opening_details").hasClass('wmsToggle')) {
+			// $("#tabMySignups .toggle_opening_details").removeClass('hidden');
+			$("#tabMySignups .toggle_opening_details").removeClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
 			$("#link_for_opening_details_1").text('hide details');
 		}
 		else {
-			$("#tabMySignups .toggle_opening_details").addClass('hidden');//.show();
+			// $("#tabMySignups .toggle_opening_details").addClass('hidden');
+			$("#tabMySignups .toggle_opening_details").addClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
 			$("#link_for_opening_details_1").text('show details');
 		}
 	});
 
 	$("#link_for_opening_details_2").click(function () {
-		if ($("#tabOthersSignups .toggle_opening_details").hasClass('hidden')) {
-			$("#tabOthersSignups .toggle_opening_details").removeClass('hidden');//.show();
+		if ($("#tabOthersSignups .toggle_opening_details").hasClass('wmsToggle')) {
+			$("#tabOthersSignups .toggle_opening_details").removeClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
 			$("#link_for_opening_details_2").text('hide details');
 		}
 		else {
-			$("#tabOthersSignups .toggle_opening_details").addClass('hidden');//.show();
+			$("#tabOthersSignups .toggle_opening_details").addClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
 			$("#link_for_opening_details_2").text('show details');
 		}
 	});

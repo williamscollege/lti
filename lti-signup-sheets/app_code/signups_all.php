@@ -132,6 +132,7 @@
 										date</a>
 									<!-- TOGGLE LINK: Show optional details -->
 									<a href="#" id="link_for_opening_details_1"  type="button" class="btn btn-info btn-xs" title="toggle optional details">hide details</a>
+
 									<?php
 										$USER->cacheMySignups();
 										// util_prePrintR($USER->signups_all);
@@ -203,6 +204,7 @@
 										date</a>
 									<!-- TOGGLE LINK: Show optional details -->
 									<a href="#" id="link_for_opening_details_2"  type="button" class="btn btn-info btn-xs" title="toggle optional details">hide details</a>
+
 									<?php
 										$USER->cacheSignupsOnMySheets();
 										// util_prePrintR($USER->signups_on_my_sheets);
