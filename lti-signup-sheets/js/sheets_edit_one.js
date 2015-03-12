@@ -179,7 +179,7 @@ $(document).ready(function () {
 		//console.log('to remote url: '+remoteUrl);
 		//console.dir(params);
 		// show status
-		dfnUtil_setTransientAlert('progress', 'Saving...');
+		susUtil_setTransientAlert('progress', 'Saving...');
 		$.ajax({
 			type: 'GET',
 			url: "../ajax_actions/ajax_actions.php",
@@ -187,7 +187,7 @@ $(document).ready(function () {
 			data: params,
 			dataType: 'json',
 			error: function (req, textStatus, err) {
-				dfnUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
+				susUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
 				//console.dir(req);
 				//console.dir(textStatus);
 				//console.dir(err);
@@ -195,11 +195,11 @@ $(document).ready(function () {
 			success: function (data) {
 				if (data.status == 'success') {
 					// remove element
-					dfnUtil_setTransientAlert('success', 'Saved');
+					susUtil_setTransientAlert('success', 'Saved');
 				}
 				else {
 					// error message
-					dfnUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
+					susUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
 				}
 			}
 			//, complete: function(req,textStatus) {

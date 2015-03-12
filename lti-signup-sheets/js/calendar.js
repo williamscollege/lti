@@ -51,7 +51,7 @@ $(document).ready(function () {
 			doAction = 'sheet-opening-signup-delete-me';
 		}
 
-		dfnUtil_setTransientAlert('progress', 'Saving...');
+		susUtil_setTransientAlert('progress', 'Saving...');
 
 		$.ajax({
 			type: 'GET',
@@ -63,18 +63,18 @@ $(document).ready(function () {
 			},
 			dataType: 'json',
 			error: function (req, textStatus, err) {
-				dfnUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
+				susUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
 			},
 			success: function (data) {
 				if (data.status == 'success') {
-					dfnUtil_setTransientAlert('success', 'Saved');
+					susUtil_setTransientAlert('success', 'Saved');
 					//$("#alert_usage_quotas").replaceWith(data['html_render_usage_alert']);
 					//$("#contents_usage_quotas").replaceWith(data['html_render_usage_details']);
 					//$(".list-opening-id-" + openingID).replaceWith(data['html_render_opening']);
 					updateUserSignupUsageDetailsInDOM(data['html_render_usage_alert'], data['html_render_usage_details'], data['html_render_opening'],openingID);
 				}
 				else {
-					dfnUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
+					susUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
 				}
 			}
 		});
@@ -160,7 +160,7 @@ $(document).ready(function () {
 		};
 
 		// show status
-		// dfnUtil_setTransientAlert('progress', 'Saving...');
+		// susUtil_setTransientAlert('progress', 'Saving...');
 		$.ajax({
 			type: 'GET',
 			url: "../ajax_actions/ajax_actions.php",
@@ -168,16 +168,16 @@ $(document).ready(function () {
 			data: params,
 			dataType: 'json',
 			error: function (req, textStatus, err) {
-				dfnUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
+				susUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
 			},
 			success: function (data) {
 				if (data.status == 'success') {
-					//dfnUtil_setTransientAlert('success', 'Saved');
+					//susUtil_setTransientAlert('success', 'Saved');
 					$("#signupListing UL").html(data.html_output);
 					$(".list-opening-id-" + params['ajaxVal_Edit_ID']).replaceWith(data['html_render_opening']);
 				}
 				else {
-					dfnUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
+					susUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
 				}
 			}
 			//, complete: function(req,textStatus) {
@@ -449,7 +449,7 @@ $(document).ready(function () {
 		};
 
 		// show status
-		dfnUtil_setTransientAlert('progress', 'Saving...');
+		susUtil_setTransientAlert('progress', 'Saving...');
 		$.ajax({
 			type: 'GET',
 			url: "../ajax_actions/ajax_actions.php",
@@ -457,18 +457,18 @@ $(document).ready(function () {
 			data: params,
 			dataType: 'json',
 			error: function (req, textStatus, err) {
-				dfnUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
+				susUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
 			},
 			success: function (data) {
 				if (data.status == 'success') {
-					dfnUtil_setTransientAlert('success', 'Saved');
+					susUtil_setTransientAlert('success', 'Saved');
 					GLOBAL_calendar_fetchSignupsforOpening(params['ajaxVal_Edit_ID']);
 					// hide input fields (and reset them)
 					$("#btnEditOpeningCancelSignup").click();
 				}
 				else {
 					// error message
-					dfnUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
+					susUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
 				}
 			}
 			//, complete: function(req,textStatus) {

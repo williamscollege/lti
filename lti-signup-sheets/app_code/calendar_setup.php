@@ -50,7 +50,7 @@
 		<link rel="stylesheet" href="<?php echo APP_ROOT_PATH; ?>/js/bootstrap-calendar-master/css/calendar.css">
 		<!-- TODO - underscore is CDN. download for more direct service? -->
 		<!-- TODO - PUT THIS IN CONFIG FILE FOR easier maintenance and updating -->
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
 		<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/bootstrap-calendar-master/js/calendar.js"></script>
 		<script src="<?php echo APP_ROOT_PATH; ?>/js/calendar.js"></script>
 	<?php

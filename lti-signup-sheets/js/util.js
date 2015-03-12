@@ -31,7 +31,7 @@ function showConfirmBox(ary) {
 				className: ary['class'],
 				callback: function () {
 					// show status
-					dfnUtil_setTransientAlert('progress', 'Saving...');
+					susUtil_setTransientAlert('progress', 'Saving...');
 					$.ajax({
 						type: 'GET',
 						url: ary['url'],
@@ -80,7 +80,7 @@ function updateDOM(action, ret, data) {
 	if (action == 'delete-sheetgroup') {
 		if (ret) {
 			// show status
-			dfnUtil_setTransientAlert('success', 'Saved');
+			susUtil_setTransientAlert('success', 'Saved');
 			// remove element
 			$('#btn-edit-sheetgroup-id-' + GLOBAL_confirmHandlerData).closest('TABLE').remove();
 		}
@@ -92,7 +92,7 @@ function updateDOM(action, ret, data) {
 	else if (action == 'delete-sheet') {
 		if (ret) {
 			// show status
-			dfnUtil_setTransientAlert('success', 'Saved');
+			susUtil_setTransientAlert('success', 'Saved');
 			// remove element
 			$('#btn-edit-sheet-id-' + GLOBAL_confirmHandlerData).closest('TR').remove();
 		}
@@ -104,7 +104,7 @@ function updateDOM(action, ret, data) {
 	else if (action == 'delete-opening') {
 		if (ret) {
 			// show status
-			dfnUtil_setTransientAlert('success', 'Saved');
+			susUtil_setTransientAlert('success', 'Saved');
 
 			// check to see if this the last opening on this date
 			var countRemainingOpenings = $('.list-opening-id-' + GLOBAL_confirmHandlerData).siblings(".list-opening").length;
@@ -130,7 +130,7 @@ function updateDOM(action, ret, data) {
 	else if (action == 'delete-signup') {
 		if (ret) {
 			// show status
-			dfnUtil_setTransientAlert('success', 'Saved');
+			susUtil_setTransientAlert('success', 'Saved');
 
 			// count remaining signups within this opening
 			var countMySignupsRemaining = $('#tabMySignups .list-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
@@ -186,13 +186,13 @@ function updateDOM(action, ret, data) {
 		}
 		else {
 			// error message
-			dfnUtil_setTransientAlert('error', 'Failed: No matching record found in database.');
+			susUtil_setTransientAlert('error', 'Failed: No matching record found in database.');
 		}
 	}
 	else if (action == 'delete-signup-from-edit-opening-modal') {
 		if (ret) {
 			// show status
-			dfnUtil_setTransientAlert('success', 'Saved');
+			susUtil_setTransientAlert('success', 'Saved');
 			// console.dir(data);
 			// fetch count of remaining LI elements within this UL
 			GLOBAL_calendar_fetchSignupsforOpening(GLOBAL_confirmHandlerReference);
@@ -210,7 +210,7 @@ function appRootPath() {
 
 
 // REQUIRES: a div of id page_alert_div
-function dfnUtil_setTransientAlert(alertType, alertMessage) {
+function susUtil_setTransientAlert(alertType, alertMessage) {
 
 	// show the pre-existing alert button in DOM
 	$('#page_alert_div').show();
@@ -238,16 +238,6 @@ function dfnUtil_setTransientAlert(alertType, alertMessage) {
 	//.queue(function() {
 	//		$( this ).toggleClass( "red" ).dequeue();
 	//	})
-}
-
-
-function dfnUtil_launchConfirm(msg, handler) {
-	$('#confirmModal .modal-body').html(msg);
-//    $('#confirmModal').modal({show:'true', backdrop:'static'});
-	$('#confirmModal').modal({show: 'true'});
-	$('#confirmModal #confirm-yes').focus();
-	$('#confirm-yes').off("click");
-	$('#confirm-yes').click(handler);
 }
 
 

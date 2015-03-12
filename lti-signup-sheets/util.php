@@ -78,7 +78,7 @@
 	// this makes it much harder to spoof sessions
 	function util_doIdSecurityCheck() {
 		if ((!isset($_COOKIE[APP_STR . '_id'])) || (!$_COOKIE[APP_STR . '_id'])) {
-			if (isset($_SESSION[APP_STR . '_id']) && ($_SESSION[APP_STR . '_id'])) { // the session has an digitalfieldnotebooks id, but there was no cookie set for it - highly suspicious
+			if (isset($_SESSION[APP_STR . '_id']) && ($_SESSION[APP_STR . '_id'])) { // the session has an APP_STR id, but there was no cookie set for it - highly suspicious
 				// TODO: log and/or message?
 				util_redirectToAppHomeWithPrejudice();
 			}
