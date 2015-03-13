@@ -216,18 +216,18 @@
 		# SUS_Opening: 'opening_id', 'created_at', 'updated_at', 'flag_delete', 'sheet_id', 'opening_group_id', 'name', 'description',
 		# 'max_signups', 'admin_comment', 'begin_datetime', 'end_datetime', 'location'
 		$addTestSql  = "INSERT INTO " . SUS_Opening::$dbTable . " VALUES
-			(701, NOW(), NOW(), 0, 601, 0, 'Opening 701', 'Opening 701, Sheet 601, Sheetgroup 501', 8 , 'opening admin comment', TIMESTAMPADD(hour,4,NOW()),  TIMESTAMPADD(hour,5,NOW()), 'opening location at CET 256'),
-			(702, NOW(), NOW(), 0, 601, 0, 'Opening 702', 'Opening 702, Sheet 601, Sheetgroup 501', 2 , 'no comment', TIMESTAMPADD(day,-4,NOW()),  TIMESTAMPADD(hour,25,NOW()), 'CET MakerSpace'),
-			(703, NOW(), NOW(), 0, 602, 0, 'Opening 703', 'Opening 703, Sheet 602, Sheetgroup 501', 2 , 'no comment', TIMESTAMPADD(week,1,NOW()),  TIMESTAMPADD(hour,1,NOW()), ''),
-			(704, NOW(), NOW(), 0, 602, 0, 'Opening 704', 'Opening 704, Sheet 602, Sheetgroup 501', 2 , '', TIMESTAMPADD(hour,1,NOW()),  TIMESTAMPADD(hour,2,NOW()), ''),
-			(705, NOW(), NOW(), 0, 603, 0, 'Opening 705', 'Opening 705, Sheet 603, Sheetgroup 501', 4 , '', TIMESTAMPADD(hour,22,NOW()),  TIMESTAMPADD(hour,23,NOW()), ''),
-			(706, NOW(), NOW(), 0, 604, 0, 'Opening 706', 'Opening 706, Sheet 604, Sheetgroup 502', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), 'Faculty House'),
-			(707, NOW(), NOW(), 1, 605, 0, 'Opening 707', 'Opening 707, Sheet 605, Sheetgroup 503', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), 'Purple Pub'),
-			(708, NOW(), NOW(), 1, 606, 0, 'Opening 708', 'Opening 708, Sheet 606, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), ''),
-			(709, NOW(), NOW(), 0, 607, 0, 'Opening 709', 'Opening 709, Sheet 607, Sheetgroup 504', 1 , '', TIMESTAMPADD(day,2,NOW()),  TIMESTAMPADD(hour,1,NOW()), ''),
-			(710, NOW(), NOW(), 0, 607, 0, 'Opening 710', 'Opening 710, Sheet 607, Sheetgroup 504', 1 , '', TIMESTAMPADD(day,4,NOW()),  TIMESTAMPADD(hour,1,NOW()), ''),
-			(711, NOW(), NOW(), 0, 608, 0, 'Opening 711', 'Opening 711, Sheet 608, Sheetgroup 504', 1 , '', NOW(),  TIMESTAMPADD(hour,1,NOW()), ''),
-			(712, NOW(), NOW(), 0, 610, 0, 'Opening 712', 'Opening 712, Sheet 610, Sheetgroup 510', 1 , '', TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(hour,1,NOW()), '')
+			(701, NOW(), NOW(), 0, 601, 0, 'Opening 701', 'Opening 701, Sheet 601, Sheetgroup 501', 8 , TIMESTAMPADD(hour,4,NOW()),  TIMESTAMPADD(hour,5,NOW()), 'opening location at CET 256', 'opening admin comment'),
+			(702, NOW(), NOW(), 0, 601, 0, 'Opening 702', 'Opening 702, Sheet 601, Sheetgroup 501', 2 , TIMESTAMPADD(day,-4,NOW()),  TIMESTAMPADD(hour,25,NOW()), 'CET MakerSpace', 'no comment'),
+			(703, NOW(), NOW(), 0, 602, 0, 'Opening 703', 'Opening 703, Sheet 602, Sheetgroup 501', 2 , TIMESTAMPADD(week,1,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', 'no comment'),
+			(704, NOW(), NOW(), 0, 602, 0, 'Opening 704', 'Opening 704, Sheet 602, Sheetgroup 501', 2 , TIMESTAMPADD(hour,1,NOW()),  TIMESTAMPADD(hour,2,NOW()), '', ''),
+			(705, NOW(), NOW(), 0, 603, 0, 'Opening 705', 'Opening 705, Sheet 603, Sheetgroup 501', 4 , TIMESTAMPADD(hour,22,NOW()),  TIMESTAMPADD(hour,23,NOW()), '', ''),
+			(706, NOW(), NOW(), 0, 604, 0, 'Opening 706', 'Opening 706, Sheet 604, Sheetgroup 502', 1 , NOW(),  TIMESTAMPADD(hour,1,NOW()), 'Faculty House', ''),
+			(707, NOW(), NOW(), 1, 605, 0, 'Opening 707', 'Opening 707, Sheet 605, Sheetgroup 503', 1 , NOW(),  TIMESTAMPADD(hour,1,NOW()), 'Purple Pub', ''),
+			(708, NOW(), NOW(), 1, 606, 0, 'Opening 708', 'Opening 708, Sheet 606, Sheetgroup 504', 1 , NOW(),  TIMESTAMPADD(hour,1,NOW()), '', ''),
+			(709, NOW(), NOW(), 0, 607, 0, 'Opening 709', 'Opening 709, Sheet 607, Sheetgroup 504', 1 , TIMESTAMPADD(day,2,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', ''),
+			(710, NOW(), NOW(), 0, 607, 0, 'Opening 710', 'Opening 710, Sheet 607, Sheetgroup 504', 1 , TIMESTAMPADD(day,4,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', ''),
+			(711, NOW(), NOW(), 0, 608, 0, 'Opening 711', 'Opening 711, Sheet 608, Sheetgroup 504', 1 , NOW(),  TIMESTAMPADD(hour,1,NOW()), '', ''),
+			(712, NOW(), NOW(), 0, 610, 0, 'Opening 712', 'Opening 712, Sheet 610, Sheetgroup 510', 1 , TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', '')
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
