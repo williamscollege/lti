@@ -199,6 +199,7 @@
 											<label for="selectMaxTotalSignups" class="control-label">Maximum Signups</label>
 
 											<div class="form-inline small">
+												<div class="well well-sm"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i> Group settings affect all sheets in this group. Sheet settings affect only that sheet.</div>
 												Users can have
 												<select id="selectMaxTotalSignups" name="selectMaxTotalSignups" class="form-control input-sm">
 													<?php

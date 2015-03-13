@@ -39,7 +39,6 @@
 
 		echo "<div id=\"parent_container\">"; // start: div#parent_container
 		echo "<h3>" . $pageTitle . "</h3>";
-		echo "<p>Sheets are collected into groups (ordered alphabetically). Group settings affect all sheets in the group. Sheet settings affect only that sheet.</p>";
 
 
 		// ***************************
@@ -173,6 +172,7 @@
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12">
+							<div class="well well-sm"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i> Group settings affect all sheets in this group. Sheet settings affect only that sheet.</div>
 							Users can have at most
 							<select id="ajaxSheetgroupMaxTotal" name="ajaxSheetgroupMaxTotal" class="">
 								<option selected="selected" value="0">unlimited</option>
