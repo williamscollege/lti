@@ -231,6 +231,7 @@ $(document).ready(function () {
 		if (closestFutureOpeningsList.length) {
 			$('#openings-list-container').scrollTop($('#openings-list-container').scrollTop() + $(closestFutureOpeningsList).position().top);
 		}
+		$(closestFutureOpeningsList).first().effect("highlight", {color: '#C9E5C9'}, 300);
 	}
 
 });

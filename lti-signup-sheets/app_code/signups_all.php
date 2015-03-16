@@ -4,115 +4,116 @@
 	require_once('../app_head.php');
 
 
-	function _renderHtml_START($signup) {
-		$rendered = '<div class="list-openings list-opening-id-' . $signup['opening_id'] . '">';
-		$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($signup['begin_datetime']), "h:i A") . ' - ' . date_format(new DateTime($signup['end_datetime']), "h:i A") . '</span>';
+	if ($IS_AUTHENTICATED) {
 
-		$customColorClass = " text-danger ";
-		if ($signup['current_signups'] < $signup['opening_max_signups']) {
-			$customColorClass = " text-success ";
-		}
+		// TODO: render fxns okay here? not sure how to incorporate these into a class?
+		function _renderHtml_START($signup) {
+			$rendered = '<div class="list-openings list-opening-id-' . $signup['opening_id'] . '">';
+			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($signup['begin_datetime']), "h:i A") . ' - ' . date_format(new DateTime($signup['end_datetime']), "h:i A") . '</span>';
 
-		$max_signups = $signup['opening_max_signups'];
-		if ($max_signups == -1) {
-			$max_signups = "*";
-		}
-		$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . $signup['current_signups'] . '/' . $max_signups . ')</strong></span><br />';
-
-		return $rendered;
-	}
-
-	function _renderList_MYSELF($signup) {
-		global $USER;
-		$rendered = "<ul class=\"unstyled small\"><li class=\"toggle_opening_details\">";
-		$rendered .= "<strong>Sheet:</strong> " . $signup['sheet_name'] . "<br />";
-		if ($signup['opening_name'] != '') {
-			$rendered .= "<strong>Opening:</strong> " . $signup['opening_name'] . "<br />";
-		}
-		if ($signup['opening_description'] != '') {
-			$rendered .= "<strong>Description:</strong> " . $signup['opening_description'] . "<br />";
-		}
-		if ($signup['opening_location'] != '') {
-			$rendered .= "<strong>Location:</strong> " . $signup['opening_location'] . "<br />";
-		}
-		$rendered .= '</li>';
-
-		$rendered .= '<li>';
-		//util_prePrintR($signup);
-		$rendered .= "<ul class=\"wms-signups\">";
-		$rendered .= "<li class=\"list-signups list-signup-id-" . $signup['signup_id'] . "\">" . $USER->first_name . ' ' . $USER->last_name;
-		$rendered .= " <span class=\"small\">(" . $USER->username . ", " . util_datetimeFormatted($signup['signup_created_at']) . ")</span> ";
-		$rendered .= "<span class=\"\">";
-		if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
-			// TODO - add functionality to link click through
-			$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $signup['opening_id'] . "\" data-for-signup-id=\"" . $signup['signup_id'] . "\" data-for-signup-name=\"" . $USER->first_name . ' ' . $USER->last_name . "\" data-for-sheet-name=\"" . $signup['sheet_name'] . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
-		}
-		$rendered .= "</span>";
-		$rendered .= "</li>";
-		$rendered .= "</ul>";
-		$rendered .= "</li>";
-		$rendered .= "</ul>";
-		$rendered .= "</div>";
-
-		return $rendered;
-	}
-
-	function _renderList_OTHERS($signup) {
-		$rendered = "<ul class=\"unstyled small\"><li class=\"toggle_opening_details\">";
-		$rendered .= "<strong>Sheet:</strong> <a href=\"sheets_edit_one.php?sheet=" . $signup['sheet_id'] . "\" class=\"\" title=\"Edit sheet\">" . $signup['sheet_name'] . "</a><br />";
-		if ($signup['opening_name'] != '') {
-			$rendered .= "<strong>Opening:</strong> " . $signup['opening_name'] . "<br />";
-		}
-		if ($signup['opening_description'] != '') {
-			$rendered .= "<strong>Description:</strong> " . $signup['opening_description'] . "<br />";
-		}
-		if ($signup['opening_location'] != '') {
-			$rendered .= "<strong>Location:</strong> " . $signup['opening_location'] . "<br />";
-		}
-		$rendered .= '</li>';
-
-		if ($signup['array_signups']) {
-			//util_prePrintR($signup);
-			$rendered .= '<li>';
-			$signedupUsers = $signup['array_signups'];
-			$rendered .= "<ul class=\"wms-signups\">";
-			// begin: loop through signed up users
-			foreach ($signedupUsers as $u) {
-				$rendered .= "<li class=\"list-signups list-signup-id-" . $u['signup_id'] . "\">" . $u['full_name'];
-				$rendered .= " <span class=\"small\">(" . $u['username'] . ", " . util_datetimeFormatted($u['signup_created_at']) . ")</span> ";
-				$rendered .= "<span class=\"\">";
-				if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
-					// TODO - add functionality to link click through
-					$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $signup['opening_id'] . "\" data-for-signup-id=\"" . $u['signup_id'] . "\" data-for-signup-name=\"" . $u['full_name'] . "\" data-for-sheet-name=\"" . $signup['sheet_name'] . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
-				}
-				$rendered .= "</span>";
-				$rendered .= "</li>";
+			$customColorClass = " text-danger ";
+			if ($signup['current_signups'] < $signup['opening_max_signups']) {
+				$customColorClass = " text-success ";
 			}
-			// end: loop through signed up users
+
+			$max_signups = $signup['opening_max_signups'];
+			if ($max_signups == -1) {
+				$max_signups = "*";
+			}
+			$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . $signup['current_signups'] . '/' . $max_signups . ')</strong></span><br />';
+
+			return $rendered;
+		}
+
+		function _renderList_MYSELF($signup) {
+			global $USER;
+			$rendered = "<ul class=\"unstyled small\"><li class=\"toggle_opening_details\">";
+			$rendered .= "<strong>Sheet:</strong> " . $signup['sheet_name'] . "<br />";
+			if ($signup['opening_name'] != '') {
+				$rendered .= "<strong>Opening:</strong> " . $signup['opening_name'] . "<br />";
+			}
+			if ($signup['opening_description'] != '') {
+				$rendered .= "<strong>Description:</strong> " . $signup['opening_description'] . "<br />";
+			}
+			if ($signup['opening_location'] != '') {
+				$rendered .= "<strong>Location:</strong> " . $signup['opening_location'] . "<br />";
+			}
+			$rendered .= '</li>';
+
+			$rendered .= '<li>';
+			//util_prePrintR($signup);
+			$rendered .= "<ul class=\"wms-signups\">";
+			$rendered .= "<li class=\"list-signups list-signup-id-" . $signup['signup_id'] . "\">" . $USER->first_name . ' ' . $USER->last_name;
+			$rendered .= " <span class=\"small\">(" . $USER->username . ", " . util_datetimeFormatted($signup['signup_created_at']) . ")</span> ";
+			$rendered .= "<span class=\"\">";
+			if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
+				// TODO - add functionality to link click through
+				$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $signup['opening_id'] . "\" data-for-signup-id=\"" . $signup['signup_id'] . "\" data-for-signup-name=\"" . $USER->first_name . ' ' . $USER->last_name . "\" data-for-sheet-name=\"" . $signup['sheet_name'] . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
+			}
+			$rendered .= "</span>";
+			$rendered .= "</li>";
 			$rendered .= "</ul>";
 			$rendered .= "</li>";
+			$rendered .= "</ul>";
+			$rendered .= "</div>";
+
+			return $rendered;
 		}
-		$rendered .= "</ul>";
-		$rendered .= "</div>";
-		return $rendered;
-	}
 
-	function renderAsHtmlForMySignups($signup) {
-		$rendered = _renderHtml_START($signup);
-		$rendered .= _renderList_MYSELF($signup);
-		return $rendered;
-	}
+		function _renderList_OTHERS($signup) {
+			$rendered = "<ul class=\"unstyled small\"><li class=\"toggle_opening_details\">";
+			$rendered .= "<strong>Sheet:</strong> <a href=\"sheets_edit_one.php?sheet=" . $signup['sheet_id'] . "\" class=\"\" title=\"Edit sheet\">" . $signup['sheet_name'] . "</a><br />";
+			if ($signup['opening_name'] != '') {
+				$rendered .= "<strong>Opening:</strong> " . $signup['opening_name'] . "<br />";
+			}
+			if ($signup['opening_description'] != '') {
+				$rendered .= "<strong>Description:</strong> " . $signup['opening_description'] . "<br />";
+			}
+			if ($signup['opening_location'] != '') {
+				$rendered .= "<strong>Location:</strong> " . $signup['opening_location'] . "<br />";
+			}
+			$rendered .= '</li>';
 
-	function renderAsHtmlForOthersSignups($signup) {
-		$rendered = _renderHtml_START($signup);
-		$rendered .= _renderList_OTHERS($signup);
-		return $rendered;
-	}
+			if ($signup['array_signups']) {
+				//util_prePrintR($signup);
+				$rendered .= '<li>';
+				$signedupUsers = $signup['array_signups'];
+				$rendered .= "<ul class=\"wms-signups\">";
+				// begin: loop through signed up users
+				foreach ($signedupUsers as $u) {
+					$rendered .= "<li class=\"list-signups list-signup-id-" . $u['signup_id'] . "\">" . $u['full_name'];
+					$rendered .= " <span class=\"small\">(" . $u['username'] . ", " . util_datetimeFormatted($u['signup_created_at']) . ")</span> ";
+					$rendered .= "<span class=\"\">";
+					if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
+						// TODO - add functionality to link click through
+						$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $signup['opening_id'] . "\" data-for-signup-id=\"" . $u['signup_id'] . "\" data-for-signup-name=\"" . $u['full_name'] . "\" data-for-sheet-name=\"" . $signup['sheet_name'] . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
+					}
+					$rendered .= "</span>";
+					$rendered .= "</li>";
+				}
+				// end: loop through signed up users
+				$rendered .= "</ul>";
+				$rendered .= "</li>";
+			}
+			$rendered .= "</ul>";
+			$rendered .= "</div>";
+			return $rendered;
+		}
+
+		function renderAsHtmlForMySignups($signup) {
+			$rendered = _renderHtml_START($signup);
+			$rendered .= _renderList_MYSELF($signup);
+			return $rendered;
+		}
+
+		function renderAsHtmlForOthersSignups($signup) {
+			$rendered = _renderHtml_START($signup);
+			$rendered .= _renderList_OTHERS($signup);
+			return $rendered;
+		}
 
 
-	if ($IS_AUTHENTICATED) {
-		echo "<div id=\"parent_container\">"; // begin: div#parent_container
-		echo "<h3>" . $pageTitle . "</h3>";
+		echo "<div id=\"content_container\">"; // begin: div#content_container
 		?>
 		<div class="container">
 			<div class="row">
@@ -122,16 +123,20 @@
 						<div class="tab-container" role="tabpanel" data-example-id="set1">
 							<ul id="boxMySignupsHeader" class="nav nav-tabs" role="tablist">
 								<li role="presentation" class="active">
-									<strong>I've Signed up for...</strong>
+									<strong>My Signups</strong>
 								</li>
 							</ul>
 							<div id="boxMySignupsContent" class="tab-content">
 								<!-- Begin: My Signups (Content) -->
-								<div role="tabpanel" id="tabMySignups" class="tab-pane fade active in" aria-labelledby="tabMySignups">
-									<a href="#" id="scroll-to-todayish-my-signups" type="button" class="btn btn-success btn-xs" title="scroll to current date">current
-										date</a>
+								<div id="dkctest">
+									<a href="#" id="scroll-to-todayish-my-signups" type="button" class="btn btn-success btn-xs" title="go to next">go to next</a>
 									<!-- TOGGLE LINK: Show optional details -->
-									<a href="#" id="link_for_opening_details_1"  type="button" class="btn btn-info btn-xs" title="toggle optional details">hide details</a>
+									<a href="#" id="link_for_opening_details_1" type="button" class="btn btn-info btn-xs" title="toggle optional details">hide
+										details</a>
+								</div>
+
+								<div role="tabpanel" id="tabMySignups" class="tab-pane fade active in" aria-labelledby="tabMySignups">
+
 
 									<?php
 										$USER->cacheMySignups();
@@ -194,16 +199,18 @@
 						<div class="tab-container" role="tabpanel" data-example-id="set2">
 							<ul id="boxSignupsOnMySheetsHeader" class="nav nav-tabs" role="tablist">
 								<li role="presentation" class="active">
-									<strong>Sign-ups on my Sheets...</strong>
+									<strong>On My Sheets</strong>
 								</li>
 							</ul>
 							<div id="boxSignupsOnMySheetsContent" class="tab-content">
 								<!--Begin: Signups on my Sheets (Content) -->
-								<div role="tabpanel" id="tabOthersSignups" class="tab-pane fade active in" aria-labelledby="tabOthersSignups">
-									<a href="#" id="scroll-to-todayish-others-signups" type="button" class="btn btn-success btn-xs" title="scroll to current date">current
-										date</a>
+								<div id="dkctest2">
+									<a href="#" id="scroll-to-todayish-others-signups" type="button" class="btn btn-success btn-xs" title="go to next">go to next</a>
 									<!-- TOGGLE LINK: Show optional details -->
-									<a href="#" id="link_for_opening_details_2"  type="button" class="btn btn-info btn-xs" title="toggle optional details">hide details</a>
+									<a href="#" id="link_for_opening_details_2" type="button" class="btn btn-info btn-xs" title="toggle optional details">hide
+										details</a>
+								</div>
+								<div role="tabpanel" id="tabOthersSignups" class="tab-pane fade active in" aria-labelledby="tabOthersSignups">
 
 									<?php
 										$USER->cacheSignupsOnMySheets();
@@ -265,8 +272,11 @@
 		</div> <!-- end: div.container -->
 
 		<?php
-		echo "</div>"; // end: div#parent_container
-
+		echo "</div>"; // end: div#content_container
+	}
+	else {
+		# redirect to home
+		header('Location: ' . APP_ROOT_PATH . '/index.php');
 	}
 
 	require_once('../foot.php');

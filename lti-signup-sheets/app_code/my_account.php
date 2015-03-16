@@ -6,7 +6,7 @@
 
 	if ($IS_AUTHENTICATED) {
 
-		echo "<div id=\"parent_container\">"; // start: div#parent_container
+		echo "<div id=\"content_container\">"; // start: div#content_container
 		echo "<h3>" . $pageTitle . "</h3>";
 		echo "<p>&nbsp;</p>";
 
@@ -16,6 +16,10 @@
 
 		echo "TBD: Hook for preference settings...";
 
+	}
+	else {
+		# redirect to home
+		header('Location: ' . APP_ROOT_PATH . '/index.php');
 	}
 
 	require_once('../foot.php');

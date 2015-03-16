@@ -37,9 +37,7 @@
 		<?php
 		}
 
-		echo "<div id=\"parent_container\">"; // start: div#parent_container
-		echo "<h3>" . $pageTitle . "</h3>";
-
+		echo "<div id=\"content_container\">"; // start: div#content_container
 
 		// ***************************
 		// fetch managed sheets
@@ -135,7 +133,11 @@
 		echo "<a href=\"#modalSheetgroup\" class=\"btn btn-primary sus-add-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" title=\"Add group\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new group</a>";
 		echo "</p>";
 
-		echo "</div>"; // end: div#parent_container
+		echo "</div>"; // end: div#content_container
+	}
+	else {
+		# redirect to home
+		header('Location: ' . APP_ROOT_PATH . '/index.php');
 	}
 
 	require_once('../foot.php');
@@ -172,7 +174,9 @@
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12">
-							<div class="well well-sm"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i> Group settings affect all sheets in this group. Sheet settings affect only that sheet.</div>
+							<div class="well well-sm"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i> Group settings affect all
+								sheets in this group. Sheet settings affect only that sheet.
+							</div>
 							Users can have at most
 							<select id="ajaxSheetgroupMaxTotal" name="ajaxSheetgroupMaxTotal" class="">
 								<option selected="selected" value="0">unlimited</option>

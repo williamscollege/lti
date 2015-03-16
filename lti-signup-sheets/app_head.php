@@ -44,43 +44,45 @@
 		?>
 		<div class="collapse navbar-collapse" id="wms-primary-navbar-1">
 			<ul class="nav navbar-nav">
-				<li class="<?php if ((strpos($http_referer, "sheet_openings_all.php")) || (strpos($http_referer, "sheet_openings_signup.php"))) {
-					echo "active";
-				} ?>">
-					<a id="link-available-openings" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheet_openings_all.php">
-						<i class="glyphicon glyphicon-pencil"></i>
-						<b><?php echo ucfirst(util_lang('sheet_openings_all')); ?></b>
-					</a>
-				</li>
-				<li class="<?php if (strpos($http_referer, "signups_all.php")) {
-					echo "active";
-				} ?>">
-					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/signups_all.php">
-						<i class="glyphicon glyphicon-list-alt"></i>
-						<b><?php echo ucfirst(util_lang('signups_all')); ?></b>
-					</a>
-				</li>
-				<li class="<?php if ((strpos($http_referer, "sheets_all.php")) || (strpos($http_referer, "sheets_edit_one.php"))) {
-					echo "active";
-				} ?>">
-					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheets_all.php">
-						<i class="glyphicon glyphicon-wrench"></i>
-						<b><?php echo ucfirst(util_lang('sheets_all')); ?></b>
-					</a>
-				</li>
-				<li class="<?php if (strpos($http_referer, "help.php")) {
-					echo "active";
-				} ?>">
-					<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/help.php">
-						<i class="glyphicon glyphicon-question-sign"></i>
-						<b><?php echo ucfirst(util_lang('help')); ?></b>
-					</a>
-				</li>
-
 				<?php
 					if ($IS_AUTHENTICATED) {
-						# is system admin?
+						?>
+						<li class="<?php if (strpos($http_referer, "signups_all.php")) {
+							echo "active";
+						} ?>">
+							<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/signups_all.php">
+								<i class="glyphicon glyphicon-list-alt"></i>
+								<b><?php echo ucfirst(util_lang('signups_all')); ?></b>
+							</a>
+						</li>
+						<li class="<?php if ((strpos($http_referer, "sheet_openings_all.php")) || (strpos($http_referer, "sheet_openings_signup.php"))) {
+							echo "active";
+						} ?>">
+							<a id="link-available-openings" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheet_openings_all.php">
+								<i class="glyphicon glyphicon-pencil"></i>
+								<b><?php echo ucfirst(util_lang('sheet_openings_all')); ?></b>
+							</a>
+						</li>
+						<li class="<?php if ((strpos($http_referer, "sheets_all.php")) || (strpos($http_referer, "sheets_edit_one.php"))) {
+							echo "active";
+						} ?>">
+							<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheets_all.php">
+								<i class="glyphicon glyphicon-wrench"></i>
+								<b><?php echo ucfirst(util_lang('sheets_all')); ?></b>
+							</a>
+						</li>
+						<li class="<?php if (strpos($http_referer, "help.php")) {
+							echo "active";
+						} ?>">
+							<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/help.php">
+								<i class="glyphicon glyphicon-question-sign"></i>
+								<b><?php echo ucfirst(util_lang('help')); ?></b>
+							</a>
+						</li>
+
+						<?php
 						if ($USER->flag_is_system_admin) {
+							// show special admin-only stuff
 							?>
 							<li class="">
 								<a href="#" class="">Admin Only</a>
@@ -117,6 +119,7 @@
 
 <div class="container"> <!--div closed in the footer-->
 	<?php
+		// TODO - is this even used?
 		// display screen message?
 		if (isset($_REQUEST["success"])) {
 			util_displayMessage('success', $_REQUEST["success"]);
@@ -128,4 +131,4 @@
 			util_displayMessage('info', $_REQUEST["info"]);
 		}
 	?>
-</body>
+

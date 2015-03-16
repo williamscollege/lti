@@ -11,7 +11,7 @@ var GLOBAL_util_showConfirmBox = null; // hack to enable passing of JS values be
 // ***************************
 $(document).ready(function () {
 	// create container to hold ajax messages; hide #page_alert_div
-	$('#parent_container').prepend('<div id="page_alert_div" class="alert alert-dismissible small" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span id="page_alert_message"></span></div>');
+	$('#content_container').prepend('<div id="page_alert_div" class="alert alert-dismissible small" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span id="page_alert_message"></span></div>');
 	$('#page_alert_div').hide();
 });
 

@@ -3,8 +3,8 @@
 <footer>
 	<!-- Link to trigger modal -->
 	<p class="pull-right">
-		<a href="#modalHelp" data-toggle="modal" data-target="#modalHelp"><i class="glyphicon glyphicon-question-sign"></i> Need Help</a>?
-		Williams College, <?php echo date('Y'); ?>
+		<a href="#modalHelp" data-toggle="modal" data-target="#modalHelp"><i class="glyphicon glyphicon-question-sign"></i> Help</a>
+		&copy; <?php echo INSTITUTION_PRETTY_NAME . "," . date('Y'); ?>
 	</p>
 
 	<!-- Modal -->

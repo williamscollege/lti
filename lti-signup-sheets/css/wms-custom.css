@@ -298,19 +298,24 @@ span[data-cal-date] {
 }
 
 #scroll-to-todayish-my-signups {
-	margin: -81px 0 0 160px;
+	margin: -81px 0 0 120px;
 }
 
-#scroll-to-todayish-others-signups {
-	margin: -81px 0 0 190px;
-}
+/*#scroll-to-todayish-others-signups {
+	margin: -81px 0 0 150px;
+}*/
 
 /*toggle links: show optional details*/
 a#link_for_opening_details_1 {
-	margin: -121px 0 0 250px;
+	margin: -121px 0 0 200px;
 }
-#link_for_opening_details_2 {
-	margin: -121px 0 0 280px;
+/*#link_for_opening_details_2 {*/
+#dkctest2 {
+	position: relative;
+	top: -25px;
+	left: 150px;
+/*	float: left;
+	margin: -121px 0 0 230px;*/
 }
 
 /*=======================================

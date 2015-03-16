@@ -85,6 +85,7 @@ $(document).ready(function () {
 		if (closestFutureOpeningsList.length) {
 			$('#container-my-signups').scrollTop($('#container-my-signups').scrollTop() + $(closestFutureOpeningsList).position().top);
 		}
+		$(closestFutureOpeningsList).first().effect("highlight", {color: '#C9E5C9'}, 300);
 	}
 
 	function scrollListToTodayishSignups_02() {
@@ -106,6 +107,7 @@ $(document).ready(function () {
 		if (closestFutureOpeningsList.length) {
 			$('#container-others-signups').scrollTop($('#container-others-signups').scrollTop() + $(closestFutureOpeningsList).position().top);
 		}
+		$(closestFutureOpeningsList).first().effect("highlight", {color: '#C9E5C9'}, 300);
 	}
 
 });

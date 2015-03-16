@@ -7,28 +7,21 @@
 	if ($IS_AUTHENTICATED) {
 		// SECTION: authenticated
 
-		echo '<br /><h3>You are Authenticated.</h3><br />';
-
-		# is system admin?
-		if ($USER->flag_is_system_admin) {
-			// TODO: show special admin-only stuff
-			echo '<br />You are a system admin.<br />';
-		}
-
-		util_prePrintR($USER);
-		# TODO - if authenticated, then redirect to available openings?
+		# redirect to signups
+		header('Location: ' . APP_ROOT_PATH . '/app_code/signups_all.php');
 
 	}
 	else {
 		?>
-		<div class="hero-unit">
+		<div id="content_container"> <!-- start: div#content_container -->
+
 			<h1><?php echo LANG_APP_NAME; ?></h1>
 			<br />
 
 			<p><?php echo util_lang('app_short_description'); ?></p>
 
 			<p><?php echo util_lang('app_sign_in_msg'); ?></p>
-		</div>
+		</div> <!-- end: div#content_container -->
 	<?php
 	}
 

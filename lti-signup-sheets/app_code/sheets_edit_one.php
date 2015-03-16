@@ -1,8 +1,8 @@
 <?php
 	require_once('../app_setup.php');
+
 	$sheetIsNew          = FALSE;
 	$sheetIsDataIncoming = TRUE;
-
 	if ((isset($_REQUEST["sheet"])) && ($_REQUEST["sheet"] == "new")) {
 		$pageTitle           = ucfirst(util_lang('add_sheet'));
 		$sheetIsNew          = TRUE;
@@ -20,33 +20,33 @@
 	require_once('../app_head.php');
 
 
-	#------------------------------------------------#
-	# begin security: check if access allowed to this page
-	#------------------------------------------------#
-	if (!$sheetIsNew) {
-		// this is not a 'new' sheet
-		if (!$sheetIsDataIncoming) {
-			// this is not a 'postback'
-			if ((!isset($_REQUEST["sheet"])) || (!is_numeric($_REQUEST["sheet"]))) {
-				// error: querystring 'sheet' must exist and be an integer
-				util_displayMessage('error', 'Invalid or missing sheet request');
-				require_once('../foot.php');
-				exit;
-			}
-			elseif (!$USER->isUserAllowedToManageSheet($_REQUEST["sheet"])) {
-				// error: must have access to manage this sheet
-				util_displayMessage('error', 'You do not have permission to edit this sheet');
-				require_once('../foot.php');
-				exit;
+	if ($IS_AUTHENTICATED) {
+
+		#------------------------------------------------#
+		# begin security: check if access allowed to this page
+		#------------------------------------------------#
+		if (!$sheetIsNew) {
+			// this is not a 'new' sheet
+			if (!$sheetIsDataIncoming) {
+				// this is not a 'postback'
+				if ((!isset($_REQUEST["sheet"])) || (!is_numeric($_REQUEST["sheet"]))) {
+					// error: querystring 'sheet' must exist and be an integer
+					util_displayMessage('error', 'Invalid or missing sheet request');
+					require_once('../foot.php');
+					exit;
+				}
+				elseif (!$USER->isUserAllowedToManageSheet($_REQUEST["sheet"])) {
+					// error: must have access to manage this sheet
+					util_displayMessage('error', 'You do not have permission to edit this sheet');
+					require_once('../foot.php');
+					exit;
+				}
 			}
 		}
-	}
 
-	// load calendar setup functions
-	require_once('calendar_setup.php');
+		// load calendar setup functions
+		require_once('calendar_setup.php');
 
-
-	if ($IS_AUTHENTICATED) {
 
 		$s = FALSE;
 
@@ -97,8 +97,8 @@
 		}
 
 
-		echo "<div id=\"parent_container\">"; // begin: div#parent_container
-		echo "<h3>" . $pageTitle . "</h3>";
+		echo "<div id=\"content_container\">"; // begin: div#content_container
+		echo "<h5 class=\"small\"><a href=\"sheets_all.php\" title=\"" . ucfirst(util_lang('sheets_all')) . "\">" . ucfirst(util_lang('sheets_all')) . "</a>&nbsp;&gt;&nbsp;" . $s->name . "</h5>";
 
 
 		// ***************************
@@ -199,7 +199,9 @@
 											<label for="selectMaxTotalSignups" class="control-label">Maximum Signups</label>
 
 											<div class="form-inline small">
-												<div class="well well-sm"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i> Group settings affect all sheets in this group. Sheet settings affect only that sheet.</div>
+												<div class="well well-sm"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i> Group
+													settings affect all sheets in this group. Sheet settings affect only that sheet.
+												</div>
 												Users can have
 												<select id="selectMaxTotalSignups" name="selectMaxTotalSignups" class="form-control input-sm">
 													<?php
@@ -488,8 +490,7 @@
 
 										<!--Begin: List Openings -->
 										<div role="tabpanel" id="tabOpeningsList" class="tab-pane fade" aria-labelledby="tabOpeningsList">
-											<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-xs" title="scroll to current date">current
-												date</a>
+											<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-xs" title="go to next">go to next</a>
 
 											<div id="openings-list-container">
 
@@ -546,11 +547,15 @@
 		</div> <!-- end: div.container -->
 
 		<?php
-		echo "</div>"; // end: div#parent_container
+		echo "</div>"; // end: div#content_container
 
 		// Bootstrap Modal: Calendar Create Opening, Calendar Edit Opening
 		renderCalendarModalCreateOpening($s->sheet_id);
 		renderCalendarModalEditOpening($s->sheet_id);
+	}
+	else {
+		# redirect to home
+		header('Location: ' . APP_ROOT_PATH . '/index.php');
 	}
 
 	require_once('../foot.php');

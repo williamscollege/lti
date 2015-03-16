@@ -6,6 +6,7 @@
 # ---------------------------
 
 define('INSTITUTION_DOMAIN', 'institution.edu');
+define('INSTITUTION_PRETTY_NAME', 'ACME College');
 define('LMS_DOMAIN', 'canvas.institution.edu');
 
 # Used for session security

@@ -3,57 +3,60 @@
 	$pageTitle = ucfirst(util_lang('sheet_openings_signup'));
 	require_once('../app_head.php');
 
-	#------------------------------------------------#
-	# begin security: check if access allowed to this page
-	#------------------------------------------------#
-	if ((!isset($_REQUEST["sheet"])) || (!is_numeric($_REQUEST["sheet"])) || ($_REQUEST["sheet"] <= 0)) {
-		// error: querystring 'sheet' must exist and be an integer
-		util_displayMessage('error', 'Invalid or missing sheet request');
-		require_once('../foot.php');
-		exit;
-	}
-	elseif (!$USER->isUserAllowedToAccessSheet($_REQUEST["sheet"])) {
-		// error: must have access to signup on this sheet
-		util_displayMessage('error', 'You do not have permission to signup on this sheet');
-		require_once('../foot.php');
-		exit;
-	}
-
-
-	// load calendar setup functions
-	require_once('calendar_setup.php');
-
-
-	// ***************************
-	// fetch sheet
-	// ***************************
-	$s = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
-
-	if (!$s->matchesDb) {
-		util_displayMessage('error', 'No matching sheet record found in database');
-		require_once('../foot.php');
-		exit;
-	}
-
-	$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $s->sheetgroup_id], $DB);
-	if (!$sg->matchesDb) {
-		util_displayMessage('error', 'No matching sheetgroup record found in database');
-		require_once('../foot.php');
-		exit;
-	}
-
 
 	if ($IS_AUTHENTICATED) {
-		echo "<div id=\"parent_container\">"; // start: div#parent_container
+
+		#------------------------------------------------#
+		# begin security: check if access allowed to this page
+		#------------------------------------------------#
+		if ((!isset($_REQUEST["sheet"])) || (!is_numeric($_REQUEST["sheet"])) || ($_REQUEST["sheet"] <= 0)) {
+			// error: querystring 'sheet' must exist and be an integer
+			util_displayMessage('error', 'Invalid or missing sheet request');
+			require_once('../foot.php');
+			exit;
+		}
+		elseif (!$USER->isUserAllowedToAccessSheet($_REQUEST["sheet"])) {
+			// error: must have access to signup on this sheet
+			util_displayMessage('error', 'You do not have permission to signup on this sheet');
+			require_once('../foot.php');
+			exit;
+		}
+
+
+		// load calendar setup functions
+		require_once('calendar_setup.php');
+
+
+		// ***************************
+		// fetch sheet
+		// ***************************
+		$s = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
+
+		if (!$s->matchesDb) {
+			util_displayMessage('error', 'No matching sheet record found in database');
+			require_once('../foot.php');
+			exit;
+		}
+
+		$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $s->sheetgroup_id], $DB);
+		if (!$sg->matchesDb) {
+			util_displayMessage('error', 'No matching sheetgroup record found in database');
+			require_once('../foot.php');
+			exit;
+		}
+
+		echo "<div id=\"content_container\">"; // start: div#content_container
+		echo "<h5 class=\"small\"><a href=\"sheet_openings_all.php\" title=\"" . ucfirst(util_lang('sheet_openings_all')) . "\">" . ucfirst(util_lang('sheet_openings_all')) . "</a>&nbsp;&gt;&nbsp;" . $s->name . "</h5>";
 		?>
 		<div class="container">
 			<div class="row">
 				<!-- Basic Sheet Info / Sheet Access -->
 				<div class="col-sm-5">
 					<div id="sus_signup_on_sheet_info" class="small">
-						<h3><?php echo $s->name; ?></h3>
+						<p>&nbsp;</p>
 
 						<p>
+							<?php echo $s->name; ?><br />
 							<?php echo $s->description; ?><br />
 							Group: <?php echo $sg->name; ?>
 						</p>
@@ -123,7 +126,7 @@
 
 								<!--Start: List Openings -->
 								<div role="tabpanel" class="tab-pane fade" id="tabOpeningsList" aria-labelledby="tabOpeningsList">
-									<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-small" title="scroll to current date">current date</a>
+									<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-small" title="go to next">go to next</a>
 
 									<div id="openings-list-container">
 
@@ -193,7 +196,11 @@
 		</div> <!-- end: div.container -->
 
 		<?php
-		echo "</div>"; // end: div#parent_container
+		echo "</div>"; // end: div#content_container
+	}
+	else {
+		# redirect to home
+		header('Location: ' . APP_ROOT_PATH . '/index.php');
 	}
 
 	require_once('../foot.php');

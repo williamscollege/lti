@@ -5,9 +5,8 @@
 
 
 	if ($IS_AUTHENTICATED) {
-		echo "<div id=\"parent_container\">"; // start: div#parent_container
-		echo "<h3>" . $pageTitle . "</h3>";
-		echo "<p>&nbsp;</p>";
+
+		echo "<div id=\"content_container\">"; // start: div#content_container
 
 		// ***************************
 		// fetch available openings
@@ -161,7 +160,11 @@
 			}
 		}
 
-		echo "</div>"; // end: div#parent_container
+		echo "</div>"; // end: div#content_container
+	}
+	else {
+		# redirect to home
+		header('Location: ' . APP_ROOT_PATH . '/index.php');
 	}
 
 	require_once('../foot.php');

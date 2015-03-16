@@ -5,8 +5,8 @@
 
 
 	if ($IS_AUTHENTICATED) {
-		echo "<div>";
-		echo "<h3>" . $pageTitle . "</h3>";
+
+		echo "<div id=\"content_container\">"; // begin: div#content_container
 		echo "<p>NOTE: Below is temporary text from Moodle help file</p>";
 
 		// NOTE: START placeholder text from old Moodle Signup Sheets help file
@@ -20,8 +20,8 @@
 					<li><a href="#SignupSheets-AvailableOpenings">Available Openings</a></li>
 					<li><a href="#SignupSheets-MySignups">My Signups</a>
 						<ul>
-							<li><a href="#SignupSheets-IveSignedUpFor">I've Signed Up For</a></li>
-							<li><a href="#SignupSheets-SignupsForMe">Sign-ups For Me</a></li>
+							<li><a href="#SignupSheets-IveSignedUpFor">My Signups</a></li>
+							<li><a href="#SignupSheets-SignupsForMe">On My Sheets</a></li>
 						</ul>
 					</li>
 					<li><a href="#SignupSheets-SheetAdmin">Sheet Admin</a>
@@ -133,7 +133,7 @@
 			Openings
 			page (see above), and to sign someone else up for an opening on a sheet you own or manage you must go to the Sheet Admin page (see below).</p>
 
-		<h3><a name="SignupSheets-IveSignedUpFor"></a>I've Signed Up For</h3>
+		<h3><a name="SignupSheets-IveSignedUpFor"></a>My Signups</h3>
 
 		<img src="../img/help/13_antd_my_signups_I.png" alt="annotated screenshot of my signups" />
 
@@ -398,9 +398,11 @@
 		<img src="../img/help/44_antd_edit_opening_email.png" alt="annotated screenshot of message sending" />
 		<?php
 		// NOTE: END placeholder text from old Moodle Signup Sheets help file
-
-		// end parent div
-		echo "</div>";
+		echo "</div>"; // end: div#content_container
+	}
+	else {
+		# redirect to home
+		header('Location: ' . APP_ROOT_PATH . '/index.php');
 	}
 
 	require_once('../foot.php');
