@@ -56,9 +56,9 @@
 						<p>&nbsp;</p>
 
 						<p>
-							<?php echo $s->name; ?><br />
-							<?php echo $s->description; ?><br />
-							Group: <?php echo $sg->name; ?>
+						<h5><strong><?php echo $s->name; ?></strong></h5>
+						<?php echo $s->description; ?><br />
+						Group: <?php echo $sg->name; ?>
 						</p>
 
 						<!-- alert will display only if a limit has been reached (meaning: no more signups are available) -->
@@ -71,9 +71,7 @@
 						<div id="toggle_usage_quotas" class="hidden">
 							<?php echo $s->renderAsHtmlUsageDetails(); ?>
 						</div>
-						<p><a id="link_for_openings_instructions" class="hidden" href="#" title="Instructions">Show instructions</a></p>
 					</div>
-
 
 					<div class="row">
 						<div class="tab-container" role="tabpanel" data-example-id="set1">
@@ -126,7 +124,7 @@
 
 								<!--Start: List Openings -->
 								<div role="tabpanel" class="tab-pane fade" id="tabOpeningsList" aria-labelledby="tabOpeningsList">
-									<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-small" title="go to next">go to next</a>
+									<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-xs" title="go to next">go to next</a>
 
 									<div id="openings-list-container">
 

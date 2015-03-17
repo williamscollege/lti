@@ -11,9 +11,9 @@
 			$rendered = '<div class="list-openings list-opening-id-' . $signup['opening_id'] . '">';
 			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($signup['begin_datetime']), "h:i A") . ' - ' . date_format(new DateTime($signup['end_datetime']), "h:i A") . '</span>';
 
-			$customColorClass = " text-danger ";
-			if ($signup['current_signups'] < $signup['opening_max_signups']) {
-				$customColorClass = " text-success ";
+			$customColorClass = "text-danger";
+			if ($signup['current_signups'] < $signup['opening_max_signups'] || $signup['opening_max_signups'] == -1 ) {
+				$customColorClass = "text-success";
 			}
 
 			$max_signups = $signup['opening_max_signups'];
@@ -27,8 +27,8 @@
 
 		function _renderList_MYSELF($signup) {
 			global $USER;
-			$rendered = "<ul class=\"unstyled small\"><li class=\"toggle_opening_details\">";
-			$rendered .= "<strong>Sheet:</strong> " . $signup['sheet_name'] . "<br />";
+			$rendered = "<div class=\"small wms_indent\"><strong>Sheet:</strong> " . $signup['sheet_name'] . "<br /></div>";
+			$rendered .= "<ul class=\"unstyled small\"><li class=\"toggle_opening_details\">";
 			if ($signup['opening_name'] != '') {
 				$rendered .= "<strong>Opening:</strong> " . $signup['opening_name'] . "<br />";
 			}
@@ -44,7 +44,6 @@
 			//util_prePrintR($signup);
 			$rendered .= "<ul class=\"wms-signups\">";
 			$rendered .= "<li class=\"list-signups list-signup-id-" . $signup['signup_id'] . "\">" . $USER->first_name . ' ' . $USER->last_name;
-			$rendered .= " <span class=\"small\">(" . $USER->username . ", " . util_datetimeFormatted($signup['signup_created_at']) . ")</span> ";
 			$rendered .= "<span class=\"\">";
 			if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
 				// TODO - add functionality to link click through
@@ -61,8 +60,8 @@
 		}
 
 		function _renderList_OTHERS($signup) {
-			$rendered = "<ul class=\"unstyled small\"><li class=\"toggle_opening_details\">";
-			$rendered .= "<strong>Sheet:</strong> <a href=\"sheets_edit_one.php?sheet=" . $signup['sheet_id'] . "\" class=\"\" title=\"Edit sheet\">" . $signup['sheet_name'] . "</a><br />";
+			$rendered = "<div class=\"small wms_indent\"><strong>Sheet:</strong> <a href=\"sheets_edit_one.php?sheet=" . $signup['sheet_id'] . "\" class=\"\" title=\"Edit sheet\">" . $signup['sheet_name'] . "</a><br /></div>";
+			$rendered .= "<ul class=\"unstyled small\"><li class=\"toggle_opening_details\">";
 			if ($signup['opening_name'] != '') {
 				$rendered .= "<strong>Opening:</strong> " . $signup['opening_name'] . "<br />";
 			}
@@ -82,7 +81,7 @@
 				// begin: loop through signed up users
 				foreach ($signedupUsers as $u) {
 					$rendered .= "<li class=\"list-signups list-signup-id-" . $u['signup_id'] . "\">" . $u['full_name'];
-					$rendered .= " <span class=\"small\">(" . $u['username'] . ", " . util_datetimeFormatted($u['signup_created_at']) . ")</span> ";
+					$rendered .= " <span class=\"toggle_opening_details small\">(" . $u['username'] . ", " . util_datetimeFormatted($u['signup_created_at']) . ")</span> ";
 					$rendered .= "<span class=\"\">";
 					if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
 						// TODO - add functionality to link click through
@@ -128,16 +127,14 @@
 							</ul>
 							<div id="boxMySignupsContent" class="tab-content">
 								<!-- Begin: My Signups (Content) -->
-								<div id="dkctest">
-									<a href="#" id="scroll-to-todayish-my-signups" type="button" class="btn btn-success btn-xs" title="go to next">go to next</a>
+								<div id="buttons_my_signups">
+									<a href="#" id="scroll-to-todayish-my-signups" type="button" class="btn btn-success btn-xs" title="go to next">go to
+										next</a>&nbsp;&nbsp;&nbsp;
 									<!-- TOGGLE LINK: Show optional details -->
-									<a href="#" id="link_for_opening_details_1" type="button" class="btn btn-info btn-xs" title="toggle optional details">hide
+									<a href="#" id="link_for_opening_details_1" type="button" class="btn btn-info btn-xs" title="toggle details">show
 										details</a>
 								</div>
-
 								<div role="tabpanel" id="tabMySignups" class="tab-pane fade active in" aria-labelledby="tabMySignups">
-
-
 									<?php
 										$USER->cacheMySignups();
 										// util_prePrintR($USER->signups_all);
@@ -204,14 +201,14 @@
 							</ul>
 							<div id="boxSignupsOnMySheetsContent" class="tab-content">
 								<!--Begin: Signups on my Sheets (Content) -->
-								<div id="dkctest2">
-									<a href="#" id="scroll-to-todayish-others-signups" type="button" class="btn btn-success btn-xs" title="go to next">go to next</a>
+								<div id="buttons_on_my_sheets">
+									<a href="#" id="scroll-to-todayish-others-signups" type="button" class="btn btn-success btn-xs" title="go to next">go to
+										next</a>&nbsp;&nbsp;&nbsp;
 									<!-- TOGGLE LINK: Show optional details -->
-									<a href="#" id="link_for_opening_details_2" type="button" class="btn btn-info btn-xs" title="toggle optional details">hide
+									<a href="#" id="link_for_opening_details_2" type="button" class="btn btn-info btn-xs" title="toggle details">show
 										details</a>
 								</div>
 								<div role="tabpanel" id="tabOthersSignups" class="tab-pane fade active in" aria-labelledby="tabOthersSignups">
-
 									<?php
 										$USER->cacheSignupsOnMySheets();
 										// util_prePrintR($USER->signups_on_my_sheets);

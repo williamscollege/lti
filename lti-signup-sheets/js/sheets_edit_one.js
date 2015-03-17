@@ -7,7 +7,9 @@ $(document).ready(function () {
 	// ***************************
 	// For performance reasons, the Tooltip and Popover data-apis are opt-in, meaning you must initialize them yourself.
 	// ***************************
-	$('[data-toggle="popover"]').popover();
+	$(function () {
+		$('[data-toggle="tooltip"]').tooltip()
+	})
 
 
 	// ***************************
@@ -143,7 +145,7 @@ $(document).ready(function () {
 		updateSheetAccess(params);
 	});
 
-	// Display usage details for this group and sheet
+	// display usage details for this group and sheet
 	$("#link_for_usage_quotas").click(function () {
 		if ($("#toggle_usage_quotas").hasClass('hidden')) {
 			$("#toggle_usage_quotas").removeClass('hidden');//.show();
@@ -155,16 +157,17 @@ $(document).ready(function () {
 		}
 	});
 
-	// Display opening signup details (Copy DOM from calendar overlay)
+	// display opening signup details (Copy DOM from calendar overlay)
 	$(".calendar-cell-openings").click(function () {
 		var dataset = $(this).html();
-		$("#link_for_openings_instructions").removeClass('hidden').show();
 		$("#toggle_openings_instructions").hide();
 		$("#display_opening_signup_details").show().html(dataset);
+		// prepend a 'close' button to DOM overlay
+		$("#display_opening_signup_details").prepend('<a href="#" title="close" id="wms_custom_close_x" class="close"><span aria-hidden="true">&times;</span></a>');
 	});
 
-	$("#link_for_openings_instructions").click(function () {
-		$("#link_for_openings_instructions").hide();
+	// close opening signup details (DOM overlay previously copied from calendar)
+	$(document).on('click', '#wms_custom_close_x', function () {
 		$("#toggle_openings_instructions").show();
 		$("#display_opening_signup_details").hide();
 	});

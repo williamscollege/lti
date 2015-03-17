@@ -364,7 +364,9 @@
 
 										<!-- List: These People -->
 										<div class="wms_tiny_break"><br /></div>
-										<span class="small"><strong>These people: Williams username(s)</strong><br /></span>
+										<span class="small"><strong>These people: Williams username(s)</strong>
+											<button type="button" class="btn btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas"><i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
+										</span>
 										<?php
 											// create array of usernames where access type = 'byuser'
 											$byuser_ary = [];
@@ -428,8 +430,11 @@
 										<div class="form-group">
 											<p><strong>Who can manage the sheet</strong></p>
 
-											<div class="wms_tiny_break"><br /></div>
-											<span class="small"><strong>These people: Williams username(s)</strong><br /></span>
+											<!-- List: These People -->
+											<span class="small"><strong>These people: Williams username(s)</strong>
+												<button type="button" class="btn btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas"><i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
+											</span>
+
 											<?php
 												// create array of usernames where access type = 'adminbyuser'
 												$adminbyuser_ary = [];

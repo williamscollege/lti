@@ -28,8 +28,6 @@
 			$other_based_sheets  = [];
 			foreach ($USER->sheet_openings_all as $sheet) {
 
-				// TODO - remove this 2 commented lines -- popovers (bootstrap: must manually initialize popovers in JS file)
-				// $base_sheet_link = "<a href=\"#\" tabindex=\"0\" class=\"btn btn-link\" role=\"button\" data-toggle=\"popover\" data-placement=\"right\" data-trigger=\"hover\" data-html=\"true\" data-content=\"<strong>Description:</strong> " . $sheet['s_description'] . "\">" . $sheet['s_name'] . "</a>";
 				$base_sheet_link = "<a href=\"sheet_openings_signup.php?sheet=" . $sheet['s_id'] . "\"  class=\"\" title=\"Signup for Openings\">" . $sheet['s_name'] . "</a> (" . $sheet['s_description'] . ")";
 
 				// NOTE: the A) through G) leads on the keys are used to sort. The display trims the first 3 chars from the key.

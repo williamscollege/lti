@@ -37,9 +37,13 @@ div.wms_tiny_break {
 	margin-bottom: 0 !important;
 }
 
-.wms-indent{
-	margin-left: 25px;
+.wms_indent {
+	margin-left: 40px;
 }
+.wms_indent_tiny {
+	margin-left: 10px !important;
+}
+
 
 /*=======================================
 wms bootstrap-calendar-master extensions
@@ -53,7 +57,6 @@ wms bootstrap-calendar-master extensions
 
 .calendar-cell-openings {
 	clear: both;
-	/*float: right;*/
 	font-size: 11px;
 	background-color: transparent;
 	position: relative;
@@ -90,14 +93,12 @@ wms bootstrap-calendar-master extensions
 }
 
 .calendar-cell-openings-container h4 {
-	/*display: none;*/
 	padding-bottom: 10px;
 }
 
 .opening-space-usage {
 	margin-left: 3px;
 	margin-right: 3px;
-	color: #008000;
 }
 
 /* opening control links (edit, delete, add signup) */
@@ -167,6 +168,13 @@ wms bootstrap-calendar-master extensions
 	color: #ff0000;
 }
 
+/* close x for DOM overlay */
+#wms_custom_close_x{
+	position: relative;
+	top: -16px;
+	right: -12px;
+}
+
 /* classes for renderAsHtmlShortWithLimitedControls */
 .sus-add-me-to-opening {
 }
@@ -197,7 +205,7 @@ wms bootstrap-calendar-master extensions
 	width: 26px !important;
 	min-width: 26px !important;
 	max-width: 26px !important;
-	margin: 2px 0px !important; /* top/bottom, right/left*/
+	margin: 2px 0px !important;
 }
 
 /*=======================================
@@ -279,7 +287,6 @@ span[data-cal-date] {
 
 #openings-list-container .in-the-past, #container-my-signups .in-the-past, #container-others-signups .in-the-past {
 	background-color: #ddd;
-	/*border: 1px solid #fff;*/
 }
 
 #openings-list-container .in-the-present, #container-my-signups .in-the-present, #container-others-signups .in-the-present {
@@ -289,38 +296,40 @@ span[data-cal-date] {
 
 #openings-list-container .in-the-future, #container-my-signups .in-the-future, #container-others-signups .in-the-future {
 	background-color: #f9fbff;
-	/*border: 1px solid #fff;*/
 }
 
-/* button ids: scroll to 'current date' */
+/* placement for button near 'list openings': scroll to 'current date' */
 #scroll-to-todayish-openings {
-	margin: -94px 0 0 300px;
+	margin: -94px 0 0 290px;
 }
 
-#scroll-to-todayish-my-signups {
-	margin: -81px 0 0 120px;
-}
-
-/*#scroll-to-todayish-others-signups {
-	margin: -81px 0 0 150px;
-}*/
-
-/*toggle links: show optional details*/
-a#link_for_opening_details_1 {
-	margin: -121px 0 0 200px;
-}
-/*#link_for_opening_details_2 {*/
-#dkctest2 {
+/* placement for button 'my signups': go to next, show optional details*/
+#buttons_my_signups {
 	position: relative;
 	top: -25px;
-	left: 150px;
-/*	float: left;
-	margin: -121px 0 0 230px;*/
+	left: 120px;
+}
+
+/* placement for button 'on my sheets': go to next, show optional details*/
+#buttons_on_my_sheets {
+	position: relative;
+	top: -25px;
+	left: 134px;
 }
 
 /*=======================================
 Bootstrap.css tweaks are below
 ==========================================*/
+
+/* change default muddy red to bright red */
+.text-danger {
+	color: #F70000;
+}
+
+/* change default muddy greem to bright green */
+.text-success {
+	color: #008000;
+}
 
 /*validation.js hack: to eliminate extra space after dynamic validation occurs */
 div.form-group.success {
@@ -338,6 +347,7 @@ UL.wms-signups {
 	padding-left: 25px;
 	display: inline-block;
 }
+
 UL.wms-signups LI {
 	list-style-type: disc;
 }
@@ -396,8 +406,6 @@ LABEL.error {
 	color: #ff0000;
 	padding: 2px 8px;
 	margin-top: 2px;
-	/*padding: 0px !important;*/
-	/*margin: 0px !important;*/
 }
 
 .text-warning {

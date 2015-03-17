@@ -1,12 +1,6 @@
 $(document).ready(function () {
 
 	// ***************************
-	// For performance reasons, the Tooltip and Popover data-apis are opt-in, meaning you must initialize them yourself.
-	// ***************************
-	$('[data-toggle="popover"]').popover();
-
-
-	// ***************************
 	// Listeners
 	// ***************************
 
@@ -35,29 +29,34 @@ $(document).ready(function () {
 		scrollListToTodayishSignups_02();
 	});
 
+	// set initial condition: hide details
+	$("#tabMySignups .toggle_opening_details").hide();
+	$("#tabOthersSignups .toggle_opening_details").hide();
+
 	// Display optional details for openings
 	$("#link_for_opening_details_1").click(function () {
-		// (alternative: instead of using jqueryUI, we could simply use class 'hidden' instead of wmsToggle)
 		if ($("#tabMySignups .toggle_opening_details").hasClass('wmsToggle')) {
-			// $("#tabMySignups .toggle_opening_details").removeClass('hidden');
+			// hide details
 			$("#tabMySignups .toggle_opening_details").removeClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
-			$("#link_for_opening_details_1").text('hide details');
+			$("#link_for_opening_details_1").text('show details');
 		}
 		else {
-			// $("#tabMySignups .toggle_opening_details").addClass('hidden');
+			// show details
 			$("#tabMySignups .toggle_opening_details").addClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
-			$("#link_for_opening_details_1").text('show details');
+			$("#link_for_opening_details_1").text('hide details');
 		}
 	});
 
 	$("#link_for_opening_details_2").click(function () {
 		if ($("#tabOthersSignups .toggle_opening_details").hasClass('wmsToggle')) {
+			// hide details
 			$("#tabOthersSignups .toggle_opening_details").removeClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
-			$("#link_for_opening_details_2").text('hide details');
+			$("#link_for_opening_details_2").text('show details');
 		}
 		else {
+			// show details
 			$("#tabOthersSignups .toggle_opening_details").addClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
-			$("#link_for_opening_details_2").text('show details');
+			$("#link_for_opening_details_2").text('hide details');
 		}
 	});
 

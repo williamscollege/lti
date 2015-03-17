@@ -108,9 +108,9 @@
 			$rendered .= '<span class="opening-time-range' . $own_signup_class . '">' . date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A") . '</span>';
 			$this->cacheSignups();
 
-			$customColorClass = " text-danger ";
-			if (count($this->signups) < $this->max_signups) {
-				$customColorClass = " text-success ";
+			$customColorClass = "text-danger";
+			if (count($this->signups) < $this->max_signups || $this->max_signups == -1 ) {
+				$customColorClass = "text-success";
 			}
 			$max_signups = $this->max_signups;
 			if ($max_signups == -1) {
@@ -200,6 +200,7 @@
 			if ($is_own_signup) {
 				$rendered .= 'I signed up';
 			}
+			$rendered .= '<br />';
 			$rendered .= $this->_renderHtml_END($signedupUserIdsAry);
 
 			return $rendered;
