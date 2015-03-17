@@ -12,7 +12,7 @@
 			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($signup['begin_datetime']), "h:i A") . ' - ' . date_format(new DateTime($signup['end_datetime']), "h:i A") . '</span>';
 
 			$customColorClass = "text-danger";
-			if ($signup['current_signups'] < $signup['opening_max_signups'] || $signup['opening_max_signups'] == -1 ) {
+			if ($signup['current_signups'] < $signup['opening_max_signups'] || $signup['opening_max_signups'] == -1) {
 				$customColorClass = "text-success";
 			}
 
@@ -39,18 +39,41 @@
 				$rendered .= "<strong>Location:</strong> " . $signup['opening_location'] . "<br />";
 			}
 			$rendered .= '</li>';
-
 			$rendered .= '<li>';
-			//util_prePrintR($signup);
+
 			$rendered .= "<ul class=\"wms-signups\">";
-			$rendered .= "<li class=\"list-signups list-signup-id-" . $signup['signup_id'] . "\">" . $USER->first_name . ' ' . $USER->last_name;
-			$rendered .= "<span class=\"\">";
-			if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
-				// TODO - add functionality to link click through
-				$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $signup['opening_id'] . "\" data-for-signup-id=\"" . $signup['signup_id'] . "\" data-for-signup-name=\"" . $USER->first_name . ' ' . $USER->last_name . "\" data-for-sheet-name=\"" . $signup['sheet_name'] . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
+
+			$signedupUsers = $signup['array_signups'];
+			//util_prePrintR($signedupUsers);
+			// begin: loop through signed up users
+			foreach ($signedupUsers as $u) {
+				if (!$signup['sheet_flag_private_signups']) {
+					// public: Users can see everyone who signed up
+					$rendered .= "<li class=\"list-signups list-signup-id-" . $u['signup_id'] . "\">" . $u['full_name'];
+					$rendered .= "<span class=\"\">";
+					if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
+						// TODO - add functionality to link click through
+						// only allow self to cancel signup
+						if ($u['username'] == $USER->username) {
+							$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $signup['opening_id'] . "\" data-for-signup-id=\"" . $u['signup_id'] . "\" data-for-signup-name=\"" . $u['full_name'] . "\" data-for-sheet-name=\"" . $signup['sheet_name'] . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
+						}
+					}
+					$rendered .= "</span>";
+					$rendered .= "</li>";
+				}
+				elseif ($signup['sheet_flag_private_signups'] && $u['username'] == $USER->username) {
+					// private: Users can only see their own signup
+					$rendered .= "<li class=\"list-signups list-signup-id-" . $u['signup_id'] . "\">" . $u['full_name'];
+					$rendered .= "<span class=\"\">";
+					if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
+						// TODO - add functionality to link click through
+						$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $signup['opening_id'] . "\" data-for-signup-id=\"" . $u['signup_id'] . "\" data-for-signup-name=\"" . $u['full_name'] . "\" data-for-sheet-name=\"" . $signup['sheet_name'] . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
+					}
+					$rendered .= "</span>";
+					$rendered .= "</li>";
+				}
 			}
-			$rendered .= "</span>";
-			$rendered .= "</li>";
+			// end: loop through signed up users
 			$rendered .= "</ul>";
 			$rendered .= "</li>";
 			$rendered .= "</ul>";
@@ -76,8 +99,8 @@
 			if ($signup['array_signups']) {
 				//util_prePrintR($signup);
 				$rendered .= '<li>';
-				$signedupUsers = $signup['array_signups'];
 				$rendered .= "<ul class=\"wms-signups\">";
+				$signedupUsers = $signup['array_signups'];
 				// begin: loop through signed up users
 				foreach ($signedupUsers as $u) {
 					$rendered .= "<li class=\"list-signups list-signup-id-" . $u['signup_id'] . "\">" . $u['full_name'];

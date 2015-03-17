@@ -100,18 +100,6 @@
 			return '<div class="rendered-object user-render user-render-minimal user-render-' . $this->user_id . '" data-for-user="' . $this->user_id . '" data-user_full_name="' . htmlentities($this->last_name) . ', ' . htmlentities($this->first_name) . '">' . $enclosed . '</div>';
 		}
 
-
-		// TODO - SCRAP this bit
-		//		// returns: a very basic HTML representation of the object
-		//		public function renderAsHtmlShortWithNoControls($flag_linked = FALSE) {
-		//			$rendered = htmlentities($this->last_name) . ', ' . htmlentities($this->first_name);
-		//			if ($flag_linked) {
-		//				$rendered = '<a href="' . APP_ROOT_PATH . '/app_code/user.php?user_id=' . $this->user_id . '">' . $rendered . '</a>';
-		//			}
-		//
-		//			return '<div class="rendered-object user-render user-render-minimal user-render-' . $this->user_id . '" data-for-user="' . $this->user_id . '" data-user_full_name="' . htmlentities($this->last_name) . ', ' . htmlentities($this->first_name) . '">' . $rendered . '</div>';
-		//		}
-
 		public function updateDbFromAuth($auth) {
 			//echo "doing db update<br/>\n";
 			//$this->refreshFromDb();
@@ -273,26 +261,60 @@
 
 			// get sheets (using hash of IDs)
 			$sheets_ary = SUS_Sheet::getAllFromDb(['sheet_id' => $sheetIDs], $this->dbConnection);
-			//util_prePrintR($sheets_ary);
 
 			// get everyone's signups for each opening (using hash of IDs)
-			$all_signups_ary = SUS_Signup::getAllFromDb(['opening_id' => $openingIDs], $this->dbConnection);
+			$signups_ary = SUS_Signup::getAllFromDb(['opening_id' => $openingIDs], $this->dbConnection);
+			//util_prePrintR($signups_ary);
+
+			// get signup_user_id's (using hash of IDs)
+			$signupUserIDs = Db_Linked::arrayOfAttrValues($signups_ary, 'signup_user_id');
+
+			// get user names (using hash of IDs)
+			$users_ary = User::getAllFromDb(['user_id' => $signupUserIDs], $this->dbConnection);
+
+			// create hash of user information
+			$user_info_ary = [];
+			foreach ($users_ary as $user) {
+				$user_info_ary[$user->user_id] = array(
+					'user_id'   => $user->user_id,
+					'full_name' => $user->first_name . ' ' . $user->last_name,
+					'email'     => $user->email,
+					'username'  => $user->username
+				);
+			}
 
 			// count total signup_id's per each opening_id
 			$countSignupsPerOpening = array_count_values(array_map(function ($item) {
 				return $item->opening_id;
-			}, $all_signups_ary));
+			}, $signups_ary));
+
+			// create hash of signups, include user information (hash), and trim out cruft
+			$signups_with_user_info_ary = [];
+			foreach ($signups_ary as $signup) {
+				array_push($signups_with_user_info_ary,
+					array(
+						// signup information
+						'opening_id' => $signup->opening_id,
+						'signup_id'  => $signup->signup_id,
+						// 'signup_created_at' => $signup->created_at,
+						// user information
+						'user_id'    => $user_info_ary[$signup->signup_user_id]['user_id'],
+						'full_name'  => $user_info_ary[$signup->signup_user_id]['full_name'],
+						'email'      => $user_info_ary[$signup->signup_user_id]['email'],
+						'username'   => $user_info_ary[$signup->signup_user_id]['username']
+					)
+				);
+			}
 
 			// create hash for output and trim out cruft
 			$trimmed_array = [];
 			foreach ($openings_ary as $opening) {
 
-				// fetch signup_id
-				$signup_id = 0;
-				foreach ($my_signups_ary as $signup) {
-					if ($signup->opening_id == $opening->opening_id) {
-						$signup_id         = $signup->signup_id;
-						$signup_created_at = $signup->created_at;
+				// create a hash of signups for each opening
+				$signups_for_this_opening = [];
+				foreach ($signups_with_user_info_ary as $item) {
+					if ($item['opening_id'] == $opening->opening_id) {
+						$signups_for_this_opening[] = $item;    // 'user_id' => $item['user_id']
 					}
 				}
 
@@ -300,24 +322,27 @@
 				$sheet_name = '';
 				foreach ($sheets_ary as $sheet) {
 					if ($sheet->sheet_id == $opening->sheet_id) {
-						$sheet_name = $sheet->name;
+						$sheet_name                 = $sheet->name;
+						$sheet_flag_private_signups = $sheet->flag_private_signups;
 					}
 				}
 
 				array_push($trimmed_array,
 					array(
-						'opening_id'          => $opening->opening_id,
-						'sheet_id'            => $opening->sheet_id,
-						'begin_datetime'      => $opening->begin_datetime,
-						'end_datetime'        => $opening->end_datetime,
-						'current_signups'     => $countSignupsPerOpening[$opening->opening_id],
-						'opening_max_signups' => $opening->max_signups,
-						'opening_description' => $opening->description,
-						'opening_location'    => $opening->location,
-						'opening_name'        => $opening->name,
-						'signup_id'           => $signup_id,
-						'signup_created_at'   => $signup_created_at,
-						'sheet_name'          => $sheet_name
+						'opening_id'                 => $opening->opening_id,
+						'sheet_id'                   => $opening->sheet_id,
+						'begin_datetime'             => $opening->begin_datetime,
+						'end_datetime'               => $opening->end_datetime,
+						'current_signups'            => $countSignupsPerOpening[$opening->opening_id],
+						'opening_max_signups'        => $opening->max_signups,
+						'opening_description'        => $opening->description,
+						'opening_location'           => $opening->location,
+						'opening_name'               => $opening->name,
+						// 'signup_id'           => $signup_id,
+						// 'signup_created_at'   => $signup_created_at,
+						'sheet_name'                 => $sheet_name,
+						'sheet_flag_private_signups' => $sheet_flag_private_signups,
+						'array_signups'              => $signups_for_this_opening
 					)
 				);
 			}
@@ -396,6 +421,7 @@
 			// create hash for output and trim out cruft
 			$trimmed_array = [];
 			foreach ($openings_ary as $opening) {
+
 				// create a hash of signups for each opening
 				$signups_for_this_opening = [];
 				foreach ($signups_with_user_info_ary as $item) {
