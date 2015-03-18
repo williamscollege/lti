@@ -46,12 +46,9 @@
 	function renderCalendarWidget() {
 		?>
 		<div id="calendar"></div>
-
 		<link rel="stylesheet" href="<?php echo APP_ROOT_PATH; ?>/js/bootstrap-calendar-master/css/calendar.css">
-		<!-- TODO - underscore is CDN. download for more direct service? -->
-		<!-- TODO - PUT THIS IN CONFIG FILE FOR easier maintenance and updating -->
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
-		<script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/bootstrap-calendar-master/js/calendar.js"></script>
+		<script src="<?php echo PATH_UNDERSCORE_JS; ?>"></script>
+		<script src="<?php echo PATH_BOOTSTRAP_CALENDAR_JS; ?>"></script>
 		<script src="<?php echo APP_ROOT_PATH; ?>/js/calendar.js"></script>
 	<?php
 	}
@@ -251,8 +248,7 @@
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header bg-info">
-							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-							</button>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 							<h4 id="new_OpeningLabel" class="modal-title">Creating openings on <span class="openingCalDate">mm/dd/yyyy</span></h4>
 						</div>
 						<div class="modal-body">
@@ -634,8 +630,7 @@
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
 						<div class="modal-header bg-info">
-							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-							</button>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 							<h4 id="edit_OpeningLabel" class="modal-title">Edit opening</h4>
 						</div>
 						<div class="modal-body">

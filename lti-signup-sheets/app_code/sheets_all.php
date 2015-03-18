@@ -154,7 +154,7 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header bg-info">
-					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 id="ajaxSheetgroupLabel" class="modal-title">Group</h4>
 				</div>
 				<div class="modal-body">

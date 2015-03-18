@@ -4,7 +4,7 @@
 	<!-- Link to trigger modal -->
 	<p class="pull-right">
 		<a href="#modalHelp" data-toggle="modal" data-target="#modalHelp"><i class="glyphicon glyphicon-question-sign"></i> Help</a>
-		&copy; <?php echo INSTITUTION_PRETTY_NAME . "," . date('Y'); ?>
+		&copy; <?php echo LANG_INSTITUTION_NAME . "," . date('Y'); ?>
 	</p>
 
 	<!-- Modal -->
@@ -12,7 +12,7 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title" id="modalHelpLabel">Help FAQ</h4>
 				</div>
 				<div class="modal-body">
