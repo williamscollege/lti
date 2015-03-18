@@ -28,7 +28,7 @@
 			$other_based_sheets  = [];
 			foreach ($USER->sheet_openings_all as $sheet) {
 
-				$base_sheet_link = "<a href=\"sheet_openings_signup.php?sheet=" . $sheet['s_id'] . "\"  class=\"\" title=\"Signup for Openings\">" . $sheet['s_name'] . "</a> (" . $sheet['s_description'] . ")";
+				$base_sheet_link = "<a href=\"" . APP_ROOT_PATH . "/app_code/sheet_openings_signup.php?sheet=" . $sheet['s_id'] . "\"  class=\"\" title=\"Signup for Openings\">" . $sheet['s_name'] . "</a> (" . $sheet['s_description'] . ")";
 
 				// NOTE: the A) through G) leads on the keys are used to sort. The display trims the first 3 chars from the key.
 				switch ($sheet["a_type"]) {

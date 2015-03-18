@@ -46,7 +46,7 @@
 		}
 
 		echo "<div id=\"content_container\">"; // start: div#content_container
-		echo "<h5 class=\"small\"><a href=\"sheet_openings_all.php\" title=\"" . ucfirst(util_lang('sheet_openings_all')) . "\">" . ucfirst(util_lang('sheet_openings_all')) . "</a>&nbsp;&gt;&nbsp;" . $s->name . "</h5>";
+		echo "<h5 class=\"small\"><a href=\"" . APP_ROOT_PATH . "/app_code/sheet_openings_all.php\" title=\"" . ucfirst(util_lang('sheet_openings_all')) . "\">" . ucfirst(util_lang('sheet_openings_all')) . "</a>&nbsp;&gt;&nbsp;" . $s->name . "</h5>";
 		?>
 		<div class="container">
 			<div class="row">

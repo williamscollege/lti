@@ -832,7 +832,7 @@
 
 												<div class="col-sm-8">
 													<input type="text" id="signupUsername" name="signupUsername" class="form-control" placeholder="Williams username" value="" />
-													<a href="http://www.williams.edu/people/" class="small" title="Find person's username" target="_blank">Find
+													<a href="https://www.williams.edu/people/" class="small" title="Find person's username" target="_blank">Find
 														person's username</a>
 												</div>
 											</div>
@@ -874,5 +874,4 @@
 		<!-- /Bootstrap Modal: Calendar Edit Opening -->
 	<?php
 	}
-
 ?>

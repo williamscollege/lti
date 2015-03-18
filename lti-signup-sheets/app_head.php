@@ -33,21 +33,21 @@
 				<span class="icon-bar"></span>
 			</button>
 			<!-- TODO - IF entering directly from web (not from LTI), then show BRAND icon, below-->
-			<!--			<a class="navbar-brand" href="#" style="padding: 0">-->
-			<!--				<img alt="--><?php //echo LANG_INSTITUTION_NAME; ?><!--" src="img/williams-college-avatar-50.png" class="" />-->
-			<!--			</a>-->
+			<!--<a class="navbar-brand" href="#" style="padding: 0">-->
+			<!--<img alt="<?php /*echo LANG_INSTITUTION_NAME; */?>" src="<?php /*echo APP_ROOT_PATH; */?>/img/williams-college-avatar-50.png" class="" />-->
+			<!--</a>-->
 		</div>
 
 		<?php
-			// get parent referer url and querystring params
-			$http_referer = $_SERVER['REQUEST_URI'];
+			// get parent referrer url and querystring params
+			$http_referrer = $_SERVER['REQUEST_URI'];
 		?>
 		<div class="collapse navbar-collapse" id="wms-primary-navbar-1">
 			<ul class="nav navbar-nav">
 				<?php
 					if ($IS_AUTHENTICATED) {
 						?>
-						<li class="<?php if (strpos($http_referer, "signups_all.php")) {
+						<li class="<?php if (strpos($http_referrer, "signups_all.php")) {
 							echo "active";
 						} ?>">
 							<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/signups_all.php">
@@ -55,7 +55,7 @@
 								<b><?php echo ucfirst(util_lang('signups_all')); ?></b>
 							</a>
 						</li>
-						<li class="<?php if ((strpos($http_referer, "sheet_openings_all.php")) || (strpos($http_referer, "sheet_openings_signup.php"))) {
+						<li class="<?php if ((strpos($http_referrer, "sheet_openings_all.php")) || (strpos($http_referrer, "sheet_openings_signup.php"))) {
 							echo "active";
 						} ?>">
 							<a id="link-available-openings" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheet_openings_all.php">
@@ -63,7 +63,7 @@
 								<b><?php echo ucfirst(util_lang('sheet_openings_all')); ?></b>
 							</a>
 						</li>
-						<li class="<?php if ((strpos($http_referer, "sheets_all.php")) || (strpos($http_referer, "sheets_edit_one.php"))) {
+						<li class="<?php if ((strpos($http_referrer, "sheets_all.php")) || (strpos($http_referrer, "sheets_edit_one.php"))) {
 							echo "active";
 						} ?>">
 							<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheets_all.php">
@@ -71,7 +71,7 @@
 								<b><?php echo ucfirst(util_lang('sheets_all')); ?></b>
 							</a>
 						</li>
-						<li class="<?php if (strpos($http_referer, "help.php")) {
+						<li class="<?php if (strpos($http_referrer, "help.php")) {
 							echo "active";
 						} ?>">
 							<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/help.php">
@@ -97,7 +97,7 @@
 					// TODO - DO NOT SHOW THIS WHEN AUTH'ed AS AN LTI
 					?>
 					<form id="frmSignout" class="navbar-form pull-right" method="post" action="<?php echo APP_ROOT_PATH; ?>/index.php">
-						<a href="my_account.php" title="My Account" class="wms_white"><?php echo $_SESSION['userdata']['username']; ?></a>&nbsp;
+						<a href="<?php echo APP_ROOT_PATH; ?>/app_code/my_account.php" title="My Account" class="wms_white"><?php echo $_SESSION['userdata']['username']; ?></a>&nbsp;
 						<input type="submit" id="submit_signout" class="btn btn-default btn-sm" name="submit_signout" value="Sign out" />
 					</form>
 				<?php
