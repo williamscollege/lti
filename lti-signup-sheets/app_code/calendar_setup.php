@@ -274,10 +274,10 @@
 									</div>
 								</div>
 								<div class="form-group form-group-sm">
-									<label for="openingAdminNotes" class="col-sm-4 control-label">Admin&nbsp;Notes</label>
+									<label for="openingAdminNotes" class="col-sm-4 control-label">Private&nbsp;Note</label>
 
 									<div class="col-sm-8">
-										<textarea id="new_OpeningAdminNotes" name="new_OpeningAdminNotes" class="form-control" placeholder="Only the sheet admin can see these notes" rows="1"></textarea>
+										<input type="text" id="new_OpeningAdminNotes" name="new_OpeningAdminNotes" class="form-control" placeholder="Viewable by owner/manager" value="" />
 									</div>
 								</div>
 								<div class="form-group form-group-sm">
@@ -654,10 +654,10 @@
 											</div>
 										</div>
 										<div class="form-group form-group-sm">
-											<label for="openingAdminNotes" class="col-sm-3 control-label">Admin&nbsp;Notes</label>
+											<label for="openingAdminNotes" class="col-sm-3 control-label">Private&nbsp;Note</label>
 
 											<div class="col-sm-9">
-												<textarea id="edit_OpeningAdminNotes" name="edit_OpeningAdminNotes" class="form-control" placeholder="Only the sheet admin can see these notes" rows="1"></textarea>
+												<input type="text" id="edit_OpeningAdminNotes" name="edit_OpeningAdminNotes" class="form-control" placeholder="Viewable by owner/manager" value="" />
 											</div>
 										</div>
 										<div class="form-group form-group-sm">
@@ -837,10 +837,10 @@
 												</div>
 											</div>
 											<div class="form-group form-group-sm">
-												<label for="openingLocation" class="col-sm-3 control-label">Admin&nbsp;note</label>
+												<label for="openingLocation" class="col-sm-3 control-label">Private&nbsp;Note</label>
 
 												<div class="col-sm-8">
-													<textarea id="signupAdminNote" name="signupAdminNote" class="form-control" placeholder="Admin note (optional)" rows="2"></textarea>
+													<input type="text" id="signupAdminNote" name="signupAdminNote" class="form-control" placeholder="Viewable by owner/manager" value="" />
 												</div>
 											</div>
 											<div class="form-group form-group-sm">

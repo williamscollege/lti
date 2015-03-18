@@ -191,9 +191,6 @@ $(document).ready(function () {
 			dataType: 'json',
 			error: function (req, textStatus, err) {
 				susUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
-				//console.dir(req);
-				//console.dir(textStatus);
-				//console.dir(err);
 			},
 			success: function (data) {
 				if (data.status == 'success') {
@@ -203,6 +200,9 @@ $(document).ready(function () {
 				else {
 					// error message
 					susUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
+					// console.dir(data);
+					// console.dir(textStatus);
+					// console.dir(err);
 				}
 			}
 			//, complete: function(req,textStatus) {

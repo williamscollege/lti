@@ -275,19 +275,23 @@
 		}
 		// values: $editID, $editValue
 
-		// 1 clean incoming user namea and split into array
-		// 2 get existing byuser records
+		// 1 clean incoming user name and split into array
+		// 2 get existing 'byuser' records
 		// 3 generate to-add and to-remove sets
 		// 4 do adds
 		// 5 do removes
 		// 6 note results
 
-		// 1 clean incoming user namea and split into array
+		// 1 clean incoming user name and split into array
 		$usernames_str = $editValue;
 		$usernames_str = preg_replace('/,/', ' ', $usernames_str); // convert commas to single white space
 		$usernames_str = preg_replace('/\\s+/', ' ', $usernames_str); // convert all white space to single white space
 		$usernames_str = preg_replace('/^\\s+|\\s+$/', '', $usernames_str); // trim leading and trailing space
-		$usernames_ary = explode(' ', $usernames_str);
+
+		$usernames_ary = [];
+		if ($usernames_str) {
+			$usernames_ary = explode(' ', $usernames_str);
+		}
 
 		// 2 get existing byuser records
 		$existing_access_records   = SUS_Access::getAllFromDb(['sheet_id' => $editID, 'type' => $access_type], $DB);
@@ -310,7 +314,6 @@
 		$results["notes"] = '';
 
 		// 4 do adds
-
 		if (count($to_add) > 0) {
 			// only fetch big user object if we are going to add a username
 			$obj_all_users = User::getAllFromDb([], $DB);
