@@ -223,7 +223,7 @@
 								</li>
 							</ul>
 							<div id="boxSignupsOnMySheetsContent" class="tab-content">
-								<!--Begin: Signups on my Sheets (Content) -->
+								<!-- Begin: Signups on my Sheets (Content) -->
 								<div id="buttons_on_my_sheets">
 									<a href="#" id="scroll-to-todayish-others-signups" type="button" class="btn btn-success btn-xs" title="go to next">go to
 										next</a>&nbsp;&nbsp;&nbsp;
@@ -282,7 +282,7 @@
 									?>
 
 								</div>
-								<!--End: Signups on my Sheets (Content) -->
+								<!-- End: Signups on my Sheets (Content) -->
 							</div>
 						</div>
 					</div>

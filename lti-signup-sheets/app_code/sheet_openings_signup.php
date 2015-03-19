@@ -111,7 +111,7 @@
 							</ul>
 							<div id="boxOpeningsContent" class="tab-content">
 
-								<!--Begin: Calendar Openings -->
+								<!-- Begin: Calendar Openings -->
 								<div role="tabpanel" class="tab-pane fade active in" id="tabOpeningsCalendar" aria-labelledby="tabOpeningsCalendar">
 
 									<?php
@@ -120,9 +120,9 @@
 									?>
 
 								</div>
-								<!--End: Calendar Openings -->
+								<!-- End: Calendar Openings -->
 
-								<!--Begin: List Openings -->
+								<!-- Begin: List Openings -->
 								<div role="tabpanel" class="tab-pane fade" id="tabOpeningsList" aria-labelledby="tabOpeningsList">
 									<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-xs" title="go to next">go to next</a>
 
@@ -133,13 +133,16 @@
 											$lastOpeningDate = '';
 											$daysOpenings    = [];
 											$todayYmd        = explode(' ', util_currentDateTimeString())[0];
+
 											foreach ($s->openings as $opening) {
 												$curOpeningDate = explode(' ', $opening->begin_datetime)[0];
 												if ($curOpeningDate != $lastOpeningDate) {
 													// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 													foreach ($daysOpenings as $op) {
-														// show 'limited controls' only on current and future dates (not past dates)
-														if ($op->begin_datetime >= util_currentDateTimeString_asMySQL()) {
+														$op->cacheSignups();
+														// a) show 'LimitedControls' only if opening has capacity for additional signups
+														// b) show 'LimitedControls' only on current and future dates (not past dates)
+														if ((count($op->signups) < $op->max_signups || $op->max_signups == -1) && ($op->begin_datetime >= util_currentDateTimeString_asMySQL())) {
 															echo $op->renderAsHtmlShortWithLimitedControls($USER->user_id) . "\n";
 														}
 														else {
@@ -166,10 +169,13 @@
 
 												$lastOpeningDate = $curOpeningDate;
 											}
+
 											// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 											foreach ($daysOpenings as $op) {
-												// show 'self' controls only on current and future dates (not past dates)
-												if ($op->begin_datetime >= util_currentDateTimeString_asMySQL()) {
+												$op->cacheSignups();
+												// a) show 'LimitedControls' only if opening has capacity for additional signups
+												// b) show 'LimitedControls' only on current and future dates (not past dates)
+												if ((count($op->signups) < $op->max_signups || $op->max_signups == -1) && ($op->begin_datetime >= util_currentDateTimeString_asMySQL())) {
 													echo $op->renderAsHtmlShortWithLimitedControls($USER->user_id) . "\n";
 												}
 												else {
@@ -181,7 +187,7 @@
 
 									</div>
 								</div>
-								<!--End: List Openings -->
+								<!-- End: List Openings -->
 							</div>
 						</div>
 					</div>

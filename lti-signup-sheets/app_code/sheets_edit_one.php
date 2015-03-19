@@ -268,7 +268,7 @@
 								</div>
 								<!-- End: Basic Sheet Info -->
 
-								<!--Begin: Sheet Access-->
+								<!-- Begin: Sheet Access-->
 								<!--DKC IMPORTANT (normal): set class to: 'tab-pane fade'-->
 								<!--DKC IMPORTANT (testing): set class to: 'tab-pane fade active in'-->
 								<div role="tabpanel" id="tabSheetAccess" class="tab-pane fade" aria-labelledby="tabSheetAccess">
@@ -454,7 +454,7 @@
 									</div>
 									<!--end div.form-group-->
 								</div>
-								<!--End: Sheet Access-->
+								<!-- End: Sheet Access-->
 							</div>
 						</div>
 					</div>
@@ -481,7 +481,7 @@
 									</ul>
 									<div id="boxOpeningsContent" class="tab-content">
 
-										<!--Begin: Calendar Openings -->
+										<!-- Begin: Calendar Openings -->
 										<div role="tabpanel" id="tabOpeningsCalendar" class="tab-pane fade active in" aria-labelledby="tabOpeningsCalendar">
 
 											<?php
@@ -490,9 +490,9 @@
 											?>
 
 										</div>
-										<!--End: Calendar Openings -->
+										<!-- End: Calendar Openings -->
 
-										<!--Begin: List Openings -->
+										<!-- Begin: List Openings -->
 										<div role="tabpanel" id="tabOpeningsList" class="tab-pane fade" aria-labelledby="tabOpeningsList">
 											<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-xs" title="go to next">go to next</a>
 
@@ -538,7 +538,7 @@
 
 											</div>
 										</div>
-										<!--End: List Openings -->
+										<!-- End: List Openings -->
 									</div>
 								</div>
 							</div>
