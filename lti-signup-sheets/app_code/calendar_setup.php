@@ -74,9 +74,8 @@
 					tmpl_cache: false,
 					day:
 					<?php
-						// todo - grab requested start date ... date_format(new DateTime($_REQUEST["inputSheetDateStart"] . " 00:00:00"), "Y-m-d H:i:s");
 						echo "'" . date_format(new DateTime(date('Y-m-d')), "Y-m-d") . "'";
-					?>,//'2013-03-12',
+					?>,
 					onAfterEventsLoad: function (events) {
 						if (!events) {
 							return;

@@ -13,7 +13,7 @@
 	}
 	else {
 		?>
-		<div id="content_container"> <!-- start: div#content_container -->
+		<div id="content_container"> <!-- begin: div#content_container -->
 
 			<h1><?php echo LANG_APP_NAME; ?></h1>
 			<br />

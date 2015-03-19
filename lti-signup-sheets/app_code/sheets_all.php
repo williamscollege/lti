@@ -37,7 +37,7 @@
 		<?php
 		}
 
-		echo "<div id=\"content_container\">"; // start: div#content_container
+		echo "<div id=\"content_container\">"; // begin: div#content_container
 
 		// ***************************
 		// fetch managed sheets
@@ -53,7 +53,6 @@
 			echo "<th class=\"col-sm-1 text-right\"><a class=\"btn btn-xs btn-default disabled\" disabled=\"disabled\" title=\"Cannot delete\"><i class=\"glyphicon glyphicon-minus-sign\"></i></a>&nbsp;</th></tr>";
 			foreach ($USER->managed_sheets as $mgr_sheet) {
 				echo "<tr><td class=\"col-sm-11\">";
-				# TODO - refactor link below to renderAsEditLink on sheet object
 				echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . $mgr_sheet->sheet_id . "\" title=\"Edit sheet\">" . $mgr_sheet->name . "</a>";
 				$owner = User::getOneFromDb(['user_id' => $mgr_sheet->owner_user_id], $DB);
 				echo " <small>(owned by " . $owner->first_name . " " . $owner->last_name . ")</small>";

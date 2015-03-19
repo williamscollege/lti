@@ -90,6 +90,7 @@
 		// Problems adding openings:
 		// 2015-02-11 11:37 AM to 5:15 PM :: conflicts with another opening on this sheet
 		// http://oldglow.williams.edu/blocks/signup_sheets/sheet_create_openings_process.php
+		// example: http://oldglow.williams.edu/blocks/signup_sheets/?contextid=2&action=editsheet&sheet=1311&sheetgroup=2077
 
 
 		// note: default condition is 'duration'

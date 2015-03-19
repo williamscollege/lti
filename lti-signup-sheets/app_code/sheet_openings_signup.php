@@ -45,7 +45,7 @@
 			exit;
 		}
 
-		echo "<div id=\"content_container\">"; // start: div#content_container
+		echo "<div id=\"content_container\">"; // begin: div#content_container
 		echo "<h5 class=\"small\"><a href=\"" . APP_ROOT_PATH . "/app_code/sheet_openings_all.php\" title=\"" . ucfirst(util_lang('sheet_openings_all')) . "\">" . ucfirst(util_lang('sheet_openings_all')) . "</a>&nbsp;&gt;&nbsp;" . $s->name . "</h5>";
 		?>
 		<div class="container">
@@ -111,7 +111,7 @@
 							</ul>
 							<div id="boxOpeningsContent" class="tab-content">
 
-								<!--Start: Calendar Openings -->
+								<!--Begin: Calendar Openings -->
 								<div role="tabpanel" class="tab-pane fade active in" id="tabOpeningsCalendar" aria-labelledby="tabOpeningsCalendar">
 
 									<?php
@@ -122,7 +122,7 @@
 								</div>
 								<!--End: Calendar Openings -->
 
-								<!--Start: List Openings -->
+								<!--Begin: List Openings -->
 								<div role="tabpanel" class="tab-pane fade" id="tabOpeningsList" aria-labelledby="tabOpeningsList">
 									<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-xs" title="go to next">go to next</a>
 
@@ -138,11 +138,7 @@
 												if ($curOpeningDate != $lastOpeningDate) {
 													// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 													foreach ($daysOpenings as $op) {
-														// show 'self' controls only on current and future dates (not past dates)
-
-														//date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A")
-														//echo '$op->begin_datetime : util_currentDateTimeString_asMySQL = ' . $op->begin_datetime . ':' . util_currentDateTimeString_asMySQL();
-														// TODO - enforce signup limits per usage details
+														// show 'limited controls' only on current and future dates (not past dates)
 														if ($op->begin_datetime >= util_currentDateTimeString_asMySQL()) {
 															echo $op->renderAsHtmlShortWithLimitedControls($USER->user_id) . "\n";
 														}

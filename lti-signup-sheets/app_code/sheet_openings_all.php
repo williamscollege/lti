@@ -6,7 +6,7 @@
 
 	if ($IS_AUTHENTICATED) {
 
-		echo "<div id=\"content_container\">"; // start: div#content_container
+		echo "<div id=\"content_container\">"; // begin: div#content_container
 
 		// ***************************
 		// fetch available openings
@@ -113,7 +113,7 @@
 			ksort($other_based_sheets);
 
 			if ($course_based_sheets && $other_based_sheets) {
-				// start table
+				// begin table
 				echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
 				echo "<tr class=\"\"><th class=\"col-sm-6 info\">Sheets available because I am enrolled in...</th></tr>";
 				echo "<tr><td>";
@@ -122,10 +122,10 @@
 					echo "<strong>" . $course . "</strong>";
 					echo "<ul>" . $items . "</ul>";
 				}
-				// end table
 				echo "</td></tr></table>";
+				// end table
 
-				// start table
+				// begin table
 				echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
 				echo "<tr class=\"\"><th class=\"col-sm-6 info\">Sheets available because...</th></tr>";
 				echo "<tr><td>";
@@ -134,13 +134,12 @@
 					echo "<strong>" . substr($reason, 3) . "</strong>";
 					echo "<ul>" . $items . "</ul>";
 				}
-
-				// end table
 				echo "</td></tr></table>";
+				// end table
 			}
 			else // only one list has info
 			{
-				// start table
+				// begin table
 				echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
 				echo "<tr class=\"\"><th class=\"col-sm-6 info\">I can sign up for these because...</th></tr>";
 				echo "<tr><td>";
@@ -153,8 +152,8 @@
 					echo "<br /><strong>" . substr($reason, 3) . "</strong>";
 					echo "<ul>" . $items . "</ul>";
 				}
-				// end table
 				echo "</td></tr></table>";
+				// end table
 			}
 		}
 

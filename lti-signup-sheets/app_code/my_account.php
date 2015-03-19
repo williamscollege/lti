@@ -6,7 +6,7 @@
 
 	if ($IS_AUTHENTICATED) {
 
-		echo "<div id=\"content_container\">"; // start: div#content_container
+		echo "<div id=\"content_container\">"; // begin: div#content_container
 		echo "<h3>" . $pageTitle . "</h3>";
 		echo "<p>&nbsp;</p>";
 
