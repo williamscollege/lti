@@ -411,17 +411,6 @@
 		return (substr($haystack, -$length) === $needle);
 	}
 
-	function util_orderingUpDownControls($target_dom_id) {
-		$controls = '';
-
-		$controls .= '<div class="ordering-controls-up-down">';
-		$controls .= '<a href="#" class="btn ordering-button-earlier" data-for-dom-id="' . $target_dom_id . '"><i class="glyphicon glyphicon-arrow-up"></i></a>';
-		$controls .= '<a href="#" class="btn ordering-button-later" data-for-dom-id="' . $target_dom_id . '"><i class="glyphicon glyphicon-arrow-down"></i></a>';
-		$controls .= '</div>';
-
-		return $controls;
-	}
-
 	function util_getValueForCheckboxRequestData($fieldName) {
 		if (isset($_REQUEST[$fieldName]) && $_REQUEST[$fieldName] == 'on') {
 			return 1;

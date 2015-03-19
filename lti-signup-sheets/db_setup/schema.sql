@@ -120,8 +120,8 @@ CREATE TABLE IF NOT EXISTS `sus_sheetgroups` (
     `flag_is_default` int(1) NOT NULL default '0',
     `name` varchar(255) default NULL,
     `description` text,
-    `max_g_total_user_signups` smallint(3) default -1,
-    `max_g_pending_user_signups` smallint(3) default -1,
+    `max_g_total_user_signups` smallint signed default -1,
+    `max_g_pending_user_signups` smallint signed default -1,
     PRIMARY KEY (`sheetgroup_id`),
     KEY `flag_delete` (`flag_delete`),
     KEY `owner_user_id` (`owner_user_id`),
@@ -141,8 +141,8 @@ CREATE TABLE IF NOT EXISTS `sus_sheets` (
     `type` varchar(32) default NULL,
     `date_opens` TIMESTAMP NULL,
     `date_closes` TIMESTAMP NULL,
-    `max_total_user_signups` smallint(3) unsigned default NULL,
-    `max_pending_user_signups` smallint(3) unsigned default NULL,
+    `max_total_user_signups` smallint signed default -1,
+    `max_pending_user_signups` smallint signed default -1,
     `flag_alert_owner_change` tinyint(1) unsigned default NULL,
     `flag_alert_owner_signup` tinyint(1) unsigned default NULL,
     `flag_alert_owner_imminent` tinyint(1) unsigned default NULL,
@@ -173,10 +173,10 @@ CREATE TABLE IF NOT EXISTS `sus_openings` (
     `updated_at` TIMESTAMP NULL,
     `flag_delete` tinyint(1) unsigned default NULL,
     `sheet_id` bigint(10) unsigned default NULL,
-    `opening_set_id` bigint(20) unsigned default NULL,
+    `opening_group_id` bigint(20) unsigned default NULL,
     `name` varchar(255) default NULL,
     `description` text,
-    `max_signups` mediumint(6) unsigned default NULL,
+    `max_signups` smallint signed default 1,
     `begin_datetime` TIMESTAMP NULL,
     `end_datetime` TIMESTAMP NULL,
     `location` varchar(255) default NULL,
@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `sus_openings` (
     PRIMARY KEY (`opening_id`),
     KEY `flag_delete` (`flag_delete`),
     KEY `sheet_id` (`sheet_id`),
-    KEY `opening_set_id` (`opening_set_id`),
+    KEY `opening_group_id` (`opening_group_id`),
     KEY `begin_datetime` (`begin_datetime`),
     KEY `end_datetime` (`end_datetime`),
     KEY `location` (`location`),
@@ -204,7 +204,6 @@ CREATE TABLE IF NOT EXISTS `sus_signups` (
     KEY `opening_id` (`opening_id`),
     KEY `signup_user_id` (`signup_user_id`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Users signing up for openings - analogous to a list of times and dates on a piece of paper that is passed around or posted on a door and on which people would put their name';
--- TODO - Delete Confusing Moodle Fragment: 'opening_set_id' is current datetime concat-ed with the current user id
 
 CREATE TABLE IF NOT EXISTS `sus_access` (
     `access_id` bigint(10) unsigned NOT NULL auto_increment,
@@ -223,39 +222,6 @@ CREATE TABLE IF NOT EXISTS `sus_access` (
     KEY `broadness` (`broadness`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='which users can signup on which sheets';
 
-/*
-CREATE TABLE IF NOT EXISTS `user_role_links` (
-    `user_role_link_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NULL,
-    `user_id` INT NOT NULL,
-    `role_id` INT NOT NULL
-)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='determines allowable actions within the digitalfieldnotebooks system';
-*//* FK: users.user_id *//*
-CREATE TABLE IF NOT EXISTS `actions` (
-    `action_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(255) NULL,
-    `ordering` DECIMAL(10 , 5 ),
-    `flag_delete` BIT(1) NOT NULL DEFAULT 0
-)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='actions that users can take - together with roles are used to define permissions';
-
-CREATE TABLE IF NOT EXISTS `role_action_target_links` (
-    `role_action_target_link_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NULL,
-    `role_id` INT NOT NULL,
-    `action_id` INT NOT NULL,
-    `target_type` VARCHAR(255) NOT NULL,
-    `target_id` INT NOT NULL,
-    `flag_delete` BIT(1) NOT NULL DEFAULT 0
-)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='';
-*/
-/* This is single inheritance table, meaning it is a linking table that links dependant upon the value of target_type */
-/* FK: roles.role_id */
-/* FK: actions.action_id */
-/* FK: target_id: this is the FK that will link this roles record with objects to which permissions are being granted (value is 0 for global permissions) */
-/* NOTE: action permissions are hardcoded into the application - a fully fleshed out action control system is outside the scope of this project */
-
 
 # ----------------------------
 # Required: The Absolute Minimalist Approach to Initial Data Population
@@ -270,40 +236,3 @@ VALUES
 	(3,30,'observer',0),
 	(4,40,'alumni',0);
 
-/*
-# Required constant values for actions table
-INSERT INTO
-actions
-VALUES
-(1,'view',1,0),
-(2,'edit',2,0),
-(3,'update',3,0),
-(4,'create',4,0),
-(5,'delete',5,0),
-(6,'publish',6,0),
-(7,'verify',7,0),
-(8,'list',8,0);
-
-# Required constant values for role_action_target_links table (managers can do everything)
-# 		public static $fields = array('role_action_target_link_id', 'created_at', 'updated_at', 'role_id', 'action_id', 'target_type', 'target_id', 'flag_delete');
-INSERT INTO
-  role_action_target_links
-  VALUES
-  (1,NOW(),NOW(),0,1,1,'global_notebook',0,0),
-  (2,NOW(),NOW(),0,1,2,'global_notebook',0,0),
-  (3,NOW(),NOW(),0,1,3,'global_metadata',0,0),
-  (4,NOW(),NOW(),0,1,1,'global_metadata',0,0)
-;
-
-# a canonical public user
-INSERT INTO
-  users
-  VALUES
- (1,NOW(),NOW(),'canonical_public','reserved_public_user',0,0,0);
-
-INSERT INTO
-  user_role_links
-  VALUES
-  (1,NOW(),NOW(),0,1,4);
-
-*/

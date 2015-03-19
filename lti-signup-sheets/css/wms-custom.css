@@ -1,6 +1,20 @@
-/*=======================================*/
-/* General CSS Tweaks (sitewide) */
-/*=======================================*/
+/*Williams Custom CSS*/
+
+/*=======================================
+Purpose: Global CSS Tweaks that are NOT an extension / modification of the bootstrap framework
+==========================================*/
+
+#frmSignout {
+	padding-top: 8px;
+}
+
+#frmSignout #submit_signout {
+	margin-top: -3px;
+}
+
+.cursorPointer {
+	cursor: pointer;
+}
 
 a.navbar:hover {
 	background-color: #512699 !important;
@@ -46,7 +60,89 @@ div.wms_tiny_break {
 
 
 /*=======================================
-wms bootstrap-calendar-master extensions
+Purpose: Edit Opening - Signup someone to an opening
+==========================================*/
+
+#signupControls {
+	display: none;
+}
+
+#signupHeader {
+	margin-bottom: 10px;
+}
+
+.signupSorters {
+	margin-top: 16px;
+}
+
+#signupListing {
+	margin-top: 16px;
+}
+
+.signup-admin-comment-display {
+	margin-left: 48px;
+	margin-top: -2px;
+	margin-bottom: 4px;
+	font-size: 11px;
+	font-style: italic;
+}
+
+.own-signup {
+	font-weight: bold;
+}
+
+
+/*=======================================
+Purpose: Openings list styles
+==========================================*/
+
+#openings-list-container, #container-my-signups, #container-others-signups {
+	margin-top: -20px;
+	max-height: 591px;
+	overflow-y: scroll;
+	position: relative;
+}
+
+#openings-list-container .opening-list-for-date, #container-my-signups .opening-list-for-date, #container-others-signups .opening-list-for-date {
+	padding: 0 0 6px 10px;
+	margin: 0 !important;
+}
+
+#openings-list-container .in-the-past, #container-my-signups .in-the-past, #container-others-signups .in-the-past {
+	background-color: #ddd;
+}
+
+#openings-list-container .in-the-present, #container-my-signups .in-the-present, #container-others-signups .in-the-present {
+	background-color: #f9fffb;
+	border: 1px solid #999;
+}
+
+#openings-list-container .in-the-future, #container-my-signups .in-the-future, #container-others-signups .in-the-future {
+	background-color: #f9fbff;
+}
+
+/* placement for button near 'list openings': scroll to 'current date' */
+#scroll-to-todayish-openings {
+	margin: -94px 0 0 290px;
+}
+
+/* placement for button 'my signups': go to next, show optional details*/
+#buttons_my_signups {
+	position: relative;
+	top: -25px;
+	left: 120px;
+}
+
+/* placement for button 'on my sheets': go to next, show optional details*/
+#buttons_on_my_sheets {
+	position: relative;
+	top: -25px;
+	left: 134px;
+}
+
+
+/*=======================================
+Purpose: Extend/customize the 'Bootstrap-Calendar' plugin
 ==========================================*/
 
 /* help force 'create openings' link into top left corner */
@@ -94,6 +190,33 @@ wms bootstrap-calendar-master extensions
 
 .calendar-cell-openings-container h4 {
 	padding-bottom: 10px;
+}
+
+/* make calendar date numbers smaller */
+span[data-cal-date] {
+	margin-top: 5px !important;
+	margin-right: 5px !important;
+	font-size: inherit !important;
+}
+
+/* make today's calendar date bold */
+.cal-month-box .cal-day-today span[data-cal-date] {
+	font-weight: bold !important;
+}
+
+/* remove annoying weekly display tab */
+#cal-week-box {
+	display: none !important;
+}
+
+.cal-cell {
+	min-height: 65px !important;
+	height: 65px !important;
+}
+
+.cal-month-day {
+	min-height: 65px !important;
+	height: 65px !important;
 }
 
 .opening-space-usage {
@@ -209,117 +332,25 @@ wms bootstrap-calendar-master extensions
 }
 
 /*=======================================
-Edit Opening: Signup someone to an opening
+Purpose: Extend/customize 'Bootstrap' CSS framework
 ==========================================*/
-#signupControls {
-	display: none;
-}
 
-#signupHeader {
-	margin-bottom: 10px;
-}
-
-.signupSorters {
-	margin-top: 16px;
-}
-
-#signupListing {
-	margin-top: 16px;
-}
-
-.signup-admin-comment-display {
-	margin-left: 48px;
-	margin-top: -2px;
-	margin-bottom: 4px;
-	font-size: 11px;
-	font-style: italic;
-}
-
-.own-signup {
-	font-weight: bold;
-}
-
-/*=======================================
-wms bootstrap-calendar-master overrides
-==========================================*/
-/* make calendar date numbers smaller */
-span[data-cal-date] {
-	margin-top: 5px !important;
-	margin-right: 5px !important;
-	font-size: inherit !important;
-}
-
-/* make today's calendar date bold */
-.cal-month-box .cal-day-today span[data-cal-date] {
-	font-weight: bold !important;
-}
-
-/* remove annoying weekly display tab */
-#cal-week-box {
-	display: none !important;
-}
-
-.cal-cell {
-	min-height: 65px !important;
-	height: 65px !important;
-}
-
-.cal-month-day {
-	min-height: 65px !important;
-	height: 65px !important;
-}
-
-/*=======================================*/
-/* openings list styles */
-/*=======================================*/
-
-#openings-list-container, #container-my-signups, #container-others-signups {
-	margin-top: -20px;
-	max-height: 591px;
+/*add a placeholder to prevent page content from shifting to accommodate the scrollbar*/
+HTML {
 	overflow-y: scroll;
-	position: relative;
 }
 
-#openings-list-container .opening-list-for-date, #container-my-signups .opening-list-for-date, #container-others-signups .opening-list-for-date {
-	padding: 0 0 6px 10px;
-	margin: 0 !important;
+H1, H2, H3, H4, H5 {
+	margin-bottom: 0;
 }
 
-#openings-list-container .in-the-past, #container-my-signups .in-the-past, #container-others-signups .in-the-past {
-	background-color: #ddd;
+.btn.btn-link.btn-cancel, .btn-link.btn-cancel {
+	color: #d15545 !important;
 }
 
-#openings-list-container .in-the-present, #container-my-signups .in-the-present, #container-others-signups .in-the-present {
-	background-color: #f9fffb;
-	border: 1px solid #999;
+.form-horizontal .control-group .display-only-controls {
+	padding-top: 5px;
 }
-
-#openings-list-container .in-the-future, #container-my-signups .in-the-future, #container-others-signups .in-the-future {
-	background-color: #f9fbff;
-}
-
-/* placement for button near 'list openings': scroll to 'current date' */
-#scroll-to-todayish-openings {
-	margin: -94px 0 0 290px;
-}
-
-/* placement for button 'my signups': go to next, show optional details*/
-#buttons_my_signups {
-	position: relative;
-	top: -25px;
-	left: 120px;
-}
-
-/* placement for button 'on my sheets': go to next, show optional details*/
-#buttons_on_my_sheets {
-	position: relative;
-	top: -25px;
-	left: 134px;
-}
-
-/*=======================================
-Bootstrap.css tweaks are below
-==========================================*/
 
 /* change default muddy red to bright red */
 .text-danger {
@@ -352,11 +383,7 @@ UL.wms-signups LI {
 	list-style-type: disc;
 }
 
-/*=======================================*/
 /* Bootstrap positioning for message alert box for UI output of AJAX actions success/failure */
-/*=======================================*/
-
-/* position placeholder message alert box */
 #page_alert_div {
 	z-index: 2000; /* must be > 1040 which is default z-index of bootstrap modal */
 	position: fixed;
@@ -365,11 +392,7 @@ UL.wms-signups LI {
 	width: 400px;
 }
 
-/*=======================================*/
-/* Bootstrap Tabs Styling */
-/*=======================================*/
-
-/* add border to tab box */
+/* Bootstrap Tabs Styling: add border to tab box */
 .tab-container {
 	position: relative;
 	padding: 15px;
@@ -389,9 +412,9 @@ UL.nav.nav-tabs LI A {
 	padding-top: 15px;
 }
 
-/* TODO - REVIEW STUFF BELOW THIS LIND AND REMOVE OBSOLETE STUFF */
+
 /*=======================================*/
-/*PRE 2014 EQR Historical CSS Tweaks*/
+/*Purpose: Legacy CSS to Extend/customize the CSS for jQuery 'validation.js' plugin
 /*=======================================*/
 LABEL.valid {
 	width: 24px;
@@ -412,59 +435,4 @@ LABEL.error {
 	color: #E17823;
 }
 
-/*=======================================
-Patch For: bootstrap.css
-Purpose: Williams custom tweaks to bootstrap.css
-==========================================
-add a placeholder to prevent page content from shifting to accommodate the scrollbar*/
-HTML {
-	overflow-y: scroll;
-}
 
-H1, H2, H3, H4, H5 {
-	margin-bottom: 0;
-}
-
-.btn.btn-link.btn-cancel, .btn-link.btn-cancel {
-	color: #d15545 !important;
-}
-
-.form-horizontal .control-group .display-only-controls {
-	padding-top: 5px;
-}
-
-/*=======================================
-Williams Custom CSS
-Purpose: CSS that's NOT an extension / modification of the bootstrap framework
-==========================================*/
-
-/***********************************************************************************/
-/* GLOBAL */
-
-#frmSignout {
-	padding-top: 8px;
-}
-
-#frmSignout #submit_signout {
-	margin-top: -3px;
-}
-
-.cursorPointer {
-	cursor: pointer;
-}
-
-.ordering-controls-up-down {
-	display: inline-block;
-}
-
-.ordering-controls-up-down a.btn,
-.ordering-controls-up-down a.btn i {
-	margin: 0 !important;
-	padding: 0 !important;
-	font-size: 10px !important;
-	line-height: 10px !important;
-}
-
-.ordering-controls-up-down a.btn {
-	margin-top: -4px !important;
-}

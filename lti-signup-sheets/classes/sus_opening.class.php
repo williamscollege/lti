@@ -45,7 +45,6 @@
 
 		/* static functions */
 
-		// TODO - resort cmp to list Date DESC, and Times ASC
 		public static function cmp($a, $b) {
 			if ($a->begin_datetime == $b->begin_datetime) {
 				if ($a->begin_datetime == $b->begin_datetime) {
