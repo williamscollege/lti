@@ -148,7 +148,7 @@
 											<label for="inputSheetName" class="control-label">Sheet Name</label>
 
 											<div class="">
-												<input type="text" id="inputSheetName" name="inputSheetName" class="form-control input-sm" placeholder="Signup sheet name" maxlength="255" value="<?php echo $s ? $s->name : ''; ?>" />
+												<input type="text" id="inputSheetName" name="inputSheetName" class="form-control input-sm" maxlength="255" placeholder="Signup sheet name" value="<?php echo $s ? $s->name : ''; ?>" />
 											</div>
 										</div>
 
@@ -189,9 +189,9 @@
 											<label for="inputSheetDateStart" class="control-label">Date Span: Active from</label>
 
 											<div class="form-inline">
-												<input type="input" id="inputSheetDateStart" name="inputSheetDateStart" class="form-control input-sm" placeholder="mm/dd/yyyy" maxlength="10" value="<?php echo $s ? date_format(new DateTime($s->date_opens), "m/d/Y") : ''; ?>" />
+												<input type="text" id="inputSheetDateStart" name="inputSheetDateStart" class="form-control input-sm" maxlength="10" placeholder="mm/dd/yyyy" value="<?php echo $s ? date_format(new DateTime($s->date_opens), "m/d/Y") : ''; ?>" />
 												<strong>to</strong>
-												<input type="input" id="inputSheetDateEnd" name="inputSheetDateEnd" class="form-control input-sm" placeholder="mm/dd/yyyy" maxlength="10" value="<?php echo $s ? date_format(new DateTime($s->date_closes), "m/d/Y") : ''; ?>" />
+												<input type="text" id="inputSheetDateEnd" name="inputSheetDateEnd" class="form-control input-sm" maxlength="10" placeholder="mm/dd/yyyy" value="<?php echo $s ? date_format(new DateTime($s->date_closes), "m/d/Y") : ''; ?>" />
 											</div>
 										</div>
 

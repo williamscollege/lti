@@ -4,7 +4,7 @@
 	<title><?php echo $pageTitle . ' [' . LANG_APP_NAME . ']'; ?></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="<?php echo LANG_APP_NAME; ?>">
-	<meta name="author" content="OIT Project Group">
+	<meta name="author" content="Williams College OIT Project Group">
 	<!-- CSS: Framework -->
 	<link rel="stylesheet" href="<?php echo PATH_BOOTSTRAP_CSS; ?>" type="text/css" media="all">
 	<!-- CSS: Plugins -->
@@ -34,7 +34,7 @@
 			</button>
 			<!-- TODO - IF entering directly from web (not from LTI), then show BRAND icon, below-->
 			<!--<a class="navbar-brand" href="#" style="padding: 0">-->
-			<!--<img alt="<?php /*echo LANG_INSTITUTION_NAME; */?>" src="<?php /*echo APP_ROOT_PATH; */?>/img/williams-college-avatar-50.png" class="" />-->
+			<!--<img alt="<?php /*echo LANG_INSTITUTION_NAME; */ ?>" src="<?php /*echo APP_ROOT_PATH; */ ?>/img/williams-college-avatar-50.png" class="" />-->
 			<!--</a>-->
 		</div>
 
@@ -106,8 +106,8 @@
 					//util_prePrintR($LANGUAGE);
 					?>
 					<form id="frmSignin" class="navbar-form pull-right" method="post" action="">
-						<input type="text" id="username" class="span2" name="username" placeholder="<?php echo util_lang('username'); ?>" value="" />
-						<input type="password" id="password_login" class="span2" name="password" placeholder="<?php echo util_lang('password'); ?>" value="" />
+						<input type="text" id="username" class="span2" name="username" maxlength="255" placeholder="<?php echo util_lang('username'); ?>" value="" />
+						<input type="password" id="password_login" class="span2" name="password" maxlength="255" placeholder="<?php echo util_lang('password'); ?>" value="" />
 						<input type="submit" id="submit_signin" class="btn btn-default" name="submit_signin" value="<?php echo util_lang('app_sign_in_action'); ?>" />
 					</form>
 				<?php

@@ -162,7 +162,7 @@
 						<label for="ajaxSheetgroupName" class="col-sm-2 control-label">Name</label>
 
 						<div class="col-sm-10">
-							<input type="text" id="ajaxSheetgroupName" name="ajaxSheetgroupName" class="form-control" placeholder="Group name" value="" />
+							<input type="text" id="ajaxSheetgroupName" name="ajaxSheetgroupName" class="form-control" maxlength="255" placeholder="Group name" value="" />
 						</div>
 					</div>
 					<div class="form-group">

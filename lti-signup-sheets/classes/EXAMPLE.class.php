@@ -189,7 +189,7 @@
             $rendered .= "</div>\n";
             $rendered .= '  <input type="hidden" name="action" value="update"/>'."\n".
                 '  <input type="hidden" name="notebook_id" value="'.$this->notebook_id.'"/>'."\n".
-                '  <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': <input id="notebook-name" type="text" name="name" value="'.$this->name.'"/></h3>'."\n".
+                '  <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': <input id="notebook-name" type="text" name="name" maxlength="255" value="'.$this->name.'"/></h3>'."\n".
                 '  <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at).'</span></div>'."\n".
                 '  <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$notebook_owner->user_id.'">'.htmlentities($notebook_owner->first_name).'</a></div>'."\n";
             $rendered .= '<div class="control-workflows">';

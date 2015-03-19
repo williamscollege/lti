@@ -263,7 +263,7 @@
 									<label for="openingName" class="col-sm-4 control-label">Name</label>
 
 									<div class="col-sm-8">
-										<input type="text" id="new_OpeningName" name="new_OpeningName" class="form-control" placeholder="Opening name" value="" />
+										<input type="text" id="new_OpeningName" name="new_OpeningName" class="form-control" maxlength="255" placeholder="Opening name" value="" />
 									</div>
 								</div>
 								<div class="form-group form-group-sm">
@@ -277,14 +277,14 @@
 									<label for="openingAdminNotes" class="col-sm-4 control-label">Private&nbsp;Note</label>
 
 									<div class="col-sm-8">
-										<input type="text" id="new_OpeningAdminNotes" name="new_OpeningAdminNotes" class="form-control" placeholder="Viewable by owner/manager" value="" />
+										<input type="text" id="new_OpeningAdminNotes" name="new_OpeningAdminNotes" class="form-control" maxlength="255" placeholder="Viewable by owner/manager" value="" />
 									</div>
 								</div>
 								<div class="form-group form-group-sm">
 									<label for="openingLocation" class="col-sm-4 control-label">Location</label>
 
 									<div class="col-sm-8">
-										<input type="text" id="new_OpeningLocation" name="new_OpeningLocation" class="form-control" placeholder="Opening location" value="" />
+										<input type="text" id="new_OpeningLocation" name="new_OpeningLocation" class="form-control" maxlength="255" placeholder="Opening location" value="" />
 									</div>
 								</div>
 							</div>
@@ -493,8 +493,7 @@
 											<div class="radio">
 												<label for="radioOpeningRepeatRate2">
 													<input id="radioOpeningRepeatRate2" name="new_OpeningRepeatRate" value="2" type="radio" /> Repeat on days of
-													the
-													week
+													the week
 												</label>
 											</div>
 
@@ -518,8 +517,7 @@
 											<div class="radio">
 												<label for="radioOpeningRepeatRate3">
 													<input id="radioOpeningRepeatRate3" name="new_OpeningRepeatRate" value="3" type="radio" /> Repeat on days of
-													the
-													month
+													the month
 												</label>
 											</div>
 										</div>
@@ -601,7 +599,7 @@
 								<label for="openingUntilControls" class="col-sm-4 control-label">Until?</label>
 
 								<div class="col-sm-8">
-									<input type="text" id="new_OpeningUntilDate" name="new_OpeningUntilDate" class="form-inline" placeholder="mm/dd/yyyy" maxlength="10" value="" />
+									<input type="text" id="new_OpeningUntilDate" name="new_OpeningUntilDate" class="form-inline" maxlength="10" placeholder="mm/dd/yyyy" value="" />
 								</div>
 							</div>
 						</div>
@@ -643,7 +641,7 @@
 											<label for="openingName" class="col-sm-3 control-label">Name</label>
 
 											<div class="col-sm-9">
-												<input type="text" id="edit_OpeningName" name="edit_OpeningName" class="form-control" placeholder="Opening name (optional)" value="" />
+												<input type="text" id="edit_OpeningName" name="edit_OpeningName" class="form-control" maxlength="255" placeholder="Opening name (optional)" value="" />
 											</div>
 										</div>
 										<div class="form-group form-group-sm">
@@ -657,21 +655,21 @@
 											<label for="openingAdminNotes" class="col-sm-3 control-label">Private&nbsp;Note</label>
 
 											<div class="col-sm-9">
-												<input type="text" id="edit_OpeningAdminNotes" name="edit_OpeningAdminNotes" class="form-control" placeholder="Viewable by owner/manager" value="" />
+												<input type="text" id="edit_OpeningAdminNotes" name="edit_OpeningAdminNotes" class="form-control" maxlength="255" placeholder="Viewable by owner/manager" value="" />
 											</div>
 										</div>
 										<div class="form-group form-group-sm">
 											<label for="openingLocation" class="col-sm-3 control-label">Location</label>
 
 											<div class="col-sm-9">
-												<input type="text" id="edit_OpeningLocation" name="edit_OpeningLocation" class="form-control" placeholder="Opening location (optional)" value="" />
+												<input type="text" id="edit_OpeningLocation" name="edit_OpeningLocation" class="form-control" maxlength="255" placeholder="Opening location (optional)" value="" />
 											</div>
 										</div>
 										<div class="form-group form-group-sm">
 											<label for="openingDateStart" class="col-sm-3 control-label">On</label>
 
 											<div class="col-sm-9">
-												<input type="text" id="edit_OpeningDateStart" name="edit_OpeningDateStart" class="form-inline" placeholder="mm/dd/yyyy" maxlength="10" value="" />
+												<input type="text" id="edit_OpeningDateStart" name="edit_OpeningDateStart" class="form-inline" maxlength="10" placeholder="mm/dd/yyyy" value="" />
 											</div>
 										</div>
 
@@ -831,7 +829,7 @@
 												<label for="signupUsername" class="col-sm-3 control-label">Username</label>
 
 												<div class="col-sm-8">
-													<input type="text" id="signupUsername" name="signupUsername" class="form-control" placeholder="Williams username" value="" />
+													<input type="text" id="signupUsername" name="signupUsername" class="form-control" maxlength="255" placeholder="Williams username" value="" />
 													<a href="https://www.williams.edu/people/" class="small" title="Find person's username" target="_blank">Find
 														person's username</a>
 												</div>
@@ -840,7 +838,7 @@
 												<label for="openingLocation" class="col-sm-3 control-label">Private&nbsp;Note</label>
 
 												<div class="col-sm-8">
-													<input type="text" id="signupAdminNote" name="signupAdminNote" class="form-control" placeholder="Viewable by owner/manager" value="" />
+													<input type="text" id="signupAdminNote" name="signupAdminNote" class="form-control" maxlength="255" placeholder="Viewable by owner/manager" value="" />
 												</div>
 											</div>
 											<div class="form-group form-group-sm">
@@ -874,4 +872,5 @@
 		<!-- /Bootstrap Modal: Calendar Edit Opening -->
 	<?php
 	}
+
 ?>
