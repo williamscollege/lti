@@ -22,8 +22,8 @@
 			$this->assertTrue(in_array('name', SUS_Sheet::$fields));
 			$this->assertTrue(in_array('description', SUS_Sheet::$fields));
 			$this->assertTrue(in_array('type', SUS_Sheet::$fields));
-			$this->assertTrue(in_array('date_opens', SUS_Sheet::$fields));
-			$this->assertTrue(in_array('date_closes', SUS_Sheet::$fields));
+			$this->assertTrue(in_array('begin_date', SUS_Sheet::$fields));
+			$this->assertTrue(in_array('end_date', SUS_Sheet::$fields));
 			$this->assertTrue(in_array('max_total_user_signups', SUS_Sheet::$fields));
 			$this->assertTrue(in_array('max_pending_user_signups', SUS_Sheet::$fields));
 			$this->assertTrue(in_array('flag_alert_owner_change', SUS_Sheet::$fields));

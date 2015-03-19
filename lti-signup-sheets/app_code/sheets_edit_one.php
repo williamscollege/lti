@@ -72,8 +72,8 @@
 			$s->name                     = $_REQUEST["inputSheetName"];
 			$s->description              = $_REQUEST["textSheetDescription"];
 			$s->type                     = "timeblocks"; // hardcode this data as possible hook for future use/modification
-			$s->date_opens               = date_format(new DateTime($_REQUEST["inputSheetDateStart"] . " 00:00:00"), "Y-m-d H:i:s");
-			$s->date_closes              = date_format(new DateTime($_REQUEST["inputSheetDateEnd"] . " 23:59:59"), "Y-m-d H:i:s");
+			$s->begin_date               = date_format(new DateTime($_REQUEST["inputSheetDateBegin"] . " 00:00:00"), "Y-m-d H:i:s");
+			$s->end_date              = date_format(new DateTime($_REQUEST["inputSheetDateEnd"] . " 23:59:59"), "Y-m-d H:i:s");
 			$s->max_total_user_signups   = $_REQUEST["selectMaxTotalSignups"];
 			$s->max_pending_user_signups = $_REQUEST["selectMaxPendingSignups"];
 			//$s->flag_alert_owner_change   = $_REQUEST[""];
@@ -186,12 +186,12 @@
 										</div>
 
 										<div class="form-group">
-											<label for="inputSheetDateStart" class="control-label">Date Span: Active from</label>
+											<label for="inputSheetDateBegin" class="control-label">Date Span: Active from</label>
 
 											<div class="form-inline">
-												<input type="text" id="inputSheetDateStart" name="inputSheetDateStart" class="form-control input-sm" maxlength="10" placeholder="mm/dd/yyyy" value="<?php echo $s ? date_format(new DateTime($s->date_opens), "m/d/Y") : ''; ?>" />
+												<input type="text" id="inputSheetDateBegin" name="inputSheetDateBegin" class="form-control input-sm" maxlength="10" placeholder="mm/dd/yyyy" value="<?php echo $s ? date_format(new DateTime($s->begin_date), "m/d/Y") : ''; ?>" />
 												<strong>to</strong>
-												<input type="text" id="inputSheetDateEnd" name="inputSheetDateEnd" class="form-control input-sm" maxlength="10" placeholder="mm/dd/yyyy" value="<?php echo $s ? date_format(new DateTime($s->date_closes), "m/d/Y") : ''; ?>" />
+												<input type="text" id="inputSheetDateEnd" name="inputSheetDateEnd" class="form-control input-sm" maxlength="10" placeholder="mm/dd/yyyy" value="<?php echo $s ? date_format(new DateTime($s->end_date), "m/d/Y") : ''; ?>" />
 											</div>
 										</div>
 

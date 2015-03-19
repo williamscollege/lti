@@ -15,7 +15,7 @@ $(document).ready(function () {
 	// ***************************
 	// Calendar datepicker
 	// ***************************
-	$("#inputSheetDateStart, #inputSheetDateEnd").datepicker({
+	$("#inputSheetDateBegin, #inputSheetDateEnd").datepicker({
 		showOtherMonths: true,
 		selectOtherMonths: true,
 		dateFormat: 'mm/dd/yy',
@@ -24,9 +24,9 @@ $(document).ready(function () {
 
 
 	// New Sheet: set default date (today)
-	if ($("#inputSheetDateStart").val() == "") {
+	if ($("#inputSheetDateBegin").val() == "") {
 		var today = new Date();
-		$("#inputSheetDateStart").datepicker('setDate', today);
+		$("#inputSheetDateBegin").datepicker('setDate', today);
 
 		var futureDate = new Date(today.getTime());
 		futureDate.setMonth(futureDate.getMonth() + 1);

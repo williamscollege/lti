@@ -7,7 +7,7 @@
 	if ($IS_AUTHENTICATED) {
 
 		// TODO: render fxns okay here? not sure how to incorporate these into a class?
-		function _renderHtml_START($signup) {
+		function _renderHtml_BEGIN($signup) {
 			$rendered = '<div class="list-openings list-opening-id-' . $signup['opening_id'] . '">';
 			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($signup['begin_datetime']), "h:i A") . ' - ' . date_format(new DateTime($signup['end_datetime']), "h:i A") . '</span>';
 
@@ -123,13 +123,13 @@
 		}
 
 		function renderAsHtmlForMySignups($signup) {
-			$rendered = _renderHtml_START($signup);
+			$rendered = _renderHtml_BEGIN($signup);
 			$rendered .= _renderList_MYSELF($signup);
 			return $rendered;
 		}
 
 		function renderAsHtmlForOthersSignups($signup) {
-			$rendered = _renderHtml_START($signup);
+			$rendered = _renderHtml_BEGIN($signup);
 			$rendered .= _renderList_OTHERS($signup);
 			return $rendered;
 		}

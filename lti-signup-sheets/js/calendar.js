@@ -19,7 +19,7 @@ $(document).ready(function () {
 	// ***************************
 	// Calendar datepicker
 	// ***************************
-	$("#new_OpeningUntilDate,#edit_OpeningDateStart").datepicker({
+	$("#new_OpeningUntilDate,#edit_OpeningDateBegin").datepicker({
 		showOtherMonths: true,
 		selectOtherMonths: true,
 		dateFormat: 'mm/dd/yy',
@@ -130,7 +130,7 @@ $(document).ready(function () {
 		var forTimeEndAry = timeConvert24to12(datetimeEndAry[1]).split(':');
 
 		// set date/time values
-		$("#edit_OpeningDateStart").attr('value', forDateBeginClean);
+		$("#edit_OpeningDateBegin").attr('value', forDateBeginClean);
 
 		$('#edit_OpeningBeginTimeHour option[value="' + forTimeBeginAry[0] + '"]').prop('selected', true);
 		$('#edit_OpeningBeginTimeMinute option[value="' + roundMinutesToNearestFiveUsingTwoDigits(forTimeBeginAry[1]) + '"]').attr('selected', 'selected');
@@ -228,7 +228,7 @@ $(document).ready(function () {
 		// set up the date
 		$("#new_OpeningUntilDate").attr('value', forDateClean);
 
-		$("#new_OpeningDateStart").val(forDateYYYYMMDD);
+		$("#new_OpeningDateBegin").val(forDateYYYYMMDD);
 		$(".openingCalDate").html(forDateClean);
 
 		// clear out & reset the day-of-week repeats
@@ -421,12 +421,12 @@ $(document).ready(function () {
 			return false;
 		}
 
-		// create start time string
+		// create begin time string
 		// create end time string
 		var btime = valsToTimeString($("#new_OpeningBeginTimeHour").val(), $("#new_OpeningBeginTimeMinute").val(), $("#new_OpeningBeginTime_AMPM").val());
 		var etime = valsToTimeString($("#new_OpeningEndTimeHour").val(), $("#new_OpeningEndTimeMinute").val(), $("#new_OpeningEndTimeMinute_AMPM").val());
 
-		// if end <= start, that's a problem
+		// if end <= begin, that's a problem
 		if (etime <= btime) {
 			customAlert("", "end time must be later than start time");
 			return false;

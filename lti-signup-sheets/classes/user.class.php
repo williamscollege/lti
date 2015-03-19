@@ -509,8 +509,8 @@
 				,s.name	AS s_name
 				,s.description	AS s_description
 				,s.type	AS s_type
-				,s.date_opens	AS s_date_opens
-				,s.date_closes	AS s_date_closes
+				,s.begin_date	AS s_begin_date
+				,s.end_date	AS s_end_date
 				,s.max_total_user_signups	AS s_max_total_user_signups
 				,s.max_pending_user_signups	AS s_max_pending_user_signups
 				,s.flag_alert_owner_change	AS s_flag_alert_owner_change
@@ -640,7 +640,7 @@
 				") AS ac ON s.sheet_id = ac.sheet_id
 				WHERE
 					s.flag_delete != 1
-					AND s.date_closes > " . (time() - (1)) .
+					AND s.end_date > " . (time() - (1)) .
 				//(($for_sheet_id>0 || $for_access_id>0)?"WHERE ":'').
 				(($for_access_id > 0) ? "\n	AND ac.access_id = $for_access_id" : '') .
 				//(($for_sheet_id>0 && $for_access_id>0)?" AND ":'').

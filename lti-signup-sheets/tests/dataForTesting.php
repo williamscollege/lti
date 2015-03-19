@@ -187,7 +187,7 @@
 	function createTestData_SUS_Sheets($dbConn) {
 		// 600 series ids
 		# SUS_Sheet: 'sheet_id', 'created_at', 'updated_at', 'flag_delete', 'owner_user_id', 'sheetgroup_id', 'name', 'description',
-		# 'type', 'date_opens', 'date_closes', 'max_total_user_signups', 'max_pending_user_signups', 'flag_alert_owner_change', 'flag_alert_owner_signup',
+		# 'type', 'begin_date', 'end_date', 'max_total_user_signups', 'max_pending_user_signups', 'flag_alert_owner_change', 'flag_alert_owner_signup',
 		# 'flag_alert_owner_imminent', 'flag_alert_admin_change', 'flag_alert_admin_signup', 'flag_alert_admin_imminent', 'flag_private_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheet::$dbTable . " VALUES
 			(601, NOW(), NOW(), 0, 101, 501, 'Sheet 601 is about Dunlap tennis ball production', 'Sheet 601, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 0, 0, 0, 0),

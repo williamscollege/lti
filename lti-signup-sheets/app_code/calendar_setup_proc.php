@@ -12,7 +12,7 @@
 			// Create New Opening
 			$openingSheetID     = htmlentities((isset($_REQUEST["new_SheetID"])) ? $_REQUEST["new_SheetID"] : 0);
 			$openingID          = htmlentities((isset($_REQUEST["new_OpeningID"])) ? $_REQUEST["new_OpeningID"] : 0);
-			$openingDateStart   = htmlentities((isset($_REQUEST["new_OpeningDateStart"])) ? $_REQUEST["new_OpeningDateStart"] : 0); // current format: 2015-02-24
+			$openingDateBegin   = htmlentities((isset($_REQUEST["new_OpeningDateBegin"])) ? $_REQUEST["new_OpeningDateBegin"] : 0); // current format: 2015-02-24
 			$openingTimeMode    = htmlentities((isset($_REQUEST["new_OpeningTimeMode"])) ? $_REQUEST["new_OpeningTimeMode"] : 0);
 			$openingName        = htmlentities((isset($_REQUEST["new_OpeningName"])) ? util_quoteSmart($_REQUEST["new_OpeningName"]) : 0);
 			$openingDescription = htmlentities((isset($_REQUEST["new_OpeningDescription"])) ? util_quoteSmart($_REQUEST["new_OpeningDescription"]) : 0);
@@ -44,10 +44,10 @@
 			$openingSheetID = htmlentities(((isset($_REQUEST["edit_SheetID"])) && (is_numeric($_REQUEST["edit_SheetID"]))) ? $_REQUEST["edit_SheetID"] : 0);
 			$openingID      = htmlentities((isset($_REQUEST["edit_OpeningID"])) ? $_REQUEST["edit_OpeningID"] : 0);
 
-			// reformat $openingDateStart to match expected format
-			$openingDateStart = htmlentities((isset($_REQUEST["edit_OpeningDateStart"])) ? $_REQUEST["edit_OpeningDateStart"] : 0); // current format: 02/24/2015
-			$reformatDateAry  = explode("/", $openingDateStart);
-			$openingDateStart = $reformatDateAry[2] . '-' . $reformatDateAry[0] . '-' . $reformatDateAry[1]; // current format: 2015-02-24
+			// reformat $openingDateBegin to match expected format
+			$openingDateBegin = htmlentities((isset($_REQUEST["edit_OpeningDateBegin"])) ? $_REQUEST["edit_OpeningDateBegin"] : 0); // current format: 02/24/2015
+			$reformatDateAry  = explode("/", $openingDateBegin);
+			$openingDateBegin = $reformatDateAry[2] . '-' . $reformatDateAry[0] . '-' . $reformatDateAry[1]; // current format: 2015-02-24
 
 			$openingTimeMode    = 'time_range'; // HARDCODED VALUE
 			$openingName        = htmlentities((isset($_REQUEST["edit_OpeningName"])) ? util_quoteSmart($_REQUEST["edit_OpeningName"]) : 0);
@@ -81,9 +81,9 @@
 		}
 
 
-		// construct valid formats: ensure start, count, duration style of opening specification...
+		// construct valid formats: ensure begin, count, duration style of opening specification...
 		$openingBeginTimeMinute = ($openingBeginTimeMinute < 10 ? '0' : '') . $openingBeginTimeMinute;
-		$beginDateTime          = DateTime::createFromFormat('Y-m-d g:i a', "$openingDateStart $openingBeginTimeHour:$openingBeginTimeMinute $openingBeginTime_AMPM");
+		$beginDateTime          = DateTime::createFromFormat('Y-m-d g:i a', "$openingDateBegin $openingBeginTimeHour:$openingBeginTimeMinute $openingBeginTime_AMPM");
 
 
 		// TODO - Conflict Avoidance (validation)
@@ -97,7 +97,7 @@
 		if ($openingTimeMode == 'time_range') {
 			// calc duration of each opening
 			$openingEndTimeMinute = ($openingEndTimeMinute < 10 ? '0' : '') . $openingEndTimeMinute;
-			$endDateTime          = DateTime::createFromFormat('Y-m-d g:i a', "$openingDateStart $openingEndTimeHour:$openingEndTimeMinute $openingEndTimeMinute_AMPM");
+			$endDateTime          = DateTime::createFromFormat('Y-m-d g:i a', "$openingDateBegin $openingEndTimeHour:$openingEndTimeMinute $openingEndTimeMinute_AMPM");
 			// handle case where the range spans midnight
 			if (($openingBeginTime_AMPM == 'pm') && ($openingEndTimeMinute_AMPM == 'am')) {
 				$endDateTime->modify('+1 day');
@@ -107,25 +107,25 @@
 			// only new openings may set value for 'openingNumOpenings' (editing opening ignores this)
 			$openingDurationEachOpening = $time_range_minutes / $openingNumOpenings;
 		}
-		// at this point the opening specification is always valid as start at X, do Y openings of Z minutes each
+		// at this point the opening specification is always valid as begin at X, do Y openings of Z minutes each
 
 
 		// if current day is 'valid', then create openings on that day, else update $repeatEndDate later
-		$repeatBeginDate = DateTime::createFromFormat('Y-m-d', $openingDateStart);
-		$repeatEndDate   = DateTime::createFromFormat('Y-m-d', $openingDateStart);
+		$repeatBeginDate = DateTime::createFromFormat('Y-m-d', $openingDateBegin);
+		$repeatEndDate   = DateTime::createFromFormat('Y-m-d', $openingDateBegin);
 
 		// check repetition radio value
-		// if no repeat, then end date = $openingDateStart, else end date = $openingUntilDate
+		// if no repeat, then end date = $openingDateBegin, else end date = $openingUntilDate
 		$validation_for_repetition = [];
 		if ($openingRepeatRate == 2 || $openingRepeatRate == 3) {
 
-			// constrain $openingUntilDate date to $dateSheetCloses date
+			// constrain $openingUntilDate date to $sheetEndDate date
 			$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $openingSheetID], $DB);
-			//$dateSheetCloses =  DateTime::createFromFormat('Y-m-d g:i:s', $sheet->date_closes);
-			$dateSheetCloses = DateTime::createFromFormat('Y-m-d', substr($sheet->date_closes, 0, 10));
+			//$sheetEndDate =  DateTime::createFromFormat('Y-m-d g:i:s', $sheet->end_date);
+			$sheetEndDate = DateTime::createFromFormat('Y-m-d', substr($sheet->end_date, 0, 10));
 			$repeatEndDate   = DateTime::createFromFormat('m/d/Y', $openingUntilDate);
-			if ($dateSheetCloses < $repeatEndDate) {
-				$repeatEndDate = $dateSheetCloses;
+			if ($sheetEndDate < $repeatEndDate) {
+				$repeatEndDate = $sheetEndDate;
 			}
 
 			if ($openingRepeatRate == 2) {

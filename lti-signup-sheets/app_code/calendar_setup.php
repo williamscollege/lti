@@ -166,17 +166,17 @@
 
 				// prevent 'prev' and 'next' buttons from displaying months outside of sheet date span
 				function updateCalendarNavButtons() {
-					var calendarDateStart_ary = ($("#calendar span").first().attr("data-cal-date")).split('-');
-					var calendarDateStart = new Date(calendarDateStart_ary[1] + '/' + calendarDateStart_ary[2] + '/' + calendarDateStart_ary[0]);
+					var calendarDateBegin_ary = ($("#calendar span").first().attr("data-cal-date")).split('-');
+					var calendarDateBegin = new Date(calendarDateBegin_ary[1] + '/' + calendarDateBegin_ary[2] + '/' + calendarDateBegin_ary[0]);
 
 					var calendarDateEnd_ary = ($("#calendar span").last().attr("data-cal-date")).split('-');
 					var calendarDateEnd = new Date(calendarDateEnd_ary[1] + '/' + calendarDateEnd_ary[2] + '/' + calendarDateEnd_ary[0]);
 
-					var sheetDateStart = new Date($("#inputSheetDateStart").val());
+					var sheetDateBegin = new Date($("#inputSheetDateBegin").val());
 					var sheetDateEnd = new Date($("#inputSheetDateEnd").val());
 
-					//alert('calendarDateStart=' + calendarDateStart +  '\n' + 'sheetDateStart = ' + sheetDateStart);
-					$("BUTTON[data-calendar-nav='prev']").prop("disabled", calendarDateStart <= sheetDateStart);
+					//alert('calendarDateBegin=' + calendarDateBegin +  '\n' + 'sheetDateBegin = ' + sheetDateBegin);
+					$("BUTTON[data-calendar-nav='prev']").prop("disabled", calendarDateBegin <= sheetDateBegin);
 					$("BUTTON[data-calendar-nav='next']").prop("disabled", sheetDateEnd <= calendarDateEnd);
 				}
 
@@ -196,9 +196,9 @@
 					var currentCellDate_ary = ($(cellElement).find('span').attr("data-cal-date")).split('-');
 					var currentCellDate = new Date(currentCellDate_ary[1] + '/' + currentCellDate_ary[2] + '/' + currentCellDate_ary[0]);
 
-					var sheetDateStart = new Date($("#inputSheetDateStart").val());
+					var sheetDateBegin = new Date($("#inputSheetDateBegin").val());
 					var sheetDateEnd = new Date($("#inputSheetDateEnd").val());
-					return currentCellDate <= sheetDateEnd && currentCellDate >= sheetDateStart;
+					return currentCellDate <= sheetDateEnd && currentCellDate >= sheetDateBegin;
 				}
 
 				// insert link to 'create openings' in this calendar cell
@@ -240,7 +240,7 @@
 		<form action="<?php echo APP_ROOT_PATH; ?>/app_code/calendar_setup_proc.php" id="frmCreateOpening" name="frmCreateOpening" class="form-horizontal" role="form" method="post">
 			<input type="hidden" id="new_SheetID" name="new_SheetID" value="<?php echo $sheetID; ?>" />
 			<input type="hidden" id="new_OpeningID" name="new_OpeningID" value="NEW" />
-			<input type="hidden" id="new_OpeningDateStart" name="new_OpeningDateStart" value="" />
+			<input type="hidden" id="new_OpeningDateBegin" name="new_OpeningDateBegin" value="" />
 			<input type="hidden" id="new_OpeningTimeMode" name="new_OpeningTimeMode" value="" />
 
 			<div id="modal-create-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="openingLabel" aria-hidden="true">
@@ -287,12 +287,12 @@
 									</div>
 								</div>
 							</div>
-							<!-- end optional_opening_fields -->
+							<!-- end: .optional_opening_fields -->
 							<div class="form-group form-group-sm">
 								<label for="openingBeginTimeHour" class="col-sm-4 control-label">From</label>
 
 								<div class="col-sm-8">
-									<!-- START 'HOURS' -->
+									<!-- BEGIN 'HOURS' -->
 									<select id="new_OpeningBeginTimeHour" name="new_OpeningBeginTimeHour">
 										<option value="1" selected="selected">1</option>
 										<option value="2">2</option>
@@ -307,7 +307,7 @@
 										<option value="11">11</option>
 										<option value="12">12</option>
 									</select>:
-									<!-- START 'MINUTES' -->
+									<!-- BEGIN 'MINUTES' -->
 									<select id="new_OpeningBeginTimeMinute" name="new_OpeningBeginTimeMinute">
 										<option value="0" selected="selected">00</option>
 										<option value="5">05</option>
@@ -322,7 +322,7 @@
 										<option value="50">50</option>
 										<option value="55">55</option>
 									</select>
-									<!-- START 'AM/PM' -->
+									<!-- BEGIN 'AM/PM' -->
 									<select id="new_OpeningBeginTime_AMPM" name="new_OpeningBeginTime_AMPM">
 										<option value="am">am</option>
 										<option value="pm" selected="selected">pm</option>
@@ -342,7 +342,7 @@
 								<div class="col-sm-8">
 									<!-- TOGGLED RESULT: openings by time range -->
 									<div class="openings_by_time_range">
-										<!-- START 'HOURS' -->
+										<!-- BEGIN 'HOURS' -->
 										<select id="new_OpeningEndTimeHour" name="new_OpeningEndTimeHour">
 											<option value="1">1</option>
 											<option value="2" selected="selected">2</option>
@@ -357,7 +357,7 @@
 											<option value="11">11</option>
 											<option value="12">12</option>
 										</select>:
-										<!-- START 'MINUTES' -->
+										<!-- BEGIN 'MINUTES' -->
 										<select id="new_OpeningEndTimeMinute" name="new_OpeningEndTimeMinute">
 											<option value="0" selected="selected">00</option>
 											<option value="5">05</option>
@@ -372,7 +372,7 @@
 											<option value="50">50</option>
 											<option value="55">55</option>
 										</select>
-										<!-- START 'AM/PM' -->
+										<!-- BEGIN 'AM/PM' -->
 										<select id="new_OpeningEndTimeMinute_AMPM" name="new_OpeningEndTimeMinute_AMPM">
 											<option value="am">am</option>
 											<option value="pm" selected="selected">pm</option>
@@ -590,7 +590,7 @@
 											<input id="btn_dom_31" value="31" class="toggler_dom btn btn-default btn-xs" type="button" />
 										</div>
 									</div>
-									<!-- end openingRepeaterControls -->
+									<!-- end: #new_OpeningRepeaterControls -->
 								</div>
 							</div>
 
@@ -633,7 +633,7 @@
 						<div class="modal-body">
 							<!-- total col-sm per row should = 12 -->
 							<div class="container">
-								<!-- START COLUMN ONE -->
+								<!-- BEGIN COLUMN ONE -->
 								<div class="row col-sm-5 small">
 									<div class="col-sm-12">
 										<div class="form-group form-group-sm">
@@ -665,19 +665,19 @@
 											</div>
 										</div>
 										<div class="form-group form-group-sm">
-											<label for="openingDateStart" class="col-sm-3 control-label">On</label>
+											<label for="openingDateBegin" class="col-sm-3 control-label">On</label>
 
 											<div class="col-sm-9">
-												<input type="text" id="edit_OpeningDateStart" name="edit_OpeningDateStart" class="form-inline" maxlength="10" placeholder="mm/dd/yyyy" value="" />
+												<input type="text" id="edit_OpeningDateBegin" name="edit_OpeningDateBegin" class="form-inline" maxlength="10" placeholder="mm/dd/yyyy" value="" />
 											</div>
 										</div>
 
-										<!-- end optional_opening_fields -->
+										<!-- end: .optional_opening_fields -->
 										<div class="form-group form-group-sm">
 											<label for="openingBeginTimeHour" class="col-sm-3 control-label">From</label>
 
 											<div class="col-sm-9">
-												<!-- START 'HOURS' -->
+												<!-- BEGIN 'HOURS' -->
 												<select id="edit_OpeningBeginTimeHour" name="edit_OpeningBeginTimeHour">
 													<option value="1">1</option>
 													<option value="2">2</option>
@@ -692,7 +692,7 @@
 													<option value="11">11</option>
 													<option value="12">12</option>
 												</select>:
-												<!-- START 'MINUTES' -->
+												<!-- BEGIN 'MINUTES' -->
 												<select id="edit_OpeningBeginTimeMinute" name="edit_OpeningBeginTimeMinute">
 													<option value="0">00</option>
 													<option value="5">05</option>
@@ -707,7 +707,7 @@
 													<option value="50">50</option>
 													<option value="55">55</option>
 												</select>
-												<!-- START 'AM/PM' -->
+												<!-- BEGIN 'AM/PM' -->
 												<select id="edit_OpeningBeginTime_AMPM" name="edit_OpeningBeginTime_AMPM">
 													<option value="am">am</option>
 													<option value="pm">pm</option>
@@ -720,7 +720,7 @@
 											<div class="col-sm-9">
 												<!-- TOGGLED RESULT: openings by time range -->
 												<div class="openings_by_time_range">
-													<!-- START 'HOURS' -->
+													<!-- BEGIN 'HOURS' -->
 													<select id="edit_OpeningEndTimeHour" name="edit_OpeningEndTimeHour">
 														<option value="1">1</option>
 														<option value="2">2</option>
@@ -735,7 +735,7 @@
 														<option value="11">11</option>
 														<option value="12">12</option>
 													</select>:
-													<!-- START 'MINUTES' -->
+													<!-- BEGIN 'MINUTES' -->
 													<select id="edit_OpeningEndTimeMinute" name="edit_OpeningEndTimeMinute">
 														<option value="0">00</option>
 														<option value="5">05</option>
@@ -750,7 +750,7 @@
 														<option value="50">50</option>
 														<option value="55">55</option>
 													</select>
-													<!-- START 'AM/PM' -->
+													<!-- BEGIN 'AM/PM' -->
 													<select id="edit_OpeningEndTimeMinute_AMPM" name="edit_OpeningEndTimeMinute_AMPM">
 														<option value="am">am</option>
 														<option value="pm">pm</option>
@@ -812,7 +812,7 @@
 									</div>
 								</div>
 
-								<!-- START COLUMN TWO -->
+								<!-- BEGIN COLUMN TWO -->
 								<div class="row col-sm-5 small">
 									<div class="col-sm-11">
 										<div class="pull-right small signupSorters">Sort by:

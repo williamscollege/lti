@@ -97,7 +97,7 @@
 		}
 
 
-		private function _renderHtml_START($flag_is_for_self = FALSE) {
+		private function _renderHtml_BEGIN($flag_is_for_self = FALSE) {
 			$rendered = '';
 			$rendered .= '<div class="list-opening list-opening-id-' . $this->opening_id . '" ' . $this->fieldsAsDataAttribs() . '>';
 			$own_signup_class = '';
@@ -162,7 +162,7 @@
 			$this->cacheSignups();
 			$signedupUserIdsAry = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
 
-			$rendered = $this->_renderHtml_START();
+			$rendered = $this->_renderHtml_BEGIN();
 			$rendered .= '<a href="#" class="sus-edit-opening" data-opening-id="' . $this->opening_id . '" data-toggle="modal" data-target="#modal-edit-opening" title="Edit opening"><i class="glyphicon glyphicon-wrench"></i></a>';
 			$rendered .= '<a href="#" class="sus-delete-opening" data-opening-id="' . $this->opening_id . '" title="Cancel signup"><i class="glyphicon glyphicon-remove"></i></a>';
 			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-opening-id="' . $this->opening_id . '" data-toggle="modal" data-target="#modal-edit-opening" title="Sign up"><i class="glyphicon glyphicon-plus"></i></a><br/>';
@@ -176,7 +176,7 @@
 			$signedupUserIdsAry = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
 			$is_own_signup      = in_array($UserId, $signedupUserIdsAry);
 
-			$rendered = $this->_renderHtml_START($is_own_signup);
+			$rendered = $this->_renderHtml_BEGIN($is_own_signup);
 			// fetch array of user_id values for signups for this opening
 			if ($is_own_signup) {
 				$rendered .= '<a href="#" class="sus-delete-me-from-opening" data-opening-id="' . $this->opening_id . '" title="Delete my signup"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel signup</a>';
@@ -194,7 +194,7 @@
 			$signedupUserIdsAry = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
 			$is_own_signup      = in_array($UserId, $signedupUserIdsAry);
 
-			$rendered = $this->_renderHtml_START($is_own_signup);
+			$rendered = $this->_renderHtml_BEGIN($is_own_signup);
 			// Am I signed up?
 			if ($is_own_signup) {
 				$rendered .= 'I signed up';
