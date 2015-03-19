@@ -238,7 +238,7 @@
 	function renderCalendarModalCreateOpening($sheetID) {
 		?>
 		<!-- Bootstrap Modal: Calendar Create Opening -->
-		<form action="calendar_setup_proc.php" id="frmCreateOpening" name="frmCreateOpening" class="form-horizontal" role="form" method="post">
+		<form action="<?php echo APP_ROOT_PATH; ?>/app_code/calendar_setup_proc.php" id="frmCreateOpening" name="frmCreateOpening" class="form-horizontal" role="form" method="post">
 			<input type="hidden" id="new_SheetID" name="new_SheetID" value="<?php echo $sheetID; ?>" />
 			<input type="hidden" id="new_OpeningID" name="new_OpeningID" value="NEW" />
 			<input type="hidden" id="new_OpeningDateStart" name="new_OpeningDateStart" value="" />
@@ -622,7 +622,7 @@
 	function renderCalendarModalEditOpening($sheetID) {
 		?>
 		<!-- Bootstrap Modal: Calendar Edit Opening -->
-		<form action="calendar_setup_proc.php" id="frmEditOpening" name="frmEditOpening" class="form-horizontal" role="form" method="post">
+		<form action="<?php echo APP_ROOT_PATH; ?>/app_code/calendar_setup_proc.php" id="frmEditOpening" name="frmEditOpening" class="form-horizontal" role="form" method="post">
 			<input type="hidden" id="edit_OpeningID" name="edit_OpeningID" value="0" />
 			<input type="hidden" id="edit_SheetID" name="edit_SheetID" value="<?php echo $sheetID; ?>" />
 

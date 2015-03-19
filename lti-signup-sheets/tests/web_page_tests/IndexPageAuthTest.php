@@ -14,14 +14,14 @@
 		}
 
 		function testIndexNotLoggedIn() {
-			$this->get('http://localhost/digitalfieldnotebooks/');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 			$this->assertCookie('PHPSESSID');
 			$this->assertField('username'); //$value
 			$this->assertField('password'); //$value
 		}
 
 		function testIndexLoggingIn() {
-			$this->get('http://localhost/digitalfieldnotebooks/');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 			$this->assertCookie('PHPSESSID');
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);
@@ -39,7 +39,7 @@
 		}
 
 		function testIndexFailLoggingIn() {
-			$this->get('http://localhost/digitalfieldnotebooks/');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 			$this->assertCookie('PHPSESSID');
 			$this->setField('username', TESTINGUSER . 'foo');
 			$this->setField('password', TESTINGPASSWORD . 'foo');
@@ -50,7 +50,7 @@
 		}
 
 		function testIndexLoggingOut() {
-			$this->get('http://localhost/digitalfieldnotebooks/');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);
 			$this->click('Sign in');

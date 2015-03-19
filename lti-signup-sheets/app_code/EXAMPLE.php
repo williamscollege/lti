@@ -27,7 +27,7 @@
 		$action = $_REQUEST['action'];
 	}
 	if ((($action == 'edit') || ($action == 'view')) && ((!isset($_REQUEST['notebook_id'])) || (!is_numeric($_REQUEST['notebook_id'])))) {
-		util_redirectToAppPage('app_code/notebook.php?action=list', 'failure', util_lang('no_notebook_specified'));
+		util_redirectToAppPage(APP_ROOT_PATH . '/app_code/notebook.php?action=list', 'failure', util_lang('no_notebook_specified'));
 	}
 
 	# 2. figure out which notebook is being acted on (if none specified then redirect to home page for actions other than list)
@@ -36,7 +36,7 @@
 	if ($action == 'create') {
 
 		if ((!isset($_REQUEST['user_id'])) || (!is_numeric($_REQUEST['user_id']))) {
-			util_redirectToAppPage('app_code/notebook.php?action=list', 'failure', util_lang('no_user_specified'));
+			util_redirectToAppPage(APP_ROOT_PATH . '/app_code/notebook.php?action=list', 'failure', util_lang('no_user_specified'));
 		}
 
 		//        $notebook = new Notebook(['user_id' => $USER->user_id, 'name'=>util_lang('new_notebook_title').' '.util_currentDateTimeString(),'DB'=>$DB]);
@@ -52,12 +52,12 @@
 	else {
 		//        if ((! isset($_REQUEST['notebook_id'])) || (! is_numeric($_REQUEST['notebook_id']))) {
 		////            util_redirectToAppHome('failure',util_lang('no_notebook_specified'));
-		//            util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_specified'));
+		//            util_redirectToAppPage(APP_ROOT_PATH . '/app_code/notebook.php?action=list','failure',util_lang('no_notebook_specified'));
 		//        }
 		$notebook = Notebook::getOneFromDb(['notebook_id' => $_REQUEST['notebook_id']], $DB);
 		if (!$notebook->matchesDb) {
 			//            util_redirectToAppHome('failure',util_lang('no_notebook_found'));
-			util_redirectToAppPage('app_code/notebook.php?action=list', 'failure', util_lang('no_notebook_found'));
+			util_redirectToAppPage(APP_ROOT_PATH . '/app_code/notebook.php?action=list', 'failure', util_lang('no_notebook_found'));
 		}
 	}
 
@@ -65,9 +65,9 @@
 	if (!$USER->canActOnTarget($ACTIONS[$action], $notebook)) {
 		//        util_redirectToAppHome('failure',util_lang('no_permission'));
 		if ($action == 'edit') {
-			util_redirectToAppPage('app_code/notebook.php?action=view&notebook_id=' . $notebook->notebook_id, 'failure', util_lang('no_permission'));
+			util_redirectToAppPage(APP_ROOT_PATH . '/app_code/notebook.php?action=view&notebook_id=' . $notebook->notebook_id, 'failure', util_lang('no_permission'));
 		}
-		util_redirectToAppPage('app_code/notebook.php?action=list', 'failure', util_lang('no_permission'));
+		util_redirectToAppPage(APP_ROOT_PATH . '/app_code/notebook.php?action=list', 'failure', util_lang('no_permission'));
 	}
 
 

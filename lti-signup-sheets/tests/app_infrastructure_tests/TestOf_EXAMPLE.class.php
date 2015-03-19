@@ -293,7 +293,7 @@
 			//  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->first_name.'</a></span><br/>
 			//  <div class="notebook-notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">'.htmlentities(util_lang('new_notebook_notes')).'</textarea></div>
 			//  <input id="edit-submit-control" class="btn btn-default" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>
-			//  <a id="edit-cancel-control" class="btn btn-default" href="/digitalfieldnotebooks/app_code/notebook.php?action=list">'.util_lang('cancel','properize').'</a>
+			//  <a id="edit-cancel-control" class="btn btn-default" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list">'.util_lang('cancel','properize').'</a>
 			//</form>
 			//  <h4>'.ucfirst(util_lang('pages')).'</h4>
 			//  '.util_lang('new_notebook_must_be_saved').'

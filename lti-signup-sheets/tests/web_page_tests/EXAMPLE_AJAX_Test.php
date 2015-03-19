@@ -14,7 +14,7 @@
 		}
 
 		function doLoginBasic() {
-			$this->get('http://localhost/digitalfieldnotebooks/');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 			$this->assertCookie('PHPSESSID');
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);
@@ -38,7 +38,7 @@
 			global $DB;
 			$DB = $this->DB;
 
-			$this->get('http://localhost/digitalfieldnotebooks/ajax_actions/specimen.php?action=create&unique=ABC123&notebook_page_id=1101');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/ajax_actions/specimen.php?action=create&unique=ABC123&notebook_page_id=1101');
 
 			$expected = '<div class="specimen embedded">' . "\n" . Specimen::renderFormInteriorForNewSpecimen('ABC123', $this->DB) . "\n</div>";
 

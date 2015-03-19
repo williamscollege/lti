@@ -14,7 +14,7 @@
 		}
 
 		function doLoginBasic() {
-			$this->get('http://localhost/digitalfieldnotebooks/');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 			$this->assertCookie('PHPSESSID');
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);

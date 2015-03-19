@@ -83,7 +83,7 @@
 		}
 
 		function _renderList_OTHERS($signup) {
-			$rendered = "<div class=\"small wms_indent\"><strong>Sheet:</strong> <a href=\"sheets_edit_one.php?sheet=" . $signup['sheet_id'] . "\" class=\"\" title=\"Edit sheet\">" . $signup['sheet_name'] . "</a><br /></div>";
+			$rendered = "<div class=\"small wms_indent\"><strong>Sheet:</strong> <a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . $signup['sheet_id'] . "\" class=\"\" title=\"Edit sheet\">" . $signup['sheet_name'] . "</a><br /></div>";
 			$rendered .= "<ul class=\"unstyled small\"><li class=\"toggle_opening_details\">";
 			if ($signup['opening_name'] != '') {
 				$rendered .= "<strong>Opening:</strong> " . $signup['opening_name'] . "<br />";

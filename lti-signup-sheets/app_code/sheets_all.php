@@ -54,7 +54,7 @@
 			foreach ($USER->managed_sheets as $mgr_sheet) {
 				echo "<tr><td class=\"col-sm-11\">";
 				# TODO - refactor link below to renderAsEditLink on sheet object
-				echo "<a href=\"sheets_edit_one.php?sheet=" . $mgr_sheet->sheet_id . "\" title=\"Edit sheet\">" . $mgr_sheet->name . "</a>";
+				echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . $mgr_sheet->sheet_id . "\" title=\"Edit sheet\">" . $mgr_sheet->name . "</a>";
 				$owner = User::getOneFromDb(['user_id' => $mgr_sheet->owner_user_id], $DB);
 				echo " <small>(owned by " . $owner->first_name . " " . $owner->last_name . ")</small>";
 				echo "</td><td class=\"col-sm-1 text-right\">";
@@ -113,7 +113,7 @@
 			$sheetgroup->cacheSheets();
 			foreach ($sheetgroup->sheets as $sheet) {
 				echo "<tr><td class=\"col-sm-11\">";
-				echo "<a href=\"sheets_edit_one.php?sheet=" . $sheet->sheet_id . "\" id=\"btn-edit-sheet-id-" . $sheet->sheet_id . "\" class=\"sus-edit-sheet\" data-for-sheet-name=\"" . $sheet->name . "\"  title=\"Edit sheet\">" . $sheet->name . "</a>";
+				echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . $sheet->sheet_id . "\" id=\"btn-edit-sheet-id-" . $sheet->sheet_id . "\" class=\"sus-edit-sheet\" data-for-sheet-name=\"" . $sheet->name . "\"  title=\"Edit sheet\">" . $sheet->name . "</a>";
 				echo "</td><td class=\"col-sm-1 text-right\">";
 				echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheet\" data-bb=\"alert_callback\" data-for-sheetgroup-id=\"" . $sheet->sheetgroup_id . "\" data-for-sheet-id=\"" . $sheet->sheet_id . "\" title=\"Delete sheet\"><i class=\"glyphicon glyphicon-remove\"></i></a>&nbsp;";
 				echo "</td></tr>";
@@ -121,7 +121,7 @@
 
 			// add new sheet
 			echo "<tr><td class=\"col-sm-12\" colspan=\"2\">";
-			echo "<a href=\"sheets_edit_one.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "&sheet=new\" class=\"btn btn-xs btn-success sus-add-sheet\"  title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
+			echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "&sheet=new\" class=\"btn btn-xs btn-success sus-add-sheet\"  title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
 			echo "</td></tr>\n";
 
 			// complete sheetgroup
@@ -145,7 +145,7 @@
 
 
 <!-- Bootstrap Modal: Add/Edit Sheetgroup -->
-<form action="../ajax_actions/ajax_actions.php" id="frmAjaxSheetgroup" name="frmAjaxSheetgroup" class="form-horizontal" role="form" method="post">
+<form action="<?php echo APP_ROOT_PATH; ?>/ajax_actions/ajax_actions.php" id="frmAjaxSheetgroup" name="frmAjaxSheetgroup" class="form-horizontal" role="form" method="post">
 	<input type="hidden" id="ajaxSheetgroupAction" name="ajaxSheetgroupAction" value="" />
 	<input type="hidden" id="ajaxOwnerUserID" name="ajaxOwnerUserID" value="<?php echo $USER->user_id ?>" />
 	<input type="hidden" id="ajaxSheetgroupID" name="ajaxSheetgroupID" value="" />

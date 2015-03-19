@@ -14,7 +14,7 @@
 		}
 
 		function doLoginBasic() {
-			$this->get('http://localhost/digitalfieldnotebooks/');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 			$this->assertCookie('PHPSESSID');
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);
@@ -31,11 +31,11 @@
 		}
 
 		function goToNotebookView($notebook_id) {
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=view&notebook_id=' . $notebook_id);
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=view&notebook_id=' . $notebook_id);
 		}
 
 		function goToNotebookEdit($notebook_id) {
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=' . $notebook_id);
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=edit&notebook_id=' . $notebook_id);
 		}
 
 		function checkBasicAsserts() {
@@ -50,7 +50,7 @@
 			//        $this->todo();
 			$this->doLoginBasic();
 
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=edit');
 
 			//        $this->showContent();
 
@@ -66,7 +66,7 @@
 			//        $this->todo();
 			$this->doLoginBasic();
 
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=999');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=edit&notebook_id=999');
 
 			$this->checkBasicAsserts();
 			$this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')), $this->getBrowser()->getTitle());
@@ -79,7 +79,7 @@
 			//        $this->todo();
 			$this->doLoginBasic();
 
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1004');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=edit&notebook_id=1004');
 
 			$this->checkBasicAsserts();
 			$this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')), $this->getBrowser()->getTitle());
@@ -89,7 +89,7 @@
 
 		function testEditAccessControl_public() {
 			//        $this->todo('basic public access check - no access defaults to view');
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1004');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=edit&notebook_id=1004');
 
 			$this->checkBasicAsserts();
 			$this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')), $this->getBrowser()->getTitle());
@@ -103,7 +103,7 @@
 
 			$this->doLoginBasic();
 
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=edit&notebook_id=1001');
 
 			$this->checkBasicAsserts();
 			$this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')), $this->getBrowser()->getTitle());
@@ -125,7 +125,7 @@
 		function testEditAccessControl_admin() {
 			$this->doLoginAdmin();
 
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1004');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=edit&notebook_id=1004');
 
 			$this->checkBasicAsserts();
 			$this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')), $this->getBrowser()->getTitle());
@@ -155,7 +155,7 @@
 
 			$this->doLoginBasic();
 
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=edit&notebook_id=1001');
 
 			$this->checkBasicAsserts();
 
@@ -172,7 +172,7 @@
 
 		function testBaseDataUpdate() {
 			$this->doLoginBasic();
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=edit&notebook_id=1001');
 
 			//      NOTE: the identifier to use for setField is the value of the name attribute of the field
 			$this->setField('name', 'new name for testnotebook1');
@@ -192,7 +192,7 @@
 
 		function testCreateButton() {
 			$this->doLoginBasic();
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=list');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=list');
 
 			$this->click(util_lang('add_notebook'));
 
@@ -204,7 +204,7 @@
 
 		function testDeleteNotebook() {
 			$this->doLoginBasic();
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=edit&notebook_id=1001');
 
 			$this->todo();
 		}

@@ -14,7 +14,7 @@
 		}
 
 		function doLoginBasic() {
-			$this->get('http://localhost/digitalfieldnotebooks/');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 			$this->assertCookie('PHPSESSID');
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);
@@ -31,7 +31,7 @@
 		}
 
 		function goToNotebookView($notebook_id) {
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=view&notebook_id=' . $notebook_id);
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=view&notebook_id=' . $notebook_id);
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------
@@ -43,7 +43,7 @@
 
 			$view_content = $this->getBrowser()->getContent();
 
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?notebook_id=1001');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?notebook_id=1001');
 
 			$no_action_given_content = $this->getBrowser()->getContent();
 
@@ -53,7 +53,7 @@
 		function testMissingNotebookIdShowsNotebookListInstead() {
 			$this->doLoginBasic();
 
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=view');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=view');
 
 			$this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')), $this->getBrowser()->getTitle());
 			$this->assertText(util_lang('no_notebook_specified'));
@@ -63,7 +63,7 @@
 		function testNonexistentNotebookShowsNotebookListInstead() {
 			$this->doLoginBasic();
 
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=view&notebook_id=999');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=view&notebook_id=999');
 
 			$this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')), $this->getBrowser()->getTitle());
 			$this->assertText(util_lang('no_notebook_found'));
@@ -73,7 +73,7 @@
 		function testActionNotAllowedNotebookListInstead() {
 			$this->doLoginBasic();
 
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1004');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=edit&notebook_id=1004');
 
 			$this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')), $this->getBrowser()->getTitle());
 			$this->assertText(util_lang('no_permission'));
@@ -82,7 +82,7 @@
 
 		function testViewList_LoggedIn() {
 			$this->doLoginBasic();
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=list');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=list');
 
 			$this->assertNoText('IMPLEMENTED');
 			$this->assertNoPattern('/warning/i');
@@ -111,7 +111,7 @@
 		}
 
 		function testViewList_Public() {
-			$this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=list');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/notebook.php?action=list');
 
 			$this->assertNoText('IMPLEMENTED');
 			$this->assertNoPattern('/warning/i');

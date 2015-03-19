@@ -14,18 +14,18 @@
 		}
 
 		function testIndexPageLoad() {
-			$this->get('http://localhost/digitalfieldnotebooks/');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 			$this->assertResponse(200);
 		}
 
 		function testIndexPageLoadsErrorAndWarningFree() {
-			$this->get('http://localhost/digitalfieldnotebooks/');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 			$this->assertNoPattern('/error/i');
 			$this->assertNoPattern('/warning/i');
 		}
 
 		function testIndexPageLoadsCorrectText() {
-			$this->get('http://localhost/digitalfieldnotebooks/');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 
 			$this->assertTitle(new PatternExpectation('/' . LANG_APP_NAME . ': /'));
 
@@ -43,7 +43,7 @@
 		}
 
 		function testIndexPageHasCorrectMenus() {
-			$this->get('http://localhost/digitalfieldnotebooks/');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 
 			$this->assertEltByIdHasAttrOfValue('nav-notebooks', 'id', 'nav-notebooks');
 			$this->assertEltByIdHasAttrOfValue('nav-metadata-structures', 'id', 'nav-metadata-structures');
@@ -52,7 +52,7 @@
 		}
 
 		function testIndexPageHasSplashLinks() {
-			$this->get('http://localhost/digitalfieldnotebooks/');
+			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 
 			$this->assertEltByIdHasAttrOfValue('notebooks-splash-link', 'id', 'notebooks-splash-link');
 			$this->assertEltByIdHasAttrOfValue('plants-splash-link', 'id', 'plants-splash-link');
