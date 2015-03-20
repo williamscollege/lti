@@ -224,11 +224,12 @@
 			(706, NOW(), NOW(), 0, 604, 0, 'Opening 706', 'Opening 706, Sheet 604, Sheetgroup 502', 1 , NOW(),  TIMESTAMPADD(hour,1,NOW()), 'Faculty House', ''),
 			(707, NOW(), NOW(), 1, 605, 0, 'Opening 707', 'Opening 707, Sheet 605, Sheetgroup 503', 1 , NOW(),  TIMESTAMPADD(hour,1,NOW()), 'Purple Pub', ''),
 			(708, NOW(), NOW(), 1, 606, 0, 'Opening 708', 'Opening 708, Sheet 606, Sheetgroup 504', 1 , NOW(),  TIMESTAMPADD(hour,1,NOW()), '', ''),
-			(709, NOW(), NOW(), 0, 607, 0, 'Opening 709', 'Opening 709, Sheet 607, Sheetgroup 504', 1 , TIMESTAMPADD(day,2,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', ''),
-			(710, NOW(), NOW(), 0, 607, 0, 'Opening 710', 'Opening 710, Sheet 607, Sheetgroup 504', 1 , TIMESTAMPADD(day,4,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', ''),
-			(711, NOW(), NOW(), 0, 607, 0, 'Opening 711', 'Opening 711, Sheet 607, Sheetgroup 504', 1 , TIMESTAMPADD(day,5,NOW()),  TIMESTAMPADD(hour,2,NOW()), '', ''),
-			(712, NOW(), NOW(), 0, 608, 0, 'Opening 712', 'Opening 712, Sheet 608, Sheetgroup 504', 1 , NOW(),  TIMESTAMPADD(hour,1,NOW()), '', ''),
-			(713, NOW(), NOW(), 0, 610, 0, 'Opening 713', 'Opening 713, Sheet 610, Sheetgroup 510', 1 , TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', '')
+			(709, NOW(), NOW(), 0, 607, 0, 'Opening 709', 'Opening 709, Sheet 607, Sheetgroup 504', 1 , TIMESTAMPADD(day,-2,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', ''),
+			(710, NOW(), NOW(), 0, 607, 0, 'Opening 710', 'Opening 710, Sheet 607, Sheetgroup 504', 1 , TIMESTAMPADD(day,2,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', ''),
+			(711, NOW(), NOW(), 0, 607, 0, 'Opening 711', 'Opening 711, Sheet 607, Sheetgroup 504', 1 , TIMESTAMPADD(day,4,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', ''),
+			(712, NOW(), NOW(), 0, 607, 0, 'Opening 712', 'Opening 712, Sheet 607, Sheetgroup 504', 1 , TIMESTAMPADD(day,5,NOW()),  TIMESTAMPADD(hour,2,NOW()), '', ''),
+			(713, NOW(), NOW(), 0, 608, 0, 'Opening 713', 'Opening 713, Sheet 608, Sheetgroup 504', 1 , NOW(),  TIMESTAMPADD(hour,1,NOW()), '', ''),
+			(714, NOW(), NOW(), 0, 610, 0, 'Opening 714', 'Opening 714, Sheet 610, Sheetgroup 510', 1 , TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', '')
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
