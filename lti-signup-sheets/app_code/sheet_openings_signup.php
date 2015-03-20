@@ -1,7 +1,7 @@
 <?php
-	require_once('../app_setup.php');
+	require_once(dirname(__FILE__) . '/../app_setup.php');
 	$pageTitle = ucfirst(util_lang('sheet_openings_signup'));
-	require_once('../app_head.php');
+	require_once(dirname(__FILE__) . '/../app_head.php');
 
 
 	if ($IS_AUTHENTICATED) {
@@ -12,19 +12,19 @@
 		if ((!isset($_REQUEST["sheet"])) || (!is_numeric($_REQUEST["sheet"])) || ($_REQUEST["sheet"] <= 0)) {
 			// error: querystring 'sheet' must exist and be an integer
 			util_displayMessage('error', 'Invalid or missing sheet request');
-			require_once('../foot.php');
+			require_once(dirname(__FILE__) . '/../foot.php');
 			exit;
 		}
 		elseif (!$USER->isUserAllowedToAccessSheet($_REQUEST["sheet"])) {
 			// error: must have access to signup on this sheet
 			util_displayMessage('error', 'You do not have permission to signup on this sheet');
-			require_once('../foot.php');
+			require_once(dirname(__FILE__) . '/../foot.php');
 			exit;
 		}
 
 
 		// load calendar setup functions
-		require_once('calendar_setup.php');
+		require_once(dirname(__FILE__) . '/calendar_setup.php');
 
 
 		// ***************************
@@ -34,14 +34,14 @@
 
 		if (!$s->matchesDb) {
 			util_displayMessage('error', 'No matching sheet record found in database');
-			require_once('../foot.php');
+			require_once(dirname(__FILE__) . '/../foot.php');
 			exit;
 		}
 
 		$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $s->sheetgroup_id], $DB);
 		if (!$sg->matchesDb) {
 			util_displayMessage('error', 'No matching sheetgroup record found in database');
-			require_once('../foot.php');
+			require_once(dirname(__FILE__) . '/../foot.php');
 			exit;
 		}
 
@@ -203,7 +203,7 @@
 		header('Location: ' . APP_ROOT_PATH . '/index.php');
 	}
 
-	require_once('../foot.php');
+	require_once(dirname(__FILE__) . '/../foot.php');
 ?>
 
 <script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/sheets_edit_one.js"></script>

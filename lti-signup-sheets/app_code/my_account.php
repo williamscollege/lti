@@ -1,7 +1,7 @@
 <?php
-	require_once('../app_setup.php');
+	require_once(dirname(__FILE__) . '/../app_setup.php');
 	$pageTitle = ucfirst(util_lang('my_account'));
-	require_once('../app_head.php');
+	require_once(dirname(__FILE__) . '/../app_head.php');
 
 
 	if ($IS_AUTHENTICATED) {
@@ -22,7 +22,7 @@
 		header('Location: ' . APP_ROOT_PATH . '/index.php');
 	}
 
-	require_once('../foot.php');
+	require_once(dirname(__FILE__) . '/../foot.php');
 ?>
 
 <script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/sheet_openings_all.js"></script>

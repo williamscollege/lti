@@ -1,7 +1,7 @@
 <?php
 
-	require_once dirname(__FILE__) . '/../../classes/auth_base.class.php';
-	require_once dirname(__FILE__) . '/../../auth.cfg.php';
+	require_once(dirname(__FILE__) . '/../../classes/auth_base.class.php');
+	require_once(dirname(__FILE__) . '/../../auth.cfg.php');
 
 	class TestOfAuth_Base extends UnitTestCase {
 

@@ -1,13 +1,12 @@
 <?php
-	require_once('app_setup.php');
+	require_once(dirname(__FILE__) . '/app_setup.php');
 	$pageTitle = ucfirst(util_lang('home'));
-	require_once('app_head.php');
+	require_once(dirname(__FILE__) . '/app_head.php');
 
 
 	if ($IS_AUTHENTICATED) {
 		// SECTION: authenticated
-
-		# redirect to signups
+		# redirect to signups page
 		header('Location: ' . APP_ROOT_PATH . '/app_code/signups_all.php');
 
 	}
@@ -25,5 +24,5 @@
 	<?php
 	}
 
-	require_once('foot.php');
+	require_once(dirname(__FILE__) . '/foot.php');
 ?>

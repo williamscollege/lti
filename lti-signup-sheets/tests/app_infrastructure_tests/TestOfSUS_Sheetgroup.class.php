@@ -1,5 +1,5 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php';
+	require_once(dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php');
 
 	class TestOfSUS_Sheetgroup extends WMSUnitTestCaseDB {
 		function setUp() {
@@ -64,7 +64,7 @@
 		//// instance methods - related data
 
 		function testCacheSheets() {
-			$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id'=>501],$this->DB);
+			$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => 501], $this->DB);
 			$this->assertTrue($sg->matchesDb);
 
 			$sg->cacheSheets();
@@ -72,7 +72,7 @@
 		}
 
 		function testLoadSheets() {
-			$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id'=>501],$this->DB);
+			$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => 501], $this->DB);
 			$this->assertTrue($sg->matchesDb);
 
 			$sg->loadSheets();

@@ -1,7 +1,7 @@
 <?php
-	require_once('../app_setup.php');
+	require_once(dirname(__FILE__) . '/../app_setup.php');
 	$pageTitle = '';
-	require_once('../app_head.php');
+	require_once(dirname(__FILE__) . '/../app_head.php');
 
 
 	if ($IS_AUTHENTICATED) {
@@ -76,7 +76,7 @@
 		else {
 			// error: invalid $openingID value
 			util_displayMessage('error', 'Request failed. You appear to be attempting to do something other than create or edit an opening.');
-			require_once('../foot.php');
+			require_once(dirname(__FILE__) . '/../foot.php');
 			exit;
 		}
 
@@ -201,7 +201,7 @@
 						if (!$editOpening->matchesDb) {
 							// error: matching record does not exist
 							util_displayMessage('error', 'Error: No matching Opening record found. Attempt to edit opening record failed.');
-							require_once('../foot.php');
+							require_once(dirname(__FILE__) . '/../foot.php');
 							exit;
 						}
 

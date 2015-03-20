@@ -11,7 +11,7 @@
 	 * This page processes a launch request from an LTI tool consumer.
 	 */
 
-	require_once('lti_lib.php');
+	require_once(dirname(__FILE__) . '/lti_lib.php');
 
 	// Cancel any existing session
 	session_name(LTI_SESSION_NAME);

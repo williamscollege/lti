@@ -1,7 +1,7 @@
 <?php
-	require_once('../app_setup.php');
+	require_once(dirname(__FILE__) . '/../app_setup.php');
 	$pageTitle = ucfirst(util_lang('notebook'));
-	require_once('../app_head.php');
+	require_once(dirname(__FILE__) . '/../app_head.php');
 
 	#############################
 	# 0. example of custom SQL using PDO
@@ -156,5 +156,5 @@
 			<a href="<?php echo APP_ROOT_PATH . '/app_code/notebook.php?action=create&user_id=' . $USER->user_id; ?>" class="btn btn-default" id="btn-add-notebook"><?php echo util_lang('add_notebook'); ?></a><?php
 		}
 	}
-	require_once('../foot.php');
+	require_once(dirname(__FILE__) . '/../foot.php');
 ?>

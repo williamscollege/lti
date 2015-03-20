@@ -29,7 +29,7 @@
 	 * This page provides general functions to support the application.
 	 */
 
-	require_once('lti_db.php');
+	require_once(dirname(__FILE__) . '/lti_db.php');
 
 	###
 	###  Initialise application session and database connection

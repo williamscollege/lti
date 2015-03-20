@@ -1,6 +1,6 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/unit_tester.php';
-	require_once dirname(__FILE__) . '/../../util.php';
+	require_once(dirname(__FILE__) . '/../simpletest/unit_tester.php');
+	require_once(dirname(__FILE__) . '/../../util.php');
 
 
 	class TestOfUtil extends UnitTestCase {

@@ -1,6 +1,6 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php';
-	require_once dirname(__FILE__) . '/../../classes/auth_base.class.php';
+	require_once(dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php');
+	require_once(dirname(__FILE__) . '/../../classes/auth_base.class.php');
 
 	Mock::generate('Auth_Base');
 
@@ -80,7 +80,6 @@
 		}
 
 		//// instance methods - related data
-
 
 
 	}

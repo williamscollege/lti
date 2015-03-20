@@ -11,7 +11,7 @@
     $LANGUAGE = []; // NOTE: this is filled in by including the appropriate language file
 
     $CUR_LANG_SET = 'en'; // NOTE: not defined as a constant so that the current language set can be altered programatically if need be
-    require_once('lang/'.$CUR_LANG_SET.'.php');
+    require_once(dirname(__FILE__) . '/lang/' . $CUR_LANG_SET . '.php');
 
     // NOTE: language elements are accesses as $LANGUAGE[$set][$label] where $set the language set (e.g. 'en') and $label is the particular item desired (e.g. 'greeting')
     // NOTE: the $LANGUAGE array may be accessed directly, but the prefered method is to use util_lang($label)

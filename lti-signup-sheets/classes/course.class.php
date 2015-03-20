@@ -1,5 +1,5 @@
 <?php
-	require_once dirname(__FILE__) . '/db_linked.class.php';
+	require_once(dirname(__FILE__) . '/db_linked.class.php');
 
 	class Course extends Db_Linked {
 		public static $fields = array('course_id', 'course_idstr', 'short_name', 'long_name', 'account_idstr', 'term_idstr', 'flag_delete');

@@ -1,10 +1,10 @@
 <?php
-	require_once('simpletest/autorun.php');
-	require_once('simpletest/WMS_unit_tester_DB.php');
+	require_once(dirname(__FILE__) . '/simpletest/autorun.php');
+	require_once(dirname(__FILE__) . '/simpletest/WMS_unit_tester_DB.php');
 	SimpleTest::prefer(new TextReporter());
 
-	require_once('../institution.cfg.php');
-	require_once('../lang.cfg.php');
+	require_once(dirname(__FILE__) . '/../institution.cfg.php');
+	require_once(dirname(__FILE__) . '/../lang.cfg.php');
 
 	class TestOfAppInfrastructureSuite extends TestSuite {
 		function TestOfAppInfrastructureSuite() {

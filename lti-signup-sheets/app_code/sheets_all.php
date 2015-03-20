@@ -1,7 +1,7 @@
 <?php
-	require_once('../app_setup.php');
+	require_once(dirname(__FILE__) . '/../app_setup.php');
 	$pageTitle = ucfirst(util_lang('sheets_all'));
-	require_once('../app_head.php');
+	require_once(dirname(__FILE__) . '/../app_head.php');
 
 
 	if ($IS_AUTHENTICATED) {
@@ -82,7 +82,7 @@
 			if (!$sg->matchesDb) {
 				// error: default sheet group failed to auto-create properly
 				util_displayMessage('error', 'Default sheet group failed to auto-create properly.');
-				require_once('../foot.php');
+				require_once(dirname(__FILE__) . '/../foot.php');
 				exit;
 			}
 
@@ -139,7 +139,7 @@
 		header('Location: ' . APP_ROOT_PATH . '/index.php');
 	}
 
-	require_once('../foot.php');
+	require_once(dirname(__FILE__) . '/../foot.php');
 ?>
 
 

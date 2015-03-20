@@ -1,6 +1,6 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php';
-	require_once dirname(__FILE__) . '/../../classes/db_linked.class.php';
+	require_once(dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php');
+	require_once(dirname(__FILE__) . '/../../classes/db_linked.class.php');
 
 	class Trial_Db_Linked extends Db_Linked {
 		public static $fields = array('dblinktest_id', 'charfield', 'intfield', 'flagfield');

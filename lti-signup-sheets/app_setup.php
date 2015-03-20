@@ -1,13 +1,13 @@
 <?php
 	session_start();
 
-	require_once('institution.cfg.php');
-	require_once('lang.cfg.php');
+	require_once(dirname(__FILE__) . '/institution.cfg.php');
+	require_once(dirname(__FILE__) . '/lang.cfg.php');
 
-	require_once('classes/ALL_CLASS_INCLUDES.php');
+	require_once(dirname(__FILE__) . '/classes/ALL_CLASS_INCLUDES.php');
 
-	require_once('auth.cfg.php');
-	require_once('util.php');
+	require_once(dirname(__FILE__) . '/auth.cfg.php');
+	require_once(dirname(__FILE__) . '/util.php');
 
 	$FINGERPRINT = util_generateRequestFingerprint(); // used to prevent/complicate session hijacking ands XSS attacks
 

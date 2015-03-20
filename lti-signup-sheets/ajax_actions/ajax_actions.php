@@ -1,5 +1,5 @@
 <?php
-	require_once('head_ajax.php');
+	require_once(dirname(__FILE__) . '/head_ajax.php');
 
 	//	# tests
 	//	$action        = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);

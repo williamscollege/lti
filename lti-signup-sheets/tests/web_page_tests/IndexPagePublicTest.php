@@ -1,5 +1,5 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
+	require_once(dirname(__FILE__) . '/../simpletest/WMS_web_tester.php');
 
 	class IndexPagePublicTest extends WMSWebTestCase {
 

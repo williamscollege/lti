@@ -1,5 +1,5 @@
 <?php
-	require_once dirname(__FILE__) . '/db_linked.class.php';
+	require_once(dirname(__FILE__) . '/db_linked.class.php');
 
 	class SUS_Opening extends Db_Linked {
 		public static $fields = array('opening_id', 'created_at', 'updated_at', 'flag_delete', 'sheet_id', 'opening_group_id', 'name', 'description', 'max_signups', 'admin_comment', 'begin_datetime', 'end_datetime', 'location');
@@ -108,7 +108,7 @@
 			$this->cacheSignups();
 
 			$customColorClass = "text-danger";
-			if (count($this->signups) < $this->max_signups || $this->max_signups == -1 ) {
+			if (count($this->signups) < $this->max_signups || $this->max_signups == -1) {
 				$customColorClass = "text-success";
 			}
 			$max_signups = $this->max_signups;
@@ -144,7 +144,7 @@
 							// display date signup created
 							foreach ($this->signups as $signup) {
 								if ($signup->signup_user_id == $u->user_id) {
-									$rendered .= ' <span class="small">(' . $u->username . ', ' .util_datetimeFormatted($signup->created_at) . ')</span> ';
+									$rendered .= ' <span class="small">(' . $u->username . ', ' . util_datetimeFormatted($signup->created_at) . ')</span> ';
 								}
 							}
 							$rendered .= "</li>";

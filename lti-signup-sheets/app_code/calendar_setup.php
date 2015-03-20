@@ -1,5 +1,5 @@
 <?php
-	require_once('../app_setup.php');
+	require_once(dirname(__FILE__) . '/../app_setup.php');
 
 	#------------------------------------------------#
 	# primary function to call necessary child functions for page setup

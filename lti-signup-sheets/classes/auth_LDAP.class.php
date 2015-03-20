@@ -1,5 +1,5 @@
 <?php
-	require_once dirname(__FILE__) . '/auth_base.class.php';
+	require_once(dirname(__FILE__) . '/auth_base.class.php');
 
 	class Auth_LDAP extends Auth_Base {
 

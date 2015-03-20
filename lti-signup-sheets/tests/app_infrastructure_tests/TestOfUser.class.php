@@ -1,6 +1,6 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php';
-	require_once dirname(__FILE__) . '/../../classes/auth_base.class.php';
+	require_once(dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php');
+	require_once(dirname(__FILE__) . '/../../classes/auth_base.class.php');
 
 	Mock::generate('Auth_Base');
 
@@ -192,11 +192,11 @@
 
 			$u1->cacheMySignups();
 
-			$this->assertEqual(3,count($u1->signups_all));
+			$this->assertEqual(3, count($u1->signups_all));
 			// note hash notation (instead of object property)
-			$this->assertEqual(705,$u1->signups_all[0]['opening_id']);
-			$this->assertEqual(701,$u1->signups_all[1]['opening_id']);
-			$this->assertEqual(704,$u1->signups_all[2]['opening_id']);
+			$this->assertEqual(705, $u1->signups_all[0]['opening_id']);
+			$this->assertEqual(701, $u1->signups_all[1]['opening_id']);
+			$this->assertEqual(704, $u1->signups_all[2]['opening_id']);
 		}
 
 		function testCacheSignupsOnMySheets() {
@@ -206,18 +206,18 @@
 
 			// count # of openings
 			$this->assertEqual(5, count($u1->signups_on_my_sheets));
-			$this->assertEqual(703,$u1->signups_on_my_sheets[0]['opening_id']);
-			$this->assertEqual(702,$u1->signups_on_my_sheets[1]['opening_id']);
-			$this->assertEqual(705,$u1->signups_on_my_sheets[2]['opening_id']);
+			$this->assertEqual(703, $u1->signups_on_my_sheets[0]['opening_id']);
+			$this->assertEqual(702, $u1->signups_on_my_sheets[1]['opening_id']);
+			$this->assertEqual(705, $u1->signups_on_my_sheets[2]['opening_id']);
 			// count # of signups in one opening
 			$this->assertEqual(4, count($u1->signups_on_my_sheets[3]['array_signups']));
-			$this->assertEqual(810,$u1->signups_on_my_sheets[0]['array_signups'][0]['signup_id']);
-			$this->assertEqual(805,$u1->signups_on_my_sheets[1]['array_signups'][0]['signup_id']);
-			$this->assertEqual(809,$u1->signups_on_my_sheets[1]['array_signups'][1]['signup_id']);
+			$this->assertEqual(810, $u1->signups_on_my_sheets[0]['array_signups'][0]['signup_id']);
+			$this->assertEqual(805, $u1->signups_on_my_sheets[1]['array_signups'][0]['signup_id']);
+			$this->assertEqual(809, $u1->signups_on_my_sheets[1]['array_signups'][1]['signup_id']);
 		}
 
 		function testCacheMyAvailableSheetOpenings() {
-			$u1 = User::getOneFromDb(['user_id'=>101], $this->DB);
+			$u1 = User::getOneFromDb(['user_id' => 101], $this->DB);
 
 			$u1->cacheMyAvailableSheetOpenings();
 
@@ -272,7 +272,7 @@
 			$this->assertEqual(2, count($allTeachers));
 		}
 
-//	util_prePrintR($u1);
-//	exit;
+		//	util_prePrintR($u1);
+		//	exit;
 
 	}

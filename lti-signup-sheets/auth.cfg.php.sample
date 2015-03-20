@@ -13,7 +13,7 @@
 	# ---------------------------
 	# authentication mode: example values (e.g. test user without specific authentication mode)
 	# ---------------------------
-	# require_once('classes/auth_base.class.php');
+	# require_once(dirname(__FILE__) . '/classes/auth_base.class.php');
 	# define('AUTH_SERVER',	'');
 	# $AUTH = new Auth_Base();
 
@@ -21,7 +21,7 @@
 	# ---------------------------
 	# authentication mode: LDAP
 	# ---------------------------
-	require_once('classes/auth_LDAP.class.php');
+	require_once(dirname(__FILE__) . '/classes/auth_LDAP.class.php');
 	define('AUTH_SERVER',	'ldap.institution.edu');	// e.g. ldap.acme.edu (TODO: or https://ldap.acme.edu)
 	define('AUTH_PORT', '123');
 

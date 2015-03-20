@@ -1,5 +1,5 @@
 <?php
-	require_once('../app_setup.php');
+	require_once(dirname(__FILE__).'/../app_setup.php');
 
 	$sheetIsNew          = FALSE;
 	$sheetIsDataIncoming = TRUE;
@@ -17,7 +17,7 @@
 			$sheetIsDataIncoming = FALSE;
 		}
 	}
-	require_once('../app_head.php');
+	require_once(dirname(__FILE__) . '/../app_head.php');
 
 
 	if ($IS_AUTHENTICATED) {
@@ -32,20 +32,20 @@
 				if ((!isset($_REQUEST["sheet"])) || (!is_numeric($_REQUEST["sheet"]))) {
 					// error: querystring 'sheet' must exist and be an integer
 					util_displayMessage('error', 'Invalid or missing sheet request');
-					require_once('../foot.php');
+					require_once(dirname(__FILE__) . '/../foot.php');
 					exit;
 				}
 				elseif (!$USER->isUserAllowedToManageSheet($_REQUEST["sheet"])) {
 					// error: must have access to manage this sheet
 					util_displayMessage('error', 'You do not have permission to edit this sheet');
-					require_once('../foot.php');
+					require_once(dirname(__FILE__) . '/../foot.php');
 					exit;
 				}
 			}
 		}
 
 		// load calendar setup functions
-		require_once('calendar_setup.php');
+		require_once(dirname(__FILE__) . '/calendar_setup.php');
 
 
 		$s = FALSE;
@@ -562,7 +562,7 @@
 		header('Location: ' . APP_ROOT_PATH . '/index.php');
 	}
 
-	require_once('../foot.php');
+	require_once(dirname(__FILE__) . '/../foot.php');
 ?>
 
 <script type="text/javascript" src="<?php echo APP_ROOT_PATH; ?>/js/sheets_edit_one.js"></script>

@@ -1,5 +1,5 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php';
+	require_once(dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php');
 
 	class TestOfCourseRole extends WMSUnitTestCaseDB {
 		function setUp() {

@@ -1,8 +1,8 @@
 <?php
-	require_once dirname(__FILE__) . '/../classes/auth_base.class.php';
-	require_once dirname(__FILE__) . '/../classes/auth_LDAP.class.php';
+	require_once(dirname(__FILE__) . '/../classes/auth_base.class.php');
+	require_once(dirname(__FILE__) . '/../classes/auth_LDAP.class.php');
 
-	require_once dirname(__FILE__) . '/../classes/ALL_CLASS_INCLUDES.php';
+	require_once(dirname(__FILE__) . '/../classes/ALL_CLASS_INCLUDES.php');
 	/*
 	This file contains a series of methods for creating known test data in a target database
 	*/
@@ -226,8 +226,9 @@
 			(708, NOW(), NOW(), 1, 606, 0, 'Opening 708', 'Opening 708, Sheet 606, Sheetgroup 504', 1 , NOW(),  TIMESTAMPADD(hour,1,NOW()), '', ''),
 			(709, NOW(), NOW(), 0, 607, 0, 'Opening 709', 'Opening 709, Sheet 607, Sheetgroup 504', 1 , TIMESTAMPADD(day,2,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', ''),
 			(710, NOW(), NOW(), 0, 607, 0, 'Opening 710', 'Opening 710, Sheet 607, Sheetgroup 504', 1 , TIMESTAMPADD(day,4,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', ''),
-			(711, NOW(), NOW(), 0, 608, 0, 'Opening 711', 'Opening 711, Sheet 608, Sheetgroup 504', 1 , NOW(),  TIMESTAMPADD(hour,1,NOW()), '', ''),
-			(712, NOW(), NOW(), 0, 610, 0, 'Opening 712', 'Opening 712, Sheet 610, Sheetgroup 510', 1 , TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', '')
+			(711, NOW(), NOW(), 0, 607, 0, 'Opening 711', 'Opening 711, Sheet 607, Sheetgroup 504', 1 , TIMESTAMPADD(day,5,NOW()),  TIMESTAMPADD(hour,2,NOW()), '', ''),
+			(712, NOW(), NOW(), 0, 608, 0, 'Opening 712', 'Opening 712, Sheet 608, Sheetgroup 504', 1 , NOW(),  TIMESTAMPADD(hour,1,NOW()), '', ''),
+			(713, NOW(), NOW(), 0, 610, 0, 'Opening 713', 'Opening 713, Sheet 610, Sheetgroup 510', 1 , TIMESTAMPADD(day,1,NOW()),  TIMESTAMPADD(hour,1,NOW()), '', '')
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
@@ -320,12 +321,6 @@
 		createTestData_SUS_Openings($dbConn);
 		createTestData_SUS_Signups($dbConn);
 		createTestData_SUS_Access($dbConn);
-
-		//        $all_actions = Action::getAllFromDb([],$dbConn);
-		//        global $ACTIONS;
-		//        foreach ($all_actions as $a) {
-		//            $ACTIONS[$a->name] = $a;
-		//        }
 	}
 
 	//--------------------------------------------------------------------------------------------------------------

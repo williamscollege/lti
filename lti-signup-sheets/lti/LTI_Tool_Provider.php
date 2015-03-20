@@ -50,7 +50,7 @@
 	/**
 	 * OAuth library file
 	 */
-	require_once('OAuth.php');
+	require_once(dirname(__FILE__) . '/OAuth.php');
 
 	/**
 	 * Class to represent an LTI Tool Provider

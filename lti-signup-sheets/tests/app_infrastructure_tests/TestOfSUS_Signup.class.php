@@ -1,5 +1,5 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php';
+	require_once(dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php');
 
 	class TestOfSUS_Signup extends WMSUnitTestCaseDB {
 		function setUp() {

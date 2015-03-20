@@ -1,5 +1,5 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php';
+	require_once(dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php');
 
 	class TestOfSUS_Access extends WMSUnitTestCaseDB {
 		function setUp() {
@@ -38,7 +38,6 @@
 		//// instance methods - object itself
 
 		//// instance methods - related data
-
 
 
 	}

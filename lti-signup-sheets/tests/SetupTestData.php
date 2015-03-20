@@ -1,10 +1,10 @@
 <?php
-	require_once('simpletest/autorun.php');
-	require_once('simpletest/WMS_web_tester.php');
+	require_once(dirname(__FILE__) . '/simpletest/autorun.php');
+	require_once(dirname(__FILE__) . '/simpletest/WMS_web_tester.php');
 	SimpleTest::prefer(new TextReporter());
 
-	require_once('../institution.cfg.php');
-	require_once('../lang.cfg.php');
+	require_once(dirname(__FILE__) . '/../institution.cfg.php');
+	require_once(dirname(__FILE__) . '/../lang.cfg.php');
 
 	class SetupTestData extends TestSuite {
 		function SetupTestData() {
