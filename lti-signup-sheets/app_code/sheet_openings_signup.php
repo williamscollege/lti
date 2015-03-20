@@ -139,6 +139,7 @@
 												if ($curOpeningDate != $lastOpeningDate) {
 													// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 													foreach ($daysOpenings as $op) {
+														util_prePrintR($op);
 														$op->cacheSignups();
 														// a) show 'LimitedControls' only if opening has capacity for additional signups
 														// b) show 'LimitedControls' only on current and future dates (not past dates)
@@ -172,6 +173,7 @@
 
 											// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 											foreach ($daysOpenings as $op) {
+												util_prePrintR($op);
 												$op->cacheSignups();
 												// a) show 'LimitedControls' only if opening has capacity for additional signups
 												// b) show 'LimitedControls' only on current and future dates (not past dates)

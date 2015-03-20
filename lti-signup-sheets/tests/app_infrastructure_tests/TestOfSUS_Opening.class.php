@@ -22,10 +22,10 @@
 			$this->assertTrue(in_array('name', SUS_Opening::$fields));
 			$this->assertTrue(in_array('description', SUS_Opening::$fields));
 			$this->assertTrue(in_array('max_signups', SUS_Opening::$fields));
-			$this->assertTrue(in_array('admin_comment', SUS_Opening::$fields));
 			$this->assertTrue(in_array('begin_datetime', SUS_Opening::$fields));
 			$this->assertTrue(in_array('end_datetime', SUS_Opening::$fields));
 			$this->assertTrue(in_array('location', SUS_Opening::$fields));
+			$this->assertTrue(in_array('admin_comment', SUS_Opening::$fields));
 		}
 
 		//// static methods

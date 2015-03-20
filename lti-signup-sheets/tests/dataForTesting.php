@@ -214,7 +214,7 @@
 	function createTestData_SUS_Openings($dbConn) {
 		// 700 series ids
 		# SUS_Opening: 'opening_id', 'created_at', 'updated_at', 'flag_delete', 'sheet_id', 'opening_group_id', 'name', 'description',
-		# 'max_signups', 'admin_comment', 'begin_datetime', 'end_datetime', 'location'
+		# 'max_signups', 'begin_datetime', 'end_datetime', 'location', 'admin_comment'
 		$addTestSql  = "INSERT INTO " . SUS_Opening::$dbTable . " VALUES
 			(701, NOW(), NOW(), 0, 601, 0, 'Opening 701', 'Opening 701, Sheet 601, Sheetgroup 501', 8 , TIMESTAMPADD(hour,4,NOW()),  TIMESTAMPADD(hour,5,NOW()), 'opening location at CET 256', 'opening admin comment'),
 			(702, NOW(), NOW(), 0, 601, 0, 'Opening 702', 'Opening 702, Sheet 601, Sheetgroup 501', 2 , TIMESTAMPADD(day,-4,NOW()),  TIMESTAMPADD(hour,25,NOW()), 'CET MakerSpace', 'no comment'),

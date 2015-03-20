@@ -178,10 +178,10 @@
 						$newOpening->name             = $openingName;
 						$newOpening->description      = $openingDescription;
 						$newOpening->max_signups      = $openingNumSignupsPerOpening;
-						$newOpening->admin_comment    = $openingAdminNotes;
 						$newOpening->begin_datetime   = util_dateTimeObject_asMySQL($newOpeningDateTimeBegin);
 						$newOpening->end_datetime     = util_dateTimeObject_asMySQL($newOpeningDateTimeEnd);
 						$newOpening->location         = $openingLocation;
+						$newOpening->admin_comment    = $openingAdminNotes;
 
 						// util_prePrintR($newOpening);
 
@@ -214,10 +214,10 @@
 						$editOpening->name           = $openingName;
 						$editOpening->description    = $openingDescription;
 						$editOpening->max_signups    = $openingNumSignupsPerOpening;
-						$editOpening->admin_comment  = $openingAdminNotes;
 						$editOpening->begin_datetime = util_dateTimeObject_asMySQL($editOpeningDateTimeBegin);
 						$editOpening->end_datetime   = util_dateTimeObject_asMySQL($editOpeningDateTimeEnd);
 						$editOpening->location       = $openingLocation;
+						$editOpening->admin_comment  = $openingAdminNotes;
 						$editOpening->updated_at     = util_currentDateTimeString_asMySQL();
 
 						// util_prePrintR($editOpening);

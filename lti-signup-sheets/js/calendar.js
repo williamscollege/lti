@@ -113,9 +113,9 @@ $(document).ready(function () {
 		$("#edit_OpeningID").val($(parentOfClickedLink).attr('data-opening_id'));
 		$("#edit_OpeningName").val($(parentOfClickedLink).attr('data-name'));
 		$("#edit_OpeningDescription").val($(parentOfClickedLink).attr('data-description'));
-		$("#edit_OpeningAdminNotes").val($(parentOfClickedLink).attr('data-admin_comment'));
-		$("#edit_OpeningLocation").val($(parentOfClickedLink).attr('data-location'));
 		$("#edit_OpeningNumSignupsPerOpening").val($(parentOfClickedLink).attr('data-max_signups'));
+		$("#edit_OpeningLocation").val($(parentOfClickedLink).attr('data-location'));
+		$("#edit_OpeningAdminNotes").val($(parentOfClickedLink).attr('data-admin_comment'));
 
 		// split date/time values
 		var datetimeBeginAry = $(parentOfClickedLink).attr('data-begin_datetime').split(' ');
