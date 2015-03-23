@@ -192,7 +192,7 @@
 					$rendered .= '<a href="#" class="sus-add-me-to-opening" data-opening-id="' . $this->opening_id . '" title="Sign me up"><i class="glyphicon glyphicon-plus"></i>&nbsp;Signup</a><br/>';
 				}
 				// show no controls ("this future opening is already filled to capacity")
-				elseif (!(count($this->signups) < $this->max_signups || $this->max_signups == -1)){
+				elseif (!(count($this->signups) < $this->max_signups || $this->max_signups == -1)) {
 					$rendered .= 'full capacity<br/>';
 				}
 			}
