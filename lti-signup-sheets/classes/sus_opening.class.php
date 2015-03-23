@@ -158,6 +158,7 @@
 			return $rendered;
 		}
 
+		// usage: admin or managers of this sheet
 		public function renderAsHtmlShortWithFullControls() {
 			$this->cacheSignups();
 			$signedupUserIdsAry = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
@@ -171,6 +172,7 @@
 			return $rendered;
 		}
 
+		// usage: ordinary users with permission to signup on this sheet
 		public function renderAsHtmlShortWithLimitedControls($UserId = 0) {
 			$this->cacheSignups();
 			$signedupUserIdsAry = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
@@ -178,94 +180,35 @@
 
 			$rendered = $this->_renderHtml_BEGIN($is_own_signup);
 
-			// BEGIN: TEST CODE
-			// a) show 'LimitedControls' only if opening has capacity for additional signups
-			// b) show 'LimitedControls' only on current and future dates (not past dates)
-			// refactor into render fragments to expose logic?
-			// if ((count($this->signups) < $this->max_signups || $this->max_signups == -1) && ($this->begin_datetime >= util_currentDateTimeString_asMySQL())) {
-
-			// future opening: allow controls
 			if (($this->begin_datetime >= util_currentDateTimeString_asMySQL())) {
-				// fetch array of user_id values for signups for this opening
-				// I am signed up for this future opening: allow 'cancel signup' btn
-				//if ((count($this->signups) < $this->max_signups || $this->max_signups == -1) && ($is_own_signup)) {
+				// FUTURE OPENINGS
+
+				// show 'cancel signup' btn ("I am signed up for this future opening")
 				if ($is_own_signup) {
 					$rendered .= '<a href="#" class="sus-delete-me-from-opening" data-opening-id="' . $this->opening_id . '" title="Delete my signup"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel signup</a>';
 				}
-				// I am not signed up for this future opening: allow 'signup' btn
+				// show 'signup' btn ("I am not signed up for this future opening")
 				elseif (count($this->signups) < $this->max_signups || $this->max_signups == -1) {
 					$rendered .= '<a href="#" class="sus-add-me-to-opening" data-opening-id="' . $this->opening_id . '" title="Sign me up"><i class="glyphicon glyphicon-plus"></i>&nbsp;Signup</a><br/>';
 				}
-				// future opening but capacity is full: no controls
+				// show no controls ("this future opening is already filled to capacity")
 				elseif (!(count($this->signups) < $this->max_signups || $this->max_signups == -1)){
-					//$rendered .= '<a href="#" class="sus-add-me-to-opening" data-opening-id="' . $this->opening_id . '" title="Sign me up"><i class="glyphicon glyphicon-plus"></i>&nbsp;Signup</a><br/>';
 					$rendered .= 'full capacity<br/>';
 				}
 			}
 			else {
-				// I am signed up for this past opening: show text note (no controls)
+				// PAST OPENINGS
+
+				// show no controls ("I am signed up for this past opening: show text note")
 				if ($is_own_signup) {
 					$rendered .= 'I signed up';
 				}
 				$rendered .= '<br />';
 			}
-			// END: TEST CODE
-
 
 			$rendered .= $this->_renderHtml_END($signedupUserIdsAry);
 
 			return $rendered;
 		}
-		//
-		//		public function renderAsHtmlShortWithNoControls($UserId = 0) {
-		//			$this->cacheSignups();
-		//			$signedupUserIdsAry = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
-		//			$is_own_signup      = in_array($UserId, $signedupUserIdsAry);
-		//
-		//			$rendered = $this->_renderHtml_BEGIN($is_own_signup);
-		//			// Am I signed up?
-		//			if ($is_own_signup) {
-		//				$rendered .= 'I signed up';
-		//			}
-		//			$rendered .= '<br />';
-		//			$rendered .= $this->_renderHtml_END($signedupUserIdsAry);
-		//
-		//			return $rendered;
-		//		}
-
-		/* TEMPORARILY SAVE THE ORIGINAL CODE
-				public function renderAsHtmlShortWithLimitedControls($UserId = 0) {
-					$this->cacheSignups();
-					$signedupUserIdsAry = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
-					$is_own_signup      = in_array($UserId, $signedupUserIdsAry);
-
-					$rendered = $this->_renderHtml_BEGIN($is_own_signup);
-					// fetch array of user_id values for signups for this opening
-					if ($is_own_signup) {
-						$rendered .= '<a href="#" class="sus-delete-me-from-opening" data-opening-id="' . $this->opening_id . '" title="Delete my signup"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel signup</a>';
-					}
-					else {
-						$rendered .= '<a href="#" class="sus-add-me-to-opening" data-opening-id="' . $this->opening_id . '" title="Sign me up"><i class="glyphicon glyphicon-plus"></i>&nbsp;Signup</a><br/>';
-					}
-					$rendered .= $this->_renderHtml_END($signedupUserIdsAry);
-
-					return $rendered;
-				}
-
-				public function renderAsHtmlShortWithNoControls($UserId = 0) {
-					$this->cacheSignups();
-					$signedupUserIdsAry = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
-					$is_own_signup      = in_array($UserId, $signedupUserIdsAry);
-
-					$rendered = $this->_renderHtml_BEGIN($is_own_signup);
-					// Am I signed up?
-					if ($is_own_signup) {
-						$rendered .= 'I signed up';
-					}
-					$rendered .= '<br />';
-					$rendered .= $this->_renderHtml_END($signedupUserIdsAry);
-
-					return $rendered;
-				}*/
 
 	}

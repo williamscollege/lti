@@ -139,27 +139,9 @@
 												if ($curOpeningDate != $lastOpeningDate) {
 													// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 													foreach ($daysOpenings as $op) {
+														// determine if signups are public/private, and which, if any, controls or text should be displayed
 														$op->cacheSignups();
-
 														echo $op->renderAsHtmlShortWithLimitedControls($USER->user_id) . "\n";
-
-														/*
-														util_prePrintR($op->signups);
-														echo "<br />";
-														echo 'signup_user_id = ';
-														//util_prePrintR($op->signups[0]->signup_user_id);
-														echo 'count of signups = ' . count($op->signups) . "<br />";
-														echo 'max_signups = ' . ($op->max_signups) . "<br />";
-
-														// a) show 'LimitedControls' only if opening has capacity for additional signups
-														// b) show 'LimitedControls' only on current and future dates (not past dates)
-														if ((count($op->signups) < $op->max_signups || $op->max_signups == -1) && ($op->begin_datetime >= util_currentDateTimeString_asMySQL())) {
-															echo $op->renderAsHtmlShortWithLimitedControls($USER->user_id) . "\n";
-														}
-														else {
-															echo $op->renderAsHtmlShortWithNoControls($USER->user_id) . "\n";
-														}
-														*/
 													}
 
 													if ($lastOpeningDate) {
@@ -184,24 +166,9 @@
 
 											// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 											foreach ($daysOpenings as $op) {
+												// determine if signups are public/private, and which, if any, controls or text should be displayed
 												$op->cacheSignups();
 												echo $op->renderAsHtmlShortWithLimitedControls($USER->user_id) . "\n";
-												/*
-												util_prePrintR($op->signups);
-												echo "<br />";
-												echo 'signup_user_id = ';
-												//util_prePrintR($op->signups[0]->signup_user_id);
-												echo 'count of signups = ' . count($op->signups) . "<br />";
-												echo 'max_signups = ' . ($op->max_signups) . "<br />";
-												// a) show 'LimitedControls' only if opening has capacity for additional signups
-												// b) show 'LimitedControls' only on current and future dates (not past dates)
-												if ((count($op->signups) < $op->max_signups || $op->max_signups == -1) && ($op->begin_datetime >= util_currentDateTimeString_asMySQL())) {
-													echo $op->renderAsHtmlShortWithLimitedControls($USER->user_id) . "\n";
-												}
-												else {
-													echo $op->renderAsHtmlShortWithNoControls($USER->user_id) . "\n";
-												}
-												*/
 											}
 											echo '</div>' . "\n";
 										?>
