@@ -85,14 +85,6 @@
 		$openingBeginTimeMinute = ($openingBeginTimeMinute < 10 ? '0' : '') . $openingBeginTimeMinute;
 		$beginDateTime          = DateTime::createFromFormat('Y-m-d g:i a', "$openingDateBegin $openingBeginTimeHour:$openingBeginTimeMinute $openingBeginTime_AMPM");
 
-
-		// TODO - Conflict Avoidance (validation)
-		// Problems adding openings:
-		// 2015-02-11 11:37 AM to 5:15 PM :: conflicts with another opening on this sheet
-		// http://oldglow.williams.edu/blocks/signup_sheets/sheet_create_openings_process.php
-		// example: http://oldglow.williams.edu/blocks/signup_sheets/?contextid=2&action=editsheet&sheet=1311&sheetgroup=2077
-
-
 		// note: default condition is 'duration'
 		if ($openingTimeMode == 'time_range') {
 			// calc duration of each opening
@@ -107,7 +99,7 @@
 			// only new openings may set value for 'openingNumOpenings' (editing opening ignores this)
 			$openingDurationEachOpening = $time_range_minutes / $openingNumOpenings;
 		}
-		// at this point the opening specification is always valid as begin at X, do Y openings of Z minutes each
+		// at this point the opening specification is always valid to begin at X, do Y openings of Z minutes each
 
 
 		// if current day is 'valid', then create openings on that day, else update $repeatEndDate later
@@ -149,8 +141,25 @@
 		// 1. generate/find a unique opening group id
 		$opening_group_id = 0;
 
+		// conflict avoidance: get all preexisting openings as array for this sheet, filtered for better efficiency by opening begin and end dates
+		$conflicts_ary = [];
+		$preexisting_openings_ary = SUS_Opening::getAllFromDb(['sheet_id' => $openingSheetID, 'begin_datetime <=' => util_dateTimeObject_asMySQL($repeatEndDate), 'end_datetime >=' => util_dateTimeObject_asMySQL($repeatBeginDate)], $DB);
+		// TODO FINISH THIS
+		$preexisting_openings_ary = SUS_Opening::getAllFromDb(['sheet_id' => $openingSheetID, 'begin_datetime <=' => util_dateTimeObject_asMySQL($repeatEndDate), 'end_datetime >=' => util_dateTimeObject_asMySQL($repeatBeginDate)], $DB);
+
+		echo count($preexisting_openings_ary);
+		util_prePrintR($preexisting_openings_ary);
+		exit;
+
+		// constrain all datetime to trim seconds
+		foreach ($preexisting_openings_ary as $preexisting) {
+			$preexisting->begin_datetime = preg_replace('/:\\d\\d$/',':00',$preexisting->begin_datetime);
+			$preexisting->end_datetime = preg_replace('/:\\d\\d$/',':00',$preexisting->end_datetime);
+		}
+
 		// loop through days from begin date to end date
 		$currentOpeningDate = clone $repeatBeginDate;
+
 		while ($currentOpeningDate <= $repeatEndDate) {
 			// validation algorithm for each of the repeat radio choices
 			// if current day is 'valid', then create openings on that day
@@ -163,38 +172,66 @@
 				for ($i = 0; $i < $openingNumOpenings; $i++) {
 					// Are we creating a NEW opening or editing an preexisting opening?
 					if ($openingID == 'NEW') {
-						// create the opening form the parameters specified in the form, then save it
-						// create new Opening using factory function
-						$newOpening = SUS_Opening::createNewOpening($openingSheetID, $DB);
+						// CREATING NEW OPENING
 
 						// round any datetime seconds to nearest minute to avoid error
 						$newOpeningDateTimeBegin = clone $baseOpeningDateTime;
 						$newOpeningDateTimeBegin->modify('+' . round($i * $openingDurationEachOpening) . ' minute');
+						$newOpeningDateTimeBegin_str_Ymd_his = util_dateTimeObject_asMySQL($newOpeningDateTimeBegin);
 						$newOpeningDateTimeEnd = clone $baseOpeningDateTime;
 						$newOpeningDateTimeEnd->modify('+' . round(($i + 1) * $openingDurationEachOpening) . ' minute');
-						// echo $newOpeningDateTimeBegin->format('Y-m-d h:i') . ' - ' . $newOpeningDateTimeEnd->format('Y-m-d h:i') . "\n";
+						$newOpeningDateTimeEnd_str_Ymd_his = util_dateTimeObject_asMySQL($newOpeningDateTimeEnd);
+						// echo $newOpeningDateTimeBegin_str_Ymd_his . ' - ' . $newOpeningDateTimeEnd_str_Ymd_his . "<br />";
 
-						$newOpening->opening_group_id = $opening_group_id;
-						$newOpening->name             = $openingName;
-						$newOpening->description      = $openingDescription;
-						$newOpening->max_signups      = $openingNumSignupsPerOpening;
-						$newOpening->begin_datetime   = util_dateTimeObject_asMySQL($newOpeningDateTimeBegin);
-						$newOpening->end_datetime     = util_dateTimeObject_asMySQL($newOpeningDateTimeEnd);
-						$newOpening->location         = $openingLocation;
-						$newOpening->admin_comment    = $openingAdminNotes;
+						// conflict avoidance: allow any new non-conflicting openings to be created. Display list of blocked openings (conflicts) to user.
+						// message: "The following conflicting openings were not created, but all other openings were created successfully"
+						$isConflict = FALSE;
+						foreach ($preexisting_openings_ary as $preexisting) {
+							if( $newOpeningDateTimeBegin_str_Ymd_his < $preexisting->end_datetime &&
+								$newOpeningDateTimeEnd_str_Ymd_his   > $preexisting->begin_datetime){
+								// todo - create note of this in user log records
+								echo "CONFLICCCCT: $newOpeningDateTimeEnd_str_Ymd_his < $preexisting->end_datetime &amp;&amp; $newOpeningDateTimeEnd_str_Ymd_his > $preexisting->begin_datetime<br/>\n";
+								$needle = "conflict exists for: " . util_dateTimeObject_asMySQL($newOpeningDateTimeBegin) . " - " . util_dateTimeObject_asMySQL($newOpeningDateTimeEnd) . " against $preexisting->begin_datetime - $preexisting->end_datetime";
+								if(!in_array( $needle, $conflicts_ary)){
+									array_push($conflicts_ary, $needle);
+								}
 
-						// util_prePrintR($newOpening);
+								$isConflict = TRUE;
+								break;
+							} else {
+								echo "NO CONFLICCCCT: $newOpeningDateTimeEnd_str_Ymd_his < $preexisting->end_datetime &amp;&amp; $newOpeningDateTimeEnd_str_Ymd_his > $preexisting->begin_datetime<br/>\n";
+							}
+						}
 
-						// save the new opening
-						$newOpening->updateDb();
+						if (!$isConflict) {
+							// create the opening form the parameters specified in the form, then save it
+							// create new Opening using factory function
+							$newOpening = SUS_Opening::createNewOpening($openingSheetID, $DB);
 
-						if (!$opening_group_id) {
-							$opening_group_id             = $newOpening->opening_id;
 							$newOpening->opening_group_id = $opening_group_id;
+							$newOpening->name             = $openingName;
+							$newOpening->description      = $openingDescription;
+							$newOpening->max_signups      = $openingNumSignupsPerOpening;
+							$newOpening->begin_datetime   = util_dateTimeObject_asMySQL($newOpeningDateTimeBegin);
+							$newOpening->end_datetime     = util_dateTimeObject_asMySQL($newOpeningDateTimeEnd);
+							$newOpening->location         = $openingLocation;
+							$newOpening->admin_comment    = $openingAdminNotes;
+
+							// util_prePrintR($newOpening);
+
+							// save the new opening
 							$newOpening->updateDb();
+
+							if (!$opening_group_id) {
+								$opening_group_id             = $newOpening->opening_id;
+								$newOpening->opening_group_id = $opening_group_id;
+								$newOpening->updateDb();
+							}
 						}
 					}
 					elseif (isset($openingID) && $openingID > 0) {
+						// EDIT PREEXISTING OPENING
+
 						// fetch this opening_id from the DB, update it, then save it
 						$editOpening = SUS_Opening::getOneFromDb(['opening_id' => $openingID], $DB);
 
@@ -211,6 +248,15 @@
 						$editOpeningDateTimeEnd = clone $baseOpeningDateTime;
 						$editOpeningDateTimeEnd->modify('+' . round(($i + 1) * $openingDurationEachOpening) . ' minute');
 						// echo $editOpeningDateTimeBegin->format('Y-m-d h:i') . ' - ' . $editOpeningDateTimeEnd->format('Y-m-d h:i') . "\n";
+
+						// TODO - start conflict avoidance
+						// conflict avoidance: allow any new non-conflicting openings to be created. Display list of blocked openings (conflicts) to user.
+						// message: "The following conflicting openings were not created, but all other openings were created successfully"
+						// 2015-02-11 11:37 AM to 5:15 PM :: conflicts with another opening on this sheet
+						//						if(){
+						//
+						//						}
+
 						$editOpening->name           = $openingName;
 						$editOpening->description    = $openingDescription;
 						$editOpening->max_signups    = $openingNumSignupsPerOpening;
@@ -232,6 +278,7 @@
 			$currentOpeningDate->modify('+1 day');
 		}
 
+		util_prePrintR($conflicts_ary);
 		// redirect
 		header('Location: ' . APP_FOLDER . '/app_code/sheets_edit_one.php?sheet=' . $openingSheetID);
 	}

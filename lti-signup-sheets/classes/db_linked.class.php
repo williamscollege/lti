@@ -269,10 +269,10 @@
 			//		print_r($identHash);
 
 			$fetchSql = static::buildFetchSql($identHash);
-			//			            echo '<pre>';
-			//			            print_r($identHash);
-			//					    echo "\n$fetchSql\n";
-			//			            echo'</pre>';
+//						            echo '<pre>';
+//						            print_r($identHash);
+//								    echo "\n$fetchSql\n";
+//						            echo'</pre>';
 
 			$fetchStmt = $usingDb->prepare($fetchSql);
 
@@ -326,6 +326,7 @@
 				}
 				else {
 					$k_parts     = preg_split('/\s+/', $k);
+					//util_prePrintR($k_parts);
 					$num_k_parts = count($k_parts);
 					if ($num_k_parts == 1) {
 

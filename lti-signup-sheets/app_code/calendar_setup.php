@@ -476,7 +476,7 @@
 								</div>
 							</div>
 							<div class="form-group form-group-sm">
-								<label for="openingRepeaterControls" class="col-sm-4 control-label">Repeating?</label>
+								<label for="openingRepeaterControls" class="col-sm-4 control-label">Repeat?</label>
 
 								<div class="col-sm-8">
 									<div id="new_OpeningRepeaterControls">
