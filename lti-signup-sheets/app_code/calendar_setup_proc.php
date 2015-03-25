@@ -285,11 +285,11 @@
 			if (count($conflicts_ary) > 1) {
 				$plural_string = 's';
 			}
-			$conflicts_string = "<strong>No action taken on the following conflict" . $plural_string . ".</strong> (Any other requests were successfully completed.)<br/><ul type=\"1\">";
+			$conflicts_string = "<strong>No action taken on the following conflict" . $plural_string . ":</strong><br /><ul type=\"1\">";
 			foreach ($conflicts_ary as $conflict) {
 				$conflicts_string .= "<li>" . $conflict . "</li>";
 			}
-			$conflicts_string .= "</ul>";
+			$conflicts_string .= "</ul><br />Any other requests were successfully completed.";
 			$conflicts_string = urlencode($conflicts_string);
 
 			// redirect with conflicts param
