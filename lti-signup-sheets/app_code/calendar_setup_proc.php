@@ -114,8 +114,8 @@
 			// constrain $openingUntilDate date to $sheetEndDate date
 			$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $openingSheetID], $DB);
 			//$sheetEndDate =  DateTime::createFromFormat('Y-m-d g:i:s', $sheet->end_date);
-			$sheetEndDate = DateTime::createFromFormat('Y-m-d', substr($sheet->end_date, 0, 10));
-			$repeatEndDate   = DateTime::createFromFormat('m/d/Y', $openingUntilDate);
+			$sheetEndDate  = DateTime::createFromFormat('Y-m-d', substr($sheet->end_date, 0, 10));
+			$repeatEndDate = DateTime::createFromFormat('m/d/Y', $openingUntilDate);
 			if ($sheetEndDate < $repeatEndDate) {
 				$repeatEndDate = $sheetEndDate;
 			}
@@ -141,20 +141,14 @@
 		// 1. generate/find a unique opening group id
 		$opening_group_id = 0;
 
-		// conflict avoidance: get all preexisting openings as array for this sheet, filtered for better efficiency by opening begin and end dates
-		$conflicts_ary = [];
-		$preexisting_openings_ary = SUS_Opening::getAllFromDb(['sheet_id' => $openingSheetID, 'begin_datetime <=' => util_dateTimeObject_asMySQL($repeatEndDate), 'end_datetime >=' => util_dateTimeObject_asMySQL($repeatBeginDate)], $DB);
-		// TODO FINISH THIS
-		$preexisting_openings_ary = SUS_Opening::getAllFromDb(['sheet_id' => $openingSheetID, 'begin_datetime <=' => util_dateTimeObject_asMySQL($repeatEndDate), 'end_datetime >=' => util_dateTimeObject_asMySQL($repeatBeginDate)], $DB);
-
-		echo count($preexisting_openings_ary);
-		util_prePrintR($preexisting_openings_ary);
-		exit;
+		// conflict avoidance: get all preexisting openings as array for this sheet
+		$conflicts_ary            = [];
+		$preexisting_openings_ary = SUS_Opening::getAllFromDb(['sheet_id' => $openingSheetID, 'end_datetime >=' => util_dateTimeObject_asMySQL($beginDateTime)], $DB);
 
 		// constrain all datetime to trim seconds
 		foreach ($preexisting_openings_ary as $preexisting) {
-			$preexisting->begin_datetime = preg_replace('/:\\d\\d$/',':00',$preexisting->begin_datetime);
-			$preexisting->end_datetime = preg_replace('/:\\d\\d$/',':00',$preexisting->end_datetime);
+			$preexisting->begin_datetime = preg_replace('/:\\d\\d$/', ':00', $preexisting->begin_datetime);
+			$preexisting->end_datetime   = preg_replace('/:\\d\\d$/', ':00', $preexisting->end_datetime);
 		}
 
 		// loop through days from begin date to end date
@@ -178,28 +172,23 @@
 						$newOpeningDateTimeBegin = clone $baseOpeningDateTime;
 						$newOpeningDateTimeBegin->modify('+' . round($i * $openingDurationEachOpening) . ' minute');
 						$newOpeningDateTimeBegin_str_Ymd_his = util_dateTimeObject_asMySQL($newOpeningDateTimeBegin);
-						$newOpeningDateTimeEnd = clone $baseOpeningDateTime;
+						$newOpeningDateTimeEnd               = clone $baseOpeningDateTime;
 						$newOpeningDateTimeEnd->modify('+' . round(($i + 1) * $openingDurationEachOpening) . ' minute');
 						$newOpeningDateTimeEnd_str_Ymd_his = util_dateTimeObject_asMySQL($newOpeningDateTimeEnd);
-						// echo $newOpeningDateTimeBegin_str_Ymd_his . ' - ' . $newOpeningDateTimeEnd_str_Ymd_his . "<br />";
 
-						// conflict avoidance: allow any new non-conflicting openings to be created. Display list of blocked openings (conflicts) to user.
-						// message: "The following conflicting openings were not created, but all other openings were created successfully"
+						// conflict avoidance: allow any non-conflicting openings to be created. List blocked openings (conflicts) for user.
 						$isConflict = FALSE;
 						foreach ($preexisting_openings_ary as $preexisting) {
-							if( $newOpeningDateTimeBegin_str_Ymd_his < $preexisting->end_datetime &&
-								$newOpeningDateTimeEnd_str_Ymd_his   > $preexisting->begin_datetime){
-								// todo - create note of this in user log records
-								echo "CONFLICCCCT: $newOpeningDateTimeEnd_str_Ymd_his < $preexisting->end_datetime &amp;&amp; $newOpeningDateTimeEnd_str_Ymd_his > $preexisting->begin_datetime<br/>\n";
-								$needle = "conflict exists for: " . util_dateTimeObject_asMySQL($newOpeningDateTimeBegin) . " - " . util_dateTimeObject_asMySQL($newOpeningDateTimeEnd) . " against $preexisting->begin_datetime - $preexisting->end_datetime";
-								if(!in_array( $needle, $conflicts_ary)){
+							if ($newOpeningDateTimeBegin_str_Ymd_his < $preexisting->end_datetime &&
+								$newOpeningDateTimeEnd_str_Ymd_his > $preexisting->begin_datetime
+							) {
+								$needle = "attempted [" . $newOpeningDateTimeBegin->format('m/d/Y H:i') . " - " . $newOpeningDateTimeEnd->format('m/d/Y H:i') . "] conflicts with preexisting [" . util_datetimeFormatted($preexisting->begin_datetime) . " - " . util_datetimeFormatted($preexisting->end_datetime) . "]";
+								if (!in_array($needle, $conflicts_ary)) {
 									array_push($conflicts_ary, $needle);
 								}
 
 								$isConflict = TRUE;
 								break;
-							} else {
-								echo "NO CONFLICCCCT: $newOpeningDateTimeEnd_str_Ymd_his < $preexisting->end_datetime &amp;&amp; $newOpeningDateTimeEnd_str_Ymd_his > $preexisting->begin_datetime<br/>\n";
 							}
 						}
 
@@ -219,7 +208,7 @@
 
 							// util_prePrintR($newOpening);
 
-							// save the new opening
+							// save the opening
 							$newOpening->updateDb();
 
 							if (!$opening_group_id) {
@@ -245,31 +234,43 @@
 						// round any datetime seconds to nearest minute to avoid error
 						$editOpeningDateTimeBegin = clone $baseOpeningDateTime;
 						$editOpeningDateTimeBegin->modify('+' . round($i * $openingDurationEachOpening) . ' minute');
-						$editOpeningDateTimeEnd = clone $baseOpeningDateTime;
+						$editOpeningDateTimeBegin_str_Ymd_his = util_dateTimeObject_asMySQL($editOpeningDateTimeBegin);
+						$editOpeningDateTimeEnd               = clone $baseOpeningDateTime;
 						$editOpeningDateTimeEnd->modify('+' . round(($i + 1) * $openingDurationEachOpening) . ' minute');
-						// echo $editOpeningDateTimeBegin->format('Y-m-d h:i') . ' - ' . $editOpeningDateTimeEnd->format('Y-m-d h:i') . "\n";
+						$editOpeningDateTimeEnd_str_Ymd_his = util_dateTimeObject_asMySQL($editOpeningDateTimeEnd);
 
-						// TODO - start conflict avoidance
-						// conflict avoidance: allow any new non-conflicting openings to be created. Display list of blocked openings (conflicts) to user.
-						// message: "The following conflicting openings were not created, but all other openings were created successfully"
-						// 2015-02-11 11:37 AM to 5:15 PM :: conflicts with another opening on this sheet
-						//						if(){
-						//
-						//						}
+						// conflict avoidance: allow any non-conflicting openings to be edited. List blocked openings (conflicts) for user.
+						$isConflict = FALSE;
+						foreach ($preexisting_openings_ary as $preexisting) {
+							if ($editOpeningDateTimeBegin_str_Ymd_his < $preexisting->end_datetime &&
+								$editOpeningDateTimeEnd_str_Ymd_his > $preexisting->begin_datetime &&
+								$openingID != $preexisting->opening_id
+							) {
+								$needle = "attempted [" . $editOpeningDateTimeBegin->format('m/d/Y H:i') . " - " . $editOpeningDateTimeEnd->format('m/d/Y H:i') . "] conflicts with preexisting [" . util_datetimeFormatted($preexisting->begin_datetime) . " - " . util_datetimeFormatted($preexisting->end_datetime) . "]";
+								if (!in_array($needle, $conflicts_ary)) {
+									array_push($conflicts_ary, $needle);
+								}
 
-						$editOpening->name           = $openingName;
-						$editOpening->description    = $openingDescription;
-						$editOpening->max_signups    = $openingNumSignupsPerOpening;
-						$editOpening->begin_datetime = util_dateTimeObject_asMySQL($editOpeningDateTimeBegin);
-						$editOpening->end_datetime   = util_dateTimeObject_asMySQL($editOpeningDateTimeEnd);
-						$editOpening->location       = $openingLocation;
-						$editOpening->admin_comment  = $openingAdminNotes;
-						$editOpening->updated_at     = util_currentDateTimeString_asMySQL();
+								$isConflict = TRUE;
+								break;
+							}
+						}
 
-						// util_prePrintR($editOpening);
+						if (!$isConflict) {
+							$editOpening->name           = $openingName;
+							$editOpening->description    = $openingDescription;
+							$editOpening->max_signups    = $openingNumSignupsPerOpening;
+							$editOpening->begin_datetime = util_dateTimeObject_asMySQL($editOpeningDateTimeBegin);
+							$editOpening->end_datetime   = util_dateTimeObject_asMySQL($editOpeningDateTimeEnd);
+							$editOpening->location       = $openingLocation;
+							$editOpening->admin_comment  = $openingAdminNotes;
+							$editOpening->updated_at     = util_currentDateTimeString_asMySQL();
 
-						// save the new opening
-						$editOpening->updateDb();
+							// util_prePrintR($editOpening);
+
+							// save the opening
+							$editOpening->updateDb();
+						}
 					}
 				}
 			}
@@ -278,7 +279,26 @@
 			$currentOpeningDate->modify('+1 day');
 		}
 
-		util_prePrintR($conflicts_ary);
-		// redirect
-		header('Location: ' . APP_FOLDER . '/app_code/sheets_edit_one.php?sheet=' . $openingSheetID);
+		// package the conflicts into a urlencoded string for display on resultant page
+		if ($conflicts_ary) {
+			$plural_string = '';
+			if (count($conflicts_ary) > 1) {
+				$plural_string = 's';
+			}
+			$conflicts_string = "<strong>No action taken on the following conflict" . $plural_string . ".</strong> (Any other requests were successfully completed.)<br/><ul type=\"1\">";
+			foreach ($conflicts_ary as $conflict) {
+				$conflicts_string .= "<li>" . $conflict . "</li>";
+			}
+			$conflicts_string .= "</ul>";
+			$conflicts_string = urlencode($conflicts_string);
+
+			// redirect with conflicts param
+			header('Location: ' . APP_FOLDER . '/app_code/sheets_edit_one.php?sheet=' . $openingSheetID . '&conflicts=' . $conflicts_string);
+		}
+		else {
+			// redirect without conflicts param
+			header('Location: ' . APP_FOLDER . '/app_code/sheets_edit_one.php?sheet=' . $openingSheetID);
+		}
+
+
 	}

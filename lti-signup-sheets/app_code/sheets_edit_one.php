@@ -1,5 +1,5 @@
 <?php
-	require_once(dirname(__FILE__).'/../app_setup.php');
+	require_once(dirname(__FILE__) . '/../app_setup.php');
 
 	$sheetIsNew          = FALSE;
 	$sheetIsDataIncoming = TRUE;
@@ -73,7 +73,7 @@
 			$s->description              = $_REQUEST["textSheetDescription"];
 			$s->type                     = "timeblocks"; // hardcode this data as possible hook for future use/modification
 			$s->begin_date               = date_format(new DateTime($_REQUEST["inputSheetDateBegin"] . " 00:00:00"), "Y-m-d H:i:s");
-			$s->end_date              = date_format(new DateTime($_REQUEST["inputSheetDateEnd"] . " 23:59:59"), "Y-m-d H:i:s");
+			$s->end_date                 = date_format(new DateTime($_REQUEST["inputSheetDateEnd"] . " 23:59:59"), "Y-m-d H:i:s");
 			$s->max_total_user_signups   = $_REQUEST["selectMaxTotalSignups"];
 			$s->max_pending_user_signups = $_REQUEST["selectMaxPendingSignups"];
 			//$s->flag_alert_owner_change   = $_REQUEST[""];
@@ -109,6 +109,16 @@
 
 		?>
 		<div class="container">
+			<?php
+				// display error message, if exists
+				if (isset($_REQUEST['conflicts'])) {
+					echo '<p>&nbsp;</p>';
+					echo '<div class="alert alert-danger alert-dismissible" role="alert">';
+					echo '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+					echo $_REQUEST['conflicts'];
+					echo '</div>';
+				}
+			?>
 			<div class="row">
 				<!-- Begin: Basic Sheet Info / Sheet Access -->
 				<div class="col-sm-5">
@@ -364,7 +374,8 @@
 										<!-- List: These People -->
 										<div class="wms_tiny_break"><br /></div>
 										<span class="small"><strong>These people: Williams username(s)</strong>
-											<button type="button" class="btn btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas"><i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
+											<button type="button" class="btn btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
+												<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
 										</span>
 										<?php
 											// create array of usernames where access type = 'byuser'
@@ -431,7 +442,8 @@
 
 											<!-- List: These People -->
 											<span class="small"><strong>These people: Williams username(s)</strong>
-												<button type="button" class="btn btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas"><i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
+												<button type="button" class="btn btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
+													<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
 											</span>
 
 											<?php
@@ -494,7 +506,8 @@
 
 										<!-- Begin: List Openings -->
 										<div role="tabpanel" id="tabOpeningsList" class="tab-pane fade" aria-labelledby="tabOpeningsList">
-											<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-xs" title="go to next">go to next</a>
+											<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-xs" title="go to next">go to
+												next</a>
 
 											<div id="openings-list-container">
 
