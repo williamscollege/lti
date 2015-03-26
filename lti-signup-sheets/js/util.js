@@ -21,7 +21,7 @@ $(document).ready(function () {
 
 // BootBox jQuery confirm box (helper function)
 function showConfirmBox(ary) {
-	// console.dir(ary);
+	console.dir(ary);
 	bootbox.dialog({
 		title: ary['title'],
 		message: ary['message'],
@@ -38,7 +38,8 @@ function showConfirmBox(ary) {
 						cache: false,
 						data: {
 							'ajaxVal_Action': ary['ajax_action'],
-							'ajaxVal_Delete_ID': ary['ajax_id']
+							'ajaxVal_Delete_ID': ary['ajax_id'],
+							'ajaxVal_Custom_Data': $("input[name='custom_user_value']:checked").val() // custom value, currently only from ".sus-delete-opening" (calendar.js)
 						},
 						dataType: 'json',
 						success: function (ajxdata, textStatus, jqhdr) {
@@ -46,7 +47,6 @@ function showConfirmBox(ary) {
 							//console.dir(ajxdata);
 							if (ajxdata.status == 'success') {
 								// remove element
-								//console.log('AA - inside of ajxdata success')
 								updateDOM(ary['ajax_action'], true, ajxdata);
 								//updateDOM(ary, true, ajxdata); // pass entire array instead of just one element
 							}
@@ -105,7 +105,9 @@ function updateDOM(action, ret, data) {
 		if (ret) {
 			// show status
 			susUtil_setTransientAlert('success', 'Saved');
-
+			console.log('THE PASSED CUSTOM DATA IS: ');
+			console.log('action = ' + action + ', ret = ' + ret + ", data = ");
+			console.dir(data);
 			// check to see if this the last opening on this date
 			var countRemainingOpenings = $('.list-opening-id-' + GLOBAL_confirmHandlerData).siblings(".list-opening").length;
 

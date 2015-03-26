@@ -57,7 +57,7 @@
 			$this->doDelete();
 		}
 
-		public function renderAsHtmlShortWithFullControls($userDisplayFullname, $userDisplayUsername) {
+		public function renderAsHtmlSignupWithFullControls($userDisplayFullname, $userDisplayUsername) {
 			$rendered = '';
 
 			$rendered .= "<a href=\"#\" class=\"sus-edit-signup\" data-for-opening-id=\"" . $this->opening_id . "\" data-for-signup-id=\"" . $this->signup_id . "\" data-for-username=\"" . $userDisplayUsername . "\"  data-for-signup-admin-comment=\"" . $this->admin_comment . "\" title=\"Edit signup\"><i class=\"glyphicon glyphicon-wrench\"></i> </a>";
@@ -71,7 +71,7 @@
 			return $rendered;
 		}
 
-		public function renderAsListItemShortWithControls($userForThisSignup = '') {
+		public function renderAsListItemSignupWithControls($userForThisSignup = '') {
 			if (!$userForThisSignup) {
 				$userForThisSignup = User::getOneFromDb(['user_id' => $this->signup_user_id], $this->dbConnection);
 			}
@@ -79,7 +79,7 @@
 			$rendered = '';
 
 			$rendered .= "<li  data-for-signup-created_at=\"" . $this->created_at . "\" data-for-firstname=\"" . $userForThisSignup->first_name . "\" data-for-lastname=\"" . $userForThisSignup->last_name . "\" data-for-signup-id=\"" . $this->signup_id . "\">";
-			$rendered .= $this->renderAsHtmlShortWithFullControls($userForThisSignup->first_name . " " . $userForThisSignup->last_name, $userForThisSignup->username);
+			$rendered .= $this->renderAsHtmlSignupWithFullControls($userForThisSignup->first_name . " " . $userForThisSignup->last_name, $userForThisSignup->username);
 			$rendered .= "</li>";
 
 			return $rendered;

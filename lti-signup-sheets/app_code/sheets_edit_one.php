@@ -513,15 +513,23 @@
 
 												<?php
 													$s->cacheOpenings();
+
+													// count openings per each opening_group_id
+													$countOpeningsPerGroup = array_count_values(array_map(function ($item) {
+														return $item->opening_group_id;
+													}, $s->openings));
+													// util_prePrintR($countOpeningsPerGroup);
+
 													$lastOpeningDate = '';
 													$daysOpenings    = [];
 													$todayYmd        = explode(' ', util_currentDateTimeString())[0];
+
 													foreach ($s->openings as $opening) {
 														$curOpeningDate = explode(' ', $opening->begin_datetime)[0];
 														if ($curOpeningDate != $lastOpeningDate) {
 															// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 															foreach ($daysOpenings as $op) {
-																echo $op->renderAsHtmlShortWithFullControls() . "\n";
+																echo $op->renderAsHtmlOpeningWithFullControls($countOpeningsPerGroup) . "\n";
 															}
 
 															if ($lastOpeningDate) {
@@ -544,7 +552,7 @@
 													}
 													// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
 													foreach ($daysOpenings as $op) {
-														echo $op->renderAsHtmlShortWithFullControls() . "\n";
+														echo $op->renderAsHtmlOpeningWithFullControls($countOpeningsPerGroup) . "\n";
 													}
 													echo '</div>' . "\n";
 												?>

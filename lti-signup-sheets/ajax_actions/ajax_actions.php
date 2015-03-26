@@ -1,21 +1,25 @@
 <?php
 	require_once(dirname(__FILE__) . '/head_ajax.php');
 
-	//	# tests
-	//	$action        = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
-	//	# Output
-	//	$results['status']       = 'success';
-	//	$results['which_action'] = $action;
-	//	$results['html_output']  = 'smiling now';
-	//	# Return JSON array
-	//	echo json_encode($results);
-	//	exit;
+	//		# tests
+	//		$action        = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
+	//		# output
+	//		$results['status']       = 'success';
+	//		$results['which_action'] = $action;
+	//		$results['html_output']  = 'smiling now';
+	//		# Return JSON array
+	//
+	//		// util_prePrintR($_REQUEST); // debugging
+
+
+	//		echo json_encode($_REQUEST);
+	//		exit;
 
 
 	#------------------------------------------------#
 	# Fetch AJAX values
 	#------------------------------------------------#
-	// TODO - Can generalize some of these passed param values and reduce the number found here...
+	// TODO - Can generalize some of these passed param values and reduce the number found here... (primaryID, secondaryID, customValue?)
 	$action       = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
 	$ownerUserID  = htmlentities(((isset($_REQUEST["ajaxVal_OwnerUserID"])) && is_numeric($_REQUEST["ajaxVal_OwnerUserID"])) ? $_REQUEST["ajaxVal_OwnerUserID"] : 0);
 	$sheetgroupID = htmlentities(((isset($_REQUEST["ajaxVal_SheetgroupID"])) && is_numeric($_REQUEST["ajaxVal_SheetgroupID"])) ? $_REQUEST["ajaxVal_SheetgroupID"] : 0);
@@ -27,6 +31,7 @@
 	$deleteID     = htmlentities((isset($_REQUEST["ajaxVal_Delete_ID"])) ? $_REQUEST["ajaxVal_Delete_ID"] : 0);
 	$editID       = htmlentities((isset($_REQUEST["ajaxVal_Edit_ID"])) ? $_REQUEST["ajaxVal_Edit_ID"] : 0);
 	$editValue    = htmlentities((isset($_REQUEST["ajaxVal_Edit_Value"])) ? $_REQUEST["ajaxVal_Edit_Value"] : 0);
+	$customData   = htmlentities((isset($_REQUEST["ajaxVal_Custom_Data"])) ? $_REQUEST["ajaxVal_Custom_Data"] : 0);
 
 
 	#------------------------------------------------#
@@ -63,7 +68,7 @@
 
 		$sheetgroup = SUS_Sheetgroup::getOneFromDb(['name' => $name], $DB);
 
-		# Output
+		# output
 		$results['status']       = 'success';
 		$results['which_action'] = 'add-sheetgroup';
 		$results['html_output']  = '';
@@ -94,7 +99,7 @@
 
 		$sg->updateDb();
 
-		# Output
+		# output
 		$results['status']       = 'success';
 		$results['which_action'] = 'edit-sheetgroup';
 		$results['html_output']  = '';
@@ -113,7 +118,7 @@
 		# mark this object as deleted as well as any lower dependent items
 		$sg->cascadeDelete();
 
-		# Output
+		# output
 		if ($sg->matchesDb) {
 			$results['status'] = 'success';
 		}
@@ -143,7 +148,7 @@
 		# TODO NEED TO ENSURE THAT ADD Sheetgroup cannot add a new group with same name of pre-existing sheetgroup
 		$sheetgroup = SUS_Sheetgroup::getOneFromDb(['name' => $name], $DB);
 
-		# Output
+		# output
 		$results['status']       = 'success';
 		$results['which_action'] = 'add-sheetgroup';
 		$results['html_output']  = '';
@@ -170,29 +175,90 @@
 		# mark this object as deleted as well as any lower dependent items
 		$s->cascadeDelete();
 
-		# Output
+		# output
 		if ($s->matchesDb) {
 			$results['status'] = 'success';
 		}
 	}
 	//###############################################################
 	elseif ($action == 'delete-opening') {
-		$o = SUS_Opening::getOneFromDb(['opening_id' => $deleteID], $DB);
+		// begin test code
+		// customData default value is 0
+		// Would you like to delete only this opening, this entire day of openings, this and future openings in the series, or all openings in the series?
+		switch ($customData) {
+			case 0:
+				// delete only this opening
 
-		if (!$o->matchesDb) {
-			// error: no matching record found
-			$results["notes"] = "no matching record found";
-			echo json_encode($results);
-			exit;
+				$o = SUS_Opening::getOneFromDb(['opening_id' => $deleteID], $DB);
+
+				if (!$o->matchesDb) {
+					// error: no matching record found
+					$results["notes"] = "no matching record found";
+					echo json_encode($results);
+					exit;
+				}
+
+				# mark this object as deleted as well as any lower dependent items
+				$o->cascadeDelete();
+
+				# output
+				if ($o->matchesDb) {
+					$results['status'] = 'success';
+					$results['updateIDs_ary'] = $o->opening_group_id; // todo - obviously, create an array inst of this int
+				}
+
+				break;
+			case 1:
+				// delete all openings on this single day
+				// TODO this means across all openings across all SHEETS for this day. right?
+				/*
+				 * 1. get sheet owner user id (session could be of manager, so get owner, not manager)
+				 * 2. or create new user class fxn to get all openings for a date (an override, perhaps?)
+				 * 3.1 will cascade delete handle an array or only a single value? override?
+				 * 3. create array of which ids are being deleted (pass this back to updateDOM more easily)
+				 * 4. log this
+				*/
+
+
+				$o = SUS_Opening::getOneFromDb(['opening_id' => $deleteID], $DB);
+
+				if (!$o->matchesDb) {
+					// error: no matching record found
+					$results["notes"] = "no matching record found";
+					echo json_encode($results);
+					exit;
+				}
+
+				# mark this object as deleted as well as any lower dependent items
+				$o->cascadeDelete();
+
+				# output
+				if ($o->matchesDb) {
+					$results['status'] = 'success';
+					$results['updateIDs_ary'] = $o->opening_group_id; // todo - obviously, create an array inst of this int
+				}
+
+				break;
+			case 2:
+				// This and all the following openings in the series will be deleted
+
+				break;
+			case 3:
+				// All openings in the series will be deleted
+
+				break;
+			default:
+				break;
 		}
 
-		# mark this object as deleted as well as any lower dependent items
-		$o->cascadeDelete();
+//		echo "; action = " . $action;
+//		echo "; deleteID = " . $deleteID;
+//		echo "; customData = " . $customData;
+//		exit;
+		// end test code
 
-		# Output
-		if ($o->matchesDb) {
-			$results['status'] = 'success';
-		}
+
+
 	}
 	//###############################################################
 	elseif ($action == 'delete-signup' || $action == 'delete-signup-from-edit-opening-modal') {
@@ -208,7 +274,7 @@
 		# mark this object as deleted as well as any lower dependent items
 		$s->cascadeDelete();
 
-		# Output
+		# output
 		if ($s->matchesDb) {
 			$results['status'] = 'success';
 		}
@@ -230,7 +296,7 @@
 		$s->flag_private_signups = $editValue;
 		$s->updateDB();
 
-		# Output
+		# output
 		if ($s->matchesDb) {
 			$results['status'] = 'success';
 		}
@@ -421,9 +487,9 @@
 		// must get sheet object to enable render fxn
 		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
 
-		# Output
+		# output
 		$results['status']                    = 'success';
-		$results['html_render_opening']       = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
+		$results['html_render_opening']       = $o->renderAsHtmlOpeningWithLimitedControls($USER->user_id);
 		$results['html_render_usage_alert']   = $sheet->renderAsHtmlUsageAlert($USER);
 		$results['html_render_usage_details'] = $sheet->renderAsHtmlUsageDetails($USER);
 	}
@@ -464,9 +530,9 @@
 		// must get sheet object to enable render fxn
 		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
 
-		# Output
+		# output
 		$results['status']                    = 'success';
-		$results['html_render_opening']       = $o->renderAsHtmlShortWithLimitedControls($USER->user_id);
+		$results['html_render_opening']       = $o->renderAsHtmlOpeningWithLimitedControls($USER->user_id);
 		$results['html_render_usage_alert']   = $sheet->renderAsHtmlUsageAlert($USER);
 		$results['html_render_usage_details'] = $sheet->renderAsHtmlUsageDetails($USER);
 	}
@@ -522,7 +588,7 @@
 			}
 		}
 
-		# Output
+		# output
 		$results['status']       = 'success';
 		$results['which_action'] = 'edit-opening-add-signup-user';
 		$results['html_output']  = "<li data-for-firstname=\"" . $u->firstname . "\" data-for-lastname=\"" . $u->lastname . "\" data-for-signup-id=\"" . $s->signup_id . "\">";
@@ -544,7 +610,7 @@
 			exit;
 		}
 
-		$results['html_render_opening'] = $o->renderAsHtmlShortWithFullControls();
+		$results['html_render_opening'] = $o->renderAsHtmlOpeningWithFullControls();
 
 		$o->cacheSignups();
 
@@ -570,13 +636,13 @@
 		foreach ($o->signups as $signup) {
 			foreach ($users_info as $user) {
 				if ($signup->signup_user_id == $user->user_id) {
-					$signups_list .= $signup->renderAsListItemShortWithControls($user);
+					$signups_list .= $signup->renderAsListItemSignupWithControls($user);
 				}
 			}
 
 		}
 
-		# Output
+		# output
 		$results['status']       = 'success';
 		$results['which_action'] = 'fetch-signups-for-opening-id';
 		$results['html_output']  = $signups_list;
@@ -636,7 +702,7 @@
 			$check_access_record = SUS_Access::getOneFromDb(['type' => $type, 'sheet_id' => $sheetId, 'constraint_data' => $constraintInfo], $DB);
 		}
 
-		# Output
+		# output
 		if ($check_access_record->matchesDb) {
 			$results["notes"] = "could not remove that access";
 			echo json_encode($results);

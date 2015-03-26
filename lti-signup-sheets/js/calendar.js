@@ -263,21 +263,53 @@ $(document).ready(function () {
 	// Delete opening
 	$(document).on("click", ".sus-delete-opening", function () {
 		GLOBAL_confirmHandlerData = $(this).parent(".list-opening").attr('data-opening_id');
+		GLOBAL_confirmHandlerReference = $(this).attr('data-count-openings-in-group-id');
 
 		var openingName = '';
 		if ($(this).parent(".list-opening").attr('data-name')) {
 			var openingName = " (" + $(this).parent(".list-opening").attr('data-name') + ")";
 		}
 
-		var params = {
-			title: "Delete Opening",
-			message: "Really delete this opening?<br /><br /><strong>" + $(this).siblings('.opening-time-range').html() + "</strong>" + openingName,
-			label: "Delete Opening",
-			class: "btn btn-danger",
-			url: "../ajax_actions/ajax_actions.php",
-			ajax_action: "delete-opening",
-			ajax_id: GLOBAL_confirmHandlerData
-		};
+		if(GLOBAL_confirmHandlerReference > 1){
+			var params = {
+				title: "Delete Recurring Openings?",
+				message: '<form>' +
+				'<p>Would you like to delete only this opening, this entire day of openings, this and future openings in the series, or all openings in the series?</p>' +
+				'<div class="radio"><label for="delete-choice-0">' +
+				'<input type="radio" name="custom_user_value" id="delete-choice-0" value="0" checked="checked">' +
+				'<strong>Only this instance</strong> - <span class="small">All other openings in the series will remain</span></label>' +
+				'</div>' +
+				'<div class="radio"><label for="delete-choice-1">' +
+				'<input type="radio" name="custom_user_value" id="delete-choice-1" value="1">' +
+				'<strong>Only this single day</strong> - <span class="small">Delete all openings on this single day (i.e. I am sick today)</span></label>' +
+				'</div>' +
+				'<div class="radio"><label for="delete-choice-2">' +
+				'<input type="radio" name="custom_user_value" id="delete-choice-2" value="2">' +
+				'<strong>All following</strong> - <span class="small">This and all the following openings in the series will be deleted</span></label>' +
+				'</div>' +
+				'<div class="radio"><label for="delete-choice-3">' +
+				'<input type="radio" name="custom_user_value" id="delete-choice-3" value="3">' +
+				'<strong>All openings in the series</strong> - <span class="small">All openings in the series will be deleted</span></label>' +
+				'</div>' +
+				'</form>',
+				label: "Delete",
+				class: "btn btn-danger",
+				url: "../ajax_actions/ajax_actions.php",
+				ajax_action: "delete-opening",
+				ajax_id: GLOBAL_confirmHandlerData
+			};
+		} else{
+			var params = {
+				title: "Delete Opening",
+				message: "Really delete this opening?<br /><br /><strong>" + $(this).siblings('.opening-time-range').html() + "</strong>" + openingName,
+				label: "Delete Opening",
+				class: "btn btn-danger",
+				url: "../ajax_actions/ajax_actions.php",
+				ajax_action: "delete-opening",
+				ajax_id: GLOBAL_confirmHandlerData
+			};
+		}
+
 		showConfirmBox(params);
 	});
 

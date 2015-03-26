@@ -141,7 +141,7 @@
 													foreach ($daysOpenings as $op) {
 														// determine if signups are public/private, and which, if any, controls or text should be displayed
 														$op->cacheSignups();
-														echo $op->renderAsHtmlShortWithLimitedControls($USER->user_id) . "\n";
+														echo $op->renderAsHtmlOpeningWithLimitedControls($USER->user_id) . "\n";
 													}
 
 													if ($lastOpeningDate) {
@@ -168,7 +168,7 @@
 											foreach ($daysOpenings as $op) {
 												// determine if signups are public/private, and which, if any, controls or text should be displayed
 												$op->cacheSignups();
-												echo $op->renderAsHtmlShortWithLimitedControls($USER->user_id) . "\n";
+												echo $op->renderAsHtmlOpeningWithLimitedControls($USER->user_id) . "\n";
 											}
 											echo '</div>' . "\n";
 										?>
