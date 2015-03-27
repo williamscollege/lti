@@ -274,22 +274,22 @@ $(document).ready(function () {
 			var params = {
 				title: "Delete Recurring Openings?",
 				message: '<form>' +
-				'<p>Would you like to delete only this opening, this entire day of openings, this and future openings in the series, or all openings in the series?</p>' +
+				'<p><strong>For this sheet:</strong> would you like to delete this opening, all openings for this day, this and future openings in this series, or all past and future openings in this series?</p>' +
 				'<div class="radio"><label for="delete-choice-0">' +
 				'<input type="radio" name="custom_user_value" id="delete-choice-0" value="0" checked="checked">' +
-				'<strong>Only this instance</strong> - <span class="small">All other openings in the series will remain</span></label>' +
+				'<strong>Only this instance</strong> - <span class="small">Delete only this opening (all other openings in this series will remain)</span></label>' +
 				'</div>' +
 				'<div class="radio"><label for="delete-choice-1">' +
 				'<input type="radio" name="custom_user_value" id="delete-choice-1" value="1">' +
-				'<strong>Only this single day</strong> - <span class="small">Delete all openings on this single day (i.e. I am sick today)</span></label>' +
+				'<strong>Only this single day</strong> - <span class="small">Delete all openings for this single day</span></label>' +
 				'</div>' +
 				'<div class="radio"><label for="delete-choice-2">' +
 				'<input type="radio" name="custom_user_value" id="delete-choice-2" value="2">' +
-				'<strong>All following</strong> - <span class="small">This and all the following openings in the series will be deleted</span></label>' +
+				'<strong>All following</strong> - <span class="small">Delete this and all future openings in this series</span></label>' +
 				'</div>' +
 				'<div class="radio"><label for="delete-choice-3">' +
 				'<input type="radio" name="custom_user_value" id="delete-choice-3" value="3">' +
-				'<strong>All openings in the series</strong> - <span class="small">All openings in the series will be deleted</span></label>' +
+				'<strong>All openings in the series</strong> - <span class="small">Delete this and all past and future openings in this series</span></label>' +
 				'</div>' +
 				'</form>',
 				label: "Delete",

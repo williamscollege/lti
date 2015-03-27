@@ -203,23 +203,14 @@
 
 				# output
 				if ($o->matchesDb) {
-					$results['status'] = 'success';
-					$results['updateIDs_ary'] = $o->opening_group_id; // todo - obviously, create an array inst of this int
+					$results['status']        = 'success';
+					$results['customData']    = $customData;
+					$results['updateIDs_ary'] = $o->opening_id;
 				}
 
 				break;
 			case 1:
-				// delete all openings on this single day
-				// TODO this means across all openings across all SHEETS for this day. right?
-				/*
-				 * 1. get sheet owner user id (session could be of manager, so get owner, not manager)
-				 * 2. or create new user class fxn to get all openings for a date (an override, perhaps?)
-				 * 3.1 will cascade delete handle an array or only a single value? override?
-				 * 3. create array of which ids are being deleted (pass this back to updateDOM more easily)
-				 * 4. log this
-				*/
-
-
+				// delete all openings for this single day
 				$o = SUS_Opening::getOneFromDb(['opening_id' => $deleteID], $DB);
 
 				if (!$o->matchesDb) {
@@ -229,34 +220,54 @@
 					exit;
 				}
 
-				# mark this object as deleted as well as any lower dependent items
-				$o->cascadeDelete();
+				// 1. get sheet id, create 24 date range (only for this day)
+				$o_sheet_id       = $o->sheet_id;
+				$o_begin_datetime = substr($o->begin_datetime, 0, 10) . ' 00:00:00';
+				$o_end_datetime   = substr($o->begin_datetime, 0, 10) . ' 23:59:59';
+				// echo '$o_begin_datetime = ' . $o_begin_datetime . "<br />\n";
+				// echo '$o_end_datetime = ' . $o_end_datetime . "<br />\n";
+
+				// 2. get all openings from this sheet that begin on this one day (this includes openings that begin on this day and run over into the next day)
+				$o_all = SUS_Opening::getAllFromDb(['sheet_id' => $o_sheet_id, 'begin_datetime >=' => $o_begin_datetime, 'begin_datetime <=' => $o_end_datetime], $DB);
+
+				if (count($o_all) == 0) {
+					// error: no matching records found
+					$results["notes"] = "no matching records found";
+					echo json_encode($results);
+					exit;
+				}
+
+				# mark each object as deleted as well as any lower dependent items
+				$updateIDs_ary = [];
+				foreach ($o_all as $opening) {
+					$opening->cascadeDelete();
+					// capture opening_id's for later DOM updates
+					array_push($updateIDs_ary, $opening->opening_id);
+				}
 
 				# output
-				if ($o->matchesDb) {
-					$results['status'] = 'success';
-					$results['updateIDs_ary'] = $o->opening_group_id; // todo - obviously, create an array inst of this int
-				}
+				$results['status']        = 'success';
+				$results['customData']    = $customData;
+				$results['updateIDs_ary'] = $updateIDs_ary;
 
 				break;
 			case 2:
-				// This and all the following openings in the series will be deleted
+				// delete this and all future openings in this series
 
 				break;
 			case 3:
-				// All openings in the series will be deleted
+				// delete this and all past and future openings in this series
 
 				break;
 			default:
 				break;
 		}
 
-//		echo "; action = " . $action;
-//		echo "; deleteID = " . $deleteID;
-//		echo "; customData = " . $customData;
-//		exit;
+		//		echo "; action = " . $action;
+		//		echo "; deleteID = " . $deleteID;
+		//		echo "; customData = " . $customData;
+		//		exit;
 		// end test code
-
 
 
 	}

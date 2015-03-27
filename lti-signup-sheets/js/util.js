@@ -21,7 +21,7 @@ $(document).ready(function () {
 
 // BootBox jQuery confirm box (helper function)
 function showConfirmBox(ary) {
-	console.dir(ary);
+	// console.dir(ary);
 	bootbox.dialog({
 		title: ary['title'],
 		message: ary['message'],
@@ -43,8 +43,8 @@ function showConfirmBox(ary) {
 						},
 						dataType: 'json',
 						success: function (ajxdata, textStatus, jqhdr) {
-							//console.log('inside of success fxn(ajxdata)');
-							//console.dir(ajxdata);
+							console.log('inside of success: ajxdata array is...');
+							console.dir(ajxdata);
 							if (ajxdata.status == 'success') {
 								// remove element
 								updateDOM(ary['ajax_action'], true, ajxdata);
@@ -105,28 +105,59 @@ function updateDOM(action, ret, data) {
 		if (ret) {
 			// show status
 			susUtil_setTransientAlert('success', 'Saved');
-			console.log('THE PASSED CUSTOM DATA IS: ');
-			console.log('action = ' + action + ', ret = ' + ret + ", data = ");
-			console.dir(data);
-			// check to see if this the last opening on this date
-			var countRemainingOpenings = $('.list-opening-id-' + GLOBAL_confirmHandlerData).siblings(".list-opening").length;
+			switch (parseInt(data.customData)) {
+				case 0:
+					// check to see if this the last opening on this date
+					console.log('reached case 0. customData = '  + parseInt(data.customData));
+					console.dir(data.updateIDs_ary);
+					var countRemainingOpenings = $('.list-opening-id-' + GLOBAL_confirmHandlerData).siblings(".list-opening").length;
 
-			if (countRemainingOpenings == 0) {
-				// this is the last opening on this date!
-				// remove the list container from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
-				$('.list-opening-id-' + GLOBAL_confirmHandlerData).parent().parent(".calendar-cell-openings").remove();
-				$('#tabOpeningsList .list-opening-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
-			}
-			else {
-				// additional openings still exist on this date...
-				// remove single opening from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
-				$('.list-opening-id-' + GLOBAL_confirmHandlerData).remove();
-				$('#tabOpeningsList .list-opening-id-' + GLOBAL_confirmHandlerData).remove();
+					if (countRemainingOpenings == 0) {
+						// this is the last opening on this date!
+						// remove the list container from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
+						$('.list-opening-id-' + GLOBAL_confirmHandlerData).parent().parent(".calendar-cell-openings").remove();
+						$('#tabOpeningsList .list-opening-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
+					}
+					else {
+						// additional openings still exist on this date...
+						// remove single opening from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
+						$('.list-opening-id-' + GLOBAL_confirmHandlerData).remove();
+						$('#tabOpeningsList .list-opening-id-' + GLOBAL_confirmHandlerData).remove();
+					}
+					break;
+				case 1:
+					console.log('reached case 1. customData = '  + parseInt(data.customData));
+					var openingID = GLOBAL_confirmHandlerData;
+
+					for (i = 0; i < data.updateIDs_ary.length; i++) {
+						// loop through returned IDs, and remove each from DOM
+						openingID = parseInt(data.updateIDs_ary[i]);
+
+						// check to see if this the last opening on this date
+						var countRemainingOpenings = $('.list-opening-id-' + openingID).siblings(".list-opening").length;
+
+						if (countRemainingOpenings == 0) {
+							// this is the last opening on this date!
+							// remove the list container from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
+							$('.list-opening-id-' + openingID).parent().parent(".calendar-cell-openings").remove();
+							$('#tabOpeningsList .list-opening-id-' + openingID).parent(".opening-list-for-date").remove();
+						}
+						else {
+							// additional openings still exist on this date...
+							// remove single opening from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
+							$('.list-opening-id-' + openingID).remove();
+							$('#tabOpeningsList .list-opening-id-' + openingID).remove();
+						}
+					}
+					break;
+				//default:
+
 			}
 		}
 		else {
 			// error message
-			$(".list-opening-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+			susUtil_setTransientAlert('error', data.notes);
+			//$(".list-opening-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
 		}
 	}
 	else if (action == 'delete-signup') {

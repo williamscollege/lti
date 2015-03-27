@@ -297,6 +297,7 @@
 		}
 		else {
 			// redirect without conflicts param
+			// TODO ? could put a temporary alert message on screen showing success (similar to 'conflicts' failure msg above)
 			header('Location: ' . APP_FOLDER . '/app_code/sheets_edit_one.php?sheet=' . $openingSheetID);
 		}
 
