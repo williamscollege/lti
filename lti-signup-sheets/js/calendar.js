@@ -71,7 +71,7 @@ $(document).ready(function () {
 					//$("#alert_usage_quotas").replaceWith(data['html_render_usage_alert']);
 					//$("#contents_usage_quotas").replaceWith(data['html_render_usage_details']);
 					//$(".list-opening-id-" + openingID).replaceWith(data['html_render_opening']);
-					updateUserSignupUsageDetailsInDOM(data['html_render_usage_alert'], data['html_render_usage_details'], data['html_render_opening'],openingID);
+					updateUserSignupUsageDetailsInDOM(data['html_render_usage_alert'], data['html_render_usage_details'], data['html_render_opening'], openingID);
 				}
 				else {
 					susUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
@@ -81,7 +81,7 @@ $(document).ready(function () {
 	});
 
 	// helper function to enable updating of DOM for ajax success
-	function updateUserSignupUsageDetailsInDOM(render_usage_alert,render_usage_details, render_opening, openingID) {
+	function updateUserSignupUsageDetailsInDOM(render_usage_alert, render_usage_details, render_opening, openingID) {
 		$("#alert_usage_quotas").replaceWith(render_usage_alert);
 		$("#contents_usage_quotas").replaceWith(render_usage_details);
 		$(".list-opening-id-" + openingID).replaceWith(render_opening);
@@ -260,6 +260,16 @@ $(document).ready(function () {
 	// listeners
 	// ***************************
 
+	/*
+	 Workflow for "delete opening(s)":
+	 1. sus_opening.php - this class has a render fxn that creates the '.sus-delete-opening' links
+	 2. calendar.js - listens for click, creates params to be passed to jQuery BootBox showConfirmBox
+	 3. util.js - the showConfirmBox fxn calls ajax, sends data to ajax_actions.php
+	 4. ajax_actions.php - user's radio button choice (if exists) informs the switch case for server-side work. creates extra $results[] records for use in DOM removal.
+	 ...completes ajax action, returning json_encode'd results to the showConfirmBox fxn that had initiated the ajax call (util.js)
+	 5. util.js - the showConfirmBox fxn's success callback in turn calls updateDOM() which again uses user's radio button choice to determine how to correctly remove DOM elements
+	 */
+
 	// Delete opening
 	$(document).on("click", ".sus-delete-opening", function () {
 		GLOBAL_confirmHandlerData = $(this).parent(".list-opening").attr('data-opening_id');
@@ -270,11 +280,13 @@ $(document).ready(function () {
 			var openingName = " (" + $(this).parent(".list-opening").attr('data-name') + ")";
 		}
 
-		if(GLOBAL_confirmHandlerReference > 1){
+		if (GLOBAL_confirmHandlerReference > 1) {
+			// delete repeating opening choices (IS part of a group/series of repeating openings)
 			var params = {
-				title: "Delete Recurring Openings?",
+				title: "Delete Repeating Openings (on this sheet)?",
 				message: '<form>' +
-				'<p><strong>For this sheet:</strong> would you like to delete this opening, all openings for this day, this and future openings in this series, or all past and future openings in this series?</p>' +
+				'<p><h4>' + $(this).parent().siblings('h4').html() + '</h4><strong>' + $(this).siblings('.opening-time-range').html() + '</strong>' + openingName + '</p>' +
+				'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;Deleting an opening will cancel signups for that opening.</p>' +
 				'<div class="radio"><label for="delete-choice-0">' +
 				'<input type="radio" name="custom_user_value" id="delete-choice-0" value="0" checked="checked">' +
 				'<strong>Only this instance</strong> - <span class="small">Delete only this opening (all other openings in this series will remain)</span></label>' +
@@ -298,7 +310,9 @@ $(document).ready(function () {
 				ajax_action: "delete-opening",
 				ajax_id: GLOBAL_confirmHandlerData
 			};
-		} else{
+		}
+		else {
+			// delete single opening (NOT part of a group/series)
 			var params = {
 				title: "Delete Opening",
 				message: "Really delete this opening?<br /><br /><strong>" + $(this).siblings('.opening-time-range').html() + "</strong>" + openingName,

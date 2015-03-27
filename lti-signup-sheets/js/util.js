@@ -42,6 +42,7 @@ function showConfirmBox(ary) {
 							'ajaxVal_Custom_Data': $("input[name='custom_user_value']:checked").val() // custom value, currently only from ".sus-delete-opening" (calendar.js)
 						},
 						dataType: 'json',
+						// TODO ? - remove textStatus and jqhdr ? unused?
 						success: function (ajxdata, textStatus, jqhdr) {
 							console.log('inside of success: ajxdata array is...');
 							console.dir(ajxdata);
@@ -75,6 +76,24 @@ function showConfirmBox(ary) {
 
 GLOBAL_util_showConfirmBox = showConfirmBox;
 
+function helper_Remove_DOM_Elements(openingID) {
+	// check to see if this the last opening on this date
+	var countRemainingOpenings = $('.list-opening-id-' + openingID).siblings(".list-opening").length;
+
+	if (countRemainingOpenings == 0) {
+		// this is the last opening on this date!
+		// remove the list container from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
+		$('.list-opening-id-' + openingID).parent().parent(".calendar-cell-openings").remove();
+		$('#tabOpeningsList .list-opening-id-' + openingID).parent(".opening-list-for-date").remove();
+	}
+	else {
+		// additional openings still exist on this date...
+		// remove single opening from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
+		$('.list-opening-id-' + openingID).remove();
+		$('#tabOpeningsList .list-opening-id-' + openingID).remove();
+	}
+}
+
 function updateDOM(action, ret, data) {
 	// console.dir(action);
 	if (action == 'delete-sheetgroup') {
@@ -107,51 +126,58 @@ function updateDOM(action, ret, data) {
 			susUtil_setTransientAlert('success', 'Saved');
 			switch (parseInt(data.customData)) {
 				case 0:
-					// check to see if this the last opening on this date
-					console.log('reached case 0. customData = '  + parseInt(data.customData));
+					// delete only this opening
+					console.log('reached case 0. customData = ' + parseInt(data.customData));
 					console.dir(data.updateIDs_ary);
-					var countRemainingOpenings = $('.list-opening-id-' + GLOBAL_confirmHandlerData).siblings(".list-opening").length;
 
-					if (countRemainingOpenings == 0) {
-						// this is the last opening on this date!
-						// remove the list container from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
-						$('.list-opening-id-' + GLOBAL_confirmHandlerData).parent().parent(".calendar-cell-openings").remove();
-						$('#tabOpeningsList .list-opening-id-' + GLOBAL_confirmHandlerData).parent(".opening-list-for-date").remove();
-					}
-					else {
-						// additional openings still exist on this date...
-						// remove single opening from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
-						$('.list-opening-id-' + GLOBAL_confirmHandlerData).remove();
-						$('#tabOpeningsList .list-opening-id-' + GLOBAL_confirmHandlerData).remove();
-					}
+					var openingID = GLOBAL_confirmHandlerData;
+					helper_Remove_DOM_Elements(openingID);
+
 					break;
 				case 1:
-					console.log('reached case 1. customData = '  + parseInt(data.customData));
+					// delete all openings for this single day
+					console.log('reached case 1. customData = ' + parseInt(data.customData));
+					console.dir(data.updateIDs_ary);
+
 					var openingID = GLOBAL_confirmHandlerData;
 
 					for (i = 0; i < data.updateIDs_ary.length; i++) {
 						// loop through returned IDs, and remove each from DOM
 						openingID = parseInt(data.updateIDs_ary[i]);
-
-						// check to see if this the last opening on this date
-						var countRemainingOpenings = $('.list-opening-id-' + openingID).siblings(".list-opening").length;
-
-						if (countRemainingOpenings == 0) {
-							// this is the last opening on this date!
-							// remove the list container from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
-							$('.list-opening-id-' + openingID).parent().parent(".calendar-cell-openings").remove();
-							$('#tabOpeningsList .list-opening-id-' + openingID).parent(".opening-list-for-date").remove();
-						}
-						else {
-							// additional openings still exist on this date...
-							// remove single opening from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
-							$('.list-opening-id-' + openingID).remove();
-							$('#tabOpeningsList .list-opening-id-' + openingID).remove();
-						}
+						helper_Remove_DOM_Elements(openingID);
 					}
 					break;
-				//default:
+				case 2:
+					// delete this and all future openings in this series
+					console.log('reached case 2. customData = ' + parseInt(data.customData));
+					console.dir(data.updateIDs_ary);
 
+					var openingID = GLOBAL_confirmHandlerData;
+
+					for (i = 0; i < data.updateIDs_ary.length; i++) {
+						// loop through returned IDs, and remove each from DOM
+						openingID = parseInt(data.updateIDs_ary[i]);
+						helper_Remove_DOM_Elements(openingID);
+					}
+					break;
+				case 3:
+					// delete this and all past and future openings in this series
+					console.log('reached case 3. customData = ' + parseInt(data.customData));
+					console.dir(data.updateIDs_ary);
+
+					var openingID = GLOBAL_confirmHandlerData;
+
+					for (i = 0; i < data.updateIDs_ary.length; i++) {
+						// loop through returned IDs, and remove each from DOM
+						openingID = parseInt(data.updateIDs_ary[i]);
+						helper_Remove_DOM_Elements(openingID);
+					}
+					break;
+				default:
+					// default condition (failsafe)
+					var openingID = GLOBAL_confirmHandlerData;
+					helper_Remove_DOM_Elements(openingID);
+					break;
 			}
 		}
 		else {

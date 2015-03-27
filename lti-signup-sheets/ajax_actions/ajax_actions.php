@@ -3,7 +3,7 @@
 
 	//		# tests
 	//		$action        = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
-	//		# output
+	//		// output
 	//		$results['status']       = 'success';
 	//		$results['which_action'] = $action;
 	//		$results['html_output']  = 'smiling now';
@@ -68,7 +68,7 @@
 
 		$sheetgroup = SUS_Sheetgroup::getOneFromDb(['name' => $name], $DB);
 
-		# output
+		// output
 		$results['status']       = 'success';
 		$results['which_action'] = 'add-sheetgroup';
 		$results['html_output']  = '';
@@ -99,7 +99,7 @@
 
 		$sg->updateDb();
 
-		# output
+		// output
 		$results['status']       = 'success';
 		$results['which_action'] = 'edit-sheetgroup';
 		$results['html_output']  = '';
@@ -115,10 +115,10 @@
 			exit;
 		}
 
-		# mark this object as deleted as well as any lower dependent items
+		// mark this object as deleted as well as any lower dependent items
 		$sg->cascadeDelete();
 
-		# output
+		// output
 		if ($sg->matchesDb) {
 			$results['status'] = 'success';
 		}
@@ -148,7 +148,7 @@
 		# TODO NEED TO ENSURE THAT ADD Sheetgroup cannot add a new group with same name of pre-existing sheetgroup
 		$sheetgroup = SUS_Sheetgroup::getOneFromDb(['name' => $name], $DB);
 
-		# output
+		// output
 		$results['status']       = 'success';
 		$results['which_action'] = 'add-sheetgroup';
 		$results['html_output']  = '';
@@ -172,23 +172,21 @@
 			exit;
 		}
 
-		# mark this object as deleted as well as any lower dependent items
+		// mark this object as deleted as well as any lower dependent items
 		$s->cascadeDelete();
 
-		# output
+		// output
 		if ($s->matchesDb) {
 			$results['status'] = 'success';
 		}
 	}
 	//###############################################################
 	elseif ($action == 'delete-opening') {
-		// begin test code
-		// customData default value is 0
-		// Would you like to delete only this opening, this entire day of openings, this and future openings in the series, or all openings in the series?
+
+		// workflow: For this sheet: would you like to delete this opening, all openings for this day, this and future openings in this series, or all past and future openings in this series?
 		switch ($customData) {
 			case 0:
 				// delete only this opening
-
 				$o = SUS_Opening::getOneFromDb(['opening_id' => $deleteID], $DB);
 
 				if (!$o->matchesDb) {
@@ -198,10 +196,10 @@
 					exit;
 				}
 
-				# mark this object as deleted as well as any lower dependent items
+				// mark this object as deleted as well as any lower dependent items
 				$o->cascadeDelete();
 
-				# output
+				// output
 				if ($o->matchesDb) {
 					$results['status']        = 'success';
 					$results['customData']    = $customData;
@@ -220,15 +218,12 @@
 					exit;
 				}
 
-				// 1. get sheet id, create 24 date range (only for this day)
-				$o_sheet_id       = $o->sheet_id;
+				// get sheet_id, create 24 date range (only for this day)
 				$o_begin_datetime = substr($o->begin_datetime, 0, 10) . ' 00:00:00';
 				$o_end_datetime   = substr($o->begin_datetime, 0, 10) . ' 23:59:59';
-				// echo '$o_begin_datetime = ' . $o_begin_datetime . "<br />\n";
-				// echo '$o_end_datetime = ' . $o_end_datetime . "<br />\n";
 
-				// 2. get all openings from this sheet that begin on this one day (this includes openings that begin on this day and run over into the next day)
-				$o_all = SUS_Opening::getAllFromDb(['sheet_id' => $o_sheet_id, 'begin_datetime >=' => $o_begin_datetime, 'begin_datetime <=' => $o_end_datetime], $DB);
+				// get all openings from this sheet that begin on this one day (this includes openings that begin on this day and run over into the next day)
+				$o_all = SUS_Opening::getAllFromDb(['sheet_id' => $o->sheet_id, 'begin_datetime >=' => $o_begin_datetime, 'begin_datetime <=' => $o_end_datetime], $DB);
 
 				if (count($o_all) == 0) {
 					// error: no matching records found
@@ -237,15 +232,16 @@
 					exit;
 				}
 
-				# mark each object as deleted as well as any lower dependent items
+				// capture opening_id's for later DOM updates
 				$updateIDs_ary = [];
+
+				// mark each object as deleted as well as any lower dependent items
 				foreach ($o_all as $opening) {
 					$opening->cascadeDelete();
-					// capture opening_id's for later DOM updates
 					array_push($updateIDs_ary, $opening->opening_id);
 				}
 
-				# output
+				// output
 				$results['status']        = 'success';
 				$results['customData']    = $customData;
 				$results['updateIDs_ary'] = $updateIDs_ary;
@@ -253,23 +249,81 @@
 				break;
 			case 2:
 				// delete this and all future openings in this series
+				$o = SUS_Opening::getOneFromDb(['opening_id' => $deleteID], $DB);
+
+				if (!$o->matchesDb) {
+					// error: no matching record found
+					$results["notes"] = "no matching record found";
+					echo json_encode($results);
+					exit;
+				}
+
+				// get sheet_id, opening_group_id, begin_datetime (this opening and all future openings)
+				// get all openings from this sheet that begin on this one day (this includes openings that begin on this day and run over into the next day)
+				$o_all = SUS_Opening::getAllFromDb(['sheet_id' => $o->sheet_id, 'begin_datetime >=' => $o->begin_datetime, 'opening_group_id <=' => $o->opening_group_id], $DB);
+
+				if (count($o_all) == 0) {
+					// error: no matching records found
+					$results["notes"] = "no matching records found";
+					echo json_encode($results);
+					exit;
+				}
+
+				// capture opening_id's for later DOM updates
+				$updateIDs_ary = [];
+
+				// mark each object as deleted as well as any lower dependent items
+				foreach ($o_all as $opening) {
+					$opening->cascadeDelete();
+					array_push($updateIDs_ary, $opening->opening_id);
+				}
+
+				// output
+				$results['status']        = 'success';
+				$results['customData']    = $customData;
+				$results['updateIDs_ary'] = $updateIDs_ary;
 
 				break;
 			case 3:
 				// delete this and all past and future openings in this series
+				$o = SUS_Opening::getOneFromDb(['opening_id' => $deleteID], $DB);
+
+				if (!$o->matchesDb) {
+					// error: no matching record found
+					$results["notes"] = "no matching record found";
+					echo json_encode($results);
+					exit;
+				}
+
+				// 1. get sheet_id, opening_group_id
+				// 2. get all openings from this sheet that begin on this one day (this includes openings that begin on this day and run over into the next day)
+				$o_all = SUS_Opening::getAllFromDb(['sheet_id' => $o->sheet_id, 'opening_group_id' => $o->opening_group_id], $DB);
+
+				if (count($o_all) == 0) {
+					// error: no matching records found
+					$results["notes"] = "no matching records found";
+					echo json_encode($results);
+					exit;
+				}
+
+				// capture opening_id's for later DOM updates
+				$updateIDs_ary = [];
+
+				// mark each object as deleted as well as any lower dependent items
+				foreach ($o_all as $opening) {
+					$opening->cascadeDelete();
+					array_push($updateIDs_ary, $opening->opening_id);
+				}
+
+				// output
+				$results['status']        = 'success';
+				$results['customData']    = $customData;
+				$results['updateIDs_ary'] = $updateIDs_ary;
 
 				break;
 			default:
 				break;
 		}
-
-		//		echo "; action = " . $action;
-		//		echo "; deleteID = " . $deleteID;
-		//		echo "; customData = " . $customData;
-		//		exit;
-		// end test code
-
-
 	}
 	//###############################################################
 	elseif ($action == 'delete-signup' || $action == 'delete-signup-from-edit-opening-modal') {
@@ -282,10 +336,10 @@
 			exit;
 		}
 
-		# mark this object as deleted as well as any lower dependent items
+		// mark this object as deleted as well as any lower dependent items
 		$s->cascadeDelete();
 
-		# output
+		// output
 		if ($s->matchesDb) {
 			$results['status'] = 'success';
 		}
@@ -303,11 +357,11 @@
 			exit;
 		}
 
-		# mark this object as deleted as well as any lower dependent items
+		// mark this object as deleted as well as any lower dependent items
 		$s->flag_private_signups = $editValue;
 		$s->updateDB();
 
-		# output
+		// output
 		if ($s->matchesDb) {
 			$results['status'] = 'success';
 		}
@@ -498,7 +552,7 @@
 		// must get sheet object to enable render fxn
 		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
 
-		# output
+		// output
 		$results['status']                    = 'success';
 		$results['html_render_opening']       = $o->renderAsHtmlOpeningWithLimitedControls($USER->user_id);
 		$results['html_render_usage_alert']   = $sheet->renderAsHtmlUsageAlert($USER);
@@ -541,7 +595,7 @@
 		// must get sheet object to enable render fxn
 		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
 
-		# output
+		// output
 		$results['status']                    = 'success';
 		$results['html_render_opening']       = $o->renderAsHtmlOpeningWithLimitedControls($USER->user_id);
 		$results['html_render_usage_alert']   = $sheet->renderAsHtmlUsageAlert($USER);
@@ -599,7 +653,7 @@
 			}
 		}
 
-		# output
+		// output
 		$results['status']       = 'success';
 		$results['which_action'] = 'edit-opening-add-signup-user';
 		$results['html_output']  = "<li data-for-firstname=\"" . $u->firstname . "\" data-for-lastname=\"" . $u->lastname . "\" data-for-signup-id=\"" . $s->signup_id . "\">";
@@ -653,7 +707,7 @@
 
 		}
 
-		# output
+		// output
 		$results['status']       = 'success';
 		$results['which_action'] = 'fetch-signups-for-opening-id';
 		$results['html_output']  = $signups_list;
@@ -713,7 +767,7 @@
 			$check_access_record = SUS_Access::getOneFromDb(['type' => $type, 'sheet_id' => $sheetId, 'constraint_data' => $constraintInfo], $DB);
 		}
 
-		# output
+		// output
 		if ($check_access_record->matchesDb) {
 			$results["notes"] = "could not remove that access";
 			echo json_encode($results);
