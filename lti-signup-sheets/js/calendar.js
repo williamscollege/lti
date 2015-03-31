@@ -261,7 +261,7 @@ $(document).ready(function () {
 	// ***************************
 
 	/*
-	 Workflow for "delete opening(s)":
+	 SAVE: Workflow of codebase for "delete opening(s)":
 	 1. sus_opening.php - this class has a render fxn that creates the '.sus-delete-opening' links
 	 2. calendar.js - listens for click, creates params to be passed to jQuery BootBox showConfirmBox
 	 3. util.js - the showConfirmBox fxn calls ajax, sends data to ajax_actions.php
@@ -283,13 +283,13 @@ $(document).ready(function () {
 		if (GLOBAL_confirmHandlerReference > 1) {
 			// delete repeating opening choices (IS part of a group/series of repeating openings)
 			var params = {
-				title: "Delete Repeating Openings (on this sheet)?",
+				title: "Delete Repeating Openings? [on this sheet]",
 				message: '<form>' +
 				'<p><h4>' + $(this).parent().siblings('h4').html() + '</h4><strong>' + $(this).siblings('.opening-time-range').html() + '</strong>' + openingName + '</p>' +
 				'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;Deleting an opening will cancel signups for that opening.</p>' +
 				'<div class="radio"><label for="delete-choice-0">' +
 				'<input type="radio" name="custom_user_value" id="delete-choice-0" value="0" checked="checked">' +
-				'<strong>Only this instance</strong> - <span class="small">Delete only this opening (all other openings in this series will remain)</span></label>' +
+				'<strong>Only this instance</strong> - <span class="small">Delete only this opening</span></label>' +
 				'</div>' +
 				'<div class="radio"><label for="delete-choice-1">' +
 				'<input type="radio" name="custom_user_value" id="delete-choice-1" value="1">' +
@@ -326,6 +326,7 @@ $(document).ready(function () {
 
 		showConfirmBox(params);
 	});
+
 
 	$("#link_show_optional_opening_fields").click(function () {
 		$(".optional_opening_fields").show();

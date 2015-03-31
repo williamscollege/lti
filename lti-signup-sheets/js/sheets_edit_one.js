@@ -8,7 +8,7 @@ $(document).ready(function () {
 	// For performance reasons, the Tooltip and Popover data-apis are opt-in, meaning you must initialize them yourself.
 	// ***************************
 	$(function () {
-		$('[data-toggle="tooltip"]').tooltip()
+		$('[data-toggle="tooltip"]').tooltip();
 	})
 
 
