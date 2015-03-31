@@ -52,7 +52,7 @@
 		// TAKES: this function takes one parameters, a username as a string
 		// RETURNS: a array of strings, each string the name of an institutional group
 		public function getInstGroupsFromAuthSource($username) {
-			echo "TODO: implement group names for testing user<br/>\n";
+			echo "TODO: implement group names for testing user<br />\n";
 		}
 
 		// TAKES: a string that is someone's username
@@ -65,7 +65,7 @@
 		//        'inst_group_data'
 		//        'auth_identifier'
 		public function findOneUserByUsername($username) {
-			echo "You must override findOneUserByUsername in your auth class<br/>\n";
+			echo "You must override findOneUserByUsername in your auth class<br />\n";
 		}
 
 		// TAKES: a string that is a search term - either with out spaces, or with a single space
@@ -78,13 +78,13 @@
 		//        'inst_group_data'
 		//        'auth_identifier'
 		public function findAllUsersBySearchTerm($searchTerm) {
-			echo "You must override findAllUsersBySearchTerm in your auth class<br/>\n";
+			echo "You must override findAllUsersBySearchTerm in your auth class<br />\n";
 		}
 
 		// TAKES: an auth source data set / entry for a single user
 		// RETURNS: the common structure for user data, populated with the relevant info from the auth entry
 		public function convertAuthInfoToUserDataStructure($authEntry) {
-			echo "You must override convertAuthInfoToUserDataStructure in your auth class<br/>\n";
+			echo "You must override convertAuthInfoToUserDataStructure in your auth class<br />\n";
 			$res = [
 				'username'        => '',
 				'email'           => '',

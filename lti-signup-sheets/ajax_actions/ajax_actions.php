@@ -453,13 +453,13 @@
 			foreach ($to_add as $username_to_add) {
 				if (!in_array($username_to_add, $obj_all_attr_usernames)) {
 					// username does not exist
-					$results["notes"] .= "invalid username: " . $username_to_add . "<br/>\n";
+					$results["notes"] .= "invalid username: " . $username_to_add . "<br />\n";
 				}
 				else {
 					$access_record = SUS_Access::createNewAccess($access_type, $editID, 0, $username_to_add, $DB);
 					$access_record->updateDb();
 					if (!$access_record->matchesDb) {
-						$results["notes"] .= "could not save access for " . $username_to_add . "<br/>\n";
+						$results["notes"] .= "could not save access for " . $username_to_add . "<br />\n";
 					}
 				}
 			}
@@ -469,20 +469,20 @@
 		foreach ($to_remove as $username_to_remove) {
 			$access_record = SUS_Access::getOneFromDb(['type' => $access_type, 'sheet_id' => $editID, 'constraint_data' => $username_to_remove], $DB);
 			if (!$access_record->matchesDb) {
-				$results["notes"] .= "no existing access record found for " . $username_to_remove . "<br/>\n";
+				$results["notes"] .= "no existing access record found for " . $username_to_remove . "<br />\n";
 				continue;
 			}
 			$access_record->doDelete();
 
 			$check_access_record = SUS_Access::getOneFromDb(['type' => $access_type, 'sheet_id' => $editID, 'constraint_data' => $username_to_remove], $DB);
 			if ($check_access_record->matchesDb) {
-				$results["notes"] .= "could not remove access for " . $username_to_remove . "<br/>\n";
+				$results["notes"] .= "could not remove access for " . $username_to_remove . "<br />\n";
 			}
 		}
 
 		// 6 note results
 		if ($results["notes"]) {
-			$results["notes"] = "<br/>Problems saving one or more usernames:<br/>\n" . $results["notes"];
+			$results["notes"] = "<br />Problems saving one or more usernames:<br />\n" . $results["notes"];
 		}
 		else {
 			$results['status'] = 'success';

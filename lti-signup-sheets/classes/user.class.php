@@ -101,7 +101,7 @@
 		}
 
 		public function updateDbFromAuth($auth) {
-			//echo "doing db update<br/>\n";
+			//echo "doing db update<br />\n";
 			//$this->refreshFromDb();
 
 			// if we're passed in an array of auth data, convert it to an object

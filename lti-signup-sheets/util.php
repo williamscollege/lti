@@ -340,10 +340,10 @@
 	function util_sanitizeFileName($fn) {
 		$allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.';
 
-		//        echo "fn=$fn;<br/>\n";
+		//        echo "fn=$fn;<br />\n";
 		while (preg_match('/\\.\\./', $fn)) {
 			$fn = preg_replace('/\\.\\./', '', $fn);
-			//        echo "fn=$fn;<br/>\n";
+			//        echo "fn=$fn;<br />\n";
 		}
 		if (!$fn) {
 			return '';

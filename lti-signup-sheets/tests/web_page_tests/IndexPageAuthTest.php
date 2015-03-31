@@ -61,7 +61,7 @@
 
 			$this->clickSubmit('Sign out');
 
-			echo "<br><b>NOTE: skipping logging out test because the automated logout submission doesn't seem to work, though the functionality works fine when used in a browser</b><br/>\n";
+			echo "<br><b>NOTE: skipping logging out test because the automated logout submission doesn't seem to work, though the functionality works fine when used in a browser</b><br />\n";
 		}
 
 	}

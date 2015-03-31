@@ -289,8 +289,8 @@
 			//  <input type="hidden" name="action" value="update"/>
 			//  <input type="hidden" name="notebook_id" value="NEW"/>
 			//  <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': <input id="notebook-name" type="text" name="name" value="'.htmlentities($n->name).'"/></h3>
-			//  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($n->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($n->updated_at).'</span><br/>
-			//  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->first_name.'</a></span><br/>
+			//  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($n->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($n->updated_at).'</span><br />
+			//  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->first_name.'</a></span><br />
 			//  <div class="notebook-notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">'.htmlentities(util_lang('new_notebook_notes')).'</textarea></div>
 			//  <input id="edit-submit-control" class="btn btn-default" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>
 			//  <a id="edit-cancel-control" class="btn btn-default" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list">'.util_lang('cancel','properize').'</a>

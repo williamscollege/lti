@@ -177,7 +177,7 @@
 			$rendered = $this->_renderHtml_BEGIN();
 			$rendered .= '<a href="#" class="sus-edit-opening" data-opening-id="' . $this->opening_id . '" data-toggle="modal" data-target="#modal-edit-opening" title="Edit opening"><i class="glyphicon glyphicon-wrench"></i></a>';
 			$rendered .= '<a href="#" class="sus-delete-opening" data-opening-id="' . $this->opening_id . '" data-count-openings-in-group-id="' . $repeating_data_attr . '"  title="Delete Opening"><i class="glyphicon glyphicon-remove"></i></a>';
-			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-opening-id="' . $this->opening_id . '" data-toggle="modal" data-target="#modal-edit-opening" title="Sign up"><i class="glyphicon glyphicon-plus"></i></a>' . $repeating_event . '<br/>';
+			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-opening-id="' . $this->opening_id . '" data-toggle="modal" data-target="#modal-edit-opening" title="Sign up"><i class="glyphicon glyphicon-plus"></i></a>' . $repeating_event . '<br />';
 			$rendered .= $this->_renderHtml_END($signedupUserIdsAry, TRUE);
 
 			return $rendered;
@@ -200,11 +200,11 @@
 				}
 				// show 'signup' btn ("I am not signed up for this future opening")
 				elseif (count($this->signups) < $this->max_signups || $this->max_signups == -1) {
-					$rendered .= '<a href="#" class="sus-add-me-to-opening" data-opening-id="' . $this->opening_id . '" title="Sign me up"><i class="glyphicon glyphicon-plus"></i>&nbsp;Signup</a><br/>';
+					$rendered .= '<a href="#" class="sus-add-me-to-opening" data-opening-id="' . $this->opening_id . '" title="Sign me up"><i class="glyphicon glyphicon-plus"></i>&nbsp;Signup</a><br />';
 				}
 				// show no controls ("this future opening is already filled to capacity")
 				elseif (!(count($this->signups) < $this->max_signups || $this->max_signups == -1)) {
-					$rendered .= 'full capacity<br/>';
+					$rendered .= 'full capacity<br />';
 				}
 			}
 			else {

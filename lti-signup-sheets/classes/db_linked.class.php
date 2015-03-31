@@ -507,7 +507,7 @@
 				$qva        = $this->_getQueryValuesArray();
 
 				//			foreach ($qva as $k=>$v) {
-				//				echo "processing key $k<br/>\n";
+				//				echo "processing key $k<br />\n";
 				//				if (($k == ':flag_is_system_admin') || ($k == ':flag_delete') || ($k == ':flag_is_banned')) {
 				//					echo 'setting flag value';
 				//					$qva[$k] = false;

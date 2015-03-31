@@ -33,7 +33,7 @@
 				return $group_names;
 			}
 
-			//        echo "TODO: implement fetching of group names<br/>\n";
+			//        echo "TODO: implement fetching of group names<br />\n";
 		}
 
 		public function connectToLDAP() {
