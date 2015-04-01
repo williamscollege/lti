@@ -701,9 +701,12 @@
 			$openings_in_sg_future         = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg, 'begin_datetime >=' => util_currentDateTimeString_asMySQL()], $this->dbConnection);
 			$list_opening_ids_in_sg_future = Db_Linked::arrayOfAttrValues($openings_in_sg_future, 'opening_id');
 
+			$sg_count_g_total_user_signups = 0; // set default
 			if ($list_opening_ids_in_sg_all) {
 				$sg_count_g_total_user_signups = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_sg_all, 'signup_user_id' => $this->user_id], $this->dbConnection));
 			}
+
+			$sg_count_g_pending_user_signups = 0; // set default
 			if ($list_opening_ids_in_sg_future) {
 				$sg_count_g_pending_user_signups = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_sg_future, 'signup_user_id' => $this->user_id], $this->dbConnection));
 			}
@@ -715,10 +718,12 @@
 			$openings_in_one_sheet_future         = SUS_Opening::getAllFromDb(['sheet_id' => $s->sheet_id, 'begin_datetime >=' => util_currentDateTimeString_asMySQL()], $this->dbConnection);
 			$list_opening_ids_in_one_sheet_future = Db_Linked::arrayOfAttrValues($openings_in_one_sheet_future, 'opening_id');
 
+			$s_count_total_user_signups = 0; // set default
 			if ($list_opening_ids_in_one_sheet_all) {
 				$s_count_total_user_signups = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_one_sheet_all, 'signup_user_id' => $this->user_id], $this->dbConnection));
 			}
 
+			$s_count_pending_user_signups = 0; // set default
 			if ($list_opening_ids_in_one_sheet_future) {
 				$s_count_pending_user_signups = count(SUS_Signup::getAllFromDb(['opening_id' => $list_opening_ids_in_one_sheet_future, 'signup_user_id' => $this->user_id], $this->dbConnection));
 			}
