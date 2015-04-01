@@ -191,7 +191,7 @@
 											<label for="textSheetDescription" class="control-label">Description</label>
 
 											<div class="">
-												<textarea id="textSheetDescription" name="textSheetDescription" class="form-control input-sm" placeholder="Instructions for this signup sheet" rows="2"><?php echo $s ? $s->description : ''; ?></textarea>
+												<textarea id="textSheetDescription" name="textSheetDescription" class="form-control input-sm" placeholder="Instructions for this signup sheet" rows="2"><?php echo $s ? htmlspecialchars($s->description, ENT_QUOTES) : ''; ?></textarea>
 											</div>
 										</div>
 
