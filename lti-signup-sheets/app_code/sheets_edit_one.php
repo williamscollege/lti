@@ -158,7 +158,7 @@
 											<label for="inputSheetName" class="control-label">Sheet Name</label>
 
 											<div class="">
-												<input type="text" id="inputSheetName" name="inputSheetName" class="form-control input-sm" maxlength="255" placeholder="Signup sheet name" value="<?php echo $s ? $s->name : ''; ?>" />
+												<input type="text" id="inputSheetName" name="inputSheetName" class="form-control input-sm" maxlength="255" placeholder="Signup sheet name" value="<?php echo $s ? htmlspecialchars($s->name, ENT_QUOTES) : ''; ?>" />
 											</div>
 										</div>
 
