@@ -58,8 +58,8 @@ $(document).ready(function () {
 			url: "../ajax_actions/ajax_actions.php",
 			cache: false,
 			data: {
-				ajaxVal_Action: doAction,
-				ajaxVal_Edit_ID: openingID
+				ajax_Action: doAction,
+				ajax_Primary_ID: openingID
 			},
 			dataType: 'json',
 			error: function (req, textStatus, err) {
@@ -155,8 +155,8 @@ $(document).ready(function () {
 		var doAction = 'fetch-signups-for-opening-id';
 
 		var params = {
-			ajaxVal_Action: doAction,
-			ajaxVal_Edit_ID: openingID
+			ajax_Action: doAction,
+			ajax_Primary_ID: openingID
 		};
 
 		// show status
@@ -174,7 +174,7 @@ $(document).ready(function () {
 				if (data.status == 'success') {
 					//susUtil_setTransientAlert('success', 'Saved');
 					$("#signupListing UL").html(data.html_output);
-					$(".list-opening-id-" + params['ajaxVal_Edit_ID']).replaceWith(data['html_render_opening']);
+					$(".list-opening-id-" + params['ajax_Primary_ID']).replaceWith(data['html_render_opening']);
 				}
 				else {
 					susUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
@@ -489,10 +489,10 @@ $(document).ready(function () {
 		var doAction = 'edit-opening-add-signup-user';
 
 		var params = {
-			ajaxVal_Action: doAction,
-			ajaxVal_Edit_ID: $("#edit_OpeningID").val(),
-			ajaxVal_Name: $("#signupUsername").val(),
-			ajaxVal_Description: $("#signupAdminNote").val()
+			ajax_Action: doAction,
+			ajax_Primary_ID: $("#edit_OpeningID").val(),
+			ajax_Name: $("#signupUsername").val(),
+			ajax_Description: $("#signupAdminNote").val()
 		};
 
 		// show status
@@ -509,7 +509,7 @@ $(document).ready(function () {
 			success: function (data) {
 				if (data.status == 'success') {
 					susUtil_setTransientAlert('success', 'Saved');
-					GLOBAL_calendar_fetchSignupsforOpening(params['ajaxVal_Edit_ID']);
+					GLOBAL_calendar_fetchSignupsforOpening(params['ajax_Primary_ID']);
 					// hide input fields (and reset them)
 					$("#btnEditOpeningCancelSignup").click();
 				}

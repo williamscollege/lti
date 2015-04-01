@@ -50,32 +50,30 @@ $(document).ready(function () {
 	// Listeners
 	// ***************************
 
-	// Edit Sheet Access: Who can see signups
+	// Edit Sheet "Access": Various categories of who can see signups
 	$("input[name=radioSignupPrivacy]").on("change", function () {
 		// GLOBAL_confirmHandlerData = $(this).attr('id');
 		GLOBAL_confirmHandlerReference = $(this).val();
 		var params = {
-			ajaxVal_Action: "editSheetAccess-flag-private-signups",
-			ajaxVal_Edit_ID: $("#hiddenSheetID").val(),
-			ajaxVal_Edit_Value: GLOBAL_confirmHandlerReference
+			ajax_Action: "editSheetAccess-flag-private-signups",
+			ajax_Primary_ID: $("#hiddenSheetID").val(),
+			ajax_Custom_Data: GLOBAL_confirmHandlerReference
 		};
 		updateSheetAccess(params);
 	});
 
-	// Edit Sheet Access: Who can see signups
 	$(".access_by_course_ckboxes").on("change", function () {
 		var doAction = 'editSheetAccess-access-by-course-remove';
 		if ($(this).prop("checked")) {
 			doAction = 'editSheetAccess-access-by-course-add';
 		}
 		var params = {
-			ajaxVal_Action: doAction,
-			ajaxVal_Edit_ID: $("#hiddenSheetID").val(),
-			ajaxVal_Edit_Value: $(this).attr('data-permval')
+			ajax_Action: doAction,
+			ajax_Primary_ID: $("#hiddenSheetID").val(),
+			ajax_Custom_Data: $(this).attr('data-permval')
 		};
 		updateSheetAccess(params);
 	});
-
 
 	$(".access_by_instructor_ckboxes").on("change", function () {
 		var doAction = 'editSheetAccess-access-by-instructor-remove';
@@ -83,13 +81,12 @@ $(document).ready(function () {
 			doAction = 'editSheetAccess-access-by-instructor-add';
 		}
 		var params = {
-			ajaxVal_Action: doAction,
-			ajaxVal_Edit_ID: $("#hiddenSheetID").val(),
-			ajaxVal_Edit_Value: $(this).attr('data-permval')
+			ajax_Action: doAction,
+			ajax_Primary_ID: $("#hiddenSheetID").val(),
+			ajax_Custom_Data: $(this).attr('data-permval')
 		};
 		updateSheetAccess(params);
 	});
-
 
 	$("#access_by_role_teacher").on("change", function () {
 		var doAction = 'editSheetAccess-access-by-role-remove';
@@ -97,9 +94,9 @@ $(document).ready(function () {
 			doAction = 'editSheetAccess-access-by-role-add';
 		}
 		var params = {
-			ajaxVal_Action: doAction,
-			ajaxVal_Edit_ID: $("#hiddenSheetID").val(),
-			ajaxVal_Edit_Value: 'teacher'
+			ajax_Action: doAction,
+			ajax_Primary_ID: $("#hiddenSheetID").val(),
+			ajax_Custom_Data: 'teacher'
 		};
 		updateSheetAccess(params);
 	});
@@ -110,9 +107,9 @@ $(document).ready(function () {
 			doAction = 'editSheetAccess-access-by-role-add';
 		}
 		var params = {
-			ajaxVal_Action: doAction,
-			ajaxVal_Edit_ID: $("#hiddenSheetID").val(),
-			ajaxVal_Edit_Value: 'student'
+			ajax_Action: doAction,
+			ajax_Primary_ID: $("#hiddenSheetID").val(),
+			ajax_Custom_Data: 'student'
 		};
 		updateSheetAccess(params);
 	});
@@ -123,9 +120,9 @@ $(document).ready(function () {
 			doAction = 'editSheetAccess-access-by-any-add';
 		}
 		var params = {
-			ajaxVal_Action: doAction,
-			ajaxVal_Edit_ID: $("#hiddenSheetID").val(),
-			ajaxVal_Edit_Value: 'all'
+			ajax_Action: doAction,
+			ajax_Primary_ID: $("#hiddenSheetID").val(),
+			ajax_Custom_Data: 'all'
 		};
 		updateSheetAccess(params);
 	});
@@ -138,9 +135,9 @@ $(document).ready(function () {
 			doAction = 'editSheetAccess-admin-by-user';
 		}
 		var params = {
-			ajaxVal_Action: doAction,
-			ajaxVal_Edit_ID: $("#hiddenSheetID").val(),
-			ajaxVal_Edit_Value: $(this).val()
+			ajax_Action: doAction,
+			ajax_Primary_ID: $("#hiddenSheetID").val(),
+			ajax_Custom_Data: $(this).val()
 		};
 		updateSheetAccess(params);
 	});

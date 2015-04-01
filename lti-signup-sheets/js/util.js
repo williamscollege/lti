@@ -37,9 +37,9 @@ function showConfirmBox(ary) {
 						url: ary['url'],
 						cache: false,
 						data: {
-							'ajaxVal_Action': ary['ajax_action'],
-							'ajaxVal_Delete_ID': ary['ajax_id'],
-							'ajaxVal_Custom_Data': $("input[name='custom_user_value']:checked").val() // custom value, currently only from ".sus-delete-opening" (calendar.js)
+							'ajax_Action': ary['ajax_action'],
+							'ajax_Primary_ID': ary['ajax_id'],
+							'ajax_Custom_Data': $("input[name='custom_user_value']:checked").val() // custom value, currently only from ".sus-delete-opening" (calendar.js)
 						},
 						dataType: 'json',
 						// TODO ? - remove textStatus and jqhdr ? unused?

@@ -44,7 +44,7 @@ $(document).ready(function () {
 
 		// update values in modal
 		$("#ajaxSheetgroupLabel").text("Add Group");
-		$("INPUT#ajaxSheetgroupAction").val("add-sheetgroup");
+		$("#ajaxSheetgroupAction").val("add-sheetgroup");
 	});
 
 	// Edit sheetgroup
@@ -59,10 +59,10 @@ $(document).ready(function () {
 
 		// update values in modal
 		$("#ajaxSheetgroupLabel").text("Edit Group");
-		$("INPUT#ajaxSheetgroupAction").val("edit-sheetgroup");
-		$("INPUT#ajaxSheetgroupID").val(sheetgroup_id);
-		$("INPUT#ajaxSheetgroupName").val(sheetgroup_name);
-		$("TEXTAREA#ajaxSheetgroupDescription").val(sheetgroup_description);
+		$("#ajaxSheetgroupAction").val("edit-sheetgroup");
+		$("#ajaxSheetgroupID").val(sheetgroup_id);
+		$("#ajaxSheetgroupName").val(sheetgroup_name);
+		$("#ajaxSheetgroupDescription").val(sheetgroup_description);
 		$("#ajaxSheetgroupMaxTotal").val(sheetgroup_max_total);
 		$("#ajaxSheetgroupMaxPending").val(sheetgroup_max_pending);
 
@@ -114,13 +114,13 @@ $(document).ready(function () {
 				url: $("#frmAjaxSheetgroup").attr('action'),
 				cache: false,
 				data: {
-					ajaxVal_Action: action,
-					ajaxVal_OwnerUserID: owner_user_id,
-					ajaxVal_SheetgroupID: sheetgroup_id,
-					ajaxVal_Name: sheetgroup_name,
-					ajaxVal_Description: sheetgroup_description,
-					ajaxVal_MaxTotal: sheetgroup_max_total,
-					ajaxVal_MaxPending: sheetgroup_max_pending
+					ajax_Action: action,
+					ajax_OwnerUserID: owner_user_id,
+					ajax_Primary_ID: sheetgroup_id,
+					ajax_Name: sheetgroup_name,
+					ajax_Description: sheetgroup_description,
+					ajax_MaxTotal: sheetgroup_max_total,
+					ajax_MaxPending: sheetgroup_max_pending
 				},
 				dataType: 'json',
 				success: function (data) {

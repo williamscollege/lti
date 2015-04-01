@@ -21,10 +21,10 @@
 
 						// update values in modal
 						$("#ajaxSheetgroupLabel").text("Edit Group");
-						$("INPUT#ajaxSheetgroupAction").val("edit-sheetgroup");
-						$("INPUT#ajaxSheetgroupID").val(sheetgroup_id);
-						$("INPUT#ajaxSheetgroupName").val(sheetgroup_name);
-						$("TEXTAREA#ajaxSheetgroupDescription").val(sheetgroup_description);
+						$("#ajaxSheetgroupAction").val("edit-sheetgroup");
+						$("#ajaxSheetgroupID").val(sheetgroup_id);
+						$("#ajaxSheetgroupName").val(sheetgroup_name);
+						$("#ajaxSheetgroupDescription").val(sheetgroup_description);
 						$("#ajaxSheetgroupMaxTotal").val(sheetgroup_max_total);
 						$("#ajaxSheetgroupMaxPending").val(sheetgroup_max_pending);
 					}
@@ -178,7 +178,7 @@
 							</div>
 							Users can have at most
 							<select id="ajaxSheetgroupMaxTotal" name="ajaxSheetgroupMaxTotal" class="">
-								<option selected="selected" value="0">unlimited</option>
+								<option selected="selected" value="-1">unlimited</option>
 								<option value="1">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>

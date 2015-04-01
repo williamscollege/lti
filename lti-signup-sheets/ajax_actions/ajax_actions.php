@@ -2,16 +2,13 @@
 	require_once(dirname(__FILE__) . '/head_ajax.php');
 
 	//		# tests
-	//		$action        = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
+	//		$action        = htmlentities((isset($_REQUEST["ajax_Action"])) ? util_quoteSmart($_REQUEST["ajax_Action"]) : 0);
 	//		// output
 	//		$results['status']       = 'success';
 	//		$results['which_action'] = $action;
 	//		$results['html_output']  = 'smiling now';
+	//		util_prePrintR($_REQUEST); // debugging
 	//		# Return JSON array
-	//
-	//		// util_prePrintR($_REQUEST); // debugging
-
-
 	//		echo json_encode($_REQUEST);
 	//		exit;
 
@@ -19,19 +16,17 @@
 	#------------------------------------------------#
 	# Fetch AJAX values
 	#------------------------------------------------#
-	// TODO - Can generalize some of these passed param values and reduce the number found here... (primaryID, secondaryID, customValue?)
-	$action       = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
-	$ownerUserID  = htmlentities(((isset($_REQUEST["ajaxVal_OwnerUserID"])) && is_numeric($_REQUEST["ajaxVal_OwnerUserID"])) ? $_REQUEST["ajaxVal_OwnerUserID"] : 0);
-	$sheetgroupID = htmlentities(((isset($_REQUEST["ajaxVal_SheetgroupID"])) && is_numeric($_REQUEST["ajaxVal_SheetgroupID"])) ? $_REQUEST["ajaxVal_SheetgroupID"] : 0);
-	$sheetID      = htmlentities((isset($_REQUEST["ajaxVal_SheetID"])) ? $_REQUEST["ajaxVal_SheetID"] : 0);
-	$name         = htmlentities((isset($_REQUEST["ajaxVal_Name"])) ? util_quoteSmart($_REQUEST["ajaxVal_Name"]) : 0);
-	$description  = htmlentities((isset($_REQUEST["ajaxVal_Description"])) ? util_quoteSmart($_REQUEST["ajaxVal_Description"]) : 0);
-	$maxTotal     = htmlentities((isset($_REQUEST["ajaxVal_MaxTotal"])) ? $_REQUEST["ajaxVal_MaxTotal"] : 0);
-	$maxPending   = htmlentities((isset($_REQUEST["ajaxVal_MaxPending"])) ? $_REQUEST["ajaxVal_MaxPending"] : 0);
-	$deleteID     = htmlentities((isset($_REQUEST["ajaxVal_Delete_ID"])) ? $_REQUEST["ajaxVal_Delete_ID"] : 0);
-	$editID       = htmlentities((isset($_REQUEST["ajaxVal_Edit_ID"])) ? $_REQUEST["ajaxVal_Edit_ID"] : 0);
-	$editValue    = htmlentities((isset($_REQUEST["ajaxVal_Edit_Value"])) ? $_REQUEST["ajaxVal_Edit_Value"] : 0);
-	$customData   = htmlentities((isset($_REQUEST["ajaxVal_Custom_Data"])) ? $_REQUEST["ajaxVal_Custom_Data"] : 0);
+	// generic parameter values (used for many different types of values, from many forms, etc.)
+	$action     = htmlentities((isset($_REQUEST["ajax_Action"])) ? util_quoteSmart($_REQUEST["ajax_Action"]) : 0);
+	$primaryID  = htmlentities(((isset($_REQUEST["ajax_Primary_ID"])) && is_numeric($_REQUEST["ajax_Primary_ID"])) ? $_REQUEST["ajax_Primary_ID"] : 0);
+	$customData = htmlentities((isset($_REQUEST["ajax_Custom_Data"])) ? $_REQUEST["ajax_Custom_Data"] : 0);
+
+	// individually passed parameters
+	$ownerUserID = htmlentities(((isset($_REQUEST["ajax_OwnerUserID"])) && is_numeric($_REQUEST["ajax_OwnerUserID"])) ? $_REQUEST["ajax_OwnerUserID"] : 0);
+	$name        = htmlentities((isset($_REQUEST["ajax_Name"])) ? util_quoteSmart($_REQUEST["ajax_Name"]) : 0);
+	$description = htmlentities((isset($_REQUEST["ajax_Description"])) ? util_quoteSmart($_REQUEST["ajax_Description"]) : 0);
+	$maxTotal    = htmlentities((isset($_REQUEST["ajax_MaxTotal"])) ? $_REQUEST["ajax_MaxTotal"] : 0);
+	$maxPending  = htmlentities((isset($_REQUEST["ajax_MaxPending"])) ? $_REQUEST["ajax_MaxPending"] : 0);
 
 
 	#------------------------------------------------#
@@ -83,7 +78,7 @@
 	}
 	//###############################################################
 	elseif ($action == 'edit-sheetgroup') {
-		$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $sheetgroupID], $DB);
+		$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $primaryID], $DB);
 
 		if (!$sg->matchesDb) {
 			// error: no matching record found
@@ -106,7 +101,7 @@
 	}
 	//###############################################################
 	elseif ($action == 'delete-sheetgroup') {
-		$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $deleteID], $DB);
+		$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $primaryID], $DB);
 
 		if (!$sg->matchesDb) {
 			// error: no matching record found
@@ -163,7 +158,7 @@
 	}
 	//###############################################################
 	elseif ($action == 'delete-sheet') {
-		$s = SUS_Sheet::getOneFromDb(['sheet_id' => $deleteID], $DB);
+		$s = SUS_Sheet::getOneFromDb(['sheet_id' => $primaryID], $DB);
 
 		if (!$s->matchesDb) {
 			// error: no matching record found
@@ -187,7 +182,7 @@
 		switch ($customData) {
 			case 0:
 				// delete only this opening
-				$o = SUS_Opening::getOneFromDb(['opening_id' => $deleteID], $DB);
+				$o = SUS_Opening::getOneFromDb(['opening_id' => $primaryID], $DB);
 
 				if (!$o->matchesDb) {
 					// error: no matching record found
@@ -209,7 +204,7 @@
 				break;
 			case 1:
 				// delete all openings for this single day
-				$o = SUS_Opening::getOneFromDb(['opening_id' => $deleteID], $DB);
+				$o = SUS_Opening::getOneFromDb(['opening_id' => $primaryID], $DB);
 
 				if (!$o->matchesDb) {
 					// error: no matching record found
@@ -249,7 +244,7 @@
 				break;
 			case 2:
 				// delete this and all future openings in this series
-				$o = SUS_Opening::getOneFromDb(['opening_id' => $deleteID], $DB);
+				$o = SUS_Opening::getOneFromDb(['opening_id' => $primaryID], $DB);
 
 				if (!$o->matchesDb) {
 					// error: no matching record found
@@ -286,7 +281,7 @@
 				break;
 			case 3:
 				// delete this and all past and future openings in this series
-				$o = SUS_Opening::getOneFromDb(['opening_id' => $deleteID], $DB);
+				$o = SUS_Opening::getOneFromDb(['opening_id' => $primaryID], $DB);
 
 				if (!$o->matchesDb) {
 					// error: no matching record found
@@ -327,7 +322,7 @@
 	}
 	//###############################################################
 	elseif ($action == 'delete-signup' || $action == 'delete-signup-from-edit-opening-modal') {
-		$s = SUS_Signup::getOneFromDb(['signup_id' => $deleteID], $DB);
+		$s = SUS_Signup::getOneFromDb(['signup_id' => $primaryID], $DB);
 
 		if (!$s->matchesDb) {
 			// error: no matching record found
@@ -346,9 +341,9 @@
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-flag-private-signups') {
-		// values: $editID, $editValue
+		// values: $primaryID, $customData
 
-		$s = SUS_Sheet::getOneFromDb(['sheet_id' => $editID], $DB);
+		$s = SUS_Sheet::getOneFromDb(['sheet_id' => $primaryID], $DB);
 
 		if (!$s->matchesDb) {
 			// error: no matching record found
@@ -357,8 +352,8 @@
 			exit;
 		}
 
-		// mark this object as deleted as well as any lower dependent items
-		$s->flag_private_signups = $editValue;
+		// edit this object
+		$s->flag_private_signups = $customData;
 		$s->updateDB();
 
 		// output
@@ -368,35 +363,35 @@
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-course-remove') {
-		doAccessRemove('bycourse', $editID, $editValue, $results);
+		doAccessRemove('bycourse', $primaryID, $customData, $results);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-course-add') {
-		doAccessAdd('bycourse', $editID, $editValue, $results);
+		doAccessAdd('bycourse', $primaryID, $customData, $results);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-instructor-remove') {
-		doAccessRemove('byinstr', $editID, $editValue, $results);
+		doAccessRemove('byinstr', $primaryID, $customData, $results);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-instructor-add') {
-		doAccessAdd('byinstr', $editID, $editValue, $results);
+		doAccessAdd('byinstr', $primaryID, $customData, $results);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-role-remove') {
-		doAccessRemove('byrole', $editID, $editValue, $results);
+		doAccessRemove('byrole', $primaryID, $customData, $results);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-role-add') {
-		doAccessAdd('byrole', $editID, $editValue, $results);
+		doAccessAdd('byrole', $primaryID, $customData, $results);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-any-remove') {
-		doAccessRemove('byhasaccount', $editID, 'all', $results);
+		doAccessRemove('byhasaccount', $primaryID, 'all', $results);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-any-add') {
-		doAccessAdd('byhasaccount', $editID, 'all', $results);
+		doAccessAdd('byhasaccount', $primaryID, 'all', $results);
 	}
 	//###############################################################
 	elseif (($action == 'editSheetAccess-access-by-user') || ($action == 'editSheetAccess-admin-by-user')) {
@@ -404,7 +399,7 @@
 		if ($action == 'editSheetAccess-admin-by-user') {
 			$access_type = 'adminbyuser';
 		}
-		// values: $editID, $editValue
+		// values: $primaryID, $customData
 
 		// 1 clean incoming user name and split into array
 		// 2 get existing 'byuser' records
@@ -414,7 +409,7 @@
 		// 6 note results
 
 		// 1 clean incoming user name and split into array
-		$usernames_str = $editValue;
+		$usernames_str = $customData;
 		$usernames_str = preg_replace('/,/', ' ', $usernames_str); // convert commas to single white space
 		$usernames_str = preg_replace('/\\s+/', ' ', $usernames_str); // convert all white space to single white space
 		$usernames_str = preg_replace('/^\\s+|\\s+$/', '', $usernames_str); // trim leading and trailing space
@@ -425,7 +420,7 @@
 		}
 
 		// 2 get existing byuser records
-		$existing_access_records   = SUS_Access::getAllFromDb(['sheet_id' => $editID, 'type' => $access_type], $DB);
+		$existing_access_records   = SUS_Access::getAllFromDb(['sheet_id' => $primaryID, 'type' => $access_type], $DB);
 		$existing_access_usernames = Db_Linked::arrayOfAttrValues($existing_access_records, 'constraint_data');
 
 		// 3 generate to-add and to-remove sets
@@ -456,7 +451,7 @@
 					$results["notes"] .= "invalid username: " . $username_to_add . "<br />\n";
 				}
 				else {
-					$access_record = SUS_Access::createNewAccess($access_type, $editID, 0, $username_to_add, $DB);
+					$access_record = SUS_Access::createNewAccess($access_type, $primaryID, 0, $username_to_add, $DB);
 					$access_record->updateDb();
 					if (!$access_record->matchesDb) {
 						$results["notes"] .= "could not save access for " . $username_to_add . "<br />\n";
@@ -467,14 +462,14 @@
 
 		// 5 do removes
 		foreach ($to_remove as $username_to_remove) {
-			$access_record = SUS_Access::getOneFromDb(['type' => $access_type, 'sheet_id' => $editID, 'constraint_data' => $username_to_remove], $DB);
+			$access_record = SUS_Access::getOneFromDb(['type' => $access_type, 'sheet_id' => $primaryID, 'constraint_data' => $username_to_remove], $DB);
 			if (!$access_record->matchesDb) {
 				$results["notes"] .= "no existing access record found for " . $username_to_remove . "<br />\n";
 				continue;
 			}
 			$access_record->doDelete();
 
-			$check_access_record = SUS_Access::getOneFromDb(['type' => $access_type, 'sheet_id' => $editID, 'constraint_data' => $username_to_remove], $DB);
+			$check_access_record = SUS_Access::getOneFromDb(['type' => $access_type, 'sheet_id' => $primaryID, 'constraint_data' => $username_to_remove], $DB);
 			if ($check_access_record->matchesDb) {
 				$results["notes"] .= "could not remove access for " . $username_to_remove . "<br />\n";
 			}
@@ -491,7 +486,7 @@
 	//###############################################################
 	elseif ($action == 'sheet-opening-signup-add-me') {
 		// get opening object
-		$o = SUS_Opening::getOneFromDb(['opening_id' => $editID], $DB);
+		$o = SUS_Opening::getOneFromDb(['opening_id' => $primaryID], $DB);
 		if (!$o->matchesDb) {
 			// error: no matching record found
 			$results["notes"] = "that opening does not exist";
@@ -508,11 +503,11 @@
 		}
 
 		// check if submitted user already has a signup for this opening (specify: flag_delete = TRUE)
-		$s = SUS_Signup::getOneFromDb(['opening_id' => $editID, 'signup_user_id' => $USER->user_id, 'flag_delete' => TRUE], $DB);
+		$s = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $USER->user_id, 'flag_delete' => TRUE], $DB);
 
 		// check if submitted user already has a signup for this opening
 		if (!$s->matchesDb) {
-			$s = SUS_Signup::getOneFromDb(['opening_id' => $editID, 'signup_user_id' => $USER->user_id], $DB);
+			$s = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $USER->user_id], $DB);
 		}
 
 		// update or create signup record
@@ -520,7 +515,7 @@
 			// update preexisting record
 			$s->flag_delete    = 0;
 			$s->updated_at     = util_currentDateTimeString_asMySQL();
-			$s->opening_id     = $editID;
+			$s->opening_id     = $primaryID;
 			$s->signup_user_id = $USER->user_id;
 
 			$s->updateDb();
@@ -536,7 +531,7 @@
 			// create new record
 			$s = SUS_Signup::createNewSignup($DB);
 
-			$s->opening_id     = $editID;
+			$s->opening_id     = $primaryID;
 			$s->signup_user_id = $USER->user_id;
 
 			$s->updateDb();
@@ -562,10 +557,10 @@
 	elseif ($action == 'sheet-opening-signup-delete-me') {
 
 		// check if submitted user already has a signup for this opening
-		$s = SUS_Signup::getOneFromDb(['opening_id' => $editID, 'signup_user_id' => $USER->user_id], $DB);
+		$s = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $USER->user_id], $DB);
 
 		// get all signups for this opening
-		$o = SUS_Opening::getOneFromDb(['opening_id' => $editID], $DB);
+		$o = SUS_Opening::getOneFromDb(['opening_id' => $primaryID], $DB);
 
 		if (!$o->matchesDb) {
 			// error: no matching record found
@@ -579,7 +574,7 @@
 			// update preexisting record
 			$s->flag_delete    = 1;
 			$s->updated_at     = util_currentDateTimeString_asMySQL();
-			$s->opening_id     = $editID;
+			$s->opening_id     = $primaryID;
 			$s->signup_user_id = $USER->user_id;
 
 			$s->updateDb();
@@ -615,14 +610,14 @@
 		}
 
 		// check if submitted user already has a signup for this opening
-		$s = SUS_Signup::getOneFromDb(['opening_id' => $editID, 'signup_user_id' => $u->user_id], $DB);
+		$s = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $u->user_id], $DB);
 
 		// update or create signup record
 		if ($s->matchesDb) {
 			// update preexisting record
 			$s->flag_delete    = 0;
 			$s->updated_at     = util_currentDateTimeString_asMySQL();
-			$s->opening_id     = $editID;
+			$s->opening_id     = $primaryID;
 			$s->signup_user_id = $u->user_id;
 			$s->admin_comment  = $description;
 
@@ -639,7 +634,7 @@
 			// create new record
 			$s = SUS_Signup::createNewSignup($DB);
 
-			$s->opening_id     = $editID;
+			$s->opening_id     = $primaryID;
 			$s->signup_user_id = $u->user_id;
 			$s->admin_comment  = $description;
 
@@ -666,7 +661,7 @@
 		// TODO - Create this at the class level, instead?
 
 		// get all signups for this opening
-		$o = SUS_Opening::getOneFromDb(['opening_id' => $editID], $DB);
+		$o = SUS_Opening::getOneFromDb(['opening_id' => $primaryID], $DB);
 
 		if (!$o->matchesDb) {
 			// error: no matching record found
