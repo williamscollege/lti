@@ -5,72 +5,72 @@
 
 
 	if ($IS_AUTHENTICATED) {
-		// util_prePrintR($_POST); exit;
+		//	util_prePrintR($_POST); exit;
 
 		// processing for either creating 'NEW' opening(s) or editing an existing opening_id
 		if ((isset($_REQUEST["new_OpeningID"])) && ($_REQUEST["new_OpeningID"] == "NEW")) {
 			// Create New Opening
-			$openingSheetID     = htmlentities((isset($_REQUEST["new_SheetID"])) ? $_REQUEST["new_SheetID"] : 0);
-			$openingID          = htmlentities((isset($_REQUEST["new_OpeningID"])) ? $_REQUEST["new_OpeningID"] : 0);
-			$openingDateBegin   = htmlentities((isset($_REQUEST["new_OpeningDateBegin"])) ? $_REQUEST["new_OpeningDateBegin"] : 0); // current format: 2015-02-24
-			$openingTimeMode    = htmlentities((isset($_REQUEST["new_OpeningTimeMode"])) ? $_REQUEST["new_OpeningTimeMode"] : 0);
-			$openingName        = htmlentities((isset($_REQUEST["new_OpeningName"])) ? util_quoteSmart($_REQUEST["new_OpeningName"]) : 0);
-			$openingDescription = htmlentities((isset($_REQUEST["new_OpeningDescription"])) ? util_quoteSmart($_REQUEST["new_OpeningDescription"]) : 0);
-			$openingAdminNotes  = htmlentities((isset($_REQUEST["new_OpeningAdminNotes"])) ? util_quoteSmart($_REQUEST["new_OpeningAdminNotes"]) : 0);
-			$openingLocation    = htmlentities((isset($_REQUEST["new_OpeningLocation"])) ? util_quoteSmart($_REQUEST["new_OpeningLocation"]) : 0);
-			$openingNumOpenings = htmlentities((isset($_REQUEST["new_OpeningNumOpenings"])) ? $_REQUEST["new_OpeningNumOpenings"] : 0);
+			$openingSheetID     = isset($_REQUEST["new_SheetID"]) ? $_REQUEST["new_SheetID"] : 0;
+			$openingID          = isset($_REQUEST["new_OpeningID"]) ? $_REQUEST["new_OpeningID"] : 0;
+			$openingDateBegin   = isset($_REQUEST["new_OpeningDateBegin"]) ? $_REQUEST["new_OpeningDateBegin"] : 0; // current format: 2015-02-24
+			$openingTimeMode    = isset($_REQUEST["new_OpeningTimeMode"]) ? $_REQUEST["new_OpeningTimeMode"] : 0;
+			$openingName        = isset($_REQUEST["new_OpeningName"]) ? util_quoteSmart($_REQUEST["new_OpeningName"]) : 0;
+			$openingDescription = isset($_REQUEST["new_OpeningDescription"]) ? util_quoteSmart($_REQUEST["new_OpeningDescription"]) : 0;
+			$openingAdminNotes  = isset($_REQUEST["new_OpeningAdminNotes"]) ? util_quoteSmart($_REQUEST["new_OpeningAdminNotes"]) : 0;
+			$openingLocation    = isset($_REQUEST["new_OpeningLocation"]) ? util_quoteSmart($_REQUEST["new_OpeningLocation"]) : 0;
+			$openingNumOpenings = isset($_REQUEST["new_OpeningNumOpenings"]) ? $_REQUEST["new_OpeningNumOpenings"] : 0;
 
-			$openingBeginTimeHour   = htmlentities((isset($_REQUEST["new_OpeningBeginTimeHour"])) ? $_REQUEST["new_OpeningBeginTimeHour"] : 0);
-			$openingBeginTimeMinute = htmlentities((isset($_REQUEST["new_OpeningBeginTimeMinute"])) ? $_REQUEST["new_OpeningBeginTimeMinute"] : 0);
-			$openingBeginTime_AMPM  = htmlentities((isset($_REQUEST["new_OpeningBeginTime_AMPM"])) ? $_REQUEST["new_OpeningBeginTime_AMPM"] : 0);
+			$openingBeginTimeHour   = isset($_REQUEST["new_OpeningBeginTimeHour"]) ? $_REQUEST["new_OpeningBeginTimeHour"] : 0;
+			$openingBeginTimeMinute = isset($_REQUEST["new_OpeningBeginTimeMinute"]) ? $_REQUEST["new_OpeningBeginTimeMinute"] : 0;
+			$openingBeginTime_AMPM  = isset($_REQUEST["new_OpeningBeginTime_AMPM"]) ? $_REQUEST["new_OpeningBeginTime_AMPM"] : 0;
 
 			// these are valid if $openingTimeMode is 'time_range'
-			$openingEndTimeHour        = htmlentities((isset($_REQUEST["new_OpeningEndTimeHour"])) ? $_REQUEST["new_OpeningEndTimeHour"] : 0);
-			$openingEndTimeMinute      = htmlentities((isset($_REQUEST["new_OpeningEndTimeMinute"])) ? $_REQUEST["new_OpeningEndTimeMinute"] : 0);
-			$openingEndTimeMinute_AMPM = htmlentities((isset($_REQUEST["new_OpeningEndTimeMinute_AMPM"])) ? $_REQUEST["new_OpeningEndTimeMinute_AMPM"] : 0);
+			$openingEndTimeHour        = isset($_REQUEST["new_OpeningEndTimeHour"]) ? $_REQUEST["new_OpeningEndTimeHour"] : 0;
+			$openingEndTimeMinute      = isset($_REQUEST["new_OpeningEndTimeMinute"]) ? $_REQUEST["new_OpeningEndTimeMinute"] : 0;
+			$openingEndTimeMinute_AMPM = isset($_REQUEST["new_OpeningEndTimeMinute_AMPM"]) ? $_REQUEST["new_OpeningEndTimeMinute_AMPM"] : 0;
 
 			// these are valid if $openingTimeMode is 'duration'
-			$openingDurationEachOpening = htmlentities((isset($_REQUEST["new_OpeningDurationEachOpening"])) ? $_REQUEST["new_OpeningDurationEachOpening"] : 0);
+			$openingDurationEachOpening = isset($_REQUEST["new_OpeningDurationEachOpening"]) ? $_REQUEST["new_OpeningDurationEachOpening"] : 0;
 
 			// is opening repeating?
-			$openingRepeatRate           = htmlentities((isset($_REQUEST["new_OpeningRepeatRate"])) ? $_REQUEST["new_OpeningRepeatRate"] : 0);
-			$openingNumSignupsPerOpening = htmlentities((isset($_REQUEST["new_OpeningNumSignupsPerOpening"])) ? $_REQUEST["new_OpeningNumSignupsPerOpening"] : 0);
-			$openingUntilDate            = htmlentities((isset($_REQUEST["new_OpeningUntilDate"])) ? $_REQUEST["new_OpeningUntilDate"] : 0);
+			$openingRepeatRate           = isset($_REQUEST["new_OpeningRepeatRate"]) ? $_REQUEST["new_OpeningRepeatRate"] : 0;
+			$openingNumSignupsPerOpening = isset($_REQUEST["new_OpeningNumSignupsPerOpening"]) ? $_REQUEST["new_OpeningNumSignupsPerOpening"] : 0;
+			$openingUntilDate            = isset($_REQUEST["new_OpeningUntilDate"]) ? $_REQUEST["new_OpeningUntilDate"] : 0;
 			// notes: DOW = repeat_dow_sun, repeat_dow_mon, repeat_dow_tue, ...
 			// notes: DOM = repeat_dom_1, repeat_dom_2, ..., repeat_dom_10, ..., repeat_dom_31
 		}
 		elseif ((isset($_REQUEST["edit_OpeningID"])) && (is_numeric($_REQUEST["edit_OpeningID"])) && ($_REQUEST["edit_OpeningID"] > 0)) {
 			// Edit Existing Opening
-			$openingSheetID = htmlentities(((isset($_REQUEST["edit_SheetID"])) && (is_numeric($_REQUEST["edit_SheetID"]))) ? $_REQUEST["edit_SheetID"] : 0);
-			$openingID      = htmlentities((isset($_REQUEST["edit_OpeningID"])) ? $_REQUEST["edit_OpeningID"] : 0);
+			$openingSheetID = (isset($_REQUEST["edit_SheetID"])) && (is_numeric($_REQUEST["edit_SheetID"])) ? $_REQUEST["edit_SheetID"] : 0;
+			$openingID      = isset($_REQUEST["edit_OpeningID"]) ? $_REQUEST["edit_OpeningID"] : 0;
 
 			// reformat $openingDateBegin to match expected format
-			$openingDateBegin = htmlentities((isset($_REQUEST["edit_OpeningDateBegin"])) ? $_REQUEST["edit_OpeningDateBegin"] : 0); // current format: 02/24/2015
+			$openingDateBegin = isset($_REQUEST["edit_OpeningDateBegin"]) ? $_REQUEST["edit_OpeningDateBegin"] : 0; // current format: 02/24/2015
 			$reformatDateAry  = explode("/", $openingDateBegin);
 			$openingDateBegin = $reformatDateAry[2] . '-' . $reformatDateAry[0] . '-' . $reformatDateAry[1]; // current format: 2015-02-24
 
 			$openingTimeMode    = 'time_range'; // HARDCODED VALUE
-			$openingName        = htmlentities((isset($_REQUEST["edit_OpeningName"])) ? util_quoteSmart($_REQUEST["edit_OpeningName"]) : 0);
-			$openingDescription = htmlentities((isset($_REQUEST["edit_OpeningDescription"])) ? util_quoteSmart($_REQUEST["edit_OpeningDescription"]) : 0);
-			$openingAdminNotes  = htmlentities((isset($_REQUEST["edit_OpeningAdminNotes"])) ? util_quoteSmart($_REQUEST["edit_OpeningAdminNotes"]) : 0);
-			$openingLocation    = htmlentities((isset($_REQUEST["edit_OpeningLocation"])) ? util_quoteSmart($_REQUEST["edit_OpeningLocation"]) : 0);
+			$openingName        = isset($_REQUEST["edit_OpeningName"]) ? util_quoteSmart($_REQUEST["edit_OpeningName"]) : 0;
+			$openingDescription = isset($_REQUEST["edit_OpeningDescription"]) ? util_quoteSmart($_REQUEST["edit_OpeningDescription"]) : 0;
+			$openingAdminNotes  = isset($_REQUEST["edit_OpeningAdminNotes"]) ? util_quoteSmart($_REQUEST["edit_OpeningAdminNotes"]) : 0;
+			$openingLocation    = isset($_REQUEST["edit_OpeningLocation"]) ? util_quoteSmart($_REQUEST["edit_OpeningLocation"]) : 0;
 			$openingNumOpenings = 1; // HARDCODED VALUE
 
-			$openingBeginTimeHour   = htmlentities((isset($_REQUEST["edit_OpeningBeginTimeHour"])) ? $_REQUEST["edit_OpeningBeginTimeHour"] : 0);
-			$openingBeginTimeMinute = htmlentities((isset($_REQUEST["edit_OpeningBeginTimeMinute"])) ? $_REQUEST["edit_OpeningBeginTimeMinute"] : 0);
-			$openingBeginTime_AMPM  = htmlentities((isset($_REQUEST["edit_OpeningBeginTime_AMPM"])) ? $_REQUEST["edit_OpeningBeginTime_AMPM"] : 0);
+			$openingBeginTimeHour   = isset($_REQUEST["edit_OpeningBeginTimeHour"]) ? $_REQUEST["edit_OpeningBeginTimeHour"] : 0;
+			$openingBeginTimeMinute = isset($_REQUEST["edit_OpeningBeginTimeMinute"]) ? $_REQUEST["edit_OpeningBeginTimeMinute"] : 0;
+			$openingBeginTime_AMPM  = isset($_REQUEST["edit_OpeningBeginTime_AMPM"]) ? $_REQUEST["edit_OpeningBeginTime_AMPM"] : 0;
 
 			// these are valid if $openingTimeMode is 'time_range'
-			$openingEndTimeHour        = htmlentities((isset($_REQUEST["edit_OpeningEndTimeHour"])) ? $_REQUEST["edit_OpeningEndTimeHour"] : 0);
-			$openingEndTimeMinute      = htmlentities((isset($_REQUEST["edit_OpeningEndTimeMinute"])) ? $_REQUEST["edit_OpeningEndTimeMinute"] : 0);
-			$openingEndTimeMinute_AMPM = htmlentities((isset($_REQUEST["edit_OpeningEndTimeMinute_AMPM"])) ? $_REQUEST["edit_OpeningEndTimeMinute_AMPM"] : 0);
+			$openingEndTimeHour        = isset($_REQUEST["edit_OpeningEndTimeHour"]) ? $_REQUEST["edit_OpeningEndTimeHour"] : 0;
+			$openingEndTimeMinute      = isset($_REQUEST["edit_OpeningEndTimeMinute"]) ? $_REQUEST["edit_OpeningEndTimeMinute"] : 0;
+			$openingEndTimeMinute_AMPM = isset($_REQUEST["edit_OpeningEndTimeMinute_AMPM"]) ? $_REQUEST["edit_OpeningEndTimeMinute_AMPM"] : 0;
 
 			// these are valid if $openingTimeMode is 'duration'
 			$openingDurationEachOpening = ''; // this value not used in edit mode
 
 			// is opening repeating?
 			$openingRepeatRate           = 1; // HARDCODED VALUE
-			$openingNumSignupsPerOpening = htmlentities((isset($_REQUEST["edit_OpeningNumSignupsPerOpening"])) ? $_REQUEST["edit_OpeningNumSignupsPerOpening"] : 0);
+			$openingNumSignupsPerOpening = isset($_REQUEST["edit_OpeningNumSignupsPerOpening"]) ? $_REQUEST["edit_OpeningNumSignupsPerOpening"] : 0;
 			$openingUntilDate            = ''; // this value not used in edit mode
 		}
 		else {
@@ -257,6 +257,7 @@
 						}
 
 						if (!$isConflict) {
+
 							$editOpening->name           = $openingName;
 							$editOpening->description    = $openingDescription;
 							$editOpening->max_signups    = $openingNumSignupsPerOpening;

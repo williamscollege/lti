@@ -98,7 +98,7 @@
 
 
 		echo "<div id=\"content_container\">"; // begin: div#content_container
-		echo "<h5 class=\"small\"><a href=\"" . APP_ROOT_PATH . "/app_code/sheets_all.php\" title=\"" . ucfirst(util_lang('sheets_all')) . "\">" . ucfirst(util_lang('sheets_all')) . "</a>&nbsp;&gt;&nbsp;" . $s->name . "</h5>";
+		echo "<h5 class=\"small\"><a href=\"" . APP_ROOT_PATH . "/app_code/sheets_all.php\" title=\"" . ucfirst(util_lang('sheets_all')) . "\">" . ucfirst(util_lang('sheets_all')) . "</a>&nbsp;&gt;&nbsp;" . htmlentities($s->name, ENT_QUOTES, 'UTF-8') . "</h5>";
 
 
 		// ***************************
@@ -158,7 +158,7 @@
 											<label for="inputSheetName" class="control-label">Sheet Name</label>
 
 											<div class="">
-												<input type="text" id="inputSheetName" name="inputSheetName" class="form-control input-sm" maxlength="255" placeholder="Signup sheet name" value="<?php echo $s ? htmlspecialchars($s->name, ENT_QUOTES) : ''; ?>" />
+												<input type="text" id="inputSheetName" name="inputSheetName" class="form-control input-sm" maxlength="255" placeholder="Signup sheet name" value="<?php echo $s ? htmlentities($s->name, ENT_QUOTES, 'UTF-8') : ''; ?>" />
 											</div>
 										</div>
 
@@ -191,7 +191,7 @@
 											<label for="textSheetDescription" class="control-label">Description</label>
 
 											<div class="">
-												<textarea id="textSheetDescription" name="textSheetDescription" class="form-control input-sm" placeholder="Instructions for this signup sheet" rows="2"><?php echo $s ? htmlspecialchars($s->description, ENT_QUOTES) : ''; ?></textarea>
+												<textarea id="textSheetDescription" name="textSheetDescription" class="form-control input-sm" placeholder="Instructions for this signup sheet" rows="2"><?php echo $s ? htmlentities($s->description, ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
 											</div>
 										</div>
 

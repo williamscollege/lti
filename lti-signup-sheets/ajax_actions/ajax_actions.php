@@ -2,8 +2,8 @@
 	require_once(dirname(__FILE__) . '/head_ajax.php');
 
 	//		# tests
-	//		$action        = htmlentities((isset($_REQUEST["ajax_Action"])) ? util_quoteSmart($_REQUEST["ajax_Action"]) : 0);
-	//		// output
+	//		$action        = isset($_REQUEST["ajax_Action"]) ? util_quoteSmart($_REQUEST["ajax_Action"]) : 0;
+	//		# output
 	//		$results['status']       = 'success';
 	//		$results['which_action'] = $action;
 	//		$results['html_output']  = 'smiling now';
@@ -17,16 +17,16 @@
 	# Fetch AJAX values
 	#------------------------------------------------#
 	// generic parameter values (used for many different types of values, from many forms, etc.)
-	$action     = htmlentities((isset($_REQUEST["ajax_Action"])) ? util_quoteSmart($_REQUEST["ajax_Action"]) : 0);
-	$primaryID  = htmlentities(((isset($_REQUEST["ajax_Primary_ID"])) && is_numeric($_REQUEST["ajax_Primary_ID"])) ? $_REQUEST["ajax_Primary_ID"] : 0);
-	$customData = htmlentities((isset($_REQUEST["ajax_Custom_Data"])) ? $_REQUEST["ajax_Custom_Data"] : 0);
+	$action     = isset($_REQUEST["ajax_Action"]) ? util_quoteSmart($_REQUEST["ajax_Action"]) : 0;
+	$primaryID  = isset($_REQUEST["ajax_Primary_ID"]) && is_numeric($_REQUEST["ajax_Primary_ID"]) ? $_REQUEST["ajax_Primary_ID"] : 0;
+	$customData = isset($_REQUEST["ajax_Custom_Data"]) ? $_REQUEST["ajax_Custom_Data"] : 0;
 
 	// individually passed parameters
-	$ownerUserID = htmlentities(((isset($_REQUEST["ajax_OwnerUserID"])) && is_numeric($_REQUEST["ajax_OwnerUserID"])) ? $_REQUEST["ajax_OwnerUserID"] : 0);
-	$name        = htmlentities((isset($_REQUEST["ajax_Name"])) ? util_quoteSmart($_REQUEST["ajax_Name"]) : 0);
-	$description = htmlentities((isset($_REQUEST["ajax_Description"])) ? util_quoteSmart($_REQUEST["ajax_Description"]) : 0);
-	$maxTotal    = htmlentities((isset($_REQUEST["ajax_MaxTotal"])) ? $_REQUEST["ajax_MaxTotal"] : 0);
-	$maxPending  = htmlentities((isset($_REQUEST["ajax_MaxPending"])) ? $_REQUEST["ajax_MaxPending"] : 0);
+	$ownerUserID = isset($_REQUEST["ajax_OwnerUserID"]) && is_numeric($_REQUEST["ajax_OwnerUserID"]) ? $_REQUEST["ajax_OwnerUserID"] : 0;
+	$name        = isset($_REQUEST["ajax_Name"]) ? util_quoteSmart($_REQUEST["ajax_Name"]) : 0;
+	$description = isset($_REQUEST["ajax_Description"]) ? util_quoteSmart($_REQUEST["ajax_Description"]) : 0;
+	$maxTotal    = isset($_REQUEST["ajax_MaxTotal"]) ? $_REQUEST["ajax_MaxTotal"] : 0;
+	$maxPending  = isset($_REQUEST["ajax_MaxPending"]) ? $_REQUEST["ajax_MaxPending"] : 0;
 
 
 	#------------------------------------------------#

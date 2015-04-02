@@ -45,10 +45,12 @@ $(document).ready(function () {
 		// update values in modal
 		$("#ajaxSheetgroupLabel").text("Add Group");
 		$("#ajaxSheetgroupAction").val("add-sheetgroup");
+		$("#ajaxSheetgroupMaxTotal").val(); // required to set 'selected="selected"' as default within modal environment
+		$("#ajaxSheetgroupMaxPending").val(); // required to set 'selected="selected"' as default within modal environment
 	});
 
 	// Edit sheetgroup
-	$(document).on("click", ".sus-edit-sheetgroup", function (evt) {
+	$(document).on("click", ".sus-edit-sheetgroup", function () {
 
 		// fetch values from DOM
 		var sheetgroup_id = $(this).attr("data-for-sheetgroup-id");
@@ -115,8 +117,8 @@ $(document).ready(function () {
 				cache: false,
 				data: {
 					ajax_Action: action,
-					ajax_OwnerUserID: owner_user_id,
 					ajax_Primary_ID: sheetgroup_id,
+					ajax_OwnerUserID: owner_user_id,
 					ajax_Name: sheetgroup_name,
 					ajax_Description: sheetgroup_description,
 					ajax_MaxTotal: sheetgroup_max_total,

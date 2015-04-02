@@ -97,7 +97,7 @@
 			// sheetgroup header
 			echo "<table class=\"table table-condensed table-bordered table-hover\">";
 			echo "<tr class=\"info\"><th class=\"col-sm-11\">";
-			echo "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . $sheetgroup->sheetgroup_id . "\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . $sheetgroup->name . "\" data-for-sheetgroup-description=\"" . $sheetgroup->description . "\" data-for-sheetgroup-max-total=\"" . $sheetgroup->max_g_total_user_signups . "\" data-for-sheetgroup-max-pending=\"" . $sheetgroup->max_g_pending_user_signups . "\" title=\"Edit group\">" . $sheetgroup->name . "</a>";
+			echo "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . $sheetgroup->sheetgroup_id . "\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-description=\"" . $sheetgroup->description . "\" data-for-sheetgroup-max-total=\"" . $sheetgroup->max_g_total_user_signups . "\" data-for-sheetgroup-max-pending=\"" . $sheetgroup->max_g_pending_user_signups . "\" title=\"Edit group\">" . $sheetgroup->name . "</a>";
 			echo "</th><th class=\"col-sm-1 text-right\">";
 			if (!$sheetgroup->flag_is_default) {
 				echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-bb=\"alert_callback\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-remove\"></i> Group</a>&nbsp;";
@@ -178,7 +178,7 @@
 							</div>
 							Users can have at most
 							<select id="ajaxSheetgroupMaxTotal" name="ajaxSheetgroupMaxTotal" class="">
-								<option selected="selected" value="-1">unlimited</option>
+								<option value="-1" selected="selected">unlimited</option>
 								<option value="1">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
@@ -190,7 +190,7 @@
 							</select>
 							signups across all sheets in this group, and
 							<select id="ajaxSheetgroupMaxPending" name="ajaxSheetgroupMaxPending" class="">
-								<option selected="selected" value="-1">any</option>
+								<option value="-1" selected="selected">any</option>
 								<option value="1">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
