@@ -14,8 +14,8 @@
 
 			// now do custom stuff
 			// e.g. automatically load all accessibility info associated with this object
-			//			$this->flag_workflow_published = false;
-			//			$this->flag_workflow_validated = false;
+			// $this->flag_workflow_published = false;
+			// $this->flag_workflow_validated = false;
 			$this->enrollments = array();
 		}
 

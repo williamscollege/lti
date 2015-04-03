@@ -46,7 +46,7 @@
 		}
 
 		echo "<div id=\"content_container\">"; // begin: div#content_container
-		echo "<h5 class=\"small\"><a href=\"" . APP_ROOT_PATH . "/app_code/sheet_openings_all.php\" title=\"" . ucfirst(util_lang('sheet_openings_all')) . "\">" . ucfirst(util_lang('sheet_openings_all')) . "</a>&nbsp;&gt;&nbsp;" . $s->name . "</h5>";
+		echo "<h5 class=\"small\"><a href=\"" . APP_ROOT_PATH . "/app_code/sheet_openings_all.php\" title=\"" . ucfirst(util_lang('sheet_openings_all')) . "\">" . ucfirst(util_lang('sheet_openings_all')) . "</a>&nbsp;&gt;&nbsp;" . htmlentities($s->name, ENT_QUOTES, 'UTF-8') . "</h5>";
 		?>
 		<div class="container">
 			<div class="row">
@@ -56,9 +56,9 @@
 						<p>&nbsp;</p>
 
 						<p>
-						<h5><strong><?php echo $s->name; ?></strong></h5>
-						<?php echo $s->description; ?><br />
-						Group: <?php echo $sg->name; ?>
+						<h5><strong><?php echo htmlentities($s->name, ENT_QUOTES, 'UTF-8'); ?></strong></h5>
+						<?php echo htmlentities($s->description, ENT_QUOTES, 'UTF-8'); ?><br />
+						Group: <?php echo htmlentities($sg->name, ENT_QUOTES, 'UTF-8'); ?>
 						</p>
 
 						<!-- alert will display only if a limit has been reached (meaning: no more signups are available) -->

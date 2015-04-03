@@ -167,7 +167,7 @@
 					}
 				}
 				else {
-					$qpar[':' . $k] = $this->fieldValues[$k];
+					$qpar[':' . $k] = htmlentities($this->fieldValues[$k], ENT_QUOTES, 'UTF-8');
 				}
 			}
 			return $qpar;
@@ -608,7 +608,7 @@
 					}
 				}
 				elseif (strlen($this->fieldValues[$k]) <= 255) {
-					$field_val = htmlentities($this->fieldValues[$k]);
+					$field_val = htmlentities($this->fieldValues[$k], ENT_QUOTES, 'UTF-8');
 				}
 				$ret .= "data-$k=\"$field_val\"";
 			}

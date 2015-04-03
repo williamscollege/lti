@@ -13,8 +13,8 @@
 
 			// now do custom stuff
 			// e.g. automatically load all accessibility info associated with this object
-			//			$this->flag_workflow_published = false;
-			//			$this->flag_workflow_validated = false;
+			// $this->flag_workflow_published = false;
+			// $this->flag_workflow_validated = false;
 
 		}
 
@@ -60,12 +60,12 @@
 		public function renderAsHtmlSignupWithFullControls($userDisplayFullname, $userDisplayUsername) {
 			$rendered = '';
 
-			$rendered .= "<a href=\"#\" class=\"sus-edit-signup\" data-for-opening-id=\"" . $this->opening_id . "\" data-for-signup-id=\"" . $this->signup_id . "\" data-for-username=\"" . $userDisplayUsername . "\"  data-for-signup-admin-comment=\"" . $this->admin_comment . "\" title=\"Edit signup\"><i class=\"glyphicon glyphicon-wrench\"></i> </a>";
-			$rendered .= "<a href=\"#\" class=\"sus-delete-signup wms-custom-delete\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $this->opening_id . "\" data-for-signup-id=\"" . $this->signup_id . "\" data-for-signup-name=\"" . $userDisplayFullname . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>";
-			$rendered .= $userDisplayFullname;
-			$rendered .= ' <span class="small">(' . $userDisplayUsername . ', ' . util_datetimeFormatted($this->created_at) . ')</span> ';
+			$rendered .= "<a href=\"#\" class=\"sus-edit-signup\" data-for-opening-id=\"" . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . "\" data-for-signup-id=\"" . htmlentities($this->signup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-username=\"" . htmlentities($userDisplayUsername, ENT_QUOTES, 'UTF-8') . "\"  data-for-signup-admin-comment=\"" . htmlentities($this->admin_comment, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit signup\"><i class=\"glyphicon glyphicon-wrench\"></i> </a>";
+			$rendered .= "<a href=\"#\" class=\"sus-delete-signup wms-custom-delete\" data-bb=\"alert_callback\" data-for-opening-id=\"" . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . "\" data-for-signup-id=\"" . htmlentities($this->signup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-signup-name=\"" . htmlentities($userDisplayFullname, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>";
+			$rendered .= htmlentities($userDisplayFullname, ENT_QUOTES, 'UTF-8');
+			$rendered .= ' <span class="small">(' . htmlentities($userDisplayFullname, ENT_QUOTES, 'UTF-8') . ', ' . util_datetimeFormatted($this->created_at) . ')</span> ';
 			if ($this->admin_comment) {
-				$rendered .= '<div class="signup-admin-comment-display">' . $this->admin_comment . '</div>';
+				$rendered .= '<div class="signup-admin-comment-display">' . htmlentities($this->admin_comment, ENT_QUOTES, 'UTF-8') . '</div>';
 			}
 
 			return $rendered;
@@ -78,7 +78,7 @@
 
 			$rendered = '';
 
-			$rendered .= "<li  data-for-signup-created_at=\"" . $this->created_at . "\" data-for-firstname=\"" . $userForThisSignup->first_name . "\" data-for-lastname=\"" . $userForThisSignup->last_name . "\" data-for-signup-id=\"" . $this->signup_id . "\">";
+			$rendered .= "<li  data-for-signup-created_at=\"" . htmlentities($this->created_at, ENT_QUOTES, 'UTF-8') . "\" data-for-firstname=\"" . htmlentities($userForThisSignup->first_name, ENT_QUOTES, 'UTF-8') . "\" data-for-lastname=\"" . htmlentities($userForThisSignup->last_name, ENT_QUOTES, 'UTF-8') . "\" data-for-signup-id=\"" . htmlentities($this->signup_id, ENT_QUOTES, 'UTF-8') . "\">";
 			$rendered .= $this->renderAsHtmlSignupWithFullControls($userForThisSignup->first_name . " " . $userForThisSignup->last_name, $userForThisSignup->username);
 			$rendered .= "</li>";
 

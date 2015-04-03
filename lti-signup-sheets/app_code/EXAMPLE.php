@@ -15,7 +15,7 @@
 	// alternate way:
 	// Prepare SQL using PDO
 	//$sql = "SELECT * FROM ".SUS_Sheetgroup::$dbTable;
-	//$sql  = "SELECT * FROM sus_sheetgroups INNER JOIN sus_sheets ON sus_sheetgroups.sheetgroup_id = sus_sheets.sheetgroup_id INNER JOIN sus_openings ON sus_openings.sheet_id = sus_sheets.sheet_id INNER JOIN sus_signups ON sus_signups.opening_id = sus_openings.opening_id WHERE sus_sheetgroups.sheetgroup_id = " . $s->sheetgroup_id . " AND  sus_signups.signup_user_id = " . $USER->user_id;
+	//$sql  = "SELECT * FROM sus_sheetgroups INNER JOIN sus_sheets ON sus_sheetgroups.sheetgroup_id = sus_sheets.sheetgroup_id INNER JOIN sus_openings ON sus_openings.sheet_id = sus_sheets.sheet_id INNER JOIN sus_signups ON sus_signups.opening_id = sus_openings.opening_id WHERE sus_sheetgroups.sheetgroup_id = " . htmlentities($s->sheetgroup_id, ENT_QUOTES, 'UTF-8') . " AND  sus_signups.signup_user_id = " . htmlentities($USER->user_id, ENT_QUOTES, 'UTF-8');
 	//$stmt = $DB->prepare($sql);
 	//$stmt->execute();
 	//$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -65,7 +65,7 @@
 	if (!$USER->canActOnTarget($ACTIONS[$action], $notebook)) {
 		//        util_redirectToAppHome('failure',util_lang('no_permission'));
 		if ($action == 'edit') {
-			util_redirectToAppPage(APP_ROOT_PATH . '/app_code/notebook.php?action=view&notebook_id=' . $notebook->notebook_id, 'failure', util_lang('no_permission'));
+			util_redirectToAppPage(APP_ROOT_PATH . '/app_code/notebook.php?action=view&notebook_id=' . htmlentities($notebook->notebook_id, ENT_QUOTES, 'UTF-8'), 'failure', util_lang('no_permission'));
 		}
 		util_redirectToAppPage(APP_ROOT_PATH . '/app_code/notebook.php?action=list', 'failure', util_lang('no_permission'));
 	}
@@ -153,7 +153,7 @@
 		echo "</ul>\n";
 		if ($USER->canActOnTarget($ACTIONS['create'], new Notebook(['DB' => $DB]))) {
 			?>
-			<a href="<?php echo APP_ROOT_PATH . '/app_code/notebook.php?action=create&user_id=' . $USER->user_id; ?>" class="btn btn-default" id="btn-add-notebook"><?php echo util_lang('add_notebook'); ?></a><?php
+			<a href="<?php echo APP_ROOT_PATH . '/app_code/notebook.php?action=create&user_id=' . htmlentities($USER->user_id, ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-default" id="btn-add-notebook"><?php echo util_lang('add_notebook'); ?></a><?php
 		}
 	}
 	require_once(dirname(__FILE__) . '/../foot.php');

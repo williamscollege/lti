@@ -8,7 +8,7 @@
 
 		// TODO: render fxns okay here? not sure how to incorporate these into a class?
 		function _renderHtml_BEGIN($signup) {
-			$rendered = '<div class="list-openings list-opening-id-' . $signup['opening_id'] . '">';
+			$rendered = '<div class="list-openings list-opening-id-' . htmlentities($signup['opening_id'], ENT_QUOTES, 'UTF-8') . '">';
 			$rendered .= '<span class="opening-time-range">' . date_format(new DateTime($signup['begin_datetime']), "h:i A") . ' - ' . date_format(new DateTime($signup['end_datetime']), "h:i A") . '</span>';
 
 			$customColorClass = "text-danger";
@@ -20,23 +20,23 @@
 			if ($max_signups == -1) {
 				$max_signups = "*";
 			}
-			$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . $signup['current_signups'] . '/' . $max_signups . ')</strong></span><br />';
+			$rendered .= '<span class="opening-space-usage ' . $customColorClass . '"><strong>' . '(' . htmlentities($signup['current_signups'], ENT_QUOTES, 'UTF-8') . '/' . htmlentities($max_signups, ENT_QUOTES, 'UTF-8') . ')</strong></span><br />';
 
 			return $rendered;
 		}
 
 		function _renderList_MYSELF($signup) {
 			global $USER;
-			$rendered = "<div class=\"small wms_indent\"><strong>Sheet:</strong> " . $signup['sheet_name'] . "<br /></div>";
+			$rendered = "<div class=\"small wms_indent\"><strong>Sheet:</strong> " . htmlentities($signup['sheet_name'], ENT_QUOTES, 'UTF-8') . "<br /></div>";
 			$rendered .= "<ul class=\"unstyled small\"><li class=\"toggle_opening_details\">";
 			if ($signup['opening_name'] != '') {
-				$rendered .= "<strong>Opening:</strong> " . $signup['opening_name'] . "<br />";
+				$rendered .= "<strong>Opening:</strong> " . htmlentities($signup['opening_name'], ENT_QUOTES, 'UTF-8') . "<br />";
 			}
 			if ($signup['opening_description'] != '') {
-				$rendered .= "<strong>Description:</strong> " . $signup['opening_description'] . "<br />";
+				$rendered .= "<strong>Description:</strong> " . htmlentities($signup['opening_description'], ENT_QUOTES, 'UTF-8') . "<br />";
 			}
 			if ($signup['opening_location'] != '') {
-				$rendered .= "<strong>Location:</strong> " . $signup['opening_location'] . "<br />";
+				$rendered .= "<strong>Location:</strong> " . htmlentities($signup['opening_location'], ENT_QUOTES, 'UTF-8') . "<br />";
 			}
 			$rendered .= '</li>';
 			$rendered .= '<li>';
@@ -49,13 +49,13 @@
 			foreach ($signedupUsers as $u) {
 				if (!$signup['sheet_flag_private_signups']) {
 					// public: Users can see everyone who signed up
-					$rendered .= "<li class=\"list-signups list-signup-id-" . $u['signup_id'] . "\">" . $u['full_name'];
+					$rendered .= "<li class=\"list-signups list-signup-id-" . htmlentities($u['signup_id'], ENT_QUOTES, 'UTF-8') . "\">" . htmlentities($u['full_name'], ENT_QUOTES, 'UTF-8');
 					$rendered .= "<span class=\"\">";
 					if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
 						// TODO - add functionality to link click through
 						// only allow self to cancel signup
 						if ($u['username'] == $USER->username) {
-							$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $signup['opening_id'] . "\" data-for-signup-id=\"" . $u['signup_id'] . "\" data-for-signup-name=\"" . $u['full_name'] . "\" data-for-sheet-name=\"" . $signup['sheet_name'] . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
+							$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . htmlentities($signup['opening_id'], ENT_QUOTES, 'UTF-8') . "\" data-for-signup-id=\"" . htmlentities($u['signup_id'], ENT_QUOTES, 'UTF-8') . "\" data-for-signup-name=\"" . htmlentities($u['full_name'], ENT_QUOTES, 'UTF-8') . "\" data-for-sheet-name=\"" . htmlentities($signup['sheet_name'], ENT_QUOTES, 'UTF-8') . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
 						}
 					}
 					$rendered .= "</span>";
@@ -63,11 +63,11 @@
 				}
 				elseif ($signup['sheet_flag_private_signups'] && $u['username'] == $USER->username) {
 					// private: Users can only see their own signup
-					$rendered .= "<li class=\"list-signups list-signup-id-" . $u['signup_id'] . "\">" . $u['full_name'];
+					$rendered .= "<li class=\"list-signups list-signup-id-" . htmlentities($u['signup_id'], ENT_QUOTES, 'UTF-8') . "\">" . htmlentities($u['full_name'], ENT_QUOTES, 'UTF-8');
 					$rendered .= "<span class=\"\">";
 					if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
 						// TODO - add functionality to link click through
-						$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $signup['opening_id'] . "\" data-for-signup-id=\"" . $u['signup_id'] . "\" data-for-signup-name=\"" . $u['full_name'] . "\" data-for-sheet-name=\"" . $signup['sheet_name'] . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
+						$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . htmlentities($signup['opening_id'], ENT_QUOTES, 'UTF-8') . "\" data-for-signup-id=\"" . htmlentities($u['signup_id'], ENT_QUOTES, 'UTF-8') . "\" data-for-signup-name=\"" . htmlentities($u['full_name'], ENT_QUOTES, 'UTF-8') . "\" data-for-sheet-name=\"" . htmlentities($signup['sheet_name'], ENT_QUOTES, 'UTF-8') . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
 					}
 					$rendered .= "</span>";
 					$rendered .= "</li>";
@@ -83,16 +83,16 @@
 		}
 
 		function _renderList_OTHERS($signup) {
-			$rendered = "<div class=\"small wms_indent\"><strong>Sheet:</strong> <a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . $signup['sheet_id'] . "\" class=\"\" title=\"Edit sheet\">" . $signup['sheet_name'] . "</a><br /></div>";
+			$rendered = "<div class=\"small wms_indent\"><strong>Sheet:</strong> <a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . htmlentities($signup['sheet_id'], ENT_QUOTES, 'UTF-8') . "\" class=\"\" title=\"Edit sheet\">" . htmlentities($signup['sheet_name'], ENT_QUOTES, 'UTF-8') . "</a><br /></div>";
 			$rendered .= "<ul class=\"unstyled small\"><li class=\"toggle_opening_details\">";
 			if ($signup['opening_name'] != '') {
-				$rendered .= "<strong>Opening:</strong> " . $signup['opening_name'] . "<br />";
+				$rendered .= "<strong>Opening:</strong> " . htmlentities($signup['opening_name'], ENT_QUOTES, 'UTF-8') . "<br />";
 			}
 			if ($signup['opening_description'] != '') {
-				$rendered .= "<strong>Description:</strong> " . $signup['opening_description'] . "<br />";
+				$rendered .= "<strong>Description:</strong> " . htmlentities($signup['opening_description'], ENT_QUOTES, 'UTF-8') . "<br />";
 			}
 			if ($signup['opening_location'] != '') {
-				$rendered .= "<strong>Location:</strong> " . $signup['opening_location'] . "<br />";
+				$rendered .= "<strong>Location:</strong> " . htmlentities($signup['opening_location'], ENT_QUOTES, 'UTF-8') . "<br />";
 			}
 			$rendered .= '</li>';
 
@@ -103,12 +103,12 @@
 				$signedupUsers = $signup['array_signups'];
 				// begin: loop through signed up users
 				foreach ($signedupUsers as $u) {
-					$rendered .= "<li class=\"list-signups list-signup-id-" . $u['signup_id'] . "\">" . $u['full_name'];
-					$rendered .= " <span class=\"toggle_opening_details small\">(" . $u['username'] . ", " . util_datetimeFormatted($u['signup_created_at']) . ")</span> ";
+					$rendered .= "<li class=\"list-signups list-signup-id-" . htmlentities($u['signup_id'], ENT_QUOTES, 'UTF-8') . "\">" . htmlentities($u['full_name'], ENT_QUOTES, 'UTF-8');
+					$rendered .= " <span class=\"toggle_opening_details small\">(" . htmlentities($u['username'], ENT_QUOTES, 'UTF-8') . ", " . util_datetimeFormatted($u['signup_created_at']) . ")</span> ";
 					$rendered .= "<span class=\"\">";
 					if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
 						// TODO - add functionality to link click through
-						$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . $signup['opening_id'] . "\" data-for-signup-id=\"" . $u['signup_id'] . "\" data-for-signup-name=\"" . $u['full_name'] . "\" data-for-sheet-name=\"" . $signup['sheet_name'] . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
+						$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . htmlentities($signup['opening_id'], ENT_QUOTES, 'UTF-8') . "\" data-for-signup-id=\"" . htmlentities($u['signup_id'], ENT_QUOTES, 'UTF-8') . "\" data-for-signup-name=\"" . htmlentities($u['full_name'], ENT_QUOTES, 'UTF-8') . "\" data-for-sheet-name=\"" . htmlentities($signup['sheet_name'], ENT_QUOTES, 'UTF-8') . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
 					}
 					$rendered .= "</span>";
 					$rendered .= "</li>";

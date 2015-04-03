@@ -288,18 +288,18 @@
 			}
 			$conflicts_string = "<strong>No action taken on the following conflict" . $plural_string . ":</strong><br /><ul type=\"1\">";
 			foreach ($conflicts_ary as $conflict) {
-				$conflicts_string .= "<li>" . $conflict . "</li>";
+				$conflicts_string .= "<li>" . htmlentities($conflict, ENT_QUOTES, 'UTF-8') . "</li>";
 			}
 			$conflicts_string .= "</ul><br />Any other requests were successfully completed.";
 			$conflicts_string = urlencode($conflicts_string);
 
 			// redirect with conflicts param
-			header('Location: ' . APP_FOLDER . '/app_code/sheets_edit_one.php?sheet=' . $openingSheetID . '&conflicts=' . $conflicts_string);
+			header('Location: ' . APP_FOLDER . '/app_code/sheets_edit_one.php?sheet=' . htmlentities($openingSheetID, ENT_QUOTES, 'UTF-8') . '&conflicts=' . $conflicts_string);
 		}
 		else {
 			// redirect without conflicts param
 			// TODO ? could put a temporary alert message on screen showing success (similar to 'conflicts' failure msg above)
-			header('Location: ' . APP_FOLDER . '/app_code/sheets_edit_one.php?sheet=' . $openingSheetID);
+			header('Location: ' . APP_FOLDER . '/app_code/sheets_edit_one.php?sheet=' . htmlentities($openingSheetID, ENT_QUOTES, 'UTF-8'));
 		}
 
 

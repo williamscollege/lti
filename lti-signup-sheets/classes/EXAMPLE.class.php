@@ -1,4 +1,6 @@
 <?php
+	EXIT; // demo file
+
 	require_once(dirname(__FILE__) . '/db_linked.class.php');
 
 	class Notebook extends Db_Linked {
@@ -84,8 +86,8 @@
 				$owner = $this->getUser();
 			}
 			$li_elt = substr(util_listItemTag($idstr, $classes_array, $other_attribs_hash), 0, -1);
-			$li_elt .= ' ' . $this->fieldsAsDataAttribs() . $actions_attribs . '>';
-			$li_elt .= '<a href="' . APP_ROOT_PATH . '/app_code/notebook.php?notebook_id=' . $this->notebook_id . '">' . htmlentities($this->name) . '</a>';
+			$li_elt .= ' ' . htmlentities($this->fieldsAsDataAttribs(), ENT_QUOTES, 'UTF-8') . $actions_attribs . '>';
+			$li_elt .= '<a href="' . APP_ROOT_PATH . '/app_code/notebook.php?notebook_id=' . htmlentities($this->notebook_id, ENT_QUOTES, 'UTF-8') . '">' . htmlentities($this->name, ENT_QUOTES, 'UTF-8') . '</a>';
 			if ($is_editable) {
 				$li_elt .= '<span class="glyphicon glyphicon-pencil"></span>';
 			}
@@ -95,14 +97,14 @@
 		}
 
 		public function renderAsButtonEdit() {
-			$btn = '<a id="notebook-btn-edit-' . $this->notebook_id . '" href="' . APP_ROOT_PATH . '/app_code/notebook.php?action=edit&notebook_id=' . $this->notebook_id . '" class="edit_link btn"><i class="glyphicon glyphicon-edit"></i> ' . util_lang('edit') . '</a>';
+			$btn = '<a id="notebook-btn-edit-' . htmlentities($this->notebook_id, ENT_QUOTES, 'UTF-8') . '" href="' . APP_ROOT_PATH . '/app_code/notebook.php?action=edit&notebook_id=' . htmlentities($this->notebook_id, ENT_QUOTES, 'UTF-8') . '" class="edit_link btn"><i class="glyphicon glyphicon-edit"></i> ' . util_lang('edit') . '</a>';
 			return $btn;
 		}
 
 		function renderAsLink($action = 'view') {
 			$action = Action::sanitizeAction($action);
 
-			$link = '<a href="' . APP_ROOT_PATH . '/app_code/notebook.php?action=' . $action . '&notebook_id=' . $this->notebook_id . '">' . htmlentities($this->name) . '</a>';
+			$link = '<a href="' . APP_ROOT_PATH . '/app_code/notebook.php?action=' . $action . '&notebook_id=' . htmlentities($this->notebook_id, ENT_QUOTES, 'UTF-8') . '">' . htmlentities($this->name, ENT_QUOTES, 'UTF-8') . '</a>';
 
 			return $link;
 		}
@@ -125,14 +127,14 @@
 
 			$this->cachePages();
 
-			$rendered = '<div id="rendered_notebook_' . $this->notebook_id . '" class="rendered_notebook" ' . $this->fieldsAsDataAttribs() . $actions_attribs . '>' . "\n" .
-				'  <h3 class="notebook_title"><a href="' . APP_ROOT_PATH . '/app_code/notebook.php?action=list">' . ucfirst(util_lang('notebook')) . '</a>: ' . $this->name . '</h3>' . "\n" .
+			$rendered = '<div id="rendered_notebook_' . htmlentities($this->notebook_id, ENT_QUOTES, 'UTF-8') . '" class="rendered_notebook" ' . htmlentities($this->fieldsAsDataAttribs(), ENT_QUOTES, 'UTF-8') . $actions_attribs . '>' . "\n" .
+				'  <h3 class="notebook_title"><a href="' . APP_ROOT_PATH . '/app_code/notebook.php?action=list">' . ucfirst(util_lang('notebook')) . '</a>: ' . htmlentities($this->name, ENT_QUOTES, 'UTF-8') . '</h3>' . "\n" .
 				'  <div class="info-timestamps"><span class="created_at">' . util_lang('created_at') . ' ' . util_datetimeFormatted($this->created_at) . '</span>, <span class="updated_at">' . util_lang('updated_at') . ' ' . util_datetimeFormatted($this->updated_at) . '</span></div>' . "\n" .
-				'  <div class="info-owner">' . util_lang('owned_by') . ' <a href="' . APP_ROOT_PATH . '/app_code/user.php?action=view&user_id=' . $notebook_owner->user_id . '">' . htmlentities($notebook_owner->first_name) . '</a></div>' . "\n" .
+				'  <div class="info-owner">' . util_lang('owned_by') . ' <a href="' . APP_ROOT_PATH . '/app_code/user.php?action=view&user_id=' . htmlentities($notebook_owner->user_id, ENT_QUOTES, 'UTF-8') . '">' . htmlentities($notebook_owner->first_name, ENT_QUOTES, 'UTF-8') . '</a></div>' . "\n" .
 				'  <div class="info-workflow"><span class="published_state">' . ($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
 				. '</span>, <span class="verified_state verified_state_' . ($this->flag_workflow_validated ? 'true' : 'false') . '">' . ($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
 				. '</span></div>' . "\n" .
-				'  <div class="notebook-notes">' . htmlentities($this->notes) . '</div>' . "\n" .
+				'  <div class="notebook-notes">' . htmlentities($this->notes, ENT_QUOTES, 'UTF-8') . '</div>' . "\n" .
 				'  <h4>' . ucfirst(util_lang('pages')) . '</h4>' . "\n" .
 				'  <ul id="list-of-notebook-pages" data-notebook-page-count="' . count($this->pages) . '">' . "\n";
 			if (count($this->pages) > 0) {
@@ -147,7 +149,7 @@
 			}
 			// NOTE: add page control only in edit mode, not view mode!
 			//            if ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
-			//                $rendered .= '    <li><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.$this->notebook_id.'" id="btn-add-notebook-page" class="creation_link btn">'.util_lang('add_notebook_page').'</a></li>'."\n";
+			//                $rendered .= '    <li><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.htmlentities($this->notebook_id, ENT_QUOTES, 'UTF-8').'" id="btn-add-notebook-page" class="creation_link btn">'.util_lang('add_notebook_page').'</a></li>'."\n";
 			//            }
 			$rendered .=
 				'  </ul>' . "\n" .
@@ -179,7 +181,7 @@
 				$this->notebook_id = 'NEW';
 			}
 
-			$rendered = '<div id="edit_rendered_notebook_' . $this->notebook_id . '" class="edit_rendered_notebook" ' . $this->fieldsAsDataAttribs() . $actions_attribs . '>' . "\n" .
+			$rendered = '<div id="edit_rendered_notebook_' . htmlentities($this->notebook_id, ENT_QUOTES, 'UTF-8') . '" class="edit_rendered_notebook" ' . htmlentities($this->fieldsAsDataAttribs(), ENT_QUOTES, 'UTF-8') . $actions_attribs . '>' . "\n" .
 				'<form action="' . APP_ROOT_PATH . '/app_code/notebook.php">' . "\n";
 
 			$rendered .= '<div id="actions">' . "\n";
@@ -191,14 +193,14 @@
 			else {
 				//                $rendered .= '  <input id="edit-submit-control" class="btn btn-default" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>'."\n";
 				$rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign"></i> ' . util_lang('update', 'properize') . '</button>' . "\n";
-				$rendered .= '  <a id="edit-cancel-control" class="btn btn-default" href="' . APP_ROOT_PATH . '/app_code/notebook.php?action=view&notebook_id=' . $this->notebook_id . '"><i class="glyphicon glyphicon-remove"></i> ' . util_lang('cancel', 'properize') . '</a>' . "\n";
+				$rendered .= '  <a id="edit-cancel-control" class="btn btn-default" href="' . APP_ROOT_PATH . '/app_code/notebook.php?action=view&notebook_id=' . htmlentities($this->notebook_id, ENT_QUOTES, 'UTF-8') . '"><i class="glyphicon glyphicon-remove"></i> ' . util_lang('cancel', 'properize') . '</a>' . "\n";
 			}
 			$rendered .= "</div>\n";
 			$rendered .= '  <input type="hidden" name="action" value="update"/>' . "\n" .
-				'  <input type="hidden" name="notebook_id" value="' . $this->notebook_id . '"/>' . "\n" .
-				'  <h3 class="notebook_title">' . ucfirst(util_lang('notebook')) . ': <input id="notebook-name" type="text" name="name" maxlength="255" value="' . $this->name . '"/></h3>' . "\n" .
+				'  <input type="hidden" name="notebook_id" value="' . htmlentities($this->notebook_id, ENT_QUOTES, 'UTF-8') . '"/>' . "\n" .
+				'  <h3 class="notebook_title">' . ucfirst(util_lang('notebook')) . ': <input id="notebook-name" type="text" name="name" maxlength="255" value="' . htmlentities($this->name, ENT_QUOTES, 'UTF-8') . '"/></h3>' . "\n" .
 				'  <div class="info-timestamps"><span class="created_at">' . util_lang('created_at') . ' ' . util_datetimeFormatted($this->created_at) . '</span>, <span class="updated_at">' . util_lang('updated_at') . ' ' . util_datetimeFormatted($this->updated_at) . '</span></div>' . "\n" .
-				'  <div class="info-owner">' . util_lang('owned_by') . ' <a href="' . APP_ROOT_PATH . '/app_code/user.php?action=view&user_id=' . $notebook_owner->user_id . '">' . htmlentities($notebook_owner->first_name) . '</a></div>' . "\n";
+				'  <div class="info-owner">' . util_lang('owned_by') . ' <a href="' . APP_ROOT_PATH . '/app_code/user.php?action=view&user_id=' . htmlentities($notebook_owner->user_id, ENT_QUOTES, 'UTF-8') . '">' . htmlentities($notebook_owner->first_name, ENT_QUOTES, 'UTF-8') . '</a></div>' . "\n";
 			$rendered .= '<div class="control-workflows">';
 			if ($this->notebook_id != 'NEW') {
 				if ($USER->canActOnTarget('publish', $this)) {
@@ -221,7 +223,7 @@
 			}
 			$rendered .= "</div>\n";
 
-			$rendered .= '  <div class="notebook_notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">' . htmlentities($this->notes) . '</textarea></div>' . "\n";
+			$rendered .= '  <div class="notebook_notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">' . htmlentities($this->notes, ENT_QUOTES, 'UTF-8') . '</textarea></div>' . "\n";
 
 			$rendered .= '</form>' . "\n";
 			if ($this->notebook_id == 'NEW') {
@@ -230,12 +232,12 @@
 			}
 			else {
 				$rendered .= '  <h4>' . ucfirst(util_lang('pages')) . '</h4>' . "\n" .
-					//                    '  <a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.$this->notebook_id.'" class="btn btn-default">'.util_lang('add_notebook_page').'</a>'."\n".
+					//                    '  <a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.htmlentities($this->notebook_id, ENT_QUOTES, 'UTF-8').'" class="btn btn-default">'.util_lang('add_notebook_page').'</a>'."\n".
 
 					'  <ul id="list-of-notebook-pages" data-notebook-page-count="' . count($this->pages) . '">' . "\n";
 				// NOTE: add page control only in edit mode, not view mode!
 				if ($USER->canActOnTarget($ACTIONS['edit'], $this)) {
-					$rendered .= '    <li><a href="' . APP_ROOT_PATH . '/app_code/notebook_page.php?action=create&notebook_id=' . $this->notebook_id . '" id="btn-add-notebook-page" class="creation_link btn">' . htmlentities(util_lang('add_notebook_page')) . '</a></li>' . "\n";
+					$rendered .= '    <li><a href="' . APP_ROOT_PATH . '/app_code/notebook_page.php?action=create&notebook_id=' . htmlentities($this->notebook_id, ENT_QUOTES, 'UTF-8') . '" id="btn-add-notebook-page" class="creation_link btn">' . util_lang('add_notebook_page') . '</a></li>' . "\n";
 				}
 				if (count($this->pages) > 0) {
 					$page_counter = 0;

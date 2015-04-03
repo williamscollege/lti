@@ -29,7 +29,7 @@
 						$("#ajaxSheetgroupMaxPending").val(sheetgroup_max_pending);
 					}
 
-					var sheetgrouplink = $('#btn-edit-sheetgroup-id-<?php echo $_REQUEST['sheetgroup']; ?>');
+					var sheetgrouplink = $('#btn-edit-sheetgroup-id-<?php echo htmlentities($_REQUEST['sheetgroup'], ENT_QUOTES, 'UTF-8'); ?>');
 					openEditSheetgroupModal();
 					$(sheetgrouplink).click();
 				});
@@ -53,9 +53,9 @@
 			echo "<th class=\"col-sm-1 text-right\"><a class=\"btn btn-xs btn-default disabled\" disabled=\"disabled\" title=\"Cannot delete\"><i class=\"glyphicon glyphicon-minus-sign\"></i></a>&nbsp;</th></tr>";
 			foreach ($USER->managed_sheets as $mgr_sheet) {
 				echo "<tr><td class=\"col-sm-11\">";
-				echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . $mgr_sheet->sheet_id . "\" title=\"Edit sheet\">" . $mgr_sheet->name . "</a>";
+				echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . htmlentities($mgr_sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit sheet\">" . htmlentities($mgr_sheet->name, ENT_QUOTES, 'UTF-8') . "</a>";
 				$owner = User::getOneFromDb(['user_id' => $mgr_sheet->owner_user_id], $DB);
-				echo " <small>(owned by " . $owner->first_name . " " . $owner->last_name . ")</small>";
+				echo " <small>(owned by " . htmlentities($owner->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($owner->last_name, ENT_QUOTES, 'UTF-8') . ")</small>";
 				echo "</td><td class=\"col-sm-1 text-right\">";
 				// show placeholder icon (disabled)
 				echo "<a class=\"btn btn-xs btn-default disabled\" disabled=\"disabled\" title=\"Cannot delete\"><i class=\"glyphicon glyphicon-minus-sign\"></i></a>&nbsp;";
@@ -74,8 +74,8 @@
 		if (!$USER->sheetgroups) // create group since none exists
 		{
 			// create an object for the insert_record function
-			$name        = $USER->first_name . ' ' . $USER->last_name . ' signup-sheets';
-			$description = 'Main collection of signup-sheets created by ' . $USER->first_name . ' ' . $USER->last_name;
+			$name        = htmlentities($USER->first_name, ENT_QUOTES, 'UTF-8') . ' ' . htmlentities($USER->last_name, ENT_QUOTES, 'UTF-8') . ' signup-sheets';
+			$description = 'Main collection of signup-sheets created by ' . htmlentities($USER->first_name, ENT_QUOTES, 'UTF-8') . ' ' . htmlentities($USER->last_name, ENT_QUOTES, 'UTF-8');
 			$sg          = SUS_Sheetgroup::createNewSheetgroupForUser($USER->user_id, $name, $description, $DB);
 			$sg->updateDb();
 
@@ -97,10 +97,10 @@
 			// sheetgroup header
 			echo "<table class=\"table table-condensed table-bordered table-hover\">";
 			echo "<tr class=\"info\"><th class=\"col-sm-11\">";
-			echo "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . $sheetgroup->sheetgroup_id . "\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-description=\"" . $sheetgroup->description . "\" data-for-sheetgroup-max-total=\"" . $sheetgroup->max_g_total_user_signups . "\" data-for-sheetgroup-max-pending=\"" . $sheetgroup->max_g_pending_user_signups . "\" title=\"Edit group\">" . $sheetgroup->name . "</a>";
+			echo "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-name=\"" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-description=\"" . htmlentities($sheetgroup->description, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-max-total=\"" . htmlentities($sheetgroup->max_g_total_user_signups, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-max-pending=\"" . htmlentities($sheetgroup->max_g_pending_user_signups, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit group\">" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "</a>";
 			echo "</th><th class=\"col-sm-1 text-right\">";
 			if (!$sheetgroup->flag_is_default) {
-				echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-bb=\"alert_callback\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-remove\"></i> Group</a>&nbsp;";
+				echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-bb=\"alert_callback\" data-for-sheetgroup-id=\"" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-remove\"></i> Group</a>&nbsp;";
 			}
 			else {
 				// show placeholder icon (disabled)
@@ -112,15 +112,15 @@
 			$sheetgroup->cacheSheets();
 			foreach ($sheetgroup->sheets as $sheet) {
 				echo "<tr><td class=\"col-sm-11\">";
-				echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . $sheet->sheet_id . "\" id=\"btn-edit-sheet-id-" . $sheet->sheet_id . "\" class=\"sus-edit-sheet\" data-for-sheet-name=\"" . $sheet->name . "\"  title=\"Edit sheet\">" . $sheet->name . "</a>";
+				echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . htmlentities($sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" id=\"btn-edit-sheet-id-" . htmlentities($sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" class=\"sus-edit-sheet\" data-for-sheet-name=\"" . htmlentities($sheet->name, ENT_QUOTES, 'UTF-8') . "\"  title=\"Edit sheet\">" . htmlentities($sheet->name, ENT_QUOTES, 'UTF-8') . "</a>";
 				echo "</td><td class=\"col-sm-1 text-right\">";
-				echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheet\" data-bb=\"alert_callback\" data-for-sheetgroup-id=\"" . $sheet->sheetgroup_id . "\" data-for-sheet-id=\"" . $sheet->sheet_id . "\" title=\"Delete sheet\"><i class=\"glyphicon glyphicon-remove\"></i></a>&nbsp;";
+				echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheet\" data-bb=\"alert_callback\" data-for-sheetgroup-id=\"" . htmlentities($sheet->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-sheet-id=\"" . htmlentities($sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete sheet\"><i class=\"glyphicon glyphicon-remove\"></i></a>&nbsp;";
 				echo "</td></tr>";
 			}
 
 			// add new sheet
 			echo "<tr><td class=\"col-sm-12\" colspan=\"2\">";
-			echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "&sheet=new\" class=\"btn btn-xs btn-success sus-add-sheet\"  title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
+			echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "&sheet=new\" class=\"btn btn-xs btn-success sus-add-sheet\"  title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
 			echo "</td></tr>\n";
 
 			// complete sheetgroup
@@ -146,7 +146,7 @@
 <!-- Bootstrap Modal: Add/Edit Sheetgroup -->
 <form action="<?php echo APP_ROOT_PATH; ?>/ajax_actions/ajax_actions.php" id="frmAjaxSheetgroup" name="frmAjaxSheetgroup" class="form-horizontal" role="form" method="post">
 	<input type="hidden" id="ajaxSheetgroupAction" name="ajaxSheetgroupAction" value="" />
-	<input type="hidden" id="ajaxOwnerUserID" name="ajaxOwnerUserID" value="<?php echo $USER->user_id ?>" />
+	<input type="hidden" id="ajaxOwnerUserID" name="ajaxOwnerUserID" value="<?php echo htmlentities($USER->user_id, ENT_QUOTES, 'UTF-8') ?>" />
 	<input type="hidden" id="ajaxSheetgroupID" name="ajaxSheetgroupID" value="" />
 
 	<div id="modalSheetgroup" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ajaxSheetgroupLabel" aria-hidden="true">

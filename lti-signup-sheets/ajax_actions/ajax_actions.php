@@ -69,10 +69,10 @@
 		$results['html_output']  = '';
 		$results['html_output'] .= "<table class=\"table table-condensed table-bordered table-hover\"><tbody>";
 		$results['html_output'] .= "<tr class=\"info\"><th class=\"col-sm-11\">";
-		$results['html_output'] .= "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . $sheetgroup->sheetgroup_id . "\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . $sheetgroup->name . "\" data-for-sheetgroup-description=\"" . $sheetgroup->description . "\" data-for-sheetgroup-max-total=\"" . $sheetgroup->max_g_total_user_signups . "\" data-for-sheetgroup-max-pending=\"" . $sheetgroup->max_g_pending_user_signups . "\" title=\"Edit group\">" . $sheetgroup->name . "</a></th><th class=\"col-sm-1 text-right\"><a class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-trash\"></i> Group</a>&nbsp;";
+		$results['html_output'] .= "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-name=\"" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-description=\"" . htmlentities($sheetgroup->description, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-max-total=\"" . htmlentities($sheetgroup->max_g_total_user_signups, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-max-pending=\"" . htmlentities($sheetgroup->max_g_pending_user_signups, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit group\">" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "</a></th><th class=\"col-sm-1 text-right\"><a class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-for-sheetgroup-id=\"" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-trash\"></i> Group</a>&nbsp;";
 		$results['html_output'] .= "</th></tr>";
 		$results['html_output'] .= "<tr><td class=\"col-sm-12\" colspan=\"2\">";
-		$results['html_output'] .= "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "&sheet=new\" class=\"btn btn-xs btn-success sus-add-sheet\" title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
+		$results['html_output'] .= "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "&sheet=new\" class=\"btn btn-xs btn-success sus-add-sheet\" title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
 		$results['html_output'] .= "</td></tr>";
 		$results['html_output'] .= "</tbody></table>";
 	}
@@ -149,10 +149,10 @@
 		$results['html_output']  = '';
 		$results['html_output'] .= "<table class=\"table table-condensed table-bordered table-hover\"><tbody>";
 		$results['html_output'] .= "<tr class=\"info\"><th class=\"col-sm-11\">";
-		$results['html_output'] .= "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . $sheetgroup->sheetgroup_id . "\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" data-for-sheetgroup-name=\"" . $sheetgroup->name . "\" data-for-sheetgroup-description=\"" . $sheetgroup->description . "\" data-for-sheetgroup-max-total=\"" . $sheetgroup->max_g_total_user_signups . "\" data-for-sheetgroup-max-pending=\"" . $sheetgroup->max_g_pending_user_signups . "\" title=\"Edit group\">" . $sheetgroup->name . "</a></th><th class=\"col-sm-1 text-right\"><a class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-for-sheetgroup-id=\"" . $sheetgroup->sheetgroup_id . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-trash\"></i> Group</a>&nbsp;";
+		$results['html_output'] .= "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-name=\"" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-description=\"" . htmlentities($sheetgroup->description, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-max-total=\"" . htmlentities($sheetgroup->max_g_total_user_signups, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-max-pending=\"" . htmlentities($sheetgroup->max_g_pending_user_signups, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit group\">" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "</a></th><th class=\"col-sm-1 text-right\"><a class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-for-sheetgroup-id=\"" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-trash\"></i> Group</a>&nbsp;";
 		$results['html_output'] .= "</th></tr>";
 		$results['html_output'] .= "<tr><td class=\"col-sm-12\" colspan=\"2\">";
-		$results['html_output'] .= "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . $sheetgroup->sheetgroup_id . "\" class=\"btn btn-xs btn-success sus-add-sheet\" title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
+		$results['html_output'] .= "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" class=\"btn btn-xs btn-success sus-add-sheet\" title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
 		$results['html_output'] .= "</td></tr>";
 		$results['html_output'] .= "</tbody></table>";
 	}
@@ -448,13 +448,13 @@
 			foreach ($to_add as $username_to_add) {
 				if (!in_array($username_to_add, $obj_all_attr_usernames)) {
 					// username does not exist
-					$results["notes"] .= "invalid username: " . $username_to_add . "<br />\n";
+					$results["notes"] .= "invalid username: " . htmlentities($username_to_add, ENT_QUOTES, 'UTF-8') . "<br />\n";
 				}
 				else {
 					$access_record = SUS_Access::createNewAccess($access_type, $primaryID, 0, $username_to_add, $DB);
 					$access_record->updateDb();
 					if (!$access_record->matchesDb) {
-						$results["notes"] .= "could not save access for " . $username_to_add . "<br />\n";
+						$results["notes"] .= "could not save access for " . htmlentities($username_to_add, ENT_QUOTES, 'UTF-8') . "<br />\n";
 					}
 				}
 			}
@@ -464,14 +464,14 @@
 		foreach ($to_remove as $username_to_remove) {
 			$access_record = SUS_Access::getOneFromDb(['type' => $access_type, 'sheet_id' => $primaryID, 'constraint_data' => $username_to_remove], $DB);
 			if (!$access_record->matchesDb) {
-				$results["notes"] .= "no existing access record found for " . $username_to_remove . "<br />\n";
+				$results["notes"] .= "no existing access record found for " . htmlentities($username_to_remove, ENT_QUOTES, 'UTF-8') . "<br />\n";
 				continue;
 			}
 			$access_record->doDelete();
 
 			$check_access_record = SUS_Access::getOneFromDb(['type' => $access_type, 'sheet_id' => $primaryID, 'constraint_data' => $username_to_remove], $DB);
 			if ($check_access_record->matchesDb) {
-				$results["notes"] .= "could not remove access for " . $username_to_remove . "<br />\n";
+				$results["notes"] .= "could not remove access for " . htmlentities($username_to_remove, ENT_QUOTES, 'UTF-8') . "<br />\n";
 			}
 		}
 
@@ -651,9 +651,9 @@
 		// output
 		$results['status']       = 'success';
 		$results['which_action'] = 'edit-opening-add-signup-user';
-		$results['html_output']  = "<li data-for-firstname=\"" . $u->firstname . "\" data-for-lastname=\"" . $u->lastname . "\" data-for-signup-id=\"" . $s->signup_id . "\">";
-		$results['html_output'] .= "<a href=\"#\" class=\"sus-delete-signup\" data-bb=\"alert_callback\" data-for-signup-id=\"" . $s->signup_id . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>&nbsp;";
-		$results['html_output'] .= $u->first_name . " " . $u->last_name . "</li>";
+		$results['html_output']  = "<li data-for-firstname=\"" . htmlentities($u->firstname, ENT_QUOTES, 'UTF-8') . "\" data-for-lastname=\"" . htmlentities($u->lastname, ENT_QUOTES, 'UTF-8') . "\" data-for-signup-id=\"" . htmlentities($s->signup_id, ENT_QUOTES, 'UTF-8') . "\">";
+		$results['html_output'] .= "<a href=\"#\" class=\"sus-delete-signup\" data-bb=\"alert_callback\" data-for-signup-id=\"" . htmlentities($s->signup_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>&nbsp;";
+		$results['html_output'] .= htmlentities($u->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($u->last_name, ENT_QUOTES, 'UTF-8') . "</li>";
 	}
 	//###############################################################
 	elseif ($action == 'fetch-signups-for-opening-id') {

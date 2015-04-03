@@ -92,12 +92,12 @@
 
 		// returns: a very basic HTML representation of the object
 		public function renderMinimal($flag_linked = FALSE) {
-			$enclosed = htmlentities($this->last_name) . ', ' . htmlentities($this->first_name);
+			$enclosed = htmlentities($this->last_name, ENT_QUOTES, 'UTF-8') . ', ' . htmlentities($this->first_name, ENT_QUOTES, 'UTF-8');
 			if ($flag_linked) {
-				$enclosed = '<a href="' . APP_ROOT_PATH . '/app_code/user.php?user_id=' . $this->user_id . '">' . $enclosed . '</a>';
+				$enclosed = '<a href="' . APP_ROOT_PATH . '/app_code/user.php?user_id=' . htmlentities($this->first_name, ENT_QUOTES, 'UTF-8') . '">' . $enclosed . '</a>';
 			}
 
-			return '<div class="rendered-object user-render user-render-minimal user-render-' . $this->user_id . '" data-for-user="' . $this->user_id . '" data-user_full_name="' . htmlentities($this->last_name) . ', ' . htmlentities($this->first_name) . '">' . $enclosed . '</div>';
+			return '<div class="rendered-object user-render user-render-minimal user-render-' . htmlentities($this->first_name, ENT_QUOTES, 'UTF-8') . '" data-for-user="' . htmlentities($this->first_name, ENT_QUOTES, 'UTF-8') . '" data-user_full_name="' . htmlentities($this->last_name, ENT_QUOTES, 'UTF-8') . ', ' . htmlentities($this->first_name, ENT_QUOTES, 'UTF-8') . '">' . $enclosed . '</div>';
 		}
 
 		public function updateDbFromAuth($auth) {

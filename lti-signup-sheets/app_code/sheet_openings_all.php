@@ -28,7 +28,7 @@
 			$other_based_sheets  = [];
 			foreach ($USER->sheet_openings_all as $sheet) {
 
-				$base_sheet_link = "<a href=\"" . APP_ROOT_PATH . "/app_code/sheet_openings_signup.php?sheet=" . $sheet['s_id'] . "\"  class=\"\" title=\"Signup for Openings\">" . $sheet['s_name'] . "</a> (" . $sheet['s_description'] . ")";
+				$base_sheet_link = "<a href=\"" . APP_ROOT_PATH . "/app_code/sheet_openings_signup.php?sheet=" . htmlentities($sheet['s_id'], ENT_QUOTES, 'UTF-8') . "\"  class=\"\" title=\"Signup for Openings\">" . htmlentities($sheet['s_name'], ENT_QUOTES, 'UTF-8') . "</a> (" . htmlentities($sheet['s_description'], ENT_QUOTES, 'UTF-8') . ")";
 
 				// NOTE: the A) through G) leads on the keys are used to sort. The display trims the first 3 chars from the key.
 				switch ($sheet["a_type"]) {
@@ -54,18 +54,18 @@
 						$instr = User::getOneFromDb(['user_id' => $sheet["a_constraint_id"]], $DB);
 
 						if (isset($other_based_sheets["B) I am in a course taught by"])) {
-							$other_based_sheets["B) I am in a course taught by"] .= "<li>Professor " . $instr->first_name . " " . $instr->last_name . " - $base_sheet_link</li>";
+							$other_based_sheets["B) I am in a course taught by"] .= "<li>Professor " . htmlentities($instr->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($instr->last_name, ENT_QUOTES, 'UTF-8') . " - $base_sheet_link</li>";
 						}
 						else {
-							$other_based_sheets["B) I am in a course taught by"] = "<li>Professor " . $instr->first_name . " " . $instr->last_name . " - $base_sheet_link</li>";
+							$other_based_sheets["B) I am in a course taught by"] = "<li>Professor " . htmlentities($instr->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($instr->last_name, ENT_QUOTES, 'UTF-8') . " - $base_sheet_link</li>";
 						}
 						break;
 					case "bydept":
 						if (isset($other_based_sheets["C) I am in a course in this department"])) {
-							$other_based_sheets["C) I am in a course in this department"] .= "<li>" . $sheet["a_constraint_data"] . " - $base_sheet_link</li>";
+							$other_based_sheets["C) I am in a course in this department"] .= "<li>" . htmlentities($sheet["a_constraint_data"], ENT_QUOTES, 'UTF-8') . " - $base_sheet_link</li>";
 						}
 						else {
-							$other_based_sheets["C) I am in a course in this department"] = "<li>" . $sheet["a_constraint_data"] . " - $base_sheet_link</li>";
+							$other_based_sheets["C) I am in a course in this department"] = "<li>" . htmlentities($sheet["a_constraint_data"], ENT_QUOTES, 'UTF-8') . " - $base_sheet_link</li>";
 						}
 						break;
 					case "bygradyear":
@@ -119,7 +119,7 @@
 				echo "<tr><td>";
 
 				foreach ($course_based_sheets as $course => $items) {
-					echo "<strong>" . $course . "</strong>";
+					echo "<strong>" . htmlentities($course, ENT_QUOTES, 'UTF-8') . "</strong>";
 					echo "<ul>" . $items . "</ul>";
 				}
 				echo "</td></tr></table>";
@@ -131,7 +131,7 @@
 				echo "<tr><td>";
 
 				foreach ($other_based_sheets as $reason => $items) {
-					echo "<strong>" . substr($reason, 3) . "</strong>";
+					echo "<strong>" . htmlentities(substr($reason, 3), ENT_QUOTES, 'UTF-8') . "</strong>";
 					echo "<ul>" . $items . "</ul>";
 				}
 				echo "</td></tr></table>";
@@ -145,11 +145,11 @@
 				echo "<tr><td>";
 
 				foreach ($course_based_sheets as $course => $items) {
-					echo "<strong>" . $course . "</strong>";
+					echo "<strong>" . htmlentities($course, ENT_QUOTES, 'UTF-8') . "</strong>";
 					echo "<ul>" . $items . "</ul>";
 				}
 				foreach ($other_based_sheets as $reason => $items) {
-					echo "<br /><strong>" . substr($reason, 3) . "</strong>";
+					echo "<br /><strong>" . htmlentities(substr($reason, 3), ENT_QUOTES, 'UTF-8') . "</strong>";
 					echo "<ul>" . $items . "</ul>";
 				}
 				echo "</td></tr></table>";

@@ -285,7 +285,7 @@
 
 		$msg_text = util_lang($key_or_text);
 		if (preg_match('/UNKNOWN LANGUAGE LABEL/', $msg_text)) {
-			$msg_text = htmlentities($key_or_text);
+			$msg_text = htmlentities($key_or_text, ENT_QUOTES, 'UTF-8');
 		}
 
 		echo "<div class=\"alert alert-dismissible $alert_type\" role=\"alert\">";

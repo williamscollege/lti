@@ -26,7 +26,8 @@
 					<p><i class="glyphicon glyphicon-question-sign"></i> More questions?</p>
 					<?php
 						if (isset($managersList)) {
-							# show list of managers for this group
+							# TODO - need to implement this list from somewhere
+							// show list of managers for this group
 							echo "<p>Please contact: " . $managersList . "</p>";
 						}
 						else {

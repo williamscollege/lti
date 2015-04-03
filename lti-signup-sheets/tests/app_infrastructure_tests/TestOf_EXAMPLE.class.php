@@ -1,4 +1,6 @@
 <?php
+	EXIT; // demo file
+
 	require_once(dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php');
 
 	class TestOfNotebook extends WMSUnitTestCaseDB {
@@ -284,14 +286,14 @@
 
 			//        $this->fail();
 
-			//            $canonical = '<div id="edit_rendered_notebook_NEW" class="edit_rendered_notebook" data-notebook_id="NEW" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="'.htmlentities($n->name).'" data-notes="'.htmlentities(util_lang('new_notebook_notes')).'" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1">
+			//            $canonical = '<div id="edit_rendered_notebook_NEW" class="edit_rendered_notebook" data-notebook_id="NEW" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="'.htmlentities($n->name).'" data-notes="'.util_lang('new_notebook_notes').'" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1">
 			//<form action="'.APP_ROOT_PATH.'/app_code/notebook.php">
 			//  <input type="hidden" name="action" value="update"/>
 			//  <input type="hidden" name="notebook_id" value="NEW"/>
 			//  <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': <input id="notebook-name" type="text" name="name" value="'.htmlentities($n->name).'"/></h3>
 			//  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($n->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($n->updated_at).'</span><br />
 			//  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->first_name.'</a></span><br />
-			//  <div class="notebook-notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">'.htmlentities(util_lang('new_notebook_notes')).'</textarea></div>
+			//  <div class="notebook-notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">'.util_lang('new_notebook_notes').'</textarea></div>
 			//  <input id="edit-submit-control" class="btn btn-default" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>
 			//  <a id="edit-cancel-control" class="btn btn-default" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list">'.util_lang('cancel','properize').'</a>
 			//</form>
@@ -299,7 +301,7 @@
 			//  '.util_lang('new_notebook_must_be_saved').'
 			//</div>';
 
-			$canonical = '<div id="edit_rendered_notebook_NEW" class="edit_rendered_notebook" data-notebook_id="NEW" data-created_at="' . $n->created_at . '" data-updated_at="' . $n->updated_at . '" data-user_id="101" data-name="' . htmlentities($n->name) . '" data-notes="' . htmlentities(util_lang('new_notebook_notes')) . '" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1">
+			$canonical = '<div id="edit_rendered_notebook_NEW" class="edit_rendered_notebook" data-notebook_id="NEW" data-created_at="' . $n->created_at . '" data-updated_at="' . $n->updated_at . '" data-user_id="101" data-name="' . htmlentities($n->name) . '" data-notes="' . util_lang('new_notebook_notes') . '" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1">
 <form action="' . APP_ROOT_PATH . '/app_code/notebook.php">
 <div id="actions">
   <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="glyphicon glyphicon-ok-sign"></i> ' . util_lang('save', 'properize') . '</button>
@@ -311,7 +313,7 @@
   <div class="info-timestamps"><span class="created_at">' . util_lang('created_at') . ' ' . util_datetimeFormatted($n->created_at) . '</span>, <span class="updated_at">' . util_lang('updated_at') . ' ' . util_datetimeFormatted($n->updated_at) . '</span></div>
   <div class="info-owner">' . util_lang('owned_by') . ' <a href="' . APP_ROOT_PATH . '/app_code/user.php?action=view&user_id=101">' . $USER->first_name . '</a></div>
 <div class="control-workflows"></div>
-  <div class="notebook_notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">' . htmlentities(util_lang('new_notebook_notes')) . '</textarea></div>
+  <div class="notebook_notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">' . util_lang('new_notebook_notes') . '</textarea></div>
 </form>
   <h4>' . ucfirst(util_lang('pages')) . '</h4>
   ' . util_lang('new_notebook_must_be_saved') . '

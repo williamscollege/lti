@@ -238,7 +238,7 @@
 		?>
 		<!-- Bootstrap Modal: Calendar Create Opening -->
 		<form action="<?php echo APP_ROOT_PATH; ?>/app_code/calendar_setup_proc.php" id="frmCreateOpening" name="frmCreateOpening" class="form-horizontal" role="form" method="post">
-			<input type="hidden" id="new_SheetID" name="new_SheetID" value="<?php echo $sheetID; ?>" />
+			<input type="hidden" id="new_SheetID" name="new_SheetID" value="<?php echo htmlentities($sheetID, ENT_QUOTES, 'UTF-8'); ?>" />
 			<input type="hidden" id="new_OpeningID" name="new_OpeningID" value="NEW" />
 			<input type="hidden" id="new_OpeningDateBegin" name="new_OpeningDateBegin" value="" />
 			<input type="hidden" id="new_OpeningTimeMode" name="new_OpeningTimeMode" value="" />
@@ -621,7 +621,7 @@
 		<!-- Bootstrap Modal: Calendar Edit Opening -->
 		<form action="<?php echo APP_ROOT_PATH; ?>/app_code/calendar_setup_proc.php" id="frmEditOpening" name="frmEditOpening" class="form-horizontal" role="form" method="post">
 			<input type="hidden" id="edit_OpeningID" name="edit_OpeningID" value="0" />
-			<input type="hidden" id="edit_SheetID" name="edit_SheetID" value="<?php echo $sheetID; ?>" />
+			<input type="hidden" id="edit_SheetID" name="edit_SheetID" value="<?php echo htmlentities($sheetID, ENT_QUOTES, 'UTF-8'); ?>" />
 
 			<div id="modal-edit-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="openingLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
@@ -862,7 +862,8 @@
 						</div>
 
 						<div class="modal-footer">
-							&nbsp;notifications functionality will go here
+							<!-- TODO - notifications functionality will go here -->
+							&nbsp;TODO - notifications functionality will go here
 						</div>
 					</div>
 				</div>

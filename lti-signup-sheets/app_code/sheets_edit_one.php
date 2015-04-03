@@ -151,7 +151,7 @@
 								<!--DKC IMPORTANT (testing): set class to: 'tab-pane fade'-->
 								<div role="tabpanel" id="tabSheetInfo" class="tab-pane fade active in" aria-labelledby="tabSheetInfo">
 									<form action="<?php echo APP_ROOT_PATH; ?>/app_code/sheets_edit_one.php" id="frmEditSheet" name="frmEditSheet" class="form-group" role="form" method="post">
-										<input type="hidden" id="hiddenSheetID" name="sheet" value="<?php echo $s ? $s->sheet_id : 0; ?>">
+										<input type="hidden" id="hiddenSheetID" name="sheet" value="<?php echo $s ? htmlentities($s->sheet_id, ENT_QUOTES, 'UTF-8') : 0; ?>">
 										<input type="hidden" id="hiddenAction" name="hiddenAction" value="savesheet">
 
 										<div class="form-group">
@@ -177,12 +177,12 @@
 																$currentSheetgroupName = $sg->name;
 																$currentSheetgroupDesc = $sg->description;
 															}
-															echo "<option" . $optionSelected . " value=\"" . $sg->sheetgroup_id . "\">" . $sg->name . "</option>";
+															echo "<option" . $optionSelected . " value=\"" . htmlentities($sg->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\">" . htmlentities($sg->name, ENT_QUOTES, 'UTF-8') . "</option>";
 														}
 													?>
 												</select>
 
-												<span class="small"><a href="<?php echo APP_ROOT_PATH; ?>/app_code/sheets_all.php?sheetgroup=<?php echo $currentSheetgroupID; ?>" title="<?php echo $currentSheetgroupName . " (&quot;" . $currentSheetgroupDesc . "&quot;)"; ?>">Go
+												<span class="small"><a href="<?php echo APP_ROOT_PATH; ?>/app_code/sheets_all.php?sheetgroup=<?php echo htmlentities($currentSheetgroupID, ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo htmlentities($currentSheetgroupName, ENT_QUOTES, 'UTF-8') . " (&quot;" . htmlentities($currentSheetgroupDesc, ENT_QUOTES, 'UTF-8') . "&quot;)"; ?>">Go
 														to current group</a></span>
 											</div>
 										</div>
@@ -325,7 +325,7 @@
 																	$checkboxSelected = " checked=\"checked\" ";
 																}
 															}
-															echo "<label><input type=\"checkbox\" id=\"access_by_course_enr_" . $enr->enrollment_id . "\" class=\"access_by_course_ckboxes\"  name=\"access_by_course_enr_" . $enr->enrollment_id . "\" data-permtype=\"bycourse\" data-permval=\"" . $enr->course_idstr . "\"" . $checkboxSelected . ">" . $enr->course_idstr . "</label><br />";
+															echo "<label><input type=\"checkbox\" id=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_course_ckboxes\"  name=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"bycourse\" data-permval=\"" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "</label><br />";
 														}
 													}
 												?>
@@ -364,7 +364,7 @@
 																	$checkboxSelected = " checked=\"checked\" ";
 																}
 															}
-															echo "<label><input type=\"checkbox\" id=\"access_by_instr_" . $u->user_id . "\" class=\"access_by_instructor_ckboxes\" name=\"access_by_instr_" . $u->user_id . "\" data-permtype=\"byinstr\" data-permval=\"" . $u->user_id . "\"" . $checkboxSelected . ">" . $u->first_name . " " . $u->last_name . "</label><br />";
+															echo "<label><input type=\"checkbox\" id=\"access_by_instr_" . htmlentities($u->user_id, ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_instructor_ckboxes\" name=\"access_by_instr_" . htmlentities($u->user_id, ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"byinstr\" data-permval=\"" . htmlentities($u->user_id, ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($u->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($u->last_name, ENT_QUOTES, 'UTF-8') . "</label><br />";
 														}
 													}
 												?>

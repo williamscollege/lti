@@ -44,8 +44,8 @@ function showConfirmBox(ary) {
 						dataType: 'json',
 						// TODO ? - remove textStatus and jqhdr ? unused?
 						success: function (ajxdata, textStatus, jqhdr) {
-							console.log('inside of success: ajxdata array is...');
-							console.dir(ajxdata);
+							//console.log('inside of success: ajxdata array is...');
+							//console.dir(ajxdata);
 							if (ajxdata.status == 'success') {
 								// remove element
 								updateDOM(ary['ajax_action'], true, ajxdata);
@@ -127,8 +127,8 @@ function updateDOM(action, ret, data) {
 			switch (parseInt(data.customData)) {
 				case 0:
 					// delete only this opening
-					console.log('reached case 0. customData = ' + parseInt(data.customData));
-					console.dir(data.updateIDs_ary);
+					//console.log('reached case 0. customData = ' + parseInt(data.customData));
+					//console.dir(data.updateIDs_ary);
 
 					var openingID = GLOBAL_confirmHandlerData;
 					helper_Remove_DOM_Elements(openingID);
@@ -136,8 +136,8 @@ function updateDOM(action, ret, data) {
 					break;
 				case 1:
 					// delete all openings for this single day
-					console.log('reached case 1. customData = ' + parseInt(data.customData));
-					console.dir(data.updateIDs_ary);
+					//console.log('reached case 1. customData = ' + parseInt(data.customData));
+					//console.dir(data.updateIDs_ary);
 
 					var openingID = GLOBAL_confirmHandlerData;
 
@@ -149,8 +149,8 @@ function updateDOM(action, ret, data) {
 					break;
 				case 2:
 					// delete this and all future openings in this series
-					console.log('reached case 2. customData = ' + parseInt(data.customData));
-					console.dir(data.updateIDs_ary);
+					//console.log('reached case 2. customData = ' + parseInt(data.customData));
+					//console.dir(data.updateIDs_ary);
 
 					var openingID = GLOBAL_confirmHandlerData;
 
@@ -162,8 +162,8 @@ function updateDOM(action, ret, data) {
 					break;
 				case 3:
 					// delete this and all past and future openings in this series
-					console.log('reached case 3. customData = ' + parseInt(data.customData));
-					console.dir(data.updateIDs_ary);
+					//console.log('reached case 3. customData = ' + parseInt(data.customData));
+					//console.dir(data.updateIDs_ary);
 
 					var openingID = GLOBAL_confirmHandlerData;
 
@@ -183,7 +183,6 @@ function updateDOM(action, ret, data) {
 		else {
 			// error message
 			susUtil_setTransientAlert('error', data.notes);
-			//$(".list-opening-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
 		}
 	}
 	else if (action == 'delete-signup') {
