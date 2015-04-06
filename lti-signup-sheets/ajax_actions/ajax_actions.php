@@ -42,16 +42,8 @@
 	#------------------------------------------------#
 	//###############################################################
 	if ($action == 'add-sheetgroup') {
-		# TODO UNSURE ABOUT Necessity of this: NEED TO ENSURE THAT ADD Sheetgroup cannot add a new group with same name of pre-existing sheetgroup
-		# TODO maybe just create a createSheetgroup fxn, instead and allow duplicate names?
-		$sg = SUS_Sheetgroup::getOneFromDb(['name' => $name], $DB);
+		$sg = SUS_Sheetgroup::createNewSheetgroupForUser($USER->user_id, $name, $description, $DB);
 
-		if ($sg->matchesDb) {
-			// error: matching record already exists
-			$results["notes"] = "matching record already exists";
-			echo json_encode($results);
-			exit;
-		}
 		$sg->owner_user_id              = $ownerUserID;
 		$sg->name                       = $name;
 		$sg->description                = $description;
@@ -61,7 +53,21 @@
 
 		$sg->updateDb();
 
-		$sheetgroup = SUS_Sheetgroup::getOneFromDb(['name' => $name], $DB);
+		if (!$sg->matchesDb) {
+			// error: matching record already exists
+			$results["notes"] = "unable to create new group in database";
+			echo json_encode($results);
+			exit;
+		}
+
+		$sheetgroup = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $sg->sheetgroup_id], $DB);
+
+		if (!$sheetgroup->matchesDb) {
+			// error: matching record already exists
+			$results["notes"] = "unable to retrieve newly created group from database";
+			echo json_encode($results);
+			exit;
+		}
 
 		// output
 		$results['status']       = 'success';

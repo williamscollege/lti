@@ -149,7 +149,7 @@
 	<input type="hidden" id="ajaxOwnerUserID" name="ajaxOwnerUserID" value="<?php echo htmlentities($USER->user_id, ENT_QUOTES, 'UTF-8') ?>" />
 	<input type="hidden" id="ajaxSheetgroupID" name="ajaxSheetgroupID" value="" />
 
-	<div id="modalSheetgroup" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ajaxSheetgroupLabel" aria-hidden="true">
+	<div id="modalSheetgroup" class="modal" data-backdrop="static" data-keyboard="true" tabindex="-1" role="dialog" aria-labelledby="ajaxSheetgroupLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header bg-info">

@@ -1,13 +1,14 @@
 $(document).ready(function () {
 
 	// ***************************
-	// helper functions
-	// ***************************
-
-
-	// ***************************
 	// Listeners
 	// ***************************
+
+	// Cancel button
+	$('#btnAjaxSheetgroupCancel').click(function () {
+		// dismiss modal
+		cleanUpForm("frmAjaxSheetgroup");
+	});
 
 	// Delete sheetgroup
 	$(document).on("click", ".sus-delete-sheetgroup", function () {
@@ -41,6 +42,8 @@ $(document).ready(function () {
 
 	// Add sheetgroup
 	$(".sus-add-sheetgroup").click(function () {
+		// clear any previous values in modal (solution for: the ESC key will dismiss a modal but fails to clear values for next time usage)
+		cleanUpForm("frmAjaxSheetgroup");
 
 		// update values in modal
 		$("#ajaxSheetgroupLabel").text("Add Group");
@@ -51,7 +54,6 @@ $(document).ready(function () {
 
 	// Edit sheetgroup
 	$(document).on("click", ".sus-edit-sheetgroup", function () {
-
 		// fetch values from DOM
 		var sheetgroup_id = $(this).attr("data-for-sheetgroup-id");
 		var sheetgroup_name = $(this).attr("data-for-sheetgroup-name");
@@ -126,7 +128,7 @@ $(document).ready(function () {
 				},
 				dataType: 'json',
 				success: function (data) {
-					// hide and reset form
+					// dismiss modal and reset form
 					$("#btnAjaxSheetgroupCancel").click();
 
 					if (data.status == 'success') {
@@ -157,11 +159,13 @@ $(document).ready(function () {
 						}
 						else {
 							// error message
+							// TODO - proper error msg needed
 							$("#DKCTEST").text("<div><p>AJAX ERROR HERE!</p></div>");
 						}
 					}
 					else {
 						// error message
+						// TODO - proper error msg needed
 						$("#DKCTEST").text("<div><p>AJAX ERROR HERE!</p></div>");
 						//$("UL#displayAllSheetgroups").after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> A record with that same name already exists in database.</div>');
 					}
@@ -172,30 +176,29 @@ $(document).ready(function () {
 
 
 	// ***************************
-	// Cancel and cleanup
+	// Cancel and cleanup (helper function)
 	// ***************************
 
 	function cleanUpForm(formName) {
-		// reset forms
+		// reset form
 		validateAjaxSheetgroup.resetForm();
+
 		// manually remove input highlights
 		$(".form-group").removeClass('success').removeClass('error');
-	}
-
-	$('#btnAjaxSheetgroupCancel').click(function () {
-		cleanUpForm("frmAjaxSheetgroup");
 
 		// manually clear modal values
 		$("#ajaxSheetgroupID").val(0);
 		$("#ajaxSheetgroupLabel").text('');
 		$("#ajaxSheetgroupAction").val('');
-		$("#frmAjaxSheetgroup textarea").val('');
-		$("#frmAjaxSheetgroup input[type=text]").val('');
-		$("#frmAjaxSheetgroup input[type=radio]").attr("checked", false);
-		$("#frmAjaxSheetgroup select").val(0);
+
+		// semi-automatically clear inputs types
+		$("#" + formName + " textarea").val('');
+		$("#" + formName + " input[type=text]").val('');
+		$("#" + formName + " input[type=radio]").attr("checked", false);
+		$("#" + formName + " select").val(-1);
 
 		// reset submit button (avoid disabled state)
 		$("#btnAjaxSheetgroupSubmit").button('reset');
-	});
+	}
 
 });

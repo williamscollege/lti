@@ -574,7 +574,7 @@ $(document).ready(function () {
 		//$("#frmCreateOpening textarea").val('');
 		//$("#frmCreateOpening input[type=text]").val('');
 		//$("#frmCreateOpening input[type=radio]").attr("checked", false);
-		//$("#frmCreateOpening select").val(0);
+		//$("#frmCreateOpening select").val(-1);
 
 		// reset submit button (avoid disabled state)
 		$("#btnNewOpeningSubmit, #btnEditOpeningSubmit").button('reset');
