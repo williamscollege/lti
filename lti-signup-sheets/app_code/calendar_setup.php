@@ -243,7 +243,7 @@
 			<input type="hidden" id="new_OpeningDateBegin" name="new_OpeningDateBegin" value="" />
 			<input type="hidden" id="new_OpeningTimeMode" name="new_OpeningTimeMode" value="" />
 
-			<div id="modal-create-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="openingLabel" aria-hidden="true">
+			<div id="modal-create-opening" class="modal" data-backdrop="static" data-keyboard="true" tabindex="-1" role="dialog" aria-labelledby="openingLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header bg-info">
@@ -623,7 +623,7 @@
 			<input type="hidden" id="edit_OpeningID" name="edit_OpeningID" value="0" />
 			<input type="hidden" id="edit_SheetID" name="edit_SheetID" value="<?php echo htmlentities($sheetID, ENT_QUOTES, 'UTF-8'); ?>" />
 
-			<div id="modal-edit-opening" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="openingLabel" aria-hidden="true">
+			<div id="modal-edit-opening" class="modal" data-backdrop="static" data-keyboard="true" tabindex="-1" role="dialog" aria-labelledby="openingLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
 						<div class="modal-header bg-info">

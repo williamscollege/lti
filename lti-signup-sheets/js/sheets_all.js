@@ -4,10 +4,19 @@ $(document).ready(function () {
 	// Listeners
 	// ***************************
 
-	// Cancel button
-	$('#btnAjaxSheetgroupCancel').click(function () {
-		// dismiss modal
-		cleanUpForm("frmAjaxSheetgroup");
+	// Delete sheet
+	$(document).on("click", ".sus-delete-sheet", function () {
+		GLOBAL_confirmHandlerData = $(this).attr('data-for-sheet-id');
+		var params = {
+			title: "Delete Sheet",
+			message: "This sheet will be deleted. Really delete this sheet?<br /><br /><strong>&quot;" + $(this).parent('TD').prev().children("A").attr('data-for-sheet-name') + "&quot;</strong>",
+			label: "Delete Sheet",
+			class: "btn btn-danger",
+			url: "../ajax_actions/ajax_actions.php",
+			ajax_action: "delete-sheet",
+			ajax_id: GLOBAL_confirmHandlerData
+		};
+		showConfirmBox(params);
 	});
 
 	// Delete sheetgroup
@@ -25,24 +34,9 @@ $(document).ready(function () {
 		showConfirmBox(params);
 	});
 
-	// Delete sheet
-	$(document).on("click", ".sus-delete-sheet", function () {
-		GLOBAL_confirmHandlerData = $(this).attr('data-for-sheet-id');
-		var params = {
-			title: "Delete Sheet",
-			message: "This sheet will be deleted. Really delete this sheet?<br /><br /><strong>&quot;" + $(this).parent('TD').prev().children("A").attr('data-for-sheet-name') + "&quot;</strong>",
-			label: "Delete Sheet",
-			class: "btn btn-danger",
-			url: "../ajax_actions/ajax_actions.php",
-			ajax_action: "delete-sheet",
-			ajax_id: GLOBAL_confirmHandlerData
-		};
-		showConfirmBox(params);
-	});
-
 	// Add sheetgroup
 	$(".sus-add-sheetgroup").click(function () {
-		// clear any previous values in modal (solution for: the ESC key will dismiss a modal but fails to clear values for next time usage)
+		// reset form values in modal (solution for: the ESC key will dismiss a modal but fails to clear values per next usage)
 		cleanUpForm("frmAjaxSheetgroup");
 
 		// update values in modal
@@ -174,28 +168,26 @@ $(document).ready(function () {
 		}
 	});
 
+	// Cancel button
+	$('#btnAjaxSheetgroupCancel').click(function () {
+		// dismiss modal
+		cleanUpForm("frmAjaxSheetgroup");
+	});
+
 
 	// ***************************
 	// Cancel and cleanup (helper function)
 	// ***************************
 
 	function cleanUpForm(formName) {
-		// reset form
+		// reset form (using jquery validate plugin)
 		validateAjaxSheetgroup.resetForm();
+
+		// reset form (using standard jquery)
+		$('#' + formName).trigger("reset");
 
 		// manually remove input highlights
 		$(".form-group").removeClass('success').removeClass('error');
-
-		// manually clear modal values
-		$("#ajaxSheetgroupID").val(0);
-		$("#ajaxSheetgroupLabel").text('');
-		$("#ajaxSheetgroupAction").val('');
-
-		// semi-automatically clear inputs types
-		$("#" + formName + " textarea").val('');
-		$("#" + formName + " input[type=text]").val('');
-		$("#" + formName + " input[type=radio]").attr("checked", false);
-		$("#" + formName + " select").val(-1);
 
 		// reset submit button (avoid disabled state)
 		$("#btnAjaxSheetgroupSubmit").button('reset');

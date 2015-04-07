@@ -10,15 +10,9 @@ $(document).ready(function () {
 
 
 	// ***************************
-	// helper functions
-	// ***************************
-
-	// TODO - edit openings: btn_save_openings, cleanUpForm(), frmCreateOpening, frmEditOpening
-
-
-	// ***************************
 	// Calendar datepicker
 	// ***************************
+
 	$("#new_OpeningUntilDate,#edit_OpeningDateBegin").datepicker({
 		showOtherMonths: true,
 		selectOtherMonths: true,
@@ -102,8 +96,7 @@ $(document).ready(function () {
 	}
 
 	function setupModalForm_EditOpening(openingID, action) {
-		// reset non-dynamic form fields to defaults
-		$('#frmEditOpening').trigger("reset");
+		// reset form values in modal (solution for: the ESC key will dismiss a modal but fails to clear values per next usage)
 		$('#btnEditOpeningCancelSignup').click();
 
 		// div parent of the link clicked, which contains all of the data attributes for this opening
@@ -211,11 +204,6 @@ $(document).ready(function () {
 		return time.join(''); // return adjusted time or original string
 	}
 
-	function resetSignupFields() {
-		$("#signupUsername").val('');
-		$("#signupAdminNote").val('');
-	}
-
 	function setupModalForm_CreateOpening(forDateYYYYMMDD) {
 
 		var forDateAry = forDateYYYYMMDD.split('-');
@@ -252,9 +240,15 @@ $(document).ready(function () {
 		$('#link_hide_duration').click();
 		$('#link_hide_optional_opening_fields').click();
 
-		// reset non-dynamic form fields to defaults
-		$('#frmCreateOpening').trigger("reset");
+		// reset form values in modal (solution for: the ESC key will dismiss a modal but fails to clear values per next usage)
+		$('#frmCreateOpening').click();
 	}
+
+	function resetSignupFields() {
+		$("#signupUsername").val('');
+		$("#signupAdminNote").val('');
+	}
+
 
 	// ***************************
 	// listeners
@@ -531,7 +525,7 @@ $(document).ready(function () {
 		resetSignupFields();
 	});
 
-	// Cancel cleanup
+	// Reset hidden fields
 	$('#btnEditOpeningCancelSignup').click(function () {
 		$("#signupControls").hide();
 		$("#link_show_signup_controls").show();
@@ -539,46 +533,30 @@ $(document).ready(function () {
 		resetSignupFields();
 	});
 
-
-	// ***************************
-	// Cancel and cleanup
-	// ***************************
-	// TODO - update other modal cleanUpForm fxns with solutions from this one
-
-	function cleanUpForm(formName) {
-		// reset form to initial values (does not effect hidden inputs)
-		$('#' + formName).trigger("reset");
-
-		// TODO - temporary... need to deal with hidden values, and button conditions after click, dismiss, and re-open of modal
-		// TODO - also need to bind  button[data-dismiss="modal"]  action (AND ESCAPE KEY TOO) to the cleanUpForm()
-		//$(":input", form).each(function () {
-		//	var type = this.type;
-		//	var tag = this.tagName.toLowerCase();
-		//	if (type == 'text') {
-		//		this.value = "";
-		//	}
-		//});
-		//validateOpening.resetForm();
-		// manually remove input highlights
-		// $(".form-group").removeClass('success').removeClass('error');
-	}
-
+	// Cancel buttons
 	$('#btnNewOpeningCancel, #btnEditOpeningCancel').click(function () {
+		// dismiss modal
 		cleanUpForm("frmCreateOpening");
 		cleanUpForm("frmEditOpening");
+	});
 
-		// manually clear modal values
-		//$("#new_OpeningID").val(0);
-		//$("#new_OpeningLabel").text('');
-		//$("#new_OpeningAction").val('');
-		//$("#frmCreateOpening textarea").val('');
-		//$("#frmCreateOpening input[type=text]").val('');
-		//$("#frmCreateOpening input[type=radio]").attr("checked", false);
-		//$("#frmCreateOpening select").val(-1);
+
+	// ***************************
+	// Cancel and cleanup (helper function)
+	// ***************************
+
+	function cleanUpForm(formName) {
+		// reset form (using jquery validate plugin)
+		// $('#' + formName).validate().resetForm();
+
+		// reset form (using standard jquery)
+		$('#' + formName).trigger("reset");
+
+		// manually remove input highlights
+		// $(".form-group").removeClass('success').removeClass('error');
 
 		// reset submit button (avoid disabled state)
 		$("#btnNewOpeningSubmit, #btnEditOpeningSubmit").button('reset');
-	});
-	// END: Cancel and cleanup
+	}
 
 });
