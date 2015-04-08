@@ -51,11 +51,11 @@
 		$s = FALSE;
 
 		if ($sheetIsDataIncoming) {
-			// postback
+			// purpose: POSTBACK
 			// 1) postback for brand new sheet (record not yet in db)
 			// 2) postback for edited sheet (record exists in db)
 
-			if (isset($_REQUEST["sheet"])) {
+			if (isset($_REQUEST["sheet"]) && is_numeric($_REQUEST["sheet"])) {
 				// populate fields based on DB record
 				$s = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
 			}
@@ -87,18 +87,20 @@
 				$s->updateDb();
 			}
 		}
-		else {
-			if (isset($_REQUEST["sheet"])) {
-				// use cases:
-				// 1) requested to edit existing sheet from link on another page (record exists in db)
+		elseif (isset($_REQUEST["sheet"]) && (is_numeric($_REQUEST["sheet"]))) {
+				// purpose: requested to edit existing sheet from link on another page (record exists in db)
 				$sheetIsDataIncoming = TRUE;
 				$s                   = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
-			}
+		}
+		else {
+			// purpose: create a new sheet from scratch; create a new sheet object simply so errors do not occur
+			$s = SUS_Sheet::createNewSheet($USER->user_id, $DB);
 		}
 
 
 		echo "<div id=\"content_container\">"; // begin: div#content_container
-		echo "<h5 class=\"small\"><a href=\"" . APP_ROOT_PATH . "/app_code/sheets_all.php\" title=\"" . ucfirst(util_lang('sheets_all')) . "\">" . ucfirst(util_lang('sheets_all')) . "</a>&nbsp;&gt;&nbsp;" . htmlentities($s->name, ENT_QUOTES, 'UTF-8') . "</h5>";
+		// breadcrumbs
+		echo "<h5 class=\"small\"><a href=\"" . APP_ROOT_PATH . "/app_code/sheets_all.php\" title=\"" . ucfirst(util_lang('sheets_all')) . "\">" . ucfirst(util_lang('sheets_all')) . "</a>&nbsp;&gt;&nbsp;" . ($s->name != '' ? htmlentities($s->name, ENT_QUOTES, 'UTF-8') : 'New Sheet') . "</h5>";
 
 
 		// ***************************
@@ -151,14 +153,14 @@
 								<!--DKC IMPORTANT (testing): set class to: 'tab-pane fade'-->
 								<div role="tabpanel" id="tabSheetInfo" class="tab-pane fade active in" aria-labelledby="tabSheetInfo">
 									<form action="<?php echo APP_ROOT_PATH; ?>/app_code/sheets_edit_one.php" id="frmEditSheet" name="frmEditSheet" class="form-group" role="form" method="post">
-										<input type="hidden" id="hiddenSheetID" name="sheet" value="<?php echo $s ? htmlentities($s->sheet_id, ENT_QUOTES, 'UTF-8') : 0; ?>">
+										<input type="hidden" id="hiddenSheetID" name="sheet" value="<?php echo $s ? htmlentities($s->sheet_id, ENT_QUOTES, 'UTF-8') : ''; ?>">
 										<input type="hidden" id="hiddenAction" name="hiddenAction" value="savesheet">
 
 										<div class="form-group">
 											<label for="inputSheetName" class="control-label">Sheet Name</label>
 
 											<div class="">
-												<input type="text" id="inputSheetName" name="inputSheetName" class="form-control input-sm" maxlength="255" placeholder="Signup sheet name" value="<?php echo $s ? htmlentities($s->name, ENT_QUOTES, 'UTF-8') : ''; ?>" />
+												<input type="text" id="inputSheetName" name="inputSheetName" class="form-control input-sm" maxlength="255" placeholder="Sheet name" value="<?php echo $s ? htmlentities($s->name, ENT_QUOTES, 'UTF-8') : ''; ?>" />
 											</div>
 										</div>
 

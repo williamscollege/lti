@@ -46,6 +46,7 @@
 		}
 
 		echo "<div id=\"content_container\">"; // begin: div#content_container
+		// breadcrumbs
 		echo "<h5 class=\"small\"><a href=\"" . APP_ROOT_PATH . "/app_code/sheet_openings_all.php\" title=\"" . ucfirst(util_lang('sheet_openings_all')) . "\">" . ucfirst(util_lang('sheet_openings_all')) . "</a>&nbsp;&gt;&nbsp;" . htmlentities($s->name, ENT_QUOTES, 'UTF-8') . "</h5>";
 		?>
 		<div class="container">

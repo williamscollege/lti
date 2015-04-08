@@ -23,7 +23,7 @@
 
 		public static function createNewSheet($owner_user_id, $dbConnection) {
 			return new SUS_Sheet([
-					'sheet_id'                  => 'NEW',
+//					'sheet_id'                  => 'NEW',
 					'created_at'                => util_currentDateTimeString_asMySQL(),
 					'updated_at'                => util_currentDateTimeString_asMySQL(),
 					'flag_delete'               => FALSE,

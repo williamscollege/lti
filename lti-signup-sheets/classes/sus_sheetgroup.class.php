@@ -26,9 +26,9 @@
 		/* static functions */
 
 		// static factory function to populate new object with desired base values
-		public static function createNewSheetgroupForUser($user_id, $name, $description, $dbconnection) {
+		public static function createNewSheetgroupForUser($user_id, $name, $description, $dbConnection) {
 			// 'sheetgroup_id', 'created_at', 'updated_at', 'flag_delete', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
-			$n = new SUS_Sheetgroup([
+			return new SUS_Sheetgroup([
 				'created_at'                 => util_currentDateTimeString_asMySQL(),
 				'updated_at'                 => util_currentDateTimeString_asMySQL(),
 				'flag_delete'                => 0,
@@ -38,8 +38,7 @@
 				'description'                => $description,
 				'max_g_total_user_signups'   => -1,
 				'max_g_pending_user_signups' => -1,
-				'DB'                         => $dbconnection]);
-			return $n;
+				'DB'                         => $dbConnection]);
 		}
 
 		public static function cmp($a, $b) {

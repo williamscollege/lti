@@ -1,16 +1,13 @@
 <?php
 	require_once(dirname(__FILE__) . '/head_ajax.php');
 
-	//		# tests
+	# 		debugging
 	//		$action        = isset($_REQUEST["ajax_Action"]) ? util_quoteSmart($_REQUEST["ajax_Action"]) : 0;
-	//		# output
 	//		$results['status']       = 'success';
 	//		$results['which_action'] = $action;
 	//		$results['html_output']  = 'smiling now';
-	//		util_prePrintR($_REQUEST); // debugging
-	//		# Return JSON array
-	//		echo json_encode($_REQUEST);
-	//		exit;
+	//		util_prePrintR($_REQUEST); exit;
+	//		echo json_encode($_REQUEST); exit; // # Return JSON array
 
 
 	#------------------------------------------------#
@@ -78,7 +75,7 @@
 		$results['html_output'] .= "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-name=\"" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-description=\"" . htmlentities($sheetgroup->description, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-max-total=\"" . htmlentities($sheetgroup->max_g_total_user_signups, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-max-pending=\"" . htmlentities($sheetgroup->max_g_pending_user_signups, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit group\">" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "</a></th><th class=\"col-sm-1 text-right\"><a class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-for-sheetgroup-id=\"" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-trash\"></i> Group</a>&nbsp;";
 		$results['html_output'] .= "</th></tr>";
 		$results['html_output'] .= "<tr><td class=\"col-sm-12\" colspan=\"2\">";
-		$results['html_output'] .= "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "&sheet=new\" class=\"btn btn-xs btn-success sus-add-sheet\" title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
+		$results['html_output'] .= "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "&sheet=new\" class=\"btn btn-xs btn-success\" title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
 		$results['html_output'] .= "</td></tr>";
 		$results['html_output'] .= "</tbody></table>";
 	}
@@ -123,44 +120,6 @@
 		if ($sg->matchesDb) {
 			$results['status'] = 'success';
 		}
-	}
-	//###############################################################
-	elseif ($action == 'add-sheet') {
-		$s = SUS_Sheet::getOneFromDb(['name' => $name], $DB);
-
-		# TODO this is NOT YET IMPLEMENTED... JUST EXAMPLE CODE BELOW...
-
-		if ($s->matchesDb) {
-			// error: matching record already exists
-			$results["notes"] = "matching record already exists";
-			echo json_encode($results);
-			exit;
-		}
-		$s->owner_user_id              = $ownerUserID;
-		$s->name                       = $name;
-		$s->description                = $description;
-		$s->max_g_total_user_signups   = $maxTotal;
-		$s->max_g_pending_user_signups = $maxPending;
-		$s->updated_at                 = date("Y-m-d H:i:s");
-
-		$s->updateDb();
-
-		# TODO Search for 'sheetgroup' and update where approprate to 'sheet'
-		# TODO NEED TO ENSURE THAT ADD Sheetgroup cannot add a new group with same name of pre-existing sheetgroup
-		$sheetgroup = SUS_Sheetgroup::getOneFromDb(['name' => $name], $DB);
-
-		// output
-		$results['status']       = 'success';
-		$results['which_action'] = 'add-sheetgroup';
-		$results['html_output']  = '';
-		$results['html_output'] .= "<table class=\"table table-condensed table-bordered table-hover\"><tbody>";
-		$results['html_output'] .= "<tr class=\"info\"><th class=\"col-sm-11\">";
-		$results['html_output'] .= "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" class=\"sus-edit-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-name=\"" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-description=\"" . htmlentities($sheetgroup->description, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-max-total=\"" . htmlentities($sheetgroup->max_g_total_user_signups, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-max-pending=\"" . htmlentities($sheetgroup->max_g_pending_user_signups, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit group\">" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "</a></th><th class=\"col-sm-1 text-right\"><a class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-for-sheetgroup-id=\"" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-trash\"></i> Group</a>&nbsp;";
-		$results['html_output'] .= "</th></tr>";
-		$results['html_output'] .= "<tr><td class=\"col-sm-12\" colspan=\"2\">";
-		$results['html_output'] .= "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" class=\"btn btn-xs btn-success sus-add-sheet\" title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
-		$results['html_output'] .= "</td></tr>";
-		$results['html_output'] .= "</tbody></table>";
 	}
 	//###############################################################
 	elseif ($action == 'delete-sheet') {
