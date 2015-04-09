@@ -67,6 +67,7 @@ $(document).ready(function () {
 		// alert('1) ' + "\n" + sheetgroup_id + "\n" + sheetgroup_name + "\n" + sheetgroup_description + "\n" + sheetgroup_max_total + "\n" + sheetgroup_max_pending);
 	});
 
+	// form validation
 	var validateAjaxSheetgroup = $('#frmAjaxSheetgroup').validate({
 		rules: {
 			ajaxSheetgroupName: {
@@ -89,8 +90,9 @@ $(document).ready(function () {
 		submitHandler: function (form) {
 			var formName = $("#frmAjaxSheetgroup").attr('name');		// get name from the form element
 
-			// show loading text (button)
-			$("#btnAjaxSheetgroupSubmit").button('loading'); // bootstrap button label method
+			// show button loading text (bootstrap)
+			$("#btnAjaxSheetgroupSubmit").button('loading');
+
 			var action = $('#' + formName + ' #ajaxSheetgroupAction').val();
 			var owner_user_id = $('#' + formName + ' #ajaxOwnerUserID').val();
 			// ensure that add sheetgroup has integer value, instead of no value

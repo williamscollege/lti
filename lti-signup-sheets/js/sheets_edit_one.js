@@ -34,16 +34,97 @@ $(document).ready(function () {
 	}
 
 
-	// TODO - Replace this with pre-bundled jquery validation.js
 	// form validation
-	$("#btnSheetInfoSubmit").click(function (event) {
-		if (!($("#inputSheetName").val().match(/\S/))) {
-			alert("Missing Information - You must enter a name for the sheet");
-			$("#inputSheetName").focus();
-			return false;
+	$('#frmEditSheet').validate({
+		rules: {
+			inputSheetName: {
+				required: true,
+				minlength: 2
+			},
+			inputSheetDateBegin: {
+				required: true,
+				date: true
+				//, dateLessThanOrEqual: true
+				//, dateLessThanOrEqual : '#inputSheetDateEnd'
+			},
+			inputSheetDateEnd: {
+				required: true,
+				date: true
+			}
+		},
+		messages: {
+			inputSheetName: "Please enter a sheet name"
+		},
+		highlight: function (element) {
+			$(element).closest('.form-group').removeClass('success').addClass('error'); //.removeClass('success')
+		},
+		//invalidHandler: function (e, validator) {
+		//	var errors = validator.numberOfInvalids();
+		//	if (errors) {
+		//		var message = errors == 1
+		//			? 'You missed 1 field. It has been highlighted below'
+		//			: 'You missed ' + errors + ' fields.  They have been highlighted below';
+		//		$("div.error span").html(message);
+		//		$("div.error").show();
+		//	}
+		//	else {
+		//		$("div.error").hide();
+		//	}
+		//},
+		success: function (element) {
+			element
+			//.text('OK!').addClass('valid')
+			//.closest('.form-group').addClass('success').removeClass('error');//.addClass('success');
+		},
+		submitHandler: function (form) {
+			// show button loading text (bootstrap)
+			$("#btnSheetInfoSubmit").button('loading');
+
+			// submit form (submit form using Javascript instead of jQuery to avoid "Too much recursion" error)
+			form.submit();
 		}
-		return true;
 	});
+
+	// BEGIN TEST
+	// add custom validator method
+	//jQuery.validator.addMethod("dateLessThanOrEqual",
+	//	function (value, element) {
+	//		if ($("#inputSheetDateEnd").val() === "")
+	//			return true;
+	//
+	//		console.log(value, element, $("#inputSheetDateEnd").val());
+	//		//if (new Date(value) <= new Date($(params).val())) {
+	//		//	//alert('temp stop');
+	//		//	return new Date(value) <= new Date($(params).val());
+	//		//}
+	//		if (!/Invalid|NaN/.test(new Date(value))) {
+	//			return new Date(value) <= new Date($("#inputSheetDateEnd").val());
+	//		}
+	//
+	//		return isNaN(value) && isNaN($("#inputSheetDateEnd").val())
+	//			|| (Number(value) <= Number($("#inputSheetDateEnd").val()));
+	//	}, 'Must be less than or equal to end date.');
+
+	//// add custom validator method
+	//jQuery.validator.addMethod("dateLessThanOrEqual",
+	//	function (value, element, params) {
+	//		if ($(params).val() === "")
+	//			return true;
+	//
+	//		console.log(value, element, params, $(params).val());
+	//		//if (new Date(value) <= new Date($(params).val())) {
+	//		//	//alert('temp stop');
+	//		//	return new Date(value) <= new Date($(params).val());
+	//		//}
+	//		if (!/Invalid|NaN/.test(new Date(value))) {
+	//			return new Date(value) <= new Date($(params).val());
+	//		}
+	//
+	//		return isNaN(value) && isNaN($(params).val())
+	//			|| (Number(value) <= Number($(params).val()));
+	//	}, 'Must be less than or equal to end date.');
+
+	// END TEST
 
 
 	// ***************************

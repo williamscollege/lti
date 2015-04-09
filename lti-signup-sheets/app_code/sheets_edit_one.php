@@ -201,9 +201,9 @@
 											<label for="inputSheetDateBegin" class="control-label">Date Span: Active from</label>
 
 											<div class="form-inline">
-												<input type="text" id="inputSheetDateBegin" name="inputSheetDateBegin" class="form-control input-sm" maxlength="10" placeholder="mm/dd/yyyy" value="<?php echo $s ? date_format(new DateTime($s->begin_date), "m/d/Y") : ''; ?>" />
+												<input type="text" id="inputSheetDateBegin" name="inputSheetDateBegin" class="form-control input-sm wms-custom-datepicker" readonly maxlength="10" placeholder="mm/dd/yyyy" value="<?php echo $s ? date_format(new DateTime($s->begin_date), "m/d/Y") : ''; ?>" />
 												<strong>to</strong>
-												<input type="text" id="inputSheetDateEnd" name="inputSheetDateEnd" class="form-control input-sm" maxlength="10" placeholder="mm/dd/yyyy" value="<?php echo $s ? date_format(new DateTime($s->end_date), "m/d/Y") : ''; ?>" />
+												<input type="text" id="inputSheetDateEnd" name="inputSheetDateEnd" class="form-control input-sm wms-custom-datepicker" readonly maxlength="10" placeholder="mm/dd/yyyy" value="<?php echo $s ? date_format(new DateTime($s->end_date), "m/d/Y") : ''; ?>" />
 											</div>
 										</div>
 
@@ -275,6 +275,7 @@
 												</button>
 												<a href="<?php echo APP_ROOT_PATH; ?>/app_code/sheets_all.php" id="btnSheetInfoCancel" class="btn btn-default btn-link btn-cancel">Cancel</a>
 											</div>
+											<div class="error"></div>
 										</div>
 									</form>
 								</div>

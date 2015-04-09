@@ -598,7 +598,7 @@
 								<label for="openingUntilControls" class="col-sm-4 control-label">Until?</label>
 
 								<div class="col-sm-8">
-									<input type="text" id="new_OpeningUntilDate" name="new_OpeningUntilDate" class="form-inline" maxlength="10" placeholder="mm/dd/yyyy" value="" />
+									<input type="text" id="new_OpeningUntilDate" name="new_OpeningUntilDate" class="form-inline wms-custom-datepicker" readonly  maxlength="10" placeholder="mm/dd/yyyy" value="" />
 								</div>
 							</div>
 						</div>

@@ -447,8 +447,17 @@ $(document).ready(function () {
 	});
 
 	$("#btnEditOpeningSubmit").click(function () {
-		// TODO -- DKC form validation: see russiansisters census_add.php
-		$("#frmEditOpening").submit(); // efficiency: trigger the native submit event to avoid re-validating the form
+		// show button loading text (bootstrap)
+		$("#btnEditOpeningSubmit").button('loading');
+
+		// submit form
+		$("#frmEditOpening").submit();
+	});
+
+
+	$("#btnNewOpeningSubmit").click(function () {
+		// show button loading text (bootstrap)
+		$("#btnNewOpeningSubmit").button('loading');
 	});
 
 
@@ -462,8 +471,7 @@ $(document).ready(function () {
 			return false;
 		}
 
-		// create begin time string
-		// create end time string
+		// create time strings
 		var btime = valsToTimeString($("#new_OpeningBeginTimeHour").val(), $("#new_OpeningBeginTimeMinute").val(), $("#new_OpeningBeginTime_AMPM").val());
 		var etime = valsToTimeString($("#new_OpeningEndTimeHour").val(), $("#new_OpeningEndTimeMinute").val(), $("#new_OpeningEndTimeMinute_AMPM").val());
 
