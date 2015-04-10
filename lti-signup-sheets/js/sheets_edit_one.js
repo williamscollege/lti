@@ -86,8 +86,8 @@ $(document).ready(function () {
 	});
 
 	// BEGIN TEST
-	// add custom validator method
-	//jQuery.validator.addMethod("dateLessThanOrEqual",
+	// TODO - add custom addMethod validation for datebegin <= dateend (sheets_edit_one.php)
+	// jQuery.validator.addMethod("dateLessThanOrEqual",
 	//	function (value, element) {
 	//		if ($("#inputSheetDateEnd").val() === "")
 	//			return true;

@@ -72,6 +72,10 @@
 				exit;
 			}
 
+			/* TODO - Low priority issue: Closed concern about submitting invalid date formats.
+			 * While it's possible, there are enough client side HTML and JS measures in place to provide reasonable help to users,
+			 * plus an invalid format will only create an ugly error message w/o updating the DB. So, until it becomes necessary, this issue is tabled. */
+
 			$s->updated_at               = date("Y-m-d H:i:s");
 			$s->owner_user_id            = $USER->user_id;
 			$s->sheetgroup_id            = $_REQUEST["selectSheetgroupID"];
@@ -219,7 +223,7 @@
 											<label for="inputSheetDateBegin" class="control-label">Date Span: Active from</label>
 
 											<div class="form-inline">
-												<input type="text" id="inputSheetDateBegin" name="inputSheetDateBegin" class="form-control input-sm wms-custom-datepicker" readonly maxlength="10" placeholder="mm/dd/yyyy" value="<?php echo $s ? date_format(new DateTime($s->begin_date), "m/d/Y") : ''; ?>" />
+												<input type="text" id="inputSheetDateBegin" name="inputSheetDateBegin" class="form-control input-sm wms-custom-datepicker"  maxlength="10" placeholder="mm/dd/yyyy" value="<?php echo $s ? date_format(new DateTime($s->begin_date), "m/d/Y") : ''; ?>" />
 												<strong>to</strong>
 												<input type="text" id="inputSheetDateEnd" name="inputSheetDateEnd" class="form-control input-sm wms-custom-datepicker" readonly maxlength="10" placeholder="mm/dd/yyyy" value="<?php echo $s ? date_format(new DateTime($s->end_date), "m/d/Y") : ''; ?>" />
 											</div>
