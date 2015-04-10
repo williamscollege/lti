@@ -64,7 +64,13 @@
 				$s = SUS_Sheet::createNewSheet($USER->user_id, $DB);
 			}
 
-			// util_prePrintR($_REQUEST); // debugging
+			// util_prePrintR($s); // debugging
+			if (!$s->matchesDb) {
+				// error
+				util_displayMessage('error', 'Failed to create or retrieve sheet.');
+				require_once(dirname(__FILE__) . '/../foot.php');
+				exit;
+			}
 
 			$s->updated_at               = date("Y-m-d H:i:s");
 			$s->owner_user_id            = $USER->user_id;
@@ -83,8 +89,20 @@
 			$s->flag_alert_admin_signup   = util_getValueForCheckboxRequestData('checkAlertAdminSignup');
 			$s->flag_alert_admin_imminent = util_getValueForCheckboxRequestData('checkAlertAdminImminent');
 
-			if (!$s->matchesDb) {
+			// validation
+			if ($s->begin_date > $s->end_date) {
+				// error
+				util_displayMessage('error', 'The "Date Span" expects a "from" date less than or equal to the "to" date. Please correct and re-submit.');
+			}
+			else {
 				$s->updateDb();
+
+				if (!$s->matchesDb) {
+					// error
+					util_displayMessage('error', 'Failed to update sheet.');
+					require_once(dirname(__FILE__) . '/../foot.php');
+					exit;
+				}
 			}
 		}
 		elseif (isset($_REQUEST["sheet"]) && (is_numeric($_REQUEST["sheet"]))) {

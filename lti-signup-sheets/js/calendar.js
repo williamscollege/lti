@@ -454,7 +454,6 @@ $(document).ready(function () {
 		$("#frmEditOpening").submit();
 	});
 
-
 	$("#btnNewOpeningSubmit").click(function () {
 		// show button loading text (bootstrap)
 		$("#btnNewOpeningSubmit").button('loading');
