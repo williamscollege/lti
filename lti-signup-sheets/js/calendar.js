@@ -205,6 +205,8 @@ $(document).ready(function () {
 	}
 
 	function setupModalForm_CreateOpening(forDateYYYYMMDD) {
+		// reset form values in modal (solution for: the ESC key will dismiss a modal but fails to clear values per next usage)
+		cleanUpForm("frmCreateOpening");
 
 		var forDateAry = forDateYYYYMMDD.split('-');
 		var forDateClean = forDateAry[1] + '/' + forDateAry[2] + '/' + forDateAry[0];
@@ -239,9 +241,6 @@ $(document).ready(function () {
 		// hide the stuff that should be hidden
 		$('#link_hide_duration').click();
 		$('#link_hide_optional_opening_fields').click();
-
-		// reset form values in modal (solution for: the ESC key will dismiss a modal but fails to clear values per next usage)
-		$('#frmCreateOpening').click();
 	}
 
 	function resetSignupFields() {
@@ -457,6 +456,36 @@ $(document).ready(function () {
 	$("#btnNewOpeningSubmit").click(function () {
 		// show button loading text (bootstrap)
 		$("#btnNewOpeningSubmit").button('loading');
+
+
+/*		// theoretical idea... half baked. probably use a standard
+		if($("INPUT[name=new_OpeningRepeatRate]:checked").val() > 1) {
+			var dateAry = $("#new_OpeningDateBegin").val().split('-');
+			var origDate = dateAry[1] + '/' + dateAry[2] + '/' + dateAry[0];
+			// alert("origDate = " + origDate + ", new_OpeningUntilDate = " + $("#new_OpeningUntilDate").val() + ", radio val > 1");
+
+			if(origDate == $("#new_OpeningUntilDate").val()){
+				// obviously, this would also need to STOP the form action from submitting.
+				bootbox.dialog({
+					title: "Did you forget to update the 'Until' date?",
+					message: "If you want to repeat openings, you must also select a future date.<br /><br />Click 'Continue' to proceed, or 'Cancel' to pause and reset the date.",
+					buttons: {
+						success: {
+							label: "Continue",
+							className: "btn-success"
+						},
+						danger: {
+							label: "Cancel",
+							className: "btn btn-default btn-link btn-cancel"//,
+							//callback: function() {
+							//	Example.show("uh oh, look out!");
+							//}
+						}
+					}
+				});
+			}
+		}*/
+
 	});
 
 
@@ -540,9 +569,9 @@ $(document).ready(function () {
 		resetSignupFields();
 	});
 
-	// Cancel buttons
+	// Cancel button: dismiss modal
 	$('#btnNewOpeningCancel, #btnEditOpeningCancel').click(function () {
-		// dismiss modal
+		// reset form
 		cleanUpForm("frmCreateOpening");
 		cleanUpForm("frmEditOpening");
 	});

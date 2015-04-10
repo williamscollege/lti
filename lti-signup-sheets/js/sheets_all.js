@@ -124,7 +124,7 @@ $(document).ready(function () {
 				},
 				dataType: 'json',
 				success: function (data) {
-					// dismiss modal and reset form
+					// Cancel button: dismiss modal
 					$("#btnAjaxSheetgroupCancel").click();
 
 					if (data.status == 'success') {
@@ -170,9 +170,9 @@ $(document).ready(function () {
 		}
 	});
 
-	// Cancel button
+	// Cancel button: dismiss modal
 	$('#btnAjaxSheetgroupCancel').click(function () {
-		// dismiss modal
+		// reset form
 		cleanUpForm("frmAjaxSheetgroup");
 	});
 
