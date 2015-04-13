@@ -437,12 +437,21 @@ $(document).ready(function () {
 		$("#repeatWeekdayChooser").show();
 		$("#repeatMonthdayChooser").hide();
 		$("#repeatUntilDate").show();
+		// add visual highlight to label as a "reminder"
+		$("#repeatUntilDate LABEL").addClass('bg-danger');
 	});
 
 	$("#radioOpeningRepeatRate3").click(function (event) {
 		$("#repeatWeekdayChooser").hide();
 		$("#repeatMonthdayChooser").show();
 		$("#repeatUntilDate").show();
+		// add visual highlight to label as a "reminder"
+		$("#repeatUntilDate LABEL").addClass('bg-danger');
+	});
+
+	// remove visual highlight from label
+	$("#new_OpeningUntilDate").click(function(){
+		$("#repeatUntilDate LABEL").removeClass('bg-danger');
 	});
 
 	$("#btnEditOpeningSubmit").click(function () {
@@ -456,36 +465,6 @@ $(document).ready(function () {
 	$("#btnNewOpeningSubmit").click(function () {
 		// show button loading text (bootstrap)
 		$("#btnNewOpeningSubmit").button('loading');
-
-
-/*		// theoretical idea... half baked. probably use a standard
-		if($("INPUT[name=new_OpeningRepeatRate]:checked").val() > 1) {
-			var dateAry = $("#new_OpeningDateBegin").val().split('-');
-			var origDate = dateAry[1] + '/' + dateAry[2] + '/' + dateAry[0];
-			// alert("origDate = " + origDate + ", new_OpeningUntilDate = " + $("#new_OpeningUntilDate").val() + ", radio val > 1");
-
-			if(origDate == $("#new_OpeningUntilDate").val()){
-				// obviously, this would also need to STOP the form action from submitting.
-				bootbox.dialog({
-					title: "Did you forget to update the 'Until' date?",
-					message: "If you want to repeat openings, you must also select a future date.<br /><br />Click 'Continue' to proceed, or 'Cancel' to pause and reset the date.",
-					buttons: {
-						success: {
-							label: "Continue",
-							className: "btn-success"
-						},
-						danger: {
-							label: "Cancel",
-							className: "btn btn-default btn-link btn-cancel"//,
-							//callback: function() {
-							//	Example.show("uh oh, look out!");
-							//}
-						}
-					}
-				});
-			}
-		}*/
-
 	});
 
 
