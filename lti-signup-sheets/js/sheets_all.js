@@ -63,8 +63,6 @@ $(document).ready(function () {
 		$("#ajaxSheetgroupDescription").val(sheetgroup_description);
 		$("#ajaxSheetgroupMaxTotal").val(sheetgroup_max_total);
 		$("#ajaxSheetgroupMaxPending").val(sheetgroup_max_pending);
-
-		// alert('1) ' + "\n" + sheetgroup_id + "\n" + sheetgroup_name + "\n" + sheetgroup_description + "\n" + sheetgroup_max_total + "\n" + sheetgroup_max_pending);
 	});
 
 	// form validation
@@ -123,6 +121,9 @@ $(document).ready(function () {
 					ajax_MaxPending: sheetgroup_max_pending
 				},
 				dataType: 'json',
+				error: function (req, textStatus, err) {
+					susUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
+				},
 				success: function (data) {
 					// Cancel button: dismiss modal
 					$("#btnAjaxSheetgroupCancel").click();
@@ -131,18 +132,14 @@ $(document).ready(function () {
 						// remove error messages
 						$('DIV.alert-danger').remove();
 
-						//alert(data.which_action); // debugging
-
 						// inject updates back into the DOM
 						if (data.which_action == 'add-sheetgroup') {
 							// * Add Sheetgroup *
-
 							// update visible UI
 							$("#container-add-new-group").before(data.html_output);
 						}
 						else if (data.which_action == 'edit-sheetgroup') {
 							// * Edit Sheetgroup *
-
 							// update data attributes
 							$("#btn-edit-sheetgroup-id-" + sheetgroup_id).attr("data-for-sheetgroup-id", sheetgroup_id);
 							$("#btn-edit-sheetgroup-id-" + sheetgroup_id).attr("data-for-sheetgroup-name", sheetgroup_name);
@@ -155,15 +152,12 @@ $(document).ready(function () {
 						}
 						else {
 							// error message
-							// TODO - proper error msg needed
-							$("#DKCTEST").text("<div><p>AJAX ERROR HERE!</p></div>");
+							susUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
 						}
 					}
 					else {
 						// error message
-						// TODO - proper error msg needed
-						$("#DKCTEST").text("<div><p>AJAX ERROR HERE!</p></div>");
-						//$("UL#displayAllSheetgroups").after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> A record with that same name already exists in database.</div>');
+						susUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
 					}
 				}
 			});

@@ -15,6 +15,7 @@ $(document).ready(function () {
 	$('#page_alert_div').hide();
 });
 
+
 // ***************************
 // helper functions
 // ***************************
@@ -43,17 +44,22 @@ function showConfirmBox(ary) {
 						},
 						dataType: 'json',
 						// TODO ? - remove textStatus and jqhdr ? unused?
+						// TODO --  error: function (req, textStatus, err) {
+						error: function (ajxdata, textStatus, jqhdr) {
+							updateDOM(ary, false, ajxdata);
+						},
+						// TODO ? - remove textStatus and jqhdr ? unused?
 						success: function (ajxdata, textStatus, jqhdr) {
-							//console.log('inside of success: ajxdata array is...');
-							//console.dir(ajxdata);
+							//console.dir(ary);
+							console.dir(ajxdata);
 							if (ajxdata.status == 'success') {
 								// remove element
-								updateDOM(ary['ajax_action'], true, ajxdata);
-								//updateDOM(ary, true, ajxdata); // pass entire array instead of just one element
+								// TODO clarify, fix or remove
+								updateDOM(ary, true, ajxdata); // pass entire array instead of just one element
 							}
 							else {
 								// error message
-								updateDOM(ary['ajax_action'], false, ajxdata);
+								updateDOM(ary, false, ajxdata);
 							}
 						}
 					});
@@ -94,9 +100,9 @@ function helper_Remove_DOM_Elements(openingID) {
 	}
 }
 
-function updateDOM(action, ret, data) {
-	// console.dir(action);
-	if (action == 'delete-sheetgroup') {
+function updateDOM(action_ary, ret, data) {
+	// console.dir(action_ary);
+	if (action_ary.ajax_action == 'delete-sheetgroup') {
 		if (ret) {
 			// show status
 			susUtil_setTransientAlert('success', 'Saved');
@@ -105,10 +111,10 @@ function updateDOM(action, ret, data) {
 		}
 		else {
 			// error message
-			$("#btn-edit-sheetgroup-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+			susUtil_setTransientAlert('error', 'Failed: No action taken: ' + data.notes);
 		}
 	}
-	else if (action == 'delete-sheet') {
+	else if (action_ary.ajax_action == 'delete-sheet') {
 		if (ret) {
 			// show status
 			susUtil_setTransientAlert('success', 'Saved');
@@ -117,10 +123,10 @@ function updateDOM(action, ret, data) {
 		}
 		else {
 			// error message
-			$("#btn-edit-sheet-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+			susUtil_setTransientAlert('error', 'Failed: No action taken: ' + data.notes);
 		}
 	}
-	else if (action == 'delete-opening') {
+	else if (action_ary.ajax_action == 'delete-opening') {
 		if (ret) {
 			// show status
 			susUtil_setTransientAlert('success', 'Saved');
@@ -182,10 +188,10 @@ function updateDOM(action, ret, data) {
 		}
 		else {
 			// error message
-			susUtil_setTransientAlert('error', data.notes);
+			susUtil_setTransientAlert('error', 'Failed: No action taken: ' + data.notes);
 		}
 	}
-	else if (action == 'delete-signup') {
+	else if (action_ary.ajax_action == 'delete-signup') {
 		if (ret) {
 			// show status
 			susUtil_setTransientAlert('success', 'Saved');
@@ -244,20 +250,19 @@ function updateDOM(action, ret, data) {
 		}
 		else {
 			// error message
-			susUtil_setTransientAlert('error', 'Failed: No matching record found in database.');
+			susUtil_setTransientAlert('error', 'Failed: No action taken: ' + data.notes);
 		}
 	}
-	else if (action == 'delete-signup-from-edit-opening-modal') {
+	else if (action_ary.ajax_action == 'delete-signup-from-edit-opening-modal') {
 		if (ret) {
 			// show status
 			susUtil_setTransientAlert('success', 'Saved');
-			// console.dir(data);
 			// fetch count of remaining LI elements within this UL
 			GLOBAL_calendar_fetchSignupsforOpening(GLOBAL_confirmHandlerReference);
 		}
 		else {
 			// error message
-			$("#btn-remove-signup-id-" + GLOBAL_confirmHandlerData).after('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> No matching record was found in the database.</div>');
+			susUtil_setTransientAlert('error', 'Failed: No action taken: ' + data.notes);
 		}
 	}
 }
@@ -269,7 +274,6 @@ function appRootPath() {
 
 // REQUIRES: a div of id page_alert_div
 function susUtil_setTransientAlert(alertType, alertMessage) {
-
 	// show the pre-existing alert button in DOM
 	$('#page_alert_div').show();
 
@@ -291,11 +295,6 @@ function susUtil_setTransientAlert(alertType, alertMessage) {
 	setTimeout(function () {
 		$('#page_alert_div').hide();
 	}, 5000);
-
-	// Note: This issue seems to be resolved: how to queue multiple rapidly clicked ajax actions and have them all fire and report back
-	//.queue(function() {
-	//		$( this ).toggleClass( "red" ).dequeue();
-	//	})
 }
 
 
@@ -308,6 +307,4 @@ function randomString(strSize) {
 
 	return text;
 }
-
-//});
 

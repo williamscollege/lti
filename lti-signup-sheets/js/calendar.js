@@ -450,7 +450,7 @@ $(document).ready(function () {
 	});
 
 	// remove visual highlight from label
-	$("#new_OpeningUntilDate").click(function(){
+	$("#new_OpeningUntilDate").click(function () {
 		$("#repeatUntilDate LABEL").removeClass('bg-danger');
 	});
 
