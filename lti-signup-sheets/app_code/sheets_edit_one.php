@@ -58,6 +58,13 @@
 			if (isset($_REQUEST["sheet"]) && is_numeric($_REQUEST["sheet"])) {
 				// populate fields based on DB record
 				$s = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
+
+				if (!$s->matchesDb) {
+					// error
+					util_displayMessage('error', 'Failed to create or retrieve sheet.');
+					require_once(dirname(__FILE__) . '/../foot.php');
+					exit;
+				}
 			}
 			else {
 				// create new sheet
@@ -65,12 +72,6 @@
 			}
 
 			// util_prePrintR($s); // debugging
-			if (!$s->matchesDb) {
-				// error
-				util_displayMessage('error', 'Failed to create or retrieve sheet.');
-				require_once(dirname(__FILE__) . '/../foot.php');
-				exit;
-			}
 
 			/* TODO - Low priority issue: Not a present concern about submitting invalid date format (i.e. 99/08/9999).
 			 * While it's possible, there are enough client side HTML and JS measures in place to provide reasonable help to users,

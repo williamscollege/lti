@@ -278,9 +278,6 @@ $(document).ready(function () {
 				else {
 					// error message
 					susUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
-					// console.dir(data);
-					// console.dir(textStatus);
-					// console.dir(err);
 				}
 			}
 			//, complete: function(req,textStatus) {

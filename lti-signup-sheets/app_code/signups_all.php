@@ -164,7 +164,7 @@
 
 										// PANEL 1: "My Signups..."
 										if (count($USER->signups_all) == 0) {
-											echo "<div class='bg-warning'>You have not yet signed up for any sheet openings.<br />To sign-up, click on &quot;My Available Openings&quot; (above).</div>";
+											echo "<div class='bg-info'>You have not yet signed up for any sheet openings.<br />To sign-up, click on &quot;Available Openings&quot; (above).</div>";
 										}
 										else {
 											echo '<div id="container-my-signups">' . "\n";
@@ -238,7 +238,7 @@
 
 										// PANEL 2: "Sign-ups on my Sheets..."
 										if (count($USER->signups_on_my_sheets) == 0) {
-											echo "<div class='bg-warning'>No one has signed up on your sheets.</div>";
+											echo "<div class='bg-info'>No one has signed up on your sheets.</div>";
 										}
 										else {
 											echo '<div id="container-others-signups">' . "\n";

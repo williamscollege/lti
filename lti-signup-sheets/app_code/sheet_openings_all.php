@@ -19,7 +19,7 @@
 		if (count($USER->sheet_openings_all) == 0) {
 			echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
 			echo "<tr class=\"\">";
-			echo "<th class=\"col-sm-6 bg-warning\">There are no sheets on which you can sign up.</th>";
+			echo "<th class=\"col-sm-6 bg-info\">There are no sheets on which you can sign up.</th>";
 			echo "</tr>";
 			echo "</table>";
 		}

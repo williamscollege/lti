@@ -43,23 +43,18 @@ function showConfirmBox(ary) {
 							'ajax_Custom_Data': $("input[name='custom_user_value']:checked").val() // custom value, currently only from ".sus-delete-opening" (calendar.js)
 						},
 						dataType: 'json',
-						// TODO ? - remove textStatus and jqhdr ? unused?
-						// TODO --  error: function (req, textStatus, err) {
-						error: function (ajxdata, textStatus, jqhdr) {
-							updateDOM(ary, false, ajxdata);
+						error: function (data) {
+							updateDOM(ary, false, data);
 						},
-						// TODO ? - remove textStatus and jqhdr ? unused?
-						success: function (ajxdata, textStatus, jqhdr) {
-							//console.dir(ary);
-							console.dir(ajxdata);
-							if (ajxdata.status == 'success') {
+						success: function (data) {
+							// console.dir(data);
+							if (data.status == 'success') {
 								// remove element
-								// TODO clarify, fix or remove
-								updateDOM(ary, true, ajxdata); // pass entire array instead of just one element
+								updateDOM(ary, true, data);
 							}
 							else {
 								// error message
-								updateDOM(ary, false, ajxdata);
+								updateDOM(ary, false, data);
 							}
 						}
 					});
@@ -241,10 +236,10 @@ function updateDOM(action_ary, ret, data) {
 
 			// restore default text if no signups remain in either container
 			if ($('#container-my-signups .list-signups').length == 0) {
-				$('#container-my-signups').html("<div class='bg-warning'>You have not yet signed up for any sheet openings.<br />To sign-up, click on &quot;My Available Openings&quot; (above).</div>");
+				$('#container-my-signups').html("<div class='bg-info'>You have not yet signed up for any sheet openings.<br />To sign-up, click on &quot;Available Openings&quot; (above).</div>");
 			}
 			if ($('#container-others-signups .list-signups').length == 0) {
-				$('#container-others-signups').html("<div class='bg-warning'>No one has signed up on your sheets.</div>");
+				$('#container-others-signups').html("<div class='bg-info'>No one has signed up on your sheets.</div>");
 			}
 			// console.log('container-my-signups = ' + $('#container-my-signups .list-signups').length + ', container-others-signups = ' + $('#container-others-signups .list-signups').length);
 		}
