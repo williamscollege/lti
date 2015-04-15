@@ -1,6 +1,14 @@
 /*Williams Custom CSS*/
 
 /*=======================================
+Purpose: Format page minimally for use with the jquery-plugin "printarea"
+==========================================*/
+
+@media print {
+	i{display: none !important;}
+}
+
+/*=======================================
 Purpose: Global CSS Tweaks that are NOT an extension / modification of the bootstrap framework
 ==========================================*/
 
@@ -123,6 +131,9 @@ Purpose: Openings list styles
 
 /* placement for button near 'list openings': scroll to 'current date' */
 #scroll-to-todayish-openings {
+	margin: -94px 0 0 290px;
+}
+#panel-more-buttons {
 	margin: -94px 0 0 290px;
 }
 

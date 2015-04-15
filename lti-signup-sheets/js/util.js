@@ -13,6 +13,24 @@ $(document).ready(function () {
 	// create container to hold ajax messages; hide #page_alert_div
 	$('#content_container').prepend('<div id="page_alert_div" class="alert alert-dismissible small" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span id="page_alert_message"></span></div>');
 	$('#page_alert_div').hide();
+
+	// Enable PrintArea for Area1
+	$(".wmsPrintArea1").click(function () {
+		var options = {
+			mode: "iframe",
+			standard: "html5"
+		};
+		$("div.PrintArea.Area1").printArea([options]);
+	});
+
+	// Enable PrintArea for Area2
+	$(".wmsPrintArea2").click(function () {
+		var options = {
+			mode: "iframe",
+			standard: "html5"
+		};
+		$("div.PrintArea.Area2").printArea([options]);
+	});
 });
 
 

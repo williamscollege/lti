@@ -63,9 +63,11 @@
 	# ***** Bootstrap-Calendar: https://github.com/Serhioromano/bootstrap-calendar/releases (http://bootstrap-calendar.azurewebsites.net/)
 	define('PATH_BOOTSTRAP_CALENDAR_JS', APP_ROOT_PATH . '/js/bootstrap-calendar-master/js/calendar.min.js?rel=0.2.4&github_commit_date=20150223');
 	# ***** Underscore: http://jashkenas.github.io/underscore/ (underscore.js is required for 'bootstrap-calendar-master' plugin)
-	define('PATH_UNDERSCORE_JS', APP_ROOT_PATH . '/js/underscore/underscore-min.js?rel=1.8.2');
+	define('PATH_UNDERSCORE_JS', APP_ROOT_PATH . '/js/underscore/underscore-min.js?rel=1.8.3');
 	# ***** jQuery-Validation: http://jqueryvalidation.org/
 	define('PATH_JQUERY_VALIDATION_JS', APP_ROOT_PATH . '/js/jquery/plugins/jquery-validation/dist/jquery.validate.min.js?rel=1.13.1');
+	# ***** jquery-printarea: https://github.com/RitsC/PrintArea, http://plugins.jquery.com/PrintArea/
+	define('PATH_JQUERY_PRINTAREA_JS', APP_ROOT_PATH . '/js/jquery/plugins/jquery-printarea/demo/jquery.PrintArea.js?rel=2.4.0&github_commit_date=20141210');
 
 	# These are used in the automated tests.
 	define('TESTING_DB_SERVER','localhost');

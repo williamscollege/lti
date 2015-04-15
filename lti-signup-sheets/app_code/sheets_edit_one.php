@@ -111,9 +111,9 @@
 			}
 		}
 		elseif (isset($_REQUEST["sheet"]) && (is_numeric($_REQUEST["sheet"]))) {
-				// purpose: requested to edit existing sheet from link on another page (record exists in db)
-				$sheetIsDataIncoming = TRUE;
-				$s                   = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
+			// purpose: requested to edit existing sheet from link on another page (record exists in db)
+			$sheetIsDataIncoming = TRUE;
+			$s                   = SUS_Sheet::getOneFromDb(['sheet_id' => $_REQUEST["sheet"]], $DB);
 		}
 		else {
 			// purpose: create a new sheet from scratch; create a new sheet object simply so errors do not occur
@@ -532,9 +532,11 @@
 
 										<!-- Begin: List Openings -->
 										<div role="tabpanel" id="tabOpeningsList" class="tab-pane fade" aria-labelledby="tabOpeningsList">
-											<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-xs" title="go to next">go to
-												next</a>
-
+<!--											<div id="panel-more-buttons">-->
+<!--												<a href="#" class="wmsPrintArea1" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;-->
+<!--												<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-xs" title="go to next">go to next</a>-->
+<!--											</div>-->
+											<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-xs" title="go to next">go to next</a>
 											<div id="openings-list-container">
 
 												<?php

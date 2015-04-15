@@ -813,11 +813,16 @@
 								</div>
 
 								<!-- BEGIN COLUMN TWO -->
-								<div class="row col-sm-5 small">
+								<!-- Enable PrintArea for Area1 -->
+								<div class="row col-sm-5 small PrintArea Area1">
 									<div class="col-sm-11">
-										<div class="pull-right small signupSorters">Sort by:
-											<a href="#" id="signup_sort_by_last_name" title="Sort by last name">Last name</a> &#124;
-											<a href="#" id="signup_sort_by_signup_order" title="Sort by signup order">Signup order</a></div>
+										<div class="pull-right signupSorters">
+											<a href="#" class="wmsPrintArea1" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
+											<span class="small">Sort by:
+												<a href="#" id="signup_sort_by_last_name" title="Sort by last name">Last name</a> &#124;
+												<a href="#" id="signup_sort_by_signup_order" title="Sort by signup order">Signup order</a>
+											</span>
+										</div>
 										<h4 class="pull-left" id="signupHeader">Signups</h4>
 
 										<p class="small" style="clear: both;">Manager may override max signup limit</p>
