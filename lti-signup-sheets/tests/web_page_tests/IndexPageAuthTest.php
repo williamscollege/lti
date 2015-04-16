@@ -30,7 +30,7 @@
 
 			$this->assertFalse($this->setField('username', 'foo')); //$value
 			$this->assertFalse($this->setField('password', 'bar')); //$value
-			$this->assertPattern('/Signed in: \<a[^\>]*\>' . TESTINGUSER . '\<\/a\>/');
+			$this->assertPattern('/\<a[^\>]*\>' . TESTINGUSER . '\<\/a\>/');
 			$this->assertNoPattern('/Sign in failed/i');
 			$this->assertNoPattern('/warning/i');
 			$this->assertNoPattern('/error/i');
@@ -54,10 +54,10 @@
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);
 			$this->click('Sign in');
-			$this->assertPattern('/Signed in: \<a[^\>]*\>' . TESTINGUSER . '\<\/a\>/');
+			$this->assertPattern('/\<a[^\>]*\>' . TESTINGUSER . '\<\/a\>/');
 			$this->assertEltByIdHasAttrOfValue('submit_signout', 'value', new PatternExpectation('/Sign\s?out/i'));
 
-			//        echo $this->getBrowser()->getContent();
+			// echo $this->getBrowser()->getContent();
 
 			$this->clickSubmit('Sign out');
 

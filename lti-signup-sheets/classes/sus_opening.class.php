@@ -161,15 +161,17 @@
 		// usage: admin or managers of this sheet
 		public function renderAsHtmlOpeningWithFullControls($openings_per_group_ary = []) {
 			$this->cacheSignups();
-			$signedupUserIdsAry = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
+
+			// create hash of signup_user_id's
+			$signedupUserIds = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
 
 			// show text message if opening belongs to a group (opening_group_id)
 			// echo "opening_group_id=". $this->opening_group_id . ",cnt=" . $openings_per_group_ary[$this->opening_group_id] . "<br />";
-			$repeating_event = "";
+			$repeating_event     = "";
 			$repeating_data_attr = 1; // set default value, in event that
 			if (isset($openings_per_group_ary[$this->opening_group_id])) {
 				$repeating_data_attr = $openings_per_group_ary[$this->opening_group_id];
-				if ($openings_per_group_ary[$this->opening_group_id] > 1){
+				if ($openings_per_group_ary[$this->opening_group_id] > 1) {
 					$repeating_event = '&nbsp;<abbr title="Repeating opening" class="text-muted">repeats</abbr>';
 				}
 			}
@@ -178,7 +180,7 @@
 			$rendered .= '<a href="#" class="sus-edit-opening" data-opening-id="' . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . '" data-toggle="modal" data-target="#modal-edit-opening" title="Edit opening"><i class="glyphicon glyphicon-wrench"></i></a>';
 			$rendered .= '<a href="#" class="sus-delete-opening" data-opening-id="' . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . '" data-count-openings-in-group-id="' . $repeating_data_attr . '"  title="Delete Opening"><i class="glyphicon glyphicon-remove"></i></a>';
 			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-opening-id="' . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . '" data-toggle="modal" data-target="#modal-edit-opening" title="Sign up"><i class="glyphicon glyphicon-plus"></i></a>' . $repeating_event . '<br />';
-			$rendered .= $this->_renderHtml_END($signedupUserIdsAry, TRUE);
+			$rendered .= $this->_renderHtml_END($signedupUserIds, TRUE);
 
 			return $rendered;
 		}
@@ -186,8 +188,10 @@
 		// usage: ordinary users with permission to signup on this sheet
 		public function renderAsHtmlOpeningWithLimitedControls($UserId = 0) {
 			$this->cacheSignups();
-			$signedupUserIdsAry = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
-			$is_own_signup      = in_array($UserId, $signedupUserIdsAry);
+
+			// create hash of signup_user_id's
+			$signedupUserIds = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
+			$is_own_signup   = in_array($UserId, $signedupUserIds);
 
 			$rendered = $this->_renderHtml_BEGIN($is_own_signup);
 
@@ -217,7 +221,7 @@
 				$rendered .= '<br />';
 			}
 
-			$rendered .= $this->_renderHtml_END($signedupUserIdsAry);
+			$rendered .= $this->_renderHtml_END($signedupUserIds);
 
 			return $rendered;
 		}

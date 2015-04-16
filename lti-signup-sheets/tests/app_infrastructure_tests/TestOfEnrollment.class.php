@@ -68,14 +68,12 @@
 		function testEnrollmentRenderMinimal() {
 			$e = Enrollment::getOneFromDb(['enrollment_id' => 405], $this->DB);
 
-			$canonical = '<div class="rendered-object enrollment-render enrollment-render-minimal enrollment-render-405" data-for-enrollment="405" data-course_idstr="15F-ARTH-101-01">15F-ARTH-101-01</div>';
+			$canonical = '<div class="rendered-object" data-for-enrollment_id="405" data-course_idstr="15F-ARTH-101-01">15F-ARTH-101-01</div>';
 			$rendered  = $e->renderMinimal();
-			//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
 			$this->assertEqual($canonical, $rendered);
 
-			$canonical = '<div class="rendered-object enrollment-render enrollment-render-minimal enrollment-render-405" data-for-enrollment="405" data-course_idstr="15F-ARTH-101-01"><a href="' . APP_ROOT_PATH . '/app_code/enrollment.php?enrollment_id=405">15F-ARTH-101-01</a></div>';
+			$canonical = '<div class="rendered-object" data-for-enrollment_id="405" data-course_idstr="15F-ARTH-101-01"><a href="' . APP_ROOT_PATH . '/app_code/enrollment.php?enrollment_id=405">15F-ARTH-101-01</a></div>';
 			$rendered  = $e->renderMinimal(TRUE);
-			//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
 			$this->assertEqual($canonical, $rendered);
 		}
 

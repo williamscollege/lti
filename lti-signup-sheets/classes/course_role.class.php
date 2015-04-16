@@ -24,6 +24,7 @@
 		/* static functions */
 
 		public static function cmp($a, $b) {
+			// TODO - Currently returns course_roles ordered alphabetically by role 'name'. We may want to change this to sort by 'priority' when we implement in cacheCourseRoles()
 			# The most powerful system admin role is priority = 1; lowest anonymous/guest priority is X
 			if ($a->priority == $b->priority) {
 				if ($a->course_role_name == $b->course_role_name) {

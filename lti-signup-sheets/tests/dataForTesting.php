@@ -3,12 +3,11 @@
 	require_once(dirname(__FILE__) . '/../classes/auth_LDAP.class.php');
 
 	require_once(dirname(__FILE__) . '/../classes/ALL_CLASS_INCLUDES.php');
-	/*
-	This file contains a series of methods for creating known test data in a target database
-	*/
 
-	// NOTE !!!!!!!!!!!!!!!!!!!!
-	// Actions and Roles are pre-populated and fixed - there is no creation nor removal of test data for those tables
+	/*
+	 * This file contains a series of methods for creating known test data in a target database
+	 * NOTE: Course_roles are pre-populated and fixed - there is no creation nor removal of test data for those tables
+	*/
 
 	/*
 	function createTestData_XXXX($dbConn) {
@@ -196,7 +195,7 @@
 			(604, NOW(), NOW(), 0, 101, 502, 'Sheet 604', 'Sheet 604, Sheetgroup 502', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 1, 0, 0, 0, 0, 0),
 			(605, NOW(), NOW(), 0, 101, 503, 'Sheet 605', 'Sheet 605, Sheetgroup 503', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 1, 0, 0, 0, 0),
 			(606, NOW(), NOW(), 0, 102, 504, 'Sheet 606', 'Sheet 606, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 1, 0, 0, 0),
-			(607, NOW(), NOW(), 0, 102, 504, 'Sheet 607', 'Sheet 607, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 0, 1, 0, 0),
+			(607, NOW(), NOW(), 1, 102, 504, 'Sheet 607', 'Sheet 607, Sheetgroup 504', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 0, 1, 0, 0),
 			(608, NOW(), NOW(), 0, 103, 506, 'Sheet 608', 'Sheet 608, Sheetgroup 506', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 0, 0, 1, 0),
 			(609, NOW(), NOW(), 0, 104, 507, 'Sheet 609', 'Sheet 609, Sheetgroup 506', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 0, 0, 0, 1),
 			(610, NOW(), NOW(), 0, 109, 510, 'Sheet 610', 'Sheet 610, Sheetgroup 510', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 0, 0, 0, 0)
@@ -287,7 +286,7 @@
 			(905, NOW(), NOW(), 601, 'bygradyear', 18, '', 50),
 			(906, NOW(), NOW(), 601, 'byrole', 0, 'teacher', 60),
 			(907, NOW(), NOW(), 601, 'byhasaccount', 0, 'all', 60),
-			(908, NOW(), NOW(), 607, 'byuser', 0, 'mockUserJBond', 1),
+			(908, NOW(), NOW(), 607, 'adminbyuser', 0, 'mockUserJBond', 1),
 			(909, NOW(), NOW(), 608, 'adminbyuser', 0, 'mockUserJBond', 1),
 			(910, NOW(), NOW(), 608, 'adminbyuser', 0, 'tusr9', 1),
 			(911, NOW(), NOW(), 602, 'byrole', 0, 'teacher', 60),

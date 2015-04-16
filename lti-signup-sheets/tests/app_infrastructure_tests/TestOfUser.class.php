@@ -83,14 +83,12 @@
 		function testUserRenderMinimal() {
 			$u = User::getOneFromDb(['user_id' => 101], $this->DB);
 
-			$canonical = '<div class="rendered-object user-render user-render-minimal user-render-101" data-for-user="101" data-user_full_name="' . Auth_Base::$TEST_LNAME . ', ' . Auth_Base::$TEST_FNAME . '">' . Auth_Base::$TEST_LNAME . ', ' . Auth_Base::$TEST_FNAME . '</div>';
+			$canonical = '<div class="rendered-object" data-for-user_id="101" data-user_full_name="' . Auth_Base::$TEST_LNAME . ', ' . Auth_Base::$TEST_FNAME . '">' . Auth_Base::$TEST_LNAME . ', ' . Auth_Base::$TEST_FNAME . '</div>';
 			$rendered  = $u->renderMinimal();
-			//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
 			$this->assertEqual($canonical, $rendered);
 
-			$canonical = '<div class="rendered-object user-render user-render-minimal user-render-101" data-for-user="101" data-user_full_name="' . Auth_Base::$TEST_LNAME . ', ' . Auth_Base::$TEST_FNAME . '"><a href="' . APP_ROOT_PATH . '/app_code/user.php?user_id=101">' . Auth_Base::$TEST_LNAME . ', ' . Auth_Base::$TEST_FNAME . '</a></div>';
+			$canonical = '<div class="rendered-object" data-for-user_id="101" data-user_full_name="' . Auth_Base::$TEST_LNAME . ', ' . Auth_Base::$TEST_FNAME . '"><a href="' . APP_ROOT_PATH . '/app_code/user.php?user_id=101">' . Auth_Base::$TEST_LNAME . ', ' . Auth_Base::$TEST_FNAME . '</a></div>';
 			$rendered  = $u->renderMinimal(TRUE);
-			//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
 			$this->assertEqual($canonical, $rendered);
 		}
 
@@ -182,9 +180,8 @@
 			$u1 = User::getOneFromDb(['user_id' => 101], $this->DB);
 
 			$u1->cacheManagedSheets();
-			$this->assertEqual(2, count($u1->managed_sheets));
-			$this->assertEqual(607, $u1->managed_sheets[0]->sheet_id);
-			$this->assertEqual(608, $u1->managed_sheets[1]->sheet_id);
+			$this->assertEqual(1, count($u1->managed_sheets));
+			$this->assertEqual(608, $u1->managed_sheets[0]->sheet_id);
 		}
 
 		function testCacheMySignups() {
@@ -207,13 +204,17 @@
 			// count # of openings
 			$this->assertEqual(5, count($u1->signups_on_my_sheets));
 			$this->assertEqual(703, $u1->signups_on_my_sheets[0]['opening_id']);
-			$this->assertEqual(702, $u1->signups_on_my_sheets[1]['opening_id']);
-			$this->assertEqual(705, $u1->signups_on_my_sheets[2]['opening_id']);
+			$this->assertEqual(705, $u1->signups_on_my_sheets[1]['opening_id']);
+			$this->assertEqual(701, $u1->signups_on_my_sheets[2]['opening_id']);
+
 			// count # of signups in one opening
-			$this->assertEqual(4, count($u1->signups_on_my_sheets[3]['array_signups']));
-			$this->assertEqual(810, $u1->signups_on_my_sheets[0]['array_signups'][0]['signup_id']);
-			$this->assertEqual(805, $u1->signups_on_my_sheets[1]['array_signups'][0]['signup_id']);
-			$this->assertEqual(809, $u1->signups_on_my_sheets[1]['array_signups'][1]['signup_id']);
+			$this->assertEqual(4, count($u1->signups_on_my_sheets[2]['array_signups']));
+			$this->assertEqual(801, $u1->signups_on_my_sheets[2]['array_signups'][0]['signup_id']);
+			$this->assertEqual(804, $u1->signups_on_my_sheets[2]['array_signups'][1]['signup_id']);
+			$this->assertEqual(806, $u1->signups_on_my_sheets[2]['array_signups'][2]['signup_id']);
+			$this->assertEqual(813, $u1->signups_on_my_sheets[2]['array_signups'][3]['signup_id']);
+
+			// util_prePrintR($u1->signups_on_my_sheets); exit;
 		}
 
 		function testCacheMyAvailableSheetOpenings() {
@@ -250,7 +251,7 @@
 
 			$status = $u->updateDbFromAuth($this->auth);
 
-			// should let caller/program know there's a problem
+			// TODO - should let caller/program know there's a problem
 			$this->assertFalse($status);
 		}
 
@@ -260,7 +261,7 @@
 
 			$status = $u->updateDbFromAuth($this->auth);
 
-			// should let caller/program know there's a problem
+			// TODO - should let caller/program know there's a problem
 			$this->assertFalse($status);
 		}
 

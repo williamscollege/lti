@@ -41,13 +41,13 @@
 
 		// returns: a very basic HTML representation of the object
 		public function renderMinimal($flag_linked = FALSE) {
-
 			$enclosed = htmlentities($this->short_name);
+
 			if ($flag_linked) {
 				$enclosed = '<a href="' . APP_ROOT_PATH . '/app_code/course.php?course_id=' . $this->course_id . '">' . $enclosed . '</a>';
 			}
 
-			return '<div class="rendered-object course-render course-render-minimal course-render-' . $this->course_id . '" data-for-course="' . $this->course_id . '" data-course_idstr="' . htmlentities($this->course_idstr) . '">' . $enclosed . '</div>';
+			return '<div class="rendered-object" data-for-course_id="' . $this->course_id . '" data-course_idstr="' . htmlentities($this->course_idstr) . '">' . $enclosed . '</div>';
 		}
 
 		// cache provides data while eliminating unnecessary DB calls

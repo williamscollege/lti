@@ -41,13 +41,13 @@
 
 		// returns: a very basic HTML representation of the object
 		public function renderMinimal($flag_linked = FALSE) {
-
 			$enclosed = htmlentities($this->course_idstr, ENT_QUOTES, 'UTF-8');
+
 			if ($flag_linked) {
 				$enclosed = '<a href="' . APP_ROOT_PATH . '/app_code/enrollment.php?enrollment_id=' . htmlentities($this->enrollment_id, ENT_QUOTES, 'UTF-8') . '">' . $enclosed . '</a>';
 			}
 
-			return '<div class="rendered-object enrollment-render enrollment-render-minimal enrollment-render-' . htmlentities($this->enrollment_id, ENT_QUOTES, 'UTF-8') . '" data-for-enrollment="' . htmlentities($this->enrollment_id, ENT_QUOTES, 'UTF-8') . '" data-course_idstr="' . htmlentities($this->course_idstr, ENT_QUOTES, 'UTF-8') . '">' . $enclosed . '</div>';
+			return '<div class="rendered-object" data-for-enrollment_id="' . htmlentities($this->enrollment_id, ENT_QUOTES, 'UTF-8') . '" data-course_idstr="' . htmlentities($this->course_idstr, ENT_QUOTES, 'UTF-8') . '">' . $enclosed . '</div>';
 		}
 
 

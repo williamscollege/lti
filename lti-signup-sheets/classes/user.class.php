@@ -94,10 +94,10 @@
 		public function renderMinimal($flag_linked = FALSE) {
 			$enclosed = htmlentities($this->last_name, ENT_QUOTES, 'UTF-8') . ', ' . htmlentities($this->first_name, ENT_QUOTES, 'UTF-8');
 			if ($flag_linked) {
-				$enclosed = '<a href="' . APP_ROOT_PATH . '/app_code/user.php?user_id=' . htmlentities($this->first_name, ENT_QUOTES, 'UTF-8') . '">' . $enclosed . '</a>';
+				$enclosed = '<a href="' . APP_ROOT_PATH . '/app_code/user.php?user_id=' . htmlentities($this->user_id, ENT_QUOTES, 'UTF-8') . '">' . $enclosed . '</a>';
 			}
 
-			return '<div class="rendered-object user-render user-render-minimal user-render-' . htmlentities($this->first_name, ENT_QUOTES, 'UTF-8') . '" data-for-user="' . htmlentities($this->first_name, ENT_QUOTES, 'UTF-8') . '" data-user_full_name="' . htmlentities($this->last_name, ENT_QUOTES, 'UTF-8') . ', ' . htmlentities($this->first_name, ENT_QUOTES, 'UTF-8') . '">' . $enclosed . '</div>';
+			return '<div class="rendered-object" data-for-user_id="' . htmlentities($this->user_id, ENT_QUOTES, 'UTF-8') . '" data-user_full_name="' . htmlentities($this->last_name, ENT_QUOTES, 'UTF-8') . ', ' . htmlentities($this->first_name, ENT_QUOTES, 'UTF-8') . '">' . $enclosed . '</div>';
 		}
 
 		public function updateDbFromAuth($auth) {
@@ -203,6 +203,8 @@
 
 		public function loadSheets() {
 			$this->cacheSheetgroups();
+
+			// create hash of sheetgroup_id's
 			$sheetgroup_ids = Db_Linked::arrayOfAttrValues($this->sheetgroups, 'sheetgroup_id');
 
 			$this->sheets = [];
@@ -219,20 +221,20 @@
 		public function loadManagedSheets() {
 			$this->managed_sheets = [];
 
-			// get all sheets that have been shared with current user by type='adminbyuser'
-			$tmp_managed_access = SUS_Access::getAllFromDb(['type' => 'adminbyuser', 'constraint_data' => $this->username], $this->dbConnection);
+			// get all access records of type='adminbyuser' that are shared with current user
+			$tmp_managed_access_ary = SUS_Access::getAllFromDb(['type' => 'adminbyuser', 'constraint_data' => $this->username], $this->dbConnection);
 
-			foreach ($tmp_managed_access as $sheet) {
-				// TODO why is a sheet returned if flag_delete=1? [to replicate, set flag_delete=1 for sheet_id=607 and sheet_id=608]
-				// TODO: this type of object to hash problem may exist elsewhere too
-				array_push($this->managed_sheets, SUS_Sheet::getOneFromDb(['sheet_id' => $sheet->sheet_id], $this->dbConnection));
+			// create hash of sheet_id's
+			$sheetIDs = Db_Linked::arrayOfAttrValues($tmp_managed_access_ary, 'sheet_id');
 
-				// attempted hack to resolve above issue... aborted.
-				//				$one_sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $sheet->sheet_id], $this->dbConnection);
-				//				if (isset($one_sheet->flag_delete)) {
-				//					array_push($this->managed_sheets, $one_sheet);
-				//				}
-			}
+			// get sheets (using hash of IDs): this will exclude sheets where flag_delete=1
+			$this->managed_sheets = SUS_Sheet::getAllFromDb(['sheet_id' => $sheetIDs], $this->dbConnection);
+
+			// debugging
+			// util_prePrintR($tmp_managed_access_ary);
+			// util_prePrintR($sheetIDs);
+			// util_prePrintR($this->managed_sheets);
+
 			usort($this->managed_sheets, 'SUS_Sheet::cmp');
 		}
 
@@ -256,7 +258,7 @@
 			// get openings (using hash of IDs)
 			$openings_ary = SUS_Opening::getAllFromDb(['opening_id' => $openingIDs], $this->dbConnection);
 
-			// get sheets (using hash of IDs)
+			// create hash of sheet_id's
 			$sheetIDs = Db_Linked::arrayOfAttrValues($openings_ary, 'sheet_id');
 
 			// get sheets (using hash of IDs)
@@ -266,7 +268,7 @@
 			$signups_ary = SUS_Signup::getAllFromDb(['opening_id' => $openingIDs], $this->dbConnection);
 			//util_prePrintR($signups_ary);
 
-			// get signup_user_id's (using hash of IDs)
+			// create hash of signup_user_id's
 			$signupUserIDs = Db_Linked::arrayOfAttrValues($signups_ary, 'signup_user_id');
 
 			// get user names (using hash of IDs)
@@ -366,19 +368,19 @@
 			// get my sheets
 			$sheets_ary = SUS_Sheet::getAllFromDb(['owner_user_id' => $this->user_id], $this->dbConnection);
 
-			// get sheets (using hash of IDs)
+			// create hash of sheet_id's
 			$sheetIDs = Db_Linked::arrayOfAttrValues($sheets_ary, 'sheet_id');
 
 			// get openings on my sheets (using hash of IDs)
 			$openings_ary = SUS_Opening::getAllFromDb(['sheet_id' => $sheetIDs], $this->dbConnection);
 
-			// get openings (using hash of IDs)
+			// create hash of opening_id's
 			$openingIDs = Db_Linked::arrayOfAttrValues($openings_ary, 'opening_id');
 
 			// get signups on my openings (using hash of IDs)
 			$signups_ary = SUS_Signup::getAllFromDb(['opening_id' => $openingIDs], $this->dbConnection);
 
-			// get signup_user_id's (using hash of IDs)
+			// create hash of signup_user_id's
 			$signupUserIDs = Db_Linked::arrayOfAttrValues($signups_ary, 'signup_user_id');
 
 			// get user names (using hash of IDs)
@@ -692,13 +694,16 @@
 			$s  = SUS_Sheet::getOneFromDb(['sheet_id' => $SheetId], $this->dbConnection);
 			$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $s->sheetgroup_id], $this->dbConnection);
 
-			$sheets_in_sg         = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $sg->sheetgroup_id], $this->dbConnection);
+			$sheets_in_sg = SUS_Sheet::getAllFromDb(['sheetgroup_id' => $sg->sheetgroup_id], $this->dbConnection);
+			// create hash of sheet_id's
 			$list_sheet_ids_in_sg = Db_Linked::arrayOfAttrValues($sheets_in_sg, 'sheet_id');
 
-			$openings_in_sg_all         = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg], $this->dbConnection);
+			$openings_in_sg_all = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg], $this->dbConnection);
+			// create hash of opening_id's
 			$list_opening_ids_in_sg_all = Db_Linked::arrayOfAttrValues($openings_in_sg_all, 'opening_id');
 
-			$openings_in_sg_future         = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg, 'begin_datetime >=' => util_currentDateTimeString_asMySQL()], $this->dbConnection);
+			$openings_in_sg_future = SUS_Opening::getAllFromDb(['sheet_id' => $list_sheet_ids_in_sg, 'begin_datetime >=' => util_currentDateTimeString_asMySQL()], $this->dbConnection);
+			// create hash of opening_id's
 			$list_opening_ids_in_sg_future = Db_Linked::arrayOfAttrValues($openings_in_sg_future, 'opening_id');
 
 			$sg_count_g_total_user_signups = 0; // set default
@@ -712,10 +717,12 @@
 			}
 
 			// 2) sheet: determine max and pending signup limits, and current counts of each
-			$openings_in_one_sheet_all         = SUS_Opening::getAllFromDb(['sheet_id' => $s->sheet_id], $this->dbConnection);
+			$openings_in_one_sheet_all = SUS_Opening::getAllFromDb(['sheet_id' => $s->sheet_id], $this->dbConnection);
+			// create hash of opening_id's
 			$list_opening_ids_in_one_sheet_all = Db_Linked::arrayOfAttrValues($openings_in_one_sheet_all, 'opening_id');
 
-			$openings_in_one_sheet_future         = SUS_Opening::getAllFromDb(['sheet_id' => $s->sheet_id, 'begin_datetime >=' => util_currentDateTimeString_asMySQL()], $this->dbConnection);
+			$openings_in_one_sheet_future = SUS_Opening::getAllFromDb(['sheet_id' => $s->sheet_id, 'begin_datetime >=' => util_currentDateTimeString_asMySQL()], $this->dbConnection);
+			// create hash of opening_id's
 			$list_opening_ids_in_one_sheet_future = Db_Linked::arrayOfAttrValues($openings_in_one_sheet_future, 'opening_id');
 
 			$s_count_total_user_signups = 0; // set default
@@ -771,7 +778,7 @@
 			$this->cacheSheets();
 			$this->cacheManagedSheets();
 
-			// fetch relevant hashes of sheet_id values
+			// create hashes of opening_id's
 			$fetch_sheet_ids         = Db_Linked::arrayOfAttrValues($this->sheets, 'sheet_id');
 			$fetch_managed_sheet_ids = Db_Linked::arrayOfAttrValues($this->managed_sheets, 'sheet_id');
 			// util_prePrintR($fetch_sheet_ids);

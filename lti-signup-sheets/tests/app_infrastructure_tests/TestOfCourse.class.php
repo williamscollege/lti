@@ -68,14 +68,12 @@
 		function testCourseRenderMinimal() {
 			$c = Course::getOneFromDb(['course_id' => 205], $this->DB);
 
-			$canonical = '<div class="rendered-object course-render course-render-minimal course-render-205" data-for-course="205" data-course_idstr="15F-ECON-201-01">15F-ECON-201-01 - Economy: Depression Era to WW II</div>';
+			$canonical = '<div class="rendered-object" data-for-course_id="205" data-course_idstr="15F-ECON-201-01">15F-ECON-201-01 - Economy: Depression Era to WW II</div>';
 			$rendered  = $c->renderMinimal();
-			//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
 			$this->assertEqual($canonical, $rendered);
 
-			$canonical = '<div class="rendered-object course-render course-render-minimal course-render-205" data-for-course="205" data-course_idstr="15F-ECON-201-01"><a href="' . APP_ROOT_PATH . '/app_code/course.php?course_id=205">15F-ECON-201-01 - Economy: Depression Era to WW II</a></div>';
+			$canonical = '<div class="rendered-object" data-for-course_id="205" data-course_idstr="15F-ECON-201-01"><a href="' . APP_ROOT_PATH . '/app_code/course.php?course_id=205">15F-ECON-201-01 - Economy: Depression Era to WW II</a></div>';
 			$rendered  = $c->renderMinimal(TRUE);
-			//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
 			$this->assertEqual($canonical, $rendered);
 		}
 
@@ -90,12 +88,12 @@
 			$c1->cacheEnrollments();
 			$this->assertEqual(8, count($c1->enrollments));
 			$this->assertEqual('15F-ARTH-101-01', $c1->enrollments[0]->course_idstr);
-			$this->assertEqual('teacher', $c1->enrollments[0]->course_role_name);
+			$this->assertEqual('student', $c1->enrollments[0]->course_role_name);
 
 			$c2->cacheEnrollments();
 			$this->assertEqual(4, count($c2->enrollments));
 			$this->assertEqual('15F-BIOL-101-01', $c2->enrollments[0]->course_idstr);
-			$this->assertEqual(104, $c2->enrollments[3]->user_id);
+			$this->assertEqual(101, $c2->enrollments[3]->user_id);
 
 			$c3->cacheEnrollments();
 			$this->assertEqual(0, count($c3->enrollments));
@@ -116,12 +114,12 @@
 			$c1->loadEnrollments();
 			$this->assertEqual(8, count($c1->enrollments));
 			$this->assertEqual('15F-ARTH-101-01', $c1->enrollments[0]->course_idstr);
-			$this->assertEqual('teacher', $c1->enrollments[0]->course_role_name);
+			$this->assertEqual('student', $c1->enrollments[0]->course_role_name);
 
 			$c2->loadEnrollments();
 			$this->assertEqual(4, count($c2->enrollments));
 			$this->assertEqual('15F-BIOL-101-01', $c2->enrollments[0]->course_idstr);
-			$this->assertEqual(104, $c2->enrollments[3]->user_id);
+			$this->assertEqual(101, $c2->enrollments[3]->user_id);
 
 			$c3->loadEnrollments();
 			$this->assertEqual(0, count($c3->enrollments));

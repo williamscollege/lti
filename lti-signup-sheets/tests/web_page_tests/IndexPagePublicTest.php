@@ -27,7 +27,7 @@
 		function testIndexPageLoadsCorrectText() {
 			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 
-			$this->assertTitle(new PatternExpectation('/' . LANG_APP_NAME . ': /'));
+			$this->assertTitle(new PatternExpectation('/' . LANG_APP_NAME . '/'));
 
 			$this->assertNoPattern('/' . util_lang('app_signed_in_status') . ': \<a[^\>]*\>' . TESTINGUSER . '\<\/a\>/');
 			$this->assertPattern('/' . util_lang('app_sign_in_action') . '/');
@@ -36,32 +36,29 @@
 			$this->assertPattern('/' . util_lang('app_sign_in_msg') . '/');
 
 			// check for published, verfied notebooks that are publically viewable
-			//        $this->assertText(ucfirst(util_lang('public')).' '.ucfirst(util_lang('notebooks')));
-			//        $this->assertEltByIdHasAttrOfValue('list-of-user-notebooks','data-notebook-count','1');
-			//        $this->assertEltByIdHasAttrOfValue('notebook-item-1','data-notebook_id','1004');
-			//        $this->assertLink('testnotebook4');
+			// $this->assertText(ucfirst(util_lang('public')).' '.ucfirst(util_lang('notebooks')));
+			// $this->assertEltByIdHasAttrOfValue('list-of-user-notebooks','data-notebook-count','1');
+			// $this->assertEltByIdHasAttrOfValue('notebook-item-1','data-notebook_id','1004');
+			// $this->assertLink('testnotebook4');
 		}
 
-		function testIndexPageHasCorrectMenus() {
+		function testIndexPageHasNoNavMenusDisplayed() {
 			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 
-			$this->assertEltByIdHasAttrOfValue('nav-notebooks', 'id', 'nav-notebooks');
-			$this->assertEltByIdHasAttrOfValue('nav-metadata-structures', 'id', 'nav-metadata-structures');
-			$this->assertEltByIdHasAttrOfValue('nav-metadata-values', 'id', 'nav-metadata-values');
-			$this->assertEltByIdHasAttrOfValue('nav-authoritative-plants', 'id', 'nav-authoritative-plants');
+			$this->assertNoFieldById('nav-link-my-signups', 'there should be no nav buttons on public page');
+			$this->assertNoFieldById('nav-link-available-openings', 'there should be no nav buttons on public page');
+			$this->assertNoFieldById('nav-link-my-sheets', 'there should be no nav buttons on public page');
+			$this->assertNoFieldById('nav-link-help', 'there should be no nav buttons on public page');
 		}
 
 		function testIndexPageHasSplashLinks() {
 			$this->get('http://localhost' . APP_ROOT_PATH . '/');
 
-			$this->assertEltByIdHasAttrOfValue('notebooks-splash-link', 'id', 'notebooks-splash-link');
-			$this->assertEltByIdHasAttrOfValue('plants-splash-link', 'id', 'plants-splash-link');
-			$this->assertEltByIdHasAttrOfValue('metadata-structures-splash-link', 'id', 'metadata-structures-splash-link');
-			$this->assertEltByIdHasAttrOfValue('metadata-term-sets-splash-link', 'id', 'metadata-term-sets-splash-link');
+			$this->assertEltByIdHasAttrOfValue('footer-link-help', 'id', 'footer-link-help');
 		}
 
-		function testHelp() {
-			$this->todo();
-		}
+		//		function testHelp() {
+		//			$this->todo();
+		//		}
 
 	}

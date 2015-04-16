@@ -386,6 +386,7 @@
 
 		// 2 get existing byuser records
 		$existing_access_records   = SUS_Access::getAllFromDb(['sheet_id' => $primaryID, 'type' => $access_type], $DB);
+		// create hash of usernames
 		$existing_access_usernames = Db_Linked::arrayOfAttrValues($existing_access_records, 'constraint_data');
 
 		// 3 generate to-add and to-remove sets
@@ -409,6 +410,7 @@
 			// only fetch big user object if we are going to add a username
 			$obj_all_users = User::getAllFromDb([], $DB);
 			// remove cruft
+			// create hash of usernames
 			$obj_all_attr_usernames = Db_Linked::arrayOfAttrValues($obj_all_users, 'username');
 			foreach ($to_add as $username_to_add) {
 				if (!in_array($username_to_add, $obj_all_attr_usernames)) {

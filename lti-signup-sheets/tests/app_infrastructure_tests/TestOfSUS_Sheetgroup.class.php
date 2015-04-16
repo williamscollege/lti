@@ -82,24 +82,27 @@
 
 		public function testCascadeDelete() {
 			$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => 501], $this->DB);
+
 			$this->assertTrue($sg->matchesDb);
 			$this->assertEqual(0, $sg->flag_delete);
 
 			$sg->cascadeDelete();
+
+			// util_prePrintR($sg->sheets);
 
 			// test expected results
 			$this->assertEqual(3, count($sg->sheets));
 			$this->assertEqual(2, count($sg->sheets[0]->openings));
 			$this->assertEqual(2, count($sg->sheets[1]->openings));
 			$this->assertEqual(1, count($sg->sheets[2]->openings));
-			$this->assertEqual(2, count($sg->sheets[0]->openings[0]->signups));
-			$this->assertEqual(4, count($sg->sheets[0]->openings[1]->signups));
+			$this->assertEqual(4, count($sg->sheets[0]->openings[0]->signups));
+			$this->assertEqual(2, count($sg->sheets[0]->openings[1]->signups));
 			$this->assertEqual(1, count($sg->sheets[1]->openings[0]->signups));
 			$this->assertEqual(2, count($sg->sheets[1]->openings[1]->signups));
 			$this->assertEqual(1, count($sg->sheets[2]->openings[0]->signups));
 			$this->assertEqual(601, $sg->sheets[0]->openings[0]->sheet_id);
-			$this->assertEqual(702, $sg->sheets[0]->openings[0]->opening_id);
-			$this->assertEqual(809, $sg->sheets[0]->openings[0]->signups[0]->signup_id);
+			$this->assertEqual(701, $sg->sheets[0]->openings[0]->opening_id);
+			$this->assertEqual(813, $sg->sheets[0]->openings[0]->signups[0]->signup_id);
 
 			// were items correctly marked as deleted?
 			$this->assertEqual(1, $sg->flag_delete); // sheetgroup
@@ -112,8 +115,6 @@
 			$this->assertEqual(1, $sg->sheets[0]->openings[0]->signups[1]->flag_delete); // signup
 			$this->assertEqual(1, $sg->sheets[0]->openings[1]->signups[0]->flag_delete); // signup
 			$this->assertEqual(1, $sg->sheets[0]->openings[1]->signups[1]->flag_delete); // signup
-			$this->assertEqual(1, $sg->sheets[0]->openings[1]->signups[2]->flag_delete); // signup
-			$this->assertEqual(1, $sg->sheets[0]->openings[1]->signups[3]->flag_delete); // signup
 		}
 
 	}

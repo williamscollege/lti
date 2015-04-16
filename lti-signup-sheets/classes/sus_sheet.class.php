@@ -132,12 +132,9 @@
 		}
 
 		// determine if user has any signups remaining
-		//public function checkUserHasSignupsRemaining($UserId = 0) {
 		public function renderAsHtmlUsageAlert() {
 			// explicitly call the global session variable for use here
 			global $USER;
-
-			// TODO - Serverside: enforce ability to signup or not based on param passed back (pretty error code and boolean value)
 
 			// default condition
 			$status = '<div id="alert_usage_quotas"></div>';

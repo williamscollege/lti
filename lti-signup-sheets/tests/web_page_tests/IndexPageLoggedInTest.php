@@ -36,11 +36,9 @@
 
 			$this->assertNoPattern('/UNKNOWN LANGUAGE LABEL/i');
 			$this->assertFalse($this->setField('password', 'bar')); //$value
-			$this->assertPattern('/Signed in: \<a[^\>]*\>' . TESTINGUSER . '\<\/a\>/');
+			$this->assertPattern('/\<a[^\>]*\>' . TESTINGUSER . '\<\/a\>/');
 			$this->assertNoPattern('/Sign in failed/i');
 			$this->assertEltByIdHasAttrOfValue('submit_signout', 'value', new PatternExpectation('/Sign\s?out/i'));
-
-			//        $this->todo('check for notebook, plant, metadata structure, and metadata value sets links');
 
 			//        // page heading text
 			//        $this->assertText(ucfirst(util_lang('you_possesive')).' '.ucfirst(util_lang('notebooks')));
@@ -52,10 +50,6 @@
 			//        $this->assertEltByIdHasAttrOfValue('notebook-item-2','data-notebook_id','1002');
 			//        $this->assertEltByIdHasAttrOfValue('notebook-item-3','data-notebook_id','1004');
 			//
-			//        $this->assertEltByIdHasAttrOfValue('notebook-item-1','class','owned-object');
-			//        $this->assertEltByIdHasAttrOfValue('notebook-item-2','class','owned-object');
-			//        $this->assertEltByIdDoesNotHaveAttr('notebook-item-3','data-can-edit');
-			//
 			//        $this->assertLink('testnotebook1');
 			//        $this->assertLink('testnotebook2');
 			//        $this->assertLink('testnotebook4');
@@ -64,7 +58,7 @@
 			//        $this->assertEltByIdHasAttrOfValue('btn-add-notebook','value',util_lang('add_notebook'));
 
 			// link to main/front page
-			$this->assertEltByIdHasAttrOfValue('link-available-openings', 'href', APP_ROOT_PATH);
+			$this->assertEltByIdHasAttrOfValue('nav-link-available-openings', 'href', APP_ROOT_PATH."/app_code/sheet_openings_all.php");
 		}
 
 		//    function testIndexBasicNoCreate() {
@@ -76,7 +70,7 @@
 		//        // same as basic, but should have links to all four notebooks, with can-edit on all of them
 		//        $this->assertNoPattern('/UNKNOWN LANGUAGE LABEL/i');
 		//        $this->assertFalse($this->setField('password','bar')); //$value
-		//        $this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
+		//        $this->assertPattern('/\<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
 		//        $this->assertNoPattern('/Sign in failed/i');
 		//        $this->assertEltByIdHasAttrOfValue('submit_signout','value',new PatternExpectation('/Sign\s?out/i'));
 		//
@@ -88,7 +82,6 @@
 		//
 		//        $this->assertEltByIdHasAttrOfValue('notebook-item-1','data-notebook_id','1001');
 		//        $this->assertEltByIdHasAttrOfValue('notebook-item-2','data-notebook_id','1002');
-		//        $this->assertEltByIdHasAttrOfValue('notebook-item-3','data-notebook_id','1004');
 		//
 		//        $this->assertEltByIdHasAttrOfValue('notebook-item-1','class','owned-object');
 		//        $this->assertEltByIdHasAttrOfValue('notebook-item-2','class','owned-object');
@@ -103,7 +96,7 @@
 		//        $this->assertNoPattern("/btn-add-notebook/");
 		//        ///////////////////////////////////////////
 		//
-		//        $this->assertEltByIdHasAttrOfValue('link-available-openings','href',APP_FOLDER);
+		//        $this->assertEltByIdHasAttrOfValue('nav-link-available-openings','href',APP_FOLDER);
 		//    }
 
 		function testIndexAdmin() {
@@ -112,42 +105,21 @@
 			// same as basic, but should have links to all four notebooks, with can-edit on all of them
 			$this->assertNoPattern('/UNKNOWN LANGUAGE LABEL/i');
 			$this->assertFalse($this->setField('password', 'bar')); //$value
-			$this->assertPattern('/Signed in: \<a[^\>]*\>' . TESTINGUSER . '\<\/a\>/');
+			$this->assertPattern('/\<a[^\>]*\>' . TESTINGUSER . '\<\/a\>/');
 			$this->assertNoPattern('/Sign in failed/i');
 			$this->assertEltByIdHasAttrOfValue('submit_signout', 'value', new PatternExpectation('/Sign\s?out/i'));
 
-			$this->todo('check for admin tool links');
+			// check for admin tool links
+		}
 
+		function testIndexPageHasCorrectMenus() {
+			$this->get('http://localhost' . APP_ROOT_PATH . '/app_code/signups_all.php');
+			// echo 'http://localhost' . APP_ROOT_PATH . '/app_code/signups_all.php';
 
-			// page heading text
-			//        $this->assertText(ucfirst(util_lang('you_possesive')).' '.ucfirst(util_lang('notebooks')));
-
-			//        // number of notebooks shown
-			//        $this->assertEltByIdHasAttrOfValue('list-of-user-notebooks','data-notebook-count','4');
-			//
-			//        $this->assertEltByIdHasAttrOfValue('notebook-item-1','data-notebook_id','1001');
-			//        $this->assertEltByIdHasAttrOfValue('notebook-item-2','data-notebook_id','1002');
-			//        $this->assertEltByIdHasAttrOfValue('notebook-item-3','data-notebook_id','1003');
-			//        $this->assertEltByIdHasAttrOfValue('notebook-item-4','data-notebook_id','1004');
-			//
-			//        $this->assertEltByIdHasAttrOfValue('notebook-item-1','class','owned-object');
-			//        $this->assertEltByIdHasAttrOfValue('notebook-item-2','class','owned-object');
-			//
-			//        $this->assertEltByIdHasAttrOfValue('notebook-item-1','data-can-edit','1');
-			//        $this->assertEltByIdHasAttrOfValue('notebook-item-2','data-can-edit','1');
-			//        $this->assertEltByIdHasAttrOfValue('notebook-item-3','data-can-edit','1');
-			//        $this->assertEltByIdHasAttrOfValue('notebook-item-4','data-can-edit','1');
-			//
-			//        $this->assertLink('testnotebook1');
-			//        $this->assertLink('testnotebook2');
-			//        $this->assertLink('testnotebook3');
-			//        $this->assertLink('testnotebook4');
-			//
-			//        // 'add notebook' control
-			//        $this->assertEltByIdHasAttrOfValue('btn-add-notebook','value',util_lang('add_notebook'));
-
-			// link to main/front page
-			$this->assertEltByIdHasAttrOfValue('link-available-openings', 'href', APP_ROOT_PATH);
+//			$this->assertEltByIdHasAttrOfValue('nav-link-my-signups', 'id');
+//			$this->assertEltByIdHasAttrOfValue('nav-link-available-openings', 'id', 'nav-link-available-openings');
+//			$this->assertEltByIdHasAttrOfValue('nav-link-my-sheets', 'id', 'nav-link-my-sheets');
+//			$this->assertEltByIdHasAttrOfValue('nav-link-help', 'id', 'nav-link-help');
 		}
 
 	}

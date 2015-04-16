@@ -51,7 +51,7 @@
 						<li class="<?php if (strpos($http_referrer, "signups_all.php")) {
 							echo "active";
 						} ?>">
-							<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/signups_all.php">
+							<a id="nav-link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/signups_all.php">
 								<i class="glyphicon glyphicon-list-alt"></i>
 								<b><?php echo ucfirst(util_lang('signups_all')); ?></b>
 							</a>
@@ -59,7 +59,7 @@
 						<li class="<?php if ((strpos($http_referrer, "sheet_openings_all.php")) || (strpos($http_referrer, "sheet_openings_signup.php"))) {
 							echo "active";
 						} ?>">
-							<a id="link-available-openings" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheet_openings_all.php">
+							<a id="nav-link-available-openings" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheet_openings_all.php">
 								<i class="glyphicon glyphicon-pencil"></i>
 								<b><?php echo ucfirst(util_lang('sheet_openings_all')); ?></b>
 							</a>
@@ -67,7 +67,7 @@
 						<li class="<?php if ((strpos($http_referrer, "sheets_all.php")) || (strpos($http_referrer, "sheets_edit_one.php"))) {
 							echo "active";
 						} ?>">
-							<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheets_all.php">
+							<a id="nav-link-my-sheets" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheets_all.php">
 								<i class="glyphicon glyphicon-wrench"></i>
 								<b><?php echo ucfirst(util_lang('sheets_all')); ?></b>
 							</a>
@@ -75,7 +75,7 @@
 						<li class="<?php if (strpos($http_referrer, "help.php")) {
 							echo "active";
 						} ?>">
-							<a id="link-my-signups" href="<?php echo APP_ROOT_PATH; ?>/app_code/help.php">
+							<a id="nav-link-help" href="<?php echo APP_ROOT_PATH; ?>/app_code/help.php">
 								<i class="glyphicon glyphicon-question-sign"></i>
 								<b><?php echo ucfirst(util_lang('help')); ?></b>
 							</a>

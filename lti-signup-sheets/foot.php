@@ -3,7 +3,7 @@
 <footer>
 	<!-- Link to trigger modal -->
 	<p class="pull-right">
-		<a href="#modalHelp" data-toggle="modal" data-target="#modalHelp"><i class="glyphicon glyphicon-question-sign"></i> Help</a>
+		<a href="#modalHelp" id="footer-link-help" data-toggle="modal" data-target="#modalHelp"><i class="glyphicon glyphicon-question-sign"></i> Help</a>
 		&copy; <?php echo LANG_INSTITUTION_NAME . "," . date('Y'); ?>
 	</p>
 
