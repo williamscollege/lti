@@ -16,5 +16,3 @@
 			$this->addFile('soundForTesting.php');
 		}
 	}
-
-?>
