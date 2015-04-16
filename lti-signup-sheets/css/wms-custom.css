@@ -129,28 +129,32 @@ Purpose: Openings list styles
 	background-color: #f9fbff;
 }
 
-/* placement for button near 'list openings': scroll to 'current date' */
-#scroll-to-todayish-openings {
-	margin: -94px 0 0 290px;
-}
-#panel-more-buttons {
-	margin: -94px 0 0 290px;
+
+/*=======================================
+Purpose: Placement for extra buttons
+==========================================*/
+
+#buttons_list_openings {
+	margin: -44px 0px 29px 285px;
+	white-space: nowrap;
 }
 
-/* placement for button 'my signups': go to next, show optional details*/
 #buttons_my_signups {
 	position: relative;
 	top: -25px;
-	left: 120px;
+	left: 110px;
+	white-space: nowrap;
 }
 
-/* placement for button 'on my sheets': go to next, show optional details*/
 #buttons_on_my_sheets {
 	position: relative;
 	top: -25px;
-	left: 134px;
+	left: 125px;
+	white-space: nowrap;
 }
-
+#tabMySignups, #tabOthersSignups{
+	margin-top: -15px;
+}
 
 /*=======================================
 Purpose: Extend/customize the 'Bootstrap-Calendar' plugin

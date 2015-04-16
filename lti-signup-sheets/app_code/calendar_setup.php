@@ -813,11 +813,11 @@
 								</div>
 
 								<!-- BEGIN COLUMN TWO -->
-								<!-- Enable PrintArea for Area1 -->
-								<div class="row col-sm-5 small PrintArea Area1">
+								<div class="row col-sm-5 small PrintArea wms_print_CalSetup">
 									<div class="col-sm-11">
 										<div class="pull-right signupSorters">
-											<a href="#" class="wmsPrintArea1" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
+											<!-- PrintArea: Print a specific div -->
+											<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_CalSetup" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
 											<span class="small">Sort by:
 												<a href="#" id="signup_sort_by_last_name" title="Sort by last name">Last name</a> &#124;
 												<a href="#" id="signup_sort_by_signup_order" title="Sort by signup order">Signup order</a>

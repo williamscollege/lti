@@ -124,11 +124,15 @@
 								<!-- End: Calendar Openings -->
 
 								<!-- Begin: List Openings -->
-								<div role="tabpanel" class="tab-pane fade" id="tabOpeningsList" aria-labelledby="tabOpeningsList">
-									<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-xs" title="go to next">go to next</a>
+								<div role="tabpanel" id="tabOpeningsList" class="tab-pane fade PrintArea wms_print_OpeningSignup" aria-labelledby="tabOpeningsList">
+									<div id="buttons_list_openings">
+										<!-- PrintArea: Print a specific div -->
+										<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_OpeningSignup" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
+										<!-- Button: go to today -->
+										<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-xs" title="go to (date nearest) today">go to today</a>
+									</div>
 
 									<div id="openings-list-container">
-
 										<?php
 											$s->cacheOpenings();
 											$lastOpeningDate = '';

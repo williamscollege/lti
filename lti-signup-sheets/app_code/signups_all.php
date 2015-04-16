@@ -142,7 +142,7 @@
 				<!-- Begin: My Signups -->
 				<div class="col-sm-5">
 					<div class="row">
-						<div class="tab-container" role="tabpanel" data-example-id="set1">
+						<div class="tab-container PrintArea wms_print_MySignups" role="tabpanel" data-example-id="set1">
 							<ul id="boxMySignupsHeader" class="nav nav-tabs" role="tablist">
 								<li role="presentation" class="active">
 									<strong>My Signups</strong>
@@ -151,11 +151,12 @@
 							<div id="boxMySignupsContent" class="tab-content">
 								<!-- Begin: My Signups (Content) -->
 								<div id="buttons_my_signups">
-									<a href="#" id="scroll-to-todayish-my-signups" type="button" class="btn btn-success btn-xs" title="go to next">go to
-										next</a>&nbsp;&nbsp;&nbsp;
+									<!-- PrintArea: Print a specific div -->
+									<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_MySignups" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
+									<!-- Button: go to today -->
+									<a href="#" id="scroll-to-todayish-my-signups" type="button" class="btn btn-success btn-xs" title="go to (date nearest) today">go to today</a>&nbsp;&nbsp;&nbsp;
 									<!-- TOGGLE LINK: Show optional details -->
-									<a href="#" id="link_for_opening_details_1" type="button" class="btn btn-info btn-xs" title="toggle details">show
-										details</a>
+									<a href="#" id="link_for_opening_details_1" type="button" class="btn btn-info btn-xs" title="toggle details">show details</a>
 								</div>
 								<div role="tabpanel" id="tabMySignups" class="tab-pane fade active in" aria-labelledby="tabMySignups">
 									<?php
@@ -216,7 +217,7 @@
 				<!-- Begin: Signups on my Sheets -->
 				<div class="col-sm-6">
 					<div class="row">
-						<div class="tab-container" role="tabpanel" data-example-id="set2">
+						<div class="tab-container PrintArea wms_print_OnMySheets" role="tabpanel" data-example-id="set2">
 							<ul id="boxSignupsOnMySheetsHeader" class="nav nav-tabs" role="tablist">
 								<li role="presentation" class="active">
 									<strong>On My Sheets</strong>
@@ -225,11 +226,12 @@
 							<div id="boxSignupsOnMySheetsContent" class="tab-content">
 								<!-- Begin: Signups on my Sheets (Content) -->
 								<div id="buttons_on_my_sheets">
-									<a href="#" id="scroll-to-todayish-others-signups" type="button" class="btn btn-success btn-xs" title="go to next">go to
-										next</a>&nbsp;&nbsp;&nbsp;
+									<!-- PrintArea: Print a specific div -->
+									<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_OnMySheets" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
+									<!-- Button: go to today -->
+									<a href="#" id="scroll-to-todayish-others-signups" type="button" class="btn btn-success btn-xs" title="go to (date nearest) today">go to today</a>&nbsp;&nbsp;&nbsp;
 									<!-- TOGGLE LINK: Show optional details -->
-									<a href="#" id="link_for_opening_details_2" type="button" class="btn btn-info btn-xs" title="toggle details">show
-										details</a>
+									<a href="#" id="link_for_opening_details_2" type="button" class="btn btn-info btn-xs" title="toggle details">show details</a>
 								</div>
 								<div role="tabpanel" id="tabOthersSignups" class="tab-pane fade active in" aria-labelledby="tabOthersSignups">
 									<?php

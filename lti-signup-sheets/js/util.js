@@ -7,29 +7,22 @@ var GLOBAL_util_showConfirmBox = null; // hack to enable passing of JS values be
 
 
 // ***************************
-// Listeners: (NOTE: could put this directly in the HTML or in a footer file or some such, but doing it here consolidates the code)
+// Listeners
 // ***************************
 $(document).ready(function () {
 	// create container to hold ajax messages; hide #page_alert_div
 	$('#content_container').prepend('<div id="page_alert_div" class="alert alert-dismissible small" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span id="page_alert_message"></span></div>');
 	$('#page_alert_div').hide();
 
-	// Enable PrintArea for Area1
-	$(".wmsPrintArea1").click(function () {
+	// PrintArea: Print a specific div
+	// Important note: The desired div must be assigned a unique class called: "wms_print_XYZ" (i.e. wms_print_CalSetup, wms_print_EditOne, wms_print_OpeningSignup)
+	$(".wmsPrintArea").click(function () {
+		var print_this_area = $(this).data("what-area-to-print");
 		var options = {
 			mode: "iframe",
 			standard: "html5"
 		};
-		$("div.PrintArea.Area1").printArea([options]);
-	});
-
-	// Enable PrintArea for Area2
-	$(".wmsPrintArea2").click(function () {
-		var options = {
-			mode: "iframe",
-			standard: "html5"
-		};
-		$("div.PrintArea.Area2").printArea([options]);
+		$("div.PrintArea." + print_this_area).printArea([options]);
 	});
 });
 
