@@ -21,6 +21,7 @@ FOR TESTING ONLY:
 	DROP TABLE `sus_openings`;
 	DROP TABLE `sus_signups`;
 	DROP TABLE `sus_access`;
+	DROP TABLE `queued_messages`;
 
 	DELETE FROM `terms`;
 	DELETE FROM `users`;
@@ -32,6 +33,7 @@ FOR TESTING ONLY:
 	DELETE FROM `sus_openings`;
 	DELETE FROM `sus_signups`;
 	DELETE FROM `sus_access`;
+	DELETE FROM `queued_messages`;
 
 	Select * From `terms`;
 	Select * From `users`;
@@ -43,6 +45,7 @@ FOR TESTING ONLY:
 	Select * From `sus_openings`;
 	Select * From `sus_signups`;
 	Select * From `sus_access`;
+	Select * From `queued_messages`;
 */
 
 # ----------------------------
@@ -221,6 +224,24 @@ CREATE TABLE IF NOT EXISTS `sus_access` (
     KEY `constraint_data` (`constraint_data`),
     KEY `broadness` (`broadness`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='which users can signup on which sheets';
+
+# notes: a msg to 10 people will create 10 separate queued messages (to enable 1 user to delete their signup w/o effecting others)
+CREATE TABLE IF NOT EXISTS `queued_messages` (
+	`queued_message_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`user_id` bigint(10) unsigned default NULL,
+	`sheet_id` bigint(10) unsigned default NULL,
+	`opening_id` bigint(10) unsigned default NULL,
+	`delivery_type` VARCHAR(16) NULL, /*email (future may support other types such as sms/text) */
+	`flag_is_delivered` BIT(1) NOT NULL DEFAULT 0,
+	#`hold_until_datetime` DATETIME NULL, /* not in use for this application */
+	`target` VARCHAR(255) NULL, /*email address, or perhaps phone number or other contact address/target */
+	`summary` VARCHAR(255) NULL, /* short version / description; used as subject for email messages */
+	`body` TEXT NULL,
+	`action_datetime` DATETIME NULL,
+	`action_status` VARCHAR(16) NULL, /* SUCCESS|FAILURE */
+	`action_notes` TEXT NULL, /* any more detailed messages/notes about the action */
+	`flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='holds messages in queue prior to independent sending mechanism';
 
 
 # ----------------------------

@@ -79,6 +79,9 @@
 	define('TESTINGUSER','testing_user');
 	define('TESTINGPASSWORD','testing_password');
 
+	require_once('classes/mailer_php_standard.class.php');
+	$MAILER = new Mailer_Php_Standard();
+
 	# ---------------------------
 	# External Dependency: php.ini configuration file
 	# ---------------------------

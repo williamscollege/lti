@@ -22,3 +22,9 @@
 	require_once(dirname(__FILE__) . '/sus_signup.class.php');
 	require_once(dirname(__FILE__) . '/sus_access.class.php');
 
+	require_once(dirname(__FILE__) . '/queued_message.class.php');
+
+	require_once(dirname(__FILE__) . '/mailer_base.class.php');
+	require_once(dirname(__FILE__) . '/mailer_php_standard.class.php');
+	require_once(dirname(__FILE__) . '/mailer_testing.class.php');
+

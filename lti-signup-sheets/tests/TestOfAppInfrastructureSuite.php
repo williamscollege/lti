@@ -28,6 +28,11 @@
 
 			$this->addFile('app_infrastructure_tests/TestOfUtil.php');
 
+			$this->addFile('app_infrastructure_tests/TestOfQueued_message.class.php');
+
+			$this->addFile('app_infrastructure_tests/TestOfMailer_base.class.php');
+			$this->addFile('app_infrastructure_tests/TestOfMailer_php_standard.class.php');
+
 			# Sound Effect
 			$this->addFile('soundForTesting.php');
 		}

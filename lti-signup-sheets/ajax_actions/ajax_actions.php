@@ -17,6 +17,8 @@
 	$action     = isset($_REQUEST["ajax_Action"]) ? util_quoteSmart($_REQUEST["ajax_Action"]) : 0;
 	$primaryID  = isset($_REQUEST["ajax_Primary_ID"]) && is_numeric($_REQUEST["ajax_Primary_ID"]) ? $_REQUEST["ajax_Primary_ID"] : 0;
 	$customData = isset($_REQUEST["ajax_Custom_Data"]) ? $_REQUEST["ajax_Custom_Data"] : 0;
+//	$sheetID = isset($_REQUEST["edit_SheetID"]) ? $_REQUEST["edit_SheetID"] : 0;
+//	$openingID = isset($_REQUEST["edit_SheetID"]) ? $_REQUEST["edit_SheetID"] : 0;
 
 	// individually passed parameters
 	$ownerUserID = isset($_REQUEST["ajax_OwnerUserID"]) && is_numeric($_REQUEST["ajax_OwnerUserID"]) ? $_REQUEST["ajax_OwnerUserID"] : 0;
@@ -385,7 +387,7 @@
 		}
 
 		// 2 get existing byuser records
-		$existing_access_records   = SUS_Access::getAllFromDb(['sheet_id' => $primaryID, 'type' => $access_type], $DB);
+		$existing_access_records = SUS_Access::getAllFromDb(['sheet_id' => $primaryID, 'type' => $access_type], $DB);
 		// create hash of usernames
 		$existing_access_usernames = Db_Linked::arrayOfAttrValues($existing_access_records, 'constraint_data');
 
@@ -613,6 +615,22 @@
 				echo json_encode($results);
 				exit;
 			}
+
+			#------------------------------------------------#
+			// TODO finish more cleanly
+			// now queue the message
+			$subject = 'hey - I created a your signup';
+			$body = 'Dear ' . $u->first_name . ',\nI really did edit your signup. from your teacher';
+			$qm = QueuedMessage::factory($DB, $u->user_id, $u->email, $subject, $body, $s->opening_id); // last 3 params: opening, sheet, type
+			$qm->updateDb();
+
+			if (!$qm->matchesDb) {
+				// create record failed
+				$results["notes"] = "database error: could not create queued message for signup";
+				echo json_encode($results);
+				exit;
+			}
+			#------------------------------------------------#
 		}
 
 		// output
