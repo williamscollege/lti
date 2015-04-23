@@ -4,7 +4,7 @@ PROJECT:	Signup Sheets
 NOTES:		For testing, create 'dblinktest' table by executing: "db_setup/testing_schema.sql"
 
 FOR TESTING ONLY:
-	USE signup_sheets_development;
+	USE `signup_sheets_development`;
 
 	DROP TABLE `terms`;
 	DROP TABLE `users`;
@@ -30,17 +30,17 @@ FOR TESTING ONLY:
 	DELETE FROM `sus_access`;
 	DELETE FROM `queued_messages`;
 
-	Select * From `terms`;
-	Select * From `users`;
-	Select * From `courses`;
-	Select * From `enrollments`;
-	Select * From `course_roles`;
-	Select * From `sus_sheetgroups`;
-	Select * From `sus_sheets`;
-	Select * From `sus_openings`;
-	Select * From `sus_signups`;
-	Select * From `sus_access`;
-	Select * From `queued_messages`;
+	SELECT * FROM `terms`;
+	SELECT * FROM `users`;
+	SELECT * FROM `courses`;
+	SELECT * FROM `enrollments`;
+	SELECT * FROM `course_roles`;
+	SELECT * FROM `sus_sheetgroups`;
+	SELECT * FROM `sus_sheets`;
+	SELECT * FROM `sus_openings`;
+	SELECT * FROM `sus_signups`;
+	SELECT * FROM `sus_access`;
+	SELECT * FROM `queued_messages`;
 */
 
 # ----------------------------
