@@ -17,8 +17,8 @@
 	$action     = isset($_REQUEST["ajax_Action"]) ? util_quoteSmart($_REQUEST["ajax_Action"]) : 0;
 	$primaryID  = isset($_REQUEST["ajax_Primary_ID"]) && is_numeric($_REQUEST["ajax_Primary_ID"]) ? $_REQUEST["ajax_Primary_ID"] : 0;
 	$customData = isset($_REQUEST["ajax_Custom_Data"]) ? $_REQUEST["ajax_Custom_Data"] : 0;
-//	$sheetID = isset($_REQUEST["edit_SheetID"]) ? $_REQUEST["edit_SheetID"] : 0;
-//	$openingID = isset($_REQUEST["edit_SheetID"]) ? $_REQUEST["edit_SheetID"] : 0;
+	//	$sheetID = isset($_REQUEST["edit_SheetID"]) ? $_REQUEST["edit_SheetID"] : 0;
+	//	$openingID = isset($_REQUEST["edit_SheetID"]) ? $_REQUEST["edit_SheetID"] : 0;
 
 	// individually passed parameters
 	$ownerUserID = isset($_REQUEST["ajax_OwnerUserID"]) && is_numeric($_REQUEST["ajax_OwnerUserID"]) ? $_REQUEST["ajax_OwnerUserID"] : 0;
@@ -289,9 +289,9 @@
 	}
 	//###############################################################
 	elseif ($action == 'delete-signup' || $action == 'delete-signup-from-edit-opening-modal') {
-		$s = SUS_Signup::getOneFromDb(['signup_id' => $primaryID], $DB);
+		$su = SUS_Signup::getOneFromDb(['signup_id' => $primaryID], $DB);
 
-		if (!$s->matchesDb) {
+		if (!$su->matchesDb) {
 			// error: no matching record found
 			$results["notes"] = "no matching record found";
 			echo json_encode($results);
@@ -299,10 +299,10 @@
 		}
 
 		// mark this object as deleted as well as any lower dependent items
-		$s->cascadeDelete();
+		$su->cascadeDelete();
 
 		// output
-		if ($s->matchesDb) {
+		if ($su->matchesDb) {
 			$results['status'] = 'success';
 		}
 	}
@@ -472,24 +472,24 @@
 		}
 
 		// check if submitted user already has a signup for this opening (specify: flag_delete = TRUE)
-		$s = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $USER->user_id, 'flag_delete' => TRUE], $DB);
+		$su = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $USER->user_id, 'flag_delete' => TRUE], $DB);
 
 		// check if submitted user already has a signup for this opening
-		if (!$s->matchesDb) {
-			$s = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $USER->user_id], $DB);
+		if (!$su->matchesDb) {
+			$su = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $USER->user_id], $DB);
 		}
 
 		// update or create signup record
-		if ($s->matchesDb) {
+		if ($su->matchesDb) {
 			// update preexisting record
-			$s->flag_delete    = 0;
-			$s->updated_at     = util_currentDateTimeString_asMySQL();
-			$s->opening_id     = $primaryID;
-			$s->signup_user_id = $USER->user_id;
+			$su->flag_delete    = 0;
+			$su->updated_at     = util_currentDateTimeString_asMySQL();
+			$su->opening_id     = $primaryID;
+			$su->signup_user_id = $USER->user_id;
 
-			$s->updateDb();
+			$su->updateDb();
 
-			if (!$s->matchesDb) {
+			if (!$su->matchesDb) {
 				// update record failed
 				$results["notes"] = "database error: could not update signup";
 				echo json_encode($results);
@@ -498,14 +498,14 @@
 		}
 		else {
 			// create new record
-			$s = SUS_Signup::createNewSignup($DB);
+			$su = SUS_Signup::createNewSignup($DB);
 
-			$s->opening_id     = $primaryID;
-			$s->signup_user_id = $USER->user_id;
+			$su->opening_id     = $primaryID;
+			$su->signup_user_id = $USER->user_id;
 
-			$s->updateDb();
+			$su->updateDb();
 
-			if (!$s->matchesDb) {
+			if (!$su->matchesDb) {
 				// create record failed
 				$results["notes"] = "database error: could not save signup";
 				echo json_encode($results);
@@ -526,7 +526,7 @@
 	elseif ($action == 'sheet-opening-signup-delete-me') {
 
 		// check if submitted user already has a signup for this opening
-		$s = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $USER->user_id], $DB);
+		$su = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $USER->user_id], $DB);
 
 		// get all signups for this opening
 		$o = SUS_Opening::getOneFromDb(['opening_id' => $primaryID], $DB);
@@ -539,16 +539,16 @@
 		}
 
 		// delete signup record
-		if ($s->matchesDb) {
+		if ($su->matchesDb) {
 			// update preexisting record
-			$s->flag_delete    = 1;
-			$s->updated_at     = util_currentDateTimeString_asMySQL();
-			$s->opening_id     = $primaryID;
-			$s->signup_user_id = $USER->user_id;
+			$su->flag_delete    = 1;
+			$su->updated_at     = util_currentDateTimeString_asMySQL();
+			$su->opening_id     = $primaryID;
+			$su->signup_user_id = $USER->user_id;
 
-			$s->updateDb();
+			$su->updateDb();
 
-			if (!$s->matchesDb) {
+			if (!$su->matchesDb) {
 				// update record failed
 				$results["notes"] = "database error: could not update signup";
 				echo json_encode($results);
@@ -579,20 +579,20 @@
 		}
 
 		// check if submitted user already has a signup for this opening
-		$s = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $u->user_id], $DB);
+		$su = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $u->user_id], $DB);
 
 		// update or create signup record
-		if ($s->matchesDb) {
+		if ($su->matchesDb) {
 			// update preexisting record
-			$s->flag_delete    = 0;
-			$s->updated_at     = util_currentDateTimeString_asMySQL();
-			$s->opening_id     = $primaryID;
-			$s->signup_user_id = $u->user_id;
-			$s->admin_comment  = $description;
+			$su->flag_delete    = 0;
+			$su->updated_at     = util_currentDateTimeString_asMySQL();
+			$su->opening_id     = $primaryID;
+			$su->signup_user_id = $u->user_id;
+			$su->admin_comment  = $description;
 
-			$s->updateDb();
+			$su->updateDb();
 
-			if (!$s->matchesDb) {
+			if (!$su->matchesDb) {
 				// update record failed
 				$results["notes"] = "database error: could not update signup";
 				echo json_encode($results);
@@ -601,15 +601,15 @@
 		}
 		else {
 			// create new record
-			$s = SUS_Signup::createNewSignup($DB);
+			$su = SUS_Signup::createNewSignup($DB);
 
-			$s->opening_id     = $primaryID;
-			$s->signup_user_id = $u->user_id;
-			$s->admin_comment  = $description;
+			$su->opening_id     = $primaryID;
+			$su->signup_user_id = $u->user_id;
+			$su->admin_comment  = $description;
 
-			$s->updateDb();
+			$su->updateDb();
 
-			if (!$s->matchesDb) {
+			if (!$su->matchesDb) {
 				// create record failed
 				$results["notes"] = "database error: could not save signup";
 				echo json_encode($results);
@@ -617,27 +617,55 @@
 			}
 
 			#------------------------------------------------#
-			// TODO finish more cleanly
-			// now queue the message
-			$subject = 'hey - I created a your signup';
-			$body = 'Dear ' . $u->first_name . ',\nI really did edit your signup. from your teacher';
-			$qm = QueuedMessage::factory($DB, $u->user_id, $u->email, $subject, $body, $s->opening_id); // last 3 params: opening, sheet, type
-			$qm->updateDb();
+			// TODO - ADD_OR_COMPLETE_QUEUED_MESSAGE
+			# BEGIN: now queue the message
+			#------------------------------------------------#
+			/*
+			// TODO - MUST ADD SHEET ID TO DATA-ATTRIBUTES AND PASS IT HERE; AND replace this hardcoded values
+			$s = SUS_Sheet::getOneFromDb(['sheet_id' => 601,], $DB);
+			// cacheStructuredData($datetime=0, $opening_id=0, $signup_id=0);
+			$s->cacheStructuredData(0, 0, 813);
+			util_prePrintR($s->structured_data);
 
-			if (!$qm->matchesDb) {
-				// create record failed
-				$results["notes"] = "database error: could not create queued message for signup";
-				echo json_encode($results);
-				exit;
+			$subject = 'Glow SUS - ' . $u->first_name . ' ' . $u->last_name . ' signed up for ' . $sheet->name;
+			$body    = "Signup Confirmation: " . $u->first_name . ' ' . $u->last_name . '\nOpening: ' . date_format(new DateTime($opening->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
+
+			foreach ($s->structured_data as $obj) {
+				// Queue messages for:
+				// Email owner on signup or cancel
+				// Email owner on upcoming signup
+				// Email admin on signup or cancel
+				// Email admin on upcoming signup
+				// TODO - Need to implement proper array values here
+				if ($obj->$sheet->flag_alert_owner_signup || $obj->$sheet->flag_alert_owner_imminent || $obj->$sheet->flag_alert_admin_signup || $obj->$sheet->flag_alert_admin_imminent) {
+					prep_for_QueuedMessage($DB, $u->user_id, $u->email, $subject, $body, $su->opening_id, $subject, $body, $opening->opening_id, $sheet->sheet_id);
+				}
 			}
+
+			// TODO - Possibly move this to be a class function (and combine with others, if possible)
+			function prep_for_QueuedMessage($DB, $usersArray, $subject, $body, $openingID = 0, $sheetID = 0) {
+				// QueuedMessage::factory($db, $user_id, $target, $summary, $body, $opening_id = 0, $sheet_id = 0, $type = 'email' )
+				$qm = QueuedMessage::factory($DB, $usersArray["userID"], $usersArray["email"], $subject, $body, $openingID, $sheetID);
+				$qm->updateDb();
+
+				if (!$qm->matchesDb) {
+					// create record failed
+					$results['notes'] = "database error: could not create queued message for signup";
+					echo json_encode($results);
+					exit;
+				}
+			}
+			*/
+			#------------------------------------------------#
+			# END: now queue the message
 			#------------------------------------------------#
 		}
 
 		// output
 		$results['status']       = 'success';
 		$results['which_action'] = 'edit-opening-add-signup-user';
-		$results['html_output']  = "<li data-for-firstname=\"" . htmlentities($u->firstname, ENT_QUOTES, 'UTF-8') . "\" data-for-lastname=\"" . htmlentities($u->lastname, ENT_QUOTES, 'UTF-8') . "\" data-for-signup-id=\"" . htmlentities($s->signup_id, ENT_QUOTES, 'UTF-8') . "\">";
-		$results['html_output'] .= "<a href=\"#\" class=\"sus-delete-signup\" data-bb=\"alert_callback\" data-for-signup-id=\"" . htmlentities($s->signup_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>&nbsp;";
+		$results['html_output']  = "<li data-for-firstname=\"" . htmlentities($u->firstname, ENT_QUOTES, 'UTF-8') . "\" data-for-lastname=\"" . htmlentities($u->lastname, ENT_QUOTES, 'UTF-8') . "\" data-for-signup-id=\"" . htmlentities($su->signup_id, ENT_QUOTES, 'UTF-8') . "\">";
+		$results['html_output'] .= "<a href=\"#\" class=\"sus-delete-signup\" data-bb=\"alert_callback\" data-for-signup-id=\"" . htmlentities($su->signup_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>&nbsp;";
 		$results['html_output'] .= htmlentities($u->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($u->last_name, ENT_QUOTES, 'UTF-8') . "</li>";
 	}
 	//###############################################################

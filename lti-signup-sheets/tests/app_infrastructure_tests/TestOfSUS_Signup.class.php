@@ -25,12 +25,12 @@
 		//// static methods
 
 		public function testOfCmp() {
-			$s1 = SUS_Signup::getOneFromDb(['signup_id' => 801], $this->DB);
-			$s2 = SUS_Signup::getOneFromDb(['signup_id' => 802], $this->DB);
+			$su1 = SUS_Signup::getOneFromDb(['signup_id' => 801], $this->DB);
+			$su2 = SUS_Signup::getOneFromDb(['signup_id' => 802], $this->DB);
 
-			$this->assertEqual(SUS_Signup::cmp($s1, $s2), -1);
-			$this->assertEqual(SUS_Signup::cmp($s1, $s1), 0);
-			$this->assertEqual(SUS_Signup::cmp($s2, $s1), 1);
+			$this->assertEqual(SUS_Signup::cmp($su1, $su2), -1);
+			$this->assertEqual(SUS_Signup::cmp($su1, $su1), 0);
+			$this->assertEqual(SUS_Signup::cmp($su2, $su1), 1);
 		}
 
 
@@ -39,14 +39,14 @@
 		//// instance methods - related data
 
 		public function testCascadeDelete() {
-			$s = SUS_Signup::getOneFromDb(['signup_id' => 801], $this->DB);
-			$this->assertTrue($s->matchesDb);
-			$this->assertEqual(0, $s->flag_delete);
+			$su = SUS_Signup::getOneFromDb(['signup_id' => 801], $this->DB);
+			$this->assertTrue($su->matchesDb);
+			$this->assertEqual(0, $su->flag_delete);
 
-			$s->cascadeDelete();
+			$su->cascadeDelete();
 
 			// were items correctly marked as deleted?
-			$this->assertEqual(1, $s->flag_delete);
+			$this->assertEqual(1, $su->flag_delete);
 		}
 
 

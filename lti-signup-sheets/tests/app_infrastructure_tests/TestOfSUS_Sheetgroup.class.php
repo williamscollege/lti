@@ -28,34 +28,34 @@
 		//// static methods
 
 		public function testOfCmp() {
-			$s1 = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => 501], $this->DB);
-			$s2 = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => 502], $this->DB);
+			$sg1 = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => 501], $this->DB);
+			$sg2 = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => 502], $this->DB);
 
-			$this->assertEqual(SUS_Sheetgroup::cmp($s1, $s2), -1);
-			$this->assertEqual(SUS_Sheetgroup::cmp($s1, $s1), 0);
-			$this->assertEqual(SUS_Sheetgroup::cmp($s2, $s1), 1);
+			$this->assertEqual(SUS_Sheetgroup::cmp($sg1, $sg2), -1);
+			$this->assertEqual(SUS_Sheetgroup::cmp($sg1, $sg1), 0);
+			$this->assertEqual(SUS_Sheetgroup::cmp($sg2, $sg1), 1);
 		}
 
 		//// DB interaction tests
 
 		function testSUS_SheetgroupDBInsert() {
-			$s = new SUS_Sheetgroup(['owner_user_id' => '5', 'DB' => $this->DB]);
+			$sg1 = new SUS_Sheetgroup(['owner_user_id' => '5', 'DB' => $this->DB]);
 
-			$s->updateDb();
-			$this->assertTrue($s->matchesDb);
+			$sg1->updateDb();
+			$this->assertTrue($sg1->matchesDb);
 
-			$s2 = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $s->sheetgroup_id], $this->DB);
+			$sg2 = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $s->sheetgroup_id], $this->DB);
 
-			$this->assertTrue($s2->matchesDb);
-			$this->assertEqual($s2->owner_user_id, 5);
+			$this->assertTrue($sg2->matchesDb);
+			$this->assertEqual($sg2->owner_user_id, 5);
 		}
 
 		function testSUS_SheetgroupRetrievedFromDb() {
-			$s = new SUS_Sheetgroup(['sheetgroup_id' => 501, 'DB' => $this->DB]);
-			$this->assertNull($s->owner_user_id);
+			$sg1 = new SUS_Sheetgroup(['sheetgroup_id' => 501, 'DB' => $this->DB]);
+			$this->assertNull($sg1->owner_user_id);
 
-			$s->refreshFromDb();
-			$this->assertEqual($s->owner_user_id, 101);
+			$sg1->refreshFromDb();
+			$this->assertEqual($sg1->owner_user_id, 101);
 		}
 
 

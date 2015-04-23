@@ -31,12 +31,12 @@
 		//// static methods
 
 		public function testOfCmp() {
-			$s1 = SUS_Opening::getOneFromDb(['opening_id' => 701], $this->DB);
-			$s2 = SUS_Opening::getOneFromDb(['opening_id' => 702], $this->DB);
+			$o1 = SUS_Opening::getOneFromDb(['opening_id' => 701], $this->DB);
+			$o2 = SUS_Opening::getOneFromDb(['opening_id' => 702], $this->DB);
 
-			$this->assertEqual(SUS_Opening::cmp($s1, $s2), -1);
-			$this->assertEqual(SUS_Opening::cmp($s1, $s1), 0);
-			$this->assertEqual(SUS_Opening::cmp($s2, $s1), 1);
+			$this->assertEqual(SUS_Opening::cmp($o1, $o2), -1);
+			$this->assertEqual(SUS_Opening::cmp($o1, $o1), 0);
+			$this->assertEqual(SUS_Opening::cmp($o2, $o1), 1);
 		}
 
 
@@ -45,23 +45,23 @@
 		//// instance methods - related data
 
 		public function testCacheSignups() {
-			$s = SUS_Opening::getOneFromDb(['opening_id' => 701], $this->DB);
-			$this->assertTrue($s->matchesDb);
+			$o = SUS_Opening::getOneFromDb(['opening_id' => 701], $this->DB);
+			$this->assertTrue($o->matchesDb);
 
-			$s->cacheSignups();
-			$this->assertTrue($s->matchesDb);
+			$o->cacheSignups();
+			$this->assertTrue($o->matchesDb);
 
-			$this->assertEqual(4, count($s->signups));
+			$this->assertEqual(4, count($o->signups));
 		}
 
 		public function testLoadSignups() {
-			$s = SUS_Opening::getOneFromDb(['opening_id' => 701], $this->DB);
-			$this->assertTrue($s->matchesDb);
+			$o = SUS_Opening::getOneFromDb(['opening_id' => 701], $this->DB);
+			$this->assertTrue($o->matchesDb);
 
-			$s->cacheSignups();
-			$this->assertTrue($s->matchesDb);
-			$this->assertEqual(4, count($s->signups));
-			$this->assertEqual(801, $s->signups[3]->signup_id);
+			$o->cacheSignups();
+			$this->assertTrue($o->matchesDb);
+			$this->assertEqual(4, count($o->signups));
+			$this->assertEqual(801, $o->signups[3]->signup_id);
 		}
 
 		public function testCascadeDelete() {

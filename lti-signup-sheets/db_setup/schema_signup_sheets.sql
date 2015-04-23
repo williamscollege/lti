@@ -1,15 +1,10 @@
 /* 
-SAVE:
-	DB Creation and Maintenance Script
-
-PROJECT:
-	Signup Sheets (lti-signup-sheets)
-
-NOTES:
-	For testing, create 'dblinktest' table by executing: "db_setup/testing_schema.sql"
+SAVE:		DB Creation and Maintenance Script
+PROJECT:	Signup Sheets
+NOTES:		For testing, create 'dblinktest' table by executing: "db_setup/testing_schema.sql"
 
 FOR TESTING ONLY:
-	USE lti_signup_sheets_test;
+	USE signup_sheets_development;
 
 	DROP TABLE `terms`;
 	DROP TABLE `users`;
@@ -49,19 +44,29 @@ FOR TESTING ONLY:
 */
 
 # ----------------------------
-# IMPORTANT: Select which database you wish to run this script against
+# IMPORTANT: Select which database you wish to create and run this script against
 # ----------------------------
-CREATE SCHEMA IF NOT EXISTS `lti_signup_sheets_test`;
-USE lti_signup_sheets_test;
+# Database for Development work
+CREATE SCHEMA IF NOT EXISTS `signup_sheets_development`;
+USE `signup_sheets_development`;
 
--- CREATE USER 'usrname' IDENTIFIED BY 'usrpwd';
--- GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE lti_signup_sheets_test.* TO 'usrname';
+# Database for TestSuite (unit testing) work
+-- CREATE SCHEMA IF NOT EXISTS `signup_sheets_test_suite`;
+-- USE `signup_sheets_test_suite`;
 
--- CREATE SCHEMA IF NOT EXISTS `lti_signup_sheets`;
--- USE lti_signup_sheets;
+# Database for live (production) work
+--  CREATE SCHEMA IF NOT EXISTS `signup_sheets_live`;
+-- USE `signup_sheets_live`;
 
 # ----------------------------
-# basic application infrastructure
+# IMPORTANT: For local workstation testing, create web user and enter [DB_NAME, DB_USER, DB_PASS] credentials into "institution.cfg.php" file.
+# ----------------------------
+-- CREATE USER 'some_dev_username'@'localhost' IDENTIFIED BY 'some_pass_phrase';
+-- GRANT SELECT, INSERT, UPDATE, DELETE ON signup_sheets_development.* TO 'some_dev_username'@'localhost';
+-- /* CAREFUL!: DROP USER 'some_dev_username'@'localhost'; */
+
+# ----------------------------
+# setup database tables
 # ----------------------------
 
 CREATE TABLE IF NOT EXISTS `terms` (

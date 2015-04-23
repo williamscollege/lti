@@ -71,23 +71,23 @@
 		}
 
 		public function testCacheAccess() {
-			$a = SUS_Sheet::getOneFromDb(['sheet_id' => 601], $this->DB);
-			$this->assertTrue($a->matchesDb);
+			$s = SUS_Sheet::getOneFromDb(['sheet_id' => 601], $this->DB);
+			$this->assertTrue($s->matchesDb);
 
-			$a->cacheAccess();
-			// util_prePrintR($a->access);
+			$s->cacheAccess();
+			// util_prePrintR($s->access);
 
-			$this->assertTrue($a->matchesDb);
-			$this->assertEqual(9, count($a->access));
+			$this->assertTrue($s->matchesDb);
+			$this->assertEqual(9, count($s->access));
 		}
 
 		public function testLoadAccess() {
-			$a = SUS_Sheet::getOneFromDb(['sheet_id' => 601], $this->DB);
-			$this->assertTrue($a->matchesDb);
+			$s = SUS_Sheet::getOneFromDb(['sheet_id' => 601], $this->DB);
+			$this->assertTrue($s->matchesDb);
 
-			$a->loadAccess();
-			$this->assertTrue($a->matchesDb);
-			$this->assertEqual(9, count($a->access));
+			$s->loadAccess();
+			$this->assertTrue($s->matchesDb);
+			$this->assertEqual(9, count($s->access));
 		}
 
 		public function testCascadeDelete() {
