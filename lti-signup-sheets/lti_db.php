@@ -54,10 +54,27 @@
 	}
 
 
+	// ***************************
+	// Williams error checking
+	// ***************************
+
+	//	$sql = "SELECT count(*) FROM ".LTI_Data_Connector::CONSUMER_TABLE_NAME;
+	//	$stmt = $db->prepare($sql);
+	//	$stmt->execute();
+	//	if ($stmt->fetchAll(PDO::FETCH_ASSOC) <= 0){
+	//		echo $_SESSION['error_message'] = "Database error: no records in table: " . CONSUMER_TABLE_NAME;
+	//		exit;
+	//	}
+	// # repeat test for other tables. does this really help with LTI efficiency?
+	// # and comment out CREATE TABLE statements below...
+
+
 	###
 	###  Create any missing database tables (only for MySQL and SQLite databases)
 	###
 	function init_db($db) {
+
+		echo 'DKC is inside of lti_db.php using function init_db(db)'; exit;
 
 		$db_type = '';
 		$pos     = strpos(LTI_DB_NAME, ':');

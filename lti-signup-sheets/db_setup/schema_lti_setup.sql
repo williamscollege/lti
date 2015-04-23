@@ -1,6 +1,6 @@
 /*
 SAVE:		DB Creation and Maintenance Script
-PROJECT:	Signup Sheets
+PROJECT:	LTI setup
 NOTES:		This LTI table can be setup just one time and can accommodate multiple LTI projects
 
 	USE `lti_development`;
