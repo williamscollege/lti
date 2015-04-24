@@ -38,8 +38,7 @@
 	define('LTI_TOOL_CONSUMER_AUTH_TOKEN', 'Authorization: Bearer 1~TOKEN_HERE');
 
 	# LTI database connection
-	# TODO: Change or eliminate 'rating' DB
-	define('LTI_DB_NAME', 'mysql:dbname=rating;host=127.0.0.1');
+	define('LTI_DB_NAME', 'mysql:dbname=lti_development_db;host=127.0.0.1');
 	define('LTI_DB_USERNAME', 'yourusername');
 	define('LTI_DB_PASSWORD', 'yourlivefancypassword');
 	define('LTI_DB_TABLENAME_PREFIX', '');
@@ -88,4 +87,3 @@
 	# TimeZone Problem: the default php.ini setting may be incorrect; correct by explicitly setting this configuration to your region
 	# TimeZone Solution: (Line 1044 of php.ini: Module Settings/Date/date.timezone = America/New_York)
 
-?>

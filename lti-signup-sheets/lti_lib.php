@@ -71,9 +71,11 @@
 			else {
 				if (!is_null($checkSession) && !$checkSession) {
 					// Create database tables (if needed)
-					$ok = init_db($db); // assumes a MySQL/SQLite database is being used
+					# Modification: 20150424 by DKC: absolutely no need to automatically create tables; just echo error and exit
+					// $ok = init_db($db); // assumes a MySQL/SQLite database is being used
 					if (!$ok) {
 						$_SESSION['error_message'] = 'Unable to initialise database.';
+						exit;
 					}
 				}
 			}

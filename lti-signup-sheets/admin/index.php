@@ -221,11 +221,11 @@ EOD;
     <td>{$consumer->name}</td>
     <td>{$consumer->getKey()}</td>
     <td><span title="{$consumer->consumer_guid}">{$consumer->consumer_version}</span></td>
-    <td class="aligncentre"><img src="../images/{$available}.gif" alt="{$available_alt}" title="{$available_alt}" /></td>
-    <td class="aligncentre"><img src="../images/{$protected}.gif" alt="{$protected_alt}" title="{$protected_alt}" /></td>
+    <td class="aligncentre"><img src="../img/{$available}.gif" alt="{$available_alt}" title="{$available_alt}" /></td>
+    <td class="aligncentre"><img src="../img/{$protected}.gif" alt="{$protected_alt}" title="{$protected_alt}" /></td>
     <td>{$last}</td>
     <td class="iconcolumn aligncentre">
-      <a href="./?key={$trkey}"><img src="../images/edit.png" title="Edit consumer" alt="Edit consumer" /></a>&nbsp;<a href="./?do=delete&amp;key={$trkey}" onclick="return confirm('Delete consumer; are you sure?');"><img src="../images/delete.png" title="Delete consumer" alt="Delete consumer" /></a>
+      <a href="./?key={$trkey}"><img src="../img/edit.png" title="Edit consumer" alt="Edit consumer" /></a>&nbsp;<a href="./?do=delete&amp;key={$trkey}" onclick="return confirm('Delete consumer; are you sure?');"><img src="../img/delete.png" title="Delete consumer" alt="Delete consumer" /></a>
     </td>
   </tr>
 
