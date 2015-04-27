@@ -7,6 +7,7 @@
 	 * To change this template use File | Settings | File Templates.
 	 */
 	require_once(dirname(__FILE__) . '/auth_base.class.php');
+	require_once(dirname(__FILE__) . '/auth_LTI.class.php');
 	require_once(dirname(__FILE__) . '/auth_LDAP.class.php');
 
 

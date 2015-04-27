@@ -156,7 +156,7 @@
 		}
 
 		// TAKES: a username, a password
-		// RETURNS: true if the username and password matches an LDAP entry (i.e. has relevatn data and can bind), false otherwise
+		// RETURNS: true if the username and password matches an LDAP entry (i.e. has relevant data and can bind), false otherwise
 		public function checkLDAP($user = "", $pass = "", $ldap_server = AUTH_SERVER) {
 
 			if (!$user) {

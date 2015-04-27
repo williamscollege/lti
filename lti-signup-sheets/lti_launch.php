@@ -27,7 +27,7 @@
 	# init($db, FALSE);
 
 	$data_connector = LTI_Data_Connector::getDataConnector(LTI_DB_TABLENAME_PREFIX, $db);
-	$tool = new LTI_Tool_Provider('doLaunch', $data_connector);
+	$tool           = new LTI_Tool_Provider('doLaunch', $data_connector);
 	$tool->setParameterConstraint('oauth_consumer_key', TRUE, 50);
 	$tool->setParameterConstraint('resource_link_id', TRUE, 50);
 	$tool->setParameterConstraint('user_id', TRUE, 50);
@@ -50,20 +50,18 @@
 			$_SESSION['user_consumer_key'] = $tool_provider->user->getResourceLink()->getConsumer()->getKey();
 			$_SESSION['user_id']           = $tool_provider->user->getId();
 			$_SESSION['isStudent']         = $tool_provider->user->isLearner();
-			// Store Canvas Course ID value
-			// OBSOLETE EXAMPLE: $_SESSION['custom_canvas_course_id'] = $tool_provider->resource_link->getSetting('custom_canvas_course_id', '');
+			// Store values from Tool Consumer (Instructure Canvas)
+			$_SESSION['custom_canvas_user_login_id'] = $tool_provider->resource_link->getSetting('custom_canvas_user_login_id', '');
+			$_SESSION['custom_canvas_oauth_nonce']   = $tool_provider->resource_link->getSetting('oauth_nonce', '');
+			$_SESSION['custom_canvas_roles']         = $tool_provider->resource_link->getSetting('roles', '');
+			// $_SESSION['custom_canvas_course_id'] = $tool_provider->resource_link->getSetting('custom_canvas_course_id', '');
 
 			// Success: Redirect the user to display the list of items for the resource link
 			return getAppUrl();
-
 		}
 		else {
 			// Failure:
 			$tool_provider->reason = 'Invalid role.';
 			return FALSE;
-
 		}
-
 	}
-
-?>

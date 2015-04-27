@@ -36,7 +36,23 @@
 	define('AUTH_LDAP_EMAIL_ATTR_LABEL',            'mail');
 	define('AUTH_LDAP_GROUPMEMBERSHIP_ATTR_LABEL',  'groups');    // institutional groups
 
-	$AUTH = new Auth_LDAP();
+	// note: the $AUTH object will be set (in app_setup.php) using the appropriate auth class defined here
+	$temporary_AUTH_LDAP = new Auth_LDAP();
+
+
+	# ---------------------------
+	# authentication mode: LTI
+	# ---------------------------
+	require_once(dirname(__FILE__) . '/classes/auth_LTI.class.php');
+	define('AUTH_SERVER', LTI_DB_NAME); // uses global variable from institution.cfg.php
+
+	define('AUTH_LTI_USERNAME', 'username');
+	define('AUTH_LTI_NONCE', 'nonce');
+	define('AUTH_LTI_ROLES', 'roles');
+
+	// note: the $AUTH object will be set (in app_setup.php) using the appropriate auth class defined here
+	$temporary_AUTH_LTI = new Auth_LTI();
+
 
 	# ---------------------------
 	# authentication mode: Kerberos

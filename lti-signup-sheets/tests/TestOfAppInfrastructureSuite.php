@@ -12,6 +12,7 @@
 
 			$this->addFile('app_infrastructure_tests/TestOfDB_Linked.class.php');
 			$this->addFile('app_infrastructure_tests/TestOfAuth_Base.class.php');
+			$this->addFile('app_infrastructure_tests/TestOfAuth_LTI.class.php');
 			$this->addFile('app_infrastructure_tests/TestOfAuth_LDAP.class.php');
 
 			$this->addFile('app_infrastructure_tests/TestOfUser.class.php');

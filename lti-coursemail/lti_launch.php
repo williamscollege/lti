@@ -48,7 +48,7 @@
 			$_SESSION['user_consumer_key'] = $tool_provider->user->getResourceLink()->getConsumer()->getKey();
 			$_SESSION['user_id']           = $tool_provider->user->getId();
 			$_SESSION['isStudent']         = $tool_provider->user->isLearner();
-			// Store Canvas Course ID value
+			// Store values from Tool Consumer (Instructure Canvas)
 			$_SESSION['custom_canvas_course_id'] = $tool_provider->resource_link->getSetting('custom_canvas_course_id', '');
 
 

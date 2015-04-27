@@ -1,5 +1,6 @@
 <?php
 	require_once(dirname(__FILE__) . '/../classes/auth_base.class.php');
+	require_once(dirname(__FILE__) . '/../classes/auth_LTI.class.php');
 	require_once(dirname(__FILE__) . '/../classes/auth_LDAP.class.php');
 
 	require_once(dirname(__FILE__) . '/../classes/ALL_CLASS_INCLUDES.php');
