@@ -33,10 +33,6 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<!-- TODO - IF entering directly from web (not from LTI), then show BRAND icon, below-->
-			<!--<a class="navbar-brand" href="#" style="padding: 0">-->
-			<!--<img alt="<?php /*echo LANG_INSTITUTION_NAME; */ ?>" src="<?php /*echo APP_ROOT_PATH; */ ?>/img/williams-college-avatar-50.png" class="" />-->
-			<!--</a>-->
 		</div>
 
 		<?php
@@ -94,26 +90,27 @@
 				?>
 			</ul>
 			<?php
+/*				// NOTE: This is a form based method of firing the app_setup.php and passing manually entered username and pwd values
+				// NOTE: This could be utilized for LDAP authentication using: auth_LDAP.class.php
 				if ($IS_AUTHENTICATED) {
-					// TODO - DO NOT SHOW THIS WHEN AUTH'ed AS AN LTI
-					?>
-					<form id="frmSignout" class="navbar-form pull-right" method="post" action="<?php echo APP_ROOT_PATH; ?>/index.php">
-						<a href="<?php echo APP_ROOT_PATH; ?>/app_code/my_account.php" title="My Account" class="wms_white"><?php echo htmlentities($_SESSION['userdata']['username'], ENT_QUOTES, 'UTF-8'); ?></a>&nbsp;
+					*/?><!--
+					<form id="frmSignout" class="navbar-form pull-right" method="post" action="<?php /*echo APP_ROOT_PATH; */?>/index.php">
+						<a href="<?php /*echo APP_ROOT_PATH; */?>/app_code/my_account.php" title="My Account" class="wms_white"><?php /*echo htmlentities($_SESSION['userdata']['username'], ENT_QUOTES, 'UTF-8'); */?></a>&nbsp;
 						<input type="submit" id="submit_signout" class="btn btn-default btn-sm" name="submit_signout" value="Sign out" />
 					</form>
 				<?php
-				}
+/*				}
 				else {
 					//util_prePrintR($LANGUAGE);
-					?>
+					*/?>
 					<form id="frmSignin" class="navbar-form pull-right" method="post" action="">
-						<input type="text" id="username" class="span2" name="username" maxlength="255" placeholder="<?php echo util_lang('username'); ?>" value="" />
-						<input type="password" id="password_login" class="span2" name="password" maxlength="255" placeholder="<?php echo util_lang('password'); ?>" value="" />
-						<input type="submit" id="submit_signin" class="btn btn-default" name="submit_signin" value="<?php echo util_lang('app_sign_in_action'); ?>" />
+						<input type="text" id="username" class="span2" name="username" maxlength="255" placeholder="<?php /*echo util_lang('username'); */?>" value="" />
+						<input type="password" id="password_login" class="span2" name="password" maxlength="255" placeholder="<?php /*echo util_lang('password'); */?>" value="" />
+						<input type="submit" id="submit_signin" class="btn btn-default" name="submit_signin" value="<?php /*echo util_lang('app_sign_in_action'); */?>" />
 					</form>
-				<?php
-				}
-			?>
+				--><?php
+/*				}
+			*/?>
 		</div>
 	</div>
 </div>

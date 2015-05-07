@@ -28,6 +28,8 @@ $LANGUAGE['en'] = [
     'msg_record_duplicate' => 'Record already exists in database',
     'msg_missing_parameter' => 'Required information is missing',
 
+	'msg_lti_failed_authentication' => 'Oops! The LTI application failed to authenticate. For help, please contact ITech.',
+
     'alert_error' => 'Error!',
     'alert_success' => 'Success!',
     'alert_info' => 'Note:',

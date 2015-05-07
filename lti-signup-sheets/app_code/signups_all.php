@@ -215,7 +215,7 @@
 				<!-- End: My Signups -->
 				<div class="col-sm-1">&nbsp;</div>
 				<!-- Begin: Signups on my Sheets -->
-				<div class="col-sm-6">
+				<div class="col-sm-5">
 					<div class="row">
 						<div class="tab-container PrintArea wms_print_OnMySheets" role="tabpanel" data-example-id="set2">
 							<ul id="boxSignupsOnMySheetsHeader" class="nav nav-tabs" role="tablist">

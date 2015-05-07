@@ -107,6 +107,32 @@
 		return (isset($_SESSION['isAuthenticated']) && ($_SESSION['isAuthenticated']));
 	}
 
+	// a quick handle for a slightly complex condition check
+	function util_checkUsernameExistsInDB($username = ""){
+		if (!$username) {
+			return FALSE;
+		}
+
+		$check = new PDO("mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";port=3306", DB_USER, DB_PASS);
+
+		if (!$check) {
+			return FALSE;
+		}
+
+		// Prepare SQL using PDO
+		$sql  = "SELECT * FROM " . User::$dbTable . " WHERE users.username = '" . htmlentities($username, ENT_QUOTES, 'UTF-8') . "'";
+		$stmt = $check->prepare($sql);
+		$stmt->execute();
+		$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		// util_prePrintR($res);exit;
+
+		if (count($res) != 1) {
+			return FALSE;
+		}
+
+		return TRUE;
+	}
+
 	function util_createDbConnection() {
 		//print_r($_SERVER);
 		//        TODO: figure out how to handle this for command line scripts (possibly build this directly into the command line header, but still need to resolve test vs live)
@@ -136,6 +162,19 @@
 		echo "</pre>";
 		return TRUE;
 	}
+
+	# Output debug info only when param is TRUE
+	function util_debug($obj) {
+		// set hardcoding value to: 1 for debugging, 0 for production server
+		$debug = 1;
+		if ($debug == 1) {
+			echo "<pre>";
+			print_r($obj);
+			echo "</pre>";
+		}
+		return TRUE;
+	}
+
 
 	# returns a string thats the current date and time, in format YYYY/MM/SS HH:MI
 	function util_currentDateTimeString() {

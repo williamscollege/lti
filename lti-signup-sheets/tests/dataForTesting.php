@@ -1,8 +1,6 @@
 <?php
 	require_once(dirname(__FILE__) . '/../classes/auth_base.class.php');
-	require_once(dirname(__FILE__) . '/../classes/auth_LTI.class.php');
-	require_once(dirname(__FILE__) . '/../classes/auth_LDAP.class.php');
-
+	// require_once(dirname(__FILE__) . '/../classes/auth_LDAP.class.php'); // intentionally removed
 	require_once(dirname(__FILE__) . '/../classes/ALL_CLASS_INCLUDES.php');
 
 	/*
@@ -62,23 +60,23 @@
 
 	function createTestData_Users($dbConn) {
 		// 100 series ids
-		# user: 'user_id', 'username', 'email', 'first_name', 'last_name', 'created_at', 'updated_at', 'flag_is_system_admin', 'flag_is_banned', 'flag_delete'
+		# user: 'user_id', 'canvas_user_id', 'sis_user_id', 'username', 'email', 'first_name', 'last_name', 'created_at', 'updated_at', 'flag_is_system_admin', 'flag_is_banned', 'flag_delete'
 		// 101-104 are
 		// 105 is
 		// 106-108 are
 		// 109 has no roles (implicit 'public' role)
 		// 110 is admin?
 		$addTestSql  = "INSERT INTO " . User::$dbTable . " VALUES
-            (101,'" . Auth_Base::$TEST_USERNAME . "','" . Auth_Base::$TEST_EMAIL . "','" . Auth_Base::$TEST_FNAME . "','" . Auth_Base::$TEST_LNAME . "',NOW(),NOW(),0,0,0),
-            (102,'tusr2','tusr2@williams.edu','Tu2F','Tu2L',NOW(),NOW(),0,0,0),
-            (103,'tusr3','tusr3@williams.edu','Tu3F','Tu3L',NOW(),NOW(),0,0,0),
-            (104,'tusr4','tusr4@williams.edu','Tu4F','Tu4L',NOW(),NOW(),0,0,0),
-            (105,'tusr5','tusr5@williams.edu','Tu5F','Tu5L',NOW(),NOW(),0,0,0),
-            (106,'tusr6','tusr6@williams.edu','Tu6F','Tu6L',NOW(),NOW(),1,0,0),
-            (107,'tusr7','tusr7@williams.edu','Tu7F','Tu7L',NOW(),NOW(),0,1,0),
-            (108,'tusr8','tusr8@williams.edu','Tu8F','Tu8L',NOW(),NOW(),0,0,1),
-            (109,'tusr9','tusr9@williams.edu','Tu9F','Tu9L',NOW(),NOW(),0,0,0),
-            (110,'tusr10','tusr10@williams.edu','Tu10F','TuL',NOW(),NOW(),0,0,0)
+            (101,0,0,'" . Auth_Base::$TEST_USERNAME . "','" . Auth_Base::$TEST_EMAIL . "','" . Auth_Base::$TEST_FNAME . "','" . Auth_Base::$TEST_LNAME . "',NOW(),NOW(),0,0,0),
+            (102,0,0,'tusr2','tusr2@williams.edu','Tu2F','Tu2L',NOW(),NOW(),0,0,0),
+            (103,0,0,'tusr3','tusr3@williams.edu','Tu3F','Tu3L',NOW(),NOW(),0,0,0),
+            (104,0,0,'tusr4','tusr4@williams.edu','Tu4F','Tu4L',NOW(),NOW(),0,0,0),
+            (105,0,0,'tusr5','tusr5@williams.edu','Tu5F','Tu5L',NOW(),NOW(),0,0,0),
+            (106,0,0,'tusr6','tusr6@williams.edu','Tu6F','Tu6L',NOW(),NOW(),1,0,0),
+            (107,0,0,'tusr7','tusr7@williams.edu','Tu7F','Tu7L',NOW(),NOW(),0,1,0),
+            (108,0,0,'tusr8','tusr8@williams.edu','Tu8F','Tu8L',NOW(),NOW(),0,0,1),
+            (109,0,0,'tusr9','tusr9@williams.edu','Tu9F','Tu9L',NOW(),NOW(),0,0,0),
+            (110,0,0,'tusr10','tusr10@williams.edu','Tu10F','TuL',NOW(),NOW(),0,0,0)
         ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
@@ -92,31 +90,31 @@
 
 	function createTestData_Courses($dbConn) {
 		// 200 series ids
-		# course: 'course_id', 'course_idstr', 'short_name', 'long_name', 'account_idstr', 'term_idstr', 'flag_delete'
+		# course: 'course_id', 'course_idstr', 'short_name', 'long_name', 'account_idstr', 'term_idstr', 'canvas_course_id', 'begins_at_str', 'ends_at_str', 'flag_delete'
 		$addTestSql  = "INSERT INTO " . Course::$dbTable . " VALUES
-			(201, '15F-ARTH-101-01', '15F-ARTH-101-01 - Art History (Degas)', '15F-ARTH-101-01 - Art History (Degas)', 'courses', '15F', 0),
-			(202, '15F-BIOL-101-01', '15F-BIOL-101-01 - Biology Intro (Fall Organisms)', '15F-BIOL-101-01 - Biology Intro (Fall Organisms)', 'courses', '15F', 0),
-			(203, '15F-CHEM-101-01', '15F-CHEM-101-01 - Chemistry Compounds', '15F-CHEM-101-01 - Chemistry Compounds', 'courses', '15F', 0),
-			(204, '15F-ECON-101-01', '15F-ECON-101-01 - Economy Introduction', '15F-ECON-101-01 - Economy Introduction', 'courses', '15F', 0),
-			(205, '15F-ECON-201-01', '15F-ECON-201-01 - Economy: Depression Era to WW II', '15F-ECON-201-01 - Economy: Depression Era to WW II', 'courses', '15F', 0),
-			(206, '15F-ECON-301-01', '15F-ECON-301-01 - Economy: Fed Chair Greenspan', '15F-ECON-301-01 - Economy: Fed Chair Greenspan', 'courses', '15F', 0),
-			(207, '15F-ECON-301-02', '15F-ECON-301-02 - Economy: Fed Chair Volcker', '15F-ECON-301-02 - Economy: Fed Chair Volcker', 'courses', '15F', 0),
-			(208, '15F-HIST-101-01', '15F-HIST-101-01 - History of the Revolutionary War', '15F-HIST-101-01 - History of the Revolutionary War', 'courses', '15F', 0),
-			(209, '15F-MATH-101-01', '15F-MATH-101-01 - Math - Calculus Intro', '15F-MATH-101-01 - Math - Calculus Intro', 'courses', '15F', 0),
-			(210, '15W-CHIN-101-01', '15W-CHIN-101-01 - Chinese in 30 Days', '15W-CHIN-101-01 - Chinese in 30 Days', 'courses', '15W', 0),
-			(211, '15W-CSCI-101-01', '15W-CSCI-101-01 - Learn Python in 30 Days', '15W-CSCI-101-01 - Learn Python in 30 Days', 'courses', '15W', 0),
-			(212, '15W-JAPN-101-01', '15W-JAPN-101-01 - Japanese in 30 Days', '15W-JAPN-101-01 - Japanese in 30 Days', 'courses', '15W', 0),
-			(213, '15W-RELI-101-01', '15W-RELI-101-01 - Non-violent Religious Groups', '15W-RELI-101-01 - Non-violent Religious Groups', 'courses', '15W', 0),
-			(214, '15W-UGDN-101-01', '15W-UGDN-101-01 - Trip to Uganda', '15W-UGDN-101-01 - Trip to Uganda', 'courses', '15W', 0),
-			(215, '15S-ARTH-101-01', '15S-ARTH-101-01 - Art History (Hopper)', '15S-ARTH-101-01 - Art History (Hopper)', 'courses', '15S', 0),
-			(216, '15S-BIOL-101-01', '15S-BIOL-101-01 - Biology Intro (Spring Organisms)', '15S-BIOL-101-01 - Biology Intro (Spring Organisms)', 'courses', '15S', 0),
-			(217, '15S-CHEM-101-01', '15S-CHEM-101-01 - Chemistry Compounds', '15S-CHEM-101-01 - Chemistry Compounds', 'courses', '15S', 0),
-			(218, '15S-ECON-101-01', '15S-ECON-101-01 - Economy Introduction', '15S-ECON-101-01 - Economy Introduction', 'courses', '15S', 0),
-			(219, '15S-ECON-201-01', '15S-ECON-201-01 - Economy: Post WW II', '15S-ECON-201-01 - Economy: Post WW II', 'courses', '15S', 0),
-			(220, '15S-ECON-301-01', '15S-ECON-301-01 - Economy: Fed Chair Yellen', '15S-ECON-301-01 - Economy: Fed Chair Yellen', 'courses', '15S', 0),
-			(221, '15S-ECON-301-02', '15S-ECON-301-02 - Economy: Fed Chair Bernanke', '15S-ECON-301-02 - Economy: Fed Chair Bernanke', 'courses', '15S', 0),
-			(222, '15S-HIST-101-01', '15S-HIST-201-01 - History of the Civil War', '15S-HIST-201-01 - History of the Civil War', 'courses', '15S', 0),
-			(223, '15S-MATH-101-01', '15S-MATH-201-01 - Math - Calculus Intermediate', '15S-MATH-201-01 - Math - Calculus Intermediate', 'courses', '15S', 0)
+			(201, '15F-ARTH-101-01', '15F-ARTH-101-01 - Art History (Degas)', '15F-ARTH-101-01 - Art History (Degas)', 'courses', '15F', 0, '', '', 0),
+			(202, '15F-BIOL-101-01', '15F-BIOL-101-01 - Biology Intro (Fall Organisms)', '15F-BIOL-101-01 - Biology Intro (Fall Organisms)', 'courses', '15F', 0, '', '', 0),
+			(203, '15F-CHEM-101-01', '15F-CHEM-101-01 - Chemistry Compounds', '15F-CHEM-101-01 - Chemistry Compounds', 'courses', '15F', 0, '', '', 0),
+			(204, '15F-ECON-101-01', '15F-ECON-101-01 - Economy Introduction', '15F-ECON-101-01 - Economy Introduction', 'courses', '15F', 0, '', '', 0),
+			(205, '15F-ECON-201-01', '15F-ECON-201-01 - Economy: Depression Era to WW II', '15F-ECON-201-01 - Economy: Depression Era to WW II', 'courses', '15F', 0, '', '', 0),
+			(206, '15F-ECON-301-01', '15F-ECON-301-01 - Economy: Fed Chair Greenspan', '15F-ECON-301-01 - Economy: Fed Chair Greenspan', 'courses', '15F', 0, '', '', 0),
+			(207, '15F-ECON-301-02', '15F-ECON-301-02 - Economy: Fed Chair Volcker', '15F-ECON-301-02 - Economy: Fed Chair Volcker', 'courses', '15F', 0, '', '', 0),
+			(208, '15F-HIST-101-01', '15F-HIST-101-01 - History of the Revolutionary War', '15F-HIST-101-01 - History of the Revolutionary War', 'courses', '15F', 0, '', '', 0),
+			(209, '15F-MATH-101-01', '15F-MATH-101-01 - Math - Calculus Intro', '15F-MATH-101-01 - Math - Calculus Intro', 'courses', '15F', 0, '', '', 0),
+			(210, '15W-CHIN-101-01', '15W-CHIN-101-01 - Chinese in 30 Days', '15W-CHIN-101-01 - Chinese in 30 Days', 'courses', '15W', 0, '', '', 0),
+			(211, '15W-CSCI-101-01', '15W-CSCI-101-01 - Learn Python in 30 Days', '15W-CSCI-101-01 - Learn Python in 30 Days', 'courses', '15W', 0, '', '', 0),
+			(212, '15W-JAPN-101-01', '15W-JAPN-101-01 - Japanese in 30 Days', '15W-JAPN-101-01 - Japanese in 30 Days', 'courses', '15W', 0, '', '', 0),
+			(213, '15W-RELI-101-01', '15W-RELI-101-01 - Non-violent Religious Groups', '15W-RELI-101-01 - Non-violent Religious Groups', 'courses', '15W', 0, '', '', 0),
+			(214, '15W-UGDN-101-01', '15W-UGDN-101-01 - Trip to Uganda', '15W-UGDN-101-01 - Trip to Uganda', 'courses', '15W', 0, '', '', 0),
+			(215, '15S-ARTH-101-01', '15S-ARTH-101-01 - Art History (Hopper)', '15S-ARTH-101-01 - Art History (Hopper)', 'courses', '15S', 0, '', '', 0),
+			(216, '15S-BIOL-101-01', '15S-BIOL-101-01 - Biology Intro (Spring Organisms)', '15S-BIOL-101-01 - Biology Intro (Spring Organisms)', 'courses', '15S', 0, '', '', 0),
+			(217, '15S-CHEM-101-01', '15S-CHEM-101-01 - Chemistry Compounds', '15S-CHEM-101-01 - Chemistry Compounds', 'courses', '15S', 0, '', '', 0),
+			(218, '15S-ECON-101-01', '15S-ECON-101-01 - Economy Introduction', '15S-ECON-101-01 - Economy Introduction', 'courses', '15S', 0, '', '', 0),
+			(219, '15S-ECON-201-01', '15S-ECON-201-01 - Economy: Post WW II', '15S-ECON-201-01 - Economy: Post WW II', 'courses', '15S', 0, '', '', 0),
+			(220, '15S-ECON-301-01', '15S-ECON-301-01 - Economy: Fed Chair Yellen', '15S-ECON-301-01 - Economy: Fed Chair Yellen', 'courses', '15S', 0, '', '', 0),
+			(221, '15S-ECON-301-02', '15S-ECON-301-02 - Economy: Fed Chair Bernanke', '15S-ECON-301-02 - Economy: Fed Chair Bernanke', 'courses', '15S', 0, '', '', 0),
+			(222, '15S-HIST-101-01', '15S-HIST-201-01 - History of the Civil War', '15S-HIST-201-01 - History of the Civil War', 'courses', '15S', 0, '', '', 0),
+			(223, '15S-MATH-101-01', '15S-MATH-201-01 - Math - Calculus Intermediate', '15S-MATH-201-01 - Math - Calculus Intermediate', 'courses', '15S', 0, '', '', 0)
         ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
@@ -130,24 +128,24 @@
 
 	function createTestData_Enrollments($dbConn) {
 		// 400 series ids
-		# enrollment: 'enrollment_id', 'course_idstr', 'user_id', 'course_role_name', 'section_idstr', 'flag_delete'
+		# enrollment: 'enrollment_id', 'canvas_user_id', 'canvas_course_id', 'canvas_role_name', 'course_idstr', 'user_id', 'course_role_name', 'section_idstr', 'flag_delete'
 		$addTestSql  = "INSERT INTO " . Enrollment::$dbTable . " VALUES
-			(401,'15F-ARTH-101-01', 101, 'teacher', '15F-ARTH-101-01', 0),
-			(402,'15F-ARTH-101-01', 102, 'teacher', '15F-ARTH-101-01', 0),
-			(403,'15F-ARTH-101-01', 103, 'student', '15F-ARTH-101-01', 0),
-			(404,'15F-ARTH-101-01', 104, 'student', '15F-ARTH-101-01', 0),
-			(405,'15F-ARTH-101-01', 105, 'student', '15F-ARTH-101-01', 0),
-			(406,'15F-ARTH-101-01', 106, 'student', '15F-ARTH-101-01', 0),
-			(407,'15F-ARTH-101-01', 107, 'student', '15F-ARTH-101-01', 1),
-			(408,'15F-ARTH-101-01', 108, 'student', '15F-ARTH-101-01', 1),
-			(409,'15F-ARTH-101-01', 109, 'student', '15F-ARTH-101-01', 0),
-			(410,'15F-ARTH-101-01', 110, 'student', '15F-ARTH-101-01', 0),
-			(411,'15F-BIOL-101-01', 101, 'teacher', '15F-BIOL-101-01', 0),
-			(412,'15F-BIOL-101-01', 102, 'student', '15F-BIOL-101-01', 0),
-			(413,'15F-BIOL-101-01', 103, 'student', '15F-BIOL-101-01', 0),
-			(414,'15F-BIOL-101-01', 104, 'student', '15F-BIOL-101-01', 0),
-			(415,'15F-CHEM-101-01', 104, 'student', '15F-CHEM-101-01', 0),
-			(416,'15F-MATH-101-01', 104, 'student', '15F-MATH-101-01', 0)
+			(401, 0, 0, '', '15F-ARTH-101-01', 101, 'teacher', '15F-ARTH-101-01', 0),
+			(402, 0, 0, '', '15F-ARTH-101-01', 102, 'teacher', '15F-ARTH-101-01', 0),
+			(403, 0, 0, '', '15F-ARTH-101-01', 103, 'student', '15F-ARTH-101-01', 0),
+			(404, 0, 0, '', '15F-ARTH-101-01', 104, 'student', '15F-ARTH-101-01', 0),
+			(405, 0, 0, '', '15F-ARTH-101-01', 105, 'student', '15F-ARTH-101-01', 0),
+			(406, 0, 0, '', '15F-ARTH-101-01', 106, 'student', '15F-ARTH-101-01', 0),
+			(407, 0, 0, '', '15F-ARTH-101-01', 107, 'student', '15F-ARTH-101-01', 1),
+			(408, 0, 0, '', '15F-ARTH-101-01', 108, 'student', '15F-ARTH-101-01', 1),
+			(409, 0, 0, '', '15F-ARTH-101-01', 109, 'student', '15F-ARTH-101-01', 0),
+			(410, 0, 0, '', '15F-ARTH-101-01', 110, 'student', '15F-ARTH-101-01', 0),
+			(411, 0, 0, '', '15F-BIOL-101-01', 101, 'teacher', '15F-BIOL-101-01', 0),
+			(412, 0, 0, '', '15F-BIOL-101-01', 102, 'student', '15F-BIOL-101-01', 0),
+			(413, 0, 0, '', '15F-BIOL-101-01', 103, 'student', '15F-BIOL-101-01', 0),
+			(414, 0, 0, '', '15F-BIOL-101-01', 104, 'student', '15F-BIOL-101-01', 0),
+			(415, 0, 0, '', '15F-CHEM-101-01', 104, 'student', '15F-CHEM-101-01', 0),
+			(416, 0, 0, '', '15F-MATH-101-01', 104, 'student', '15F-MATH-101-01', 0)
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();

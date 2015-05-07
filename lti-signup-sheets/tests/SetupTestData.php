@@ -8,12 +8,10 @@
 
 	class SetupTestData extends TestSuite {
 		function SetupTestData() {
-			$this->TestSuite('Digital Field Notebooks test data creation');
+			$this->TestSuite('Signup Sheets test data creation');
 
 			# Setup test data
 			$this->addFile('TestOfSetupTestData.php');
 
 		}
 	}
-
-?>

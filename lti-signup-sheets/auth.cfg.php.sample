@@ -4,7 +4,7 @@
 	# copy this file to auth.cfg.php and replace the example values
 	# below with the appropriate authentication mode and specific values for your institution
 
-	# the default setup uses the Auth_Base class to authenticate the already defined test user (see instituion.cfg.php)
+	# the default setup uses the Auth_Base class to authenticate the already defined test user (see institution.cfg.php)
 	# it is VERY IMPORTANT that you extend the Auth_Base class with your institution's preferred authentication flavor (ldap, kerberos, etc.)
 	# we have provided the Auth_LDAP class, which extends the Auth_Base class for authenticating against an LDAP server
 	# feel free to write a similar extension for other authentication modes (and send it to us for inclusion in our github repository)
@@ -21,37 +21,25 @@
 	# ---------------------------
 	# authentication mode: LDAP
 	# ---------------------------
-	require_once(dirname(__FILE__) . '/classes/auth_LDAP.class.php');
-	define('AUTH_SERVER',	'ldap.institution.edu');	// e.g. ldap.acme.edu (TODO: or https://ldap.acme.edu)
-	define('AUTH_PORT', '123');
+	/*
+		require_once(dirname(__FILE__) . '/classes/auth_LDAP.class.php');
+		define('AUTH_SERVER',	'ldap.institution.edu');	// e.g. ldap.acme.edu (TODO: or https://ldap.acme.edu)
+		define('AUTH_PORT', '123');
 
-	define('AUTH_LDAP_SEARCH_DN',	'o=institution');
+		define('AUTH_LDAP_SEARCH_DN',	'o=institution');
 
-	define('AUTH_LDAP_USERNAME_ATTR_LABEL',         'cn');
-	define('AUTH_LDAP_USER_DN_ATTR_LABEL',          'dn');
-	define('AUTH_LDAP_FIRSTNAME_ATTR_LABEL',        'fn');
-	define('AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL',   'mi');
-	define('AUTH_LDAP_LASTNAME_ATTR_LABEL',         'sn');
-	define('AUTH_LDAP_FULLNAME_ATTR_LABEL',         'fullname');
-	define('AUTH_LDAP_EMAIL_ATTR_LABEL',            'mail');
-	define('AUTH_LDAP_GROUPMEMBERSHIP_ATTR_LABEL',  'groups');    // institutional groups
+		define('AUTH_LDAP_USERNAME_ATTR_LABEL',         'cn');
+		define('AUTH_LDAP_USER_DN_ATTR_LABEL',          'dn');
+		define('AUTH_LDAP_FIRSTNAME_ATTR_LABEL',        'fn');
+		define('AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL',   'mi');
+		define('AUTH_LDAP_LASTNAME_ATTR_LABEL',         'sn');
+		define('AUTH_LDAP_FULLNAME_ATTR_LABEL',         'fullname');
+		define('AUTH_LDAP_EMAIL_ATTR_LABEL',            'mail');
+		define('AUTH_LDAP_GROUPMEMBERSHIP_ATTR_LABEL',  'groups');    // institutional groups
 
-	// note: the $AUTH object will be set (in app_setup.php) using the appropriate auth class defined here
-	$temporary_AUTH_LDAP = new Auth_LDAP();
-
-
-	# ---------------------------
-	# authentication mode: LTI
-	# ---------------------------
-	require_once(dirname(__FILE__) . '/classes/auth_LTI.class.php');
-	define('AUTH_SERVER', LTI_DB_NAME); // uses global variable from institution.cfg.php
-
-	define('AUTH_LTI_USERNAME', 'username');
-	define('AUTH_LTI_NONCE', 'nonce');
-	define('AUTH_LTI_ROLES', 'roles');
-
-	// note: the $AUTH object will be set (in app_setup.php) using the appropriate auth class defined here
-	$temporary_AUTH_LTI = new Auth_LTI();
+		// note: the $AUTH object will be set (in app_setup.php) using the appropriate auth class defined here
+		$AUTH = new Auth_LDAP();
+	*/
 
 
 	# ---------------------------

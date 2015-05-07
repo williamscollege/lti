@@ -43,6 +43,9 @@ USE `lti_development`;
 -- GRANT SELECT, INSERT, UPDATE, DELETE ON lti_development.* TO 'some_dev_username'@'localhost';
 -- /* CAREFUL!: DROP USER 'some_dev_username'@'localhost'; */
 
+-- Get a list of MySQL user accounts
+-- SELECT * FROM mysql.user;
+
 # ----------------------------
 # setup database tables
 # Modification: 20150424 by DKC: 'lti-tables-mysql.sql' - Added more complete Engine=innodb information (formerly: ENGINE=InnoDB DEFAULT CHARSET=latin1;)
