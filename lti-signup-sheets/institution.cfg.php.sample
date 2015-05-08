@@ -17,10 +17,20 @@
 	define('APP_ROOT_PATH', '/'.APP_STR);
 
 	# Database connection
-	define('DB_SERVER', 'liver_server_address');
+	define('DB_SERVER', 'live_server_address');
 	define('DB_NAME',   'database_name');
 	define('DB_USER',   'db_user');
 	define('DB_PASS',   'db_user_password');
+
+	# Database connection for automated tests (use locally only!)
+	define('TESTING_DB_SERVER','localhost');
+	define('TESTING_DB_NAME',  'testing_database_name');
+	define('TESTING_DB_USER',  'testing_db_user'); // this user (whatever you call it) should have only basic SELECT, INSERT, UPDATE, DELETE privileges
+	define('TESTING_DB_PASS',  'testing_db_user_password');
+
+	# NOTE: It's VERY IMPORTANT to change the password (and possibly the username) for these as this user will always be authenticated!
+	define('TESTINGUSER','testing_user');
+	define('TESTINGPASSWORD','testing_password');
 
 	# ---------------------------
 	# LTI LMS App Settings
@@ -67,16 +77,9 @@
 	# ***** jquery-printarea: https://github.com/RitsC/PrintArea, http://plugins.jquery.com/PrintArea/
 	define('PATH_JQUERY_PRINTAREA_JS', APP_ROOT_PATH . '/js/jquery/plugins/jquery-printarea/demo/jquery.PrintArea.js?rel=2.4.0&github_commit_date=20141210');
 
-	# These are used in the automated tests.
-	define('TESTING_DB_SERVER','localhost');
-	define('TESTING_DB_NAME',  'testing_database_name');
-	define('TESTING_DB_USER',  'testing_db_user'); // this user (whatever you call it) should have only basic SELECT, INSERT, UPDATE, DELETE privileges
-	define('TESTING_DB_PASS',  'testing_db_user_password');
-
-	# NOTE: It's VERY IMPORTANT to change the password (and possibly the username) for these as this user will always be authenticated!
-	define('TESTINGUSER','testing_user');
-	define('TESTINGPASSWORD','testing_password');
-
+	# ---------------------------
+	# Additional Classes
+	# ---------------------------
 	require_once('classes/mailer_php_standard.class.php');
 	$MAILER = new Mailer_Php_Standard();
 
@@ -85,4 +88,5 @@
 	# ---------------------------
 	# TimeZone Problem: the default php.ini setting may be incorrect; correct by explicitly setting this configuration to your region
 	# TimeZone Solution: (Line 1044 of php.ini: Module Settings/Date/date.timezone = America/New_York)
+	# Note: lti_lib.php, if used, has hardcoded timezone location value: date_default_timezone_set('America/New_York');
 

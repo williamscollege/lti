@@ -13,19 +13,18 @@
 
 	$DB = util_createDbConnection();
 
-
 	// ensure username exists in application database, else error
 	if(!util_checkUsernameExistsInDB($_SESSION['userdata']['username'])){
 		// failure to find a match between LTI provided username and this application's username (db)
 		util_wipeSession();
-		util_redirectToAppPage('error.php', 'failure', 'msg_lti_failed_authentication');
+		util_redirectToAppPage('error.php?err=1', 'failure', 'msg_lti_failed_authentication');
 	}
 
 
 	if ((!isset($_SESSION['isAuthenticated'])) || (!$_SESSION['isAuthenticated'])) {
 		// SECTION: failure to properly set SESSION via LTI
 		util_wipeSession();
-		util_redirectToAppPage('error.php', 'failure', 'msg_lti_failed_authentication');
+		util_redirectToAppPage('error.php?err=2', 'failure', 'msg_lti_failed_authentication');
 		exit;
 
 		/*
