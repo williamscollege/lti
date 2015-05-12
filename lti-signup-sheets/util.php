@@ -24,10 +24,11 @@
 		unset($_SESSION['isAuthenticated']);
 		unset($_SESSION['fingerprint']);
 		unset($_SESSION['userdata']);
+		unset($_SESSION['consumer_key']);
+		unset($_SESSION['resource_id']);
 		unset($_SESSION[APP_STR . '_id']);
 		$_COOKIE[APP_STR . '_id'] = "";
-		setcookie(APP_STR . "_id", "", time() - 3600);
-
+		setcookie(APP_STR . "_id", "", time() - 3600); /* set the expiration date to one hour ago */
 		return;
 	}
 
@@ -80,16 +81,30 @@
 		if ((!isset($_COOKIE[APP_STR . '_id'])) || (!$_COOKIE[APP_STR . '_id'])) {
 			if (isset($_SESSION[APP_STR . '_id']) && ($_SESSION[APP_STR . '_id'])) { // the session has an APP_STR id, but there was no cookie set for it - highly suspicious
 				// TODO: log and/or message?
-				util_redirectToAppHomeWithPrejudice();
+				util_wipeSession();
+				util_redirectToAppPage('error.php?err=301', 'failure', 'msg_lti_failed_authentication');
+				exit;
 			}
-			$sec_id = util_genRandomIdString(300);
-			setcookie(APP_STR . '_id', $sec_id);
-			$_SESSION[APP_STR . '_id'] = $sec_id;
+			// set cookie
+			$security_id = util_genRandomIdString(300);
+			setcookie(APP_STR . '_id', $security_id, time() + 3600);  /* expire in 1 hour */
+			$_SESSION[APP_STR . '_id'] = $security_id;
+			$_COOKIE[APP_STR . '_id']  = $security_id;
+
+			if (!setcookie(APP_STR . '_id', $security_id)) {
+				// COULD NOT SET COOKIE!
+				util_wipeSession();
+				util_redirectToAppPage('error.php?err=302', 'failure', 'msg_lti_cannot_set_cookie');
+				exit;
+			}
+
 		}
 		elseif ((!isset($_SESSION[APP_STR . '_id'])) || ($_COOKIE[APP_STR . '_id'] != $_SESSION[APP_STR . '_id'])) {
 			// there was an appropriately named cookie, but the value doesn't match the one associated with this session
 			// TODO: log and/or message?
-			util_redirectToAppHomeWithPrejudice();
+			util_wipeSession();
+			util_redirectToAppPage('error.php?err=303', 'failure', 'msg_lti_failed_authentication');
+			exit;
 		}
 	}
 
@@ -107,31 +122,6 @@
 		return (isset($_SESSION['isAuthenticated']) && ($_SESSION['isAuthenticated']));
 	}
 
-	// a quick handle for a slightly complex condition check
-	function util_checkUsernameExistsInDB($username = ""){
-		if (!$username) {
-			return FALSE;
-		}
-
-		$check = new PDO("mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";port=3306", DB_USER, DB_PASS);
-
-		if (!$check) {
-			return FALSE;
-		}
-
-		// Prepare SQL using PDO
-		$sql  = "SELECT * FROM " . User::$dbTable . " WHERE users.username = '" . htmlentities($username, ENT_QUOTES, 'UTF-8') . "'";
-		$stmt = $check->prepare($sql);
-		$stmt->execute();
-		$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		// util_prePrintR($res);exit;
-
-		if (count($res) != 1) {
-			return FALSE;
-		}
-
-		return TRUE;
-	}
 
 	function util_createDbConnection() {
 		//print_r($_SERVER);
@@ -196,7 +186,7 @@
 	 */
 	function util_datetimeFormatted($ts) {
 		$ts_info = util_processTimeString($ts);
-		//		return $ts_info['YYYY'] . '/' . $ts_info['MM'] . '/' . $ts_info['DD'] . ' ' . $ts_info['hh'] . ':' . $ts_info['mi'];
+		// return $ts_info['YYYY'] . '/' . $ts_info['MM'] . '/' . $ts_info['DD'] . ' ' . $ts_info['hh'] . ':' . $ts_info['mi'];
 		return $ts_info['MM'] . '/' . $ts_info['DD'] . '/' . $ts_info['YYYY'] . ' ' . $ts_info['hh'] . ':' . $ts_info['mi'];
 	}
 
@@ -349,7 +339,7 @@
 			}
 		}
 
-		//        util_prePrintR($ret);
+		// util_prePrintR($ret);
 		return $ret;
 	}
 
@@ -379,17 +369,17 @@
 	function util_sanitizeFileName($fn) {
 		$allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.';
 
-		//        echo "fn=$fn;<br />\n";
+		// echo "fn=$fn;<br />\n";
 		while (preg_match('/\\.\\./', $fn)) {
 			$fn = preg_replace('/\\.\\./', '', $fn);
-			//        echo "fn=$fn;<br />\n";
+			// echo "fn=$fn;<br />\n";
 		}
 		if (!$fn) {
 			return '';
 		}
 
 		$fn_chars = str_split($fn);
-		//        util_prePrintR($fn_chars);
+		// util_prePrintR($fn_chars);
 		$cleaned = '';
 		foreach ($fn_chars as $fnc) {
 			if (strpos($allowed_chars, $fnc) === FALSE) {

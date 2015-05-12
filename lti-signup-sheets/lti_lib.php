@@ -25,10 +25,10 @@
 			date_default_timezone_set('America/New_York');
 		}
 
-		// Set session cookie path
+		// Session Maintenance: Set session cookie path
 		ini_set('session.cookie_path', getAppPath());
 
-		// Open session
+		// Session Maintenance: Open session
 		session_start();
 
 		// IMPORTANT: These values are created as SESSION values in lti_launch.php and then used in init() fxn in lti_lib.php
@@ -57,7 +57,6 @@
 				}
 			}
 		}
-
 		return $ok;
 	}
 
@@ -67,7 +66,6 @@
 		$root = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']);
 		$dir  = str_replace('\\', '/', dirname(__FILE__));
 		$path = str_replace($root, '', $dir) . '/';
-
 		return $path;
 	}
 
@@ -76,7 +74,6 @@
 	function getAppUrl() {
 		$scheme = (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") ? 'http' : 'https';
 		$url    = $scheme . '://' . $_SERVER['HTTP_HOST'] . getAppPath();
-
 		return $url;
 	}
 

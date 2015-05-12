@@ -27,5 +27,6 @@
 	require_once(dirname(__FILE__) . '../mailer_php_standard.class.php');
 	require_once(dirname(__FILE__) . '../mailer_testing.class.php');
 
+	// Create database connection object
 	$DB = util_createDbConnection();
 

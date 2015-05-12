@@ -5,6 +5,7 @@ NOTES:		For testing, create 'dblinktest' table by executing: "db_setup/testing_s
 
 FOR TESTING ONLY:
 	USE `signup_sheets_development`;
+	-- USE `signup_sheets_test_suite`;
 
 	DROP TABLE `terms`;
 	DROP TABLE `users`;
@@ -71,6 +72,7 @@ USE `signup_sheets_development`;
 
 CREATE TABLE IF NOT EXISTS `terms` (
 	`term_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`canvas_term_id` INT NOT NULL DEFAULT 0,
 	`term_idstr` VARCHAR(255) NOT NULL,
 	`name` VARCHAR(255) NULL,
 	`start_date` TIMESTAMP,

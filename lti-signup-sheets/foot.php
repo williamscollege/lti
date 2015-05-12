@@ -40,7 +40,8 @@
 				</div>
 			</div>
 		</div>
-	</div> <!-- /Modal -->
+	</div>
+	<!-- /Modal -->
 </footer>
 
 </div> <!-- /container -->

@@ -8,30 +8,22 @@
 	require_once(dirname(__FILE__) . '/util.php');
 
 
-	// used to prevent/complicate session hijacking ands XSS attacks
+	// Session Maintenance: Prevent/complicate session hijacking ands XSS attacks
 	$FINGERPRINT = util_generateRequestFingerprint();
 
+	// Create database connection object
 	$DB = util_createDbConnection();
-
-	// ensure username exists in application database, else error
-	if(!util_checkUsernameExistsInDB($_SESSION['userdata']['username'])){
-		// failure to find a match between LTI provided username and this application's username (db)
-		util_wipeSession();
-		util_redirectToAppPage('error.php?err=1', 'failure', 'msg_lti_failed_authentication');
-	}
 
 
 	if ((!isset($_SESSION['isAuthenticated'])) || (!$_SESSION['isAuthenticated'])) {
 		// SECTION: failure to properly set SESSION via LTI
 		util_wipeSession();
-		util_redirectToAppPage('error.php?err=2', 'failure', 'msg_lti_failed_authentication');
+		util_redirectToAppPage('error.php?err=101', 'failure', 'msg_lti_failed_authentication');
 		exit;
 
-		/*
-			// AUTH_LDAP: Attempt to authenticate using AUTH_LDAP class
+		/*	// AUTH_LDAP: Attempt to authenticate using AUTH_LDAP class
 				if ((isset($_REQUEST['username'])) && (isset($_REQUEST['password']))) {
 					// SECTION: not yet authenticated, wants to log in
-
 					// Authenticate values (username, password) against LDAP
 					if ($AUTH->authenticate($_REQUEST['username'], $_REQUEST['password'])) {
 						session_regenerate_id(TRUE);
@@ -47,7 +39,8 @@
 					}
 					else {
 						util_wipeSession();
-						util_redirectToAppPage('error.php', 'failure', 'msg_failed_sign_in');
+						util_redirectToAppPage('error.php?err=102', 'failure', 'msg_failed_sign_in');
+						exit;
 					}
 				}
 		*/
@@ -58,35 +51,49 @@
 		//			if (!strpos(APP_FOLDER . "/index.php", $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])) {
 		//				// TODO: LDAP - add logging?
 		//				util_wipeSession();
-		//				util_redirectToAppPage('error.php', 'info', 'msg_do_sign_in');
+		//				util_redirectToAppPage('error.php?err=103', 'info', 'msg_do_sign_in');
+		//				exit;
 		//			}
 		//		}
 	}
 	else {
 		// SECTION: authenticated
 		if ($_SESSION['fingerprint'] != $FINGERPRINT) {
-			// error: Suspected session spoofing attack. abort.
+			// error: suspected session spoofing attack. abort.
 			// TODO: add logging?
 			util_wipeSession();
-			util_redirectToAppPage('error.php', 'failure', 'msg_failed_sign_in');
+			util_redirectToAppPage('error.php?err=104', 'failure', 'msg_failed_sign_in');
+			exit;
 		}
-		/*if (isset($_REQUEST['submit_signout'])) {
-			// SECTION: wants to log out
-			util_wipeSession();
-			util_redirectToAppHome();
-			// NOTE: the above is the same as util_redirectToAppHomeWithPrejudice, but this code is easier to follow/read when the two parts are shown here
-		}*/
+		/*	// signout button
+			if (isset($_REQUEST['submit_signout'])) {
+				// SECTION: wants to log out
+				util_wipeSession();
+				util_redirectToAppHome();
+				exit;
+			}
+		*/
 	}
 
 	$IS_AUTHENTICATED = util_checkAuthentication();
 
-	if ($IS_AUTHENTICATED) { // SECTION: is signed in
+	if ($IS_AUTHENTICATED) {
+		// SECTION: is signed in
 
-		// now create user object
-		$USER = new User(['username' => $_SESSION['userdata']['username'], 'DB' => $DB]);
+		// create user object
+		$USER = User::getOneFromDb(['username' => $_SESSION['userdata']['username']], $DB);
+		// ensure username exists in database
+		if (!$USER->matchesDb) {
+			// username does not exist
+			util_wipeSession();
+			util_redirectToAppPage('error.php?err=105', 'failure', 'msg_lti_failed_authentication');
+			exit;
+		}
 
-		// if using LDAP:
-		// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
+		// SAVE for LDAP:
+		// create user object
+		// $USER = new User(['username' => $_SESSION['userdata']['username'], 'DB' => $DB]);
+		// check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
 		// $USER->refreshFromDb();
 		// util_prePrintR($USER);
 		// util_prePrintR($_SESSION['userdata']);
@@ -94,8 +101,8 @@
 		// util_prePrintR($USER);
 	}
 	else {
-		// $USER = User::getOneFromDb(['username' => 'canonical_public'], $DB);
+		// SECTION: not authenticated, exit
 		util_wipeSession();
-		util_redirectToAppPage('error.php', 'failure', 'msg_lti_failed_authentication');
+		util_redirectToAppPage('error.php?err=106', 'failure', 'msg_lti_failed_authentication');
 		exit;
 	}

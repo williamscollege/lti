@@ -7,34 +7,35 @@
 	require_once(dirname(__FILE__) . '/../auth.cfg.php');
 	require_once(dirname(__FILE__) . '/../util.php');
 
-	# TODO: validate the request (user logged in, fingerprint checks out)
+
+	// TODO: validate the request (user logged in, fingerprint checks out)
 	if (!array_key_exists('isAuthenticated', $_SESSION) || !$_SESSION['isAuthenticated']) {
-		echo 'not authenticated';
+		// not authenticated
+		util_wipeSession();
+		util_redirectToAppPage('error.php?err=201', 'failure', 'msg_lti_failed_authentication');
 		exit;
 	}
 
-	$FINGERPRINT = util_generateRequestFingerprint(); // used to prevent/complicate session hijacking ands XSS attacks
+	// Session Maintenance: Prevent/complicate session hijacking ands XSS attacks
+	$FINGERPRINT = util_generateRequestFingerprint();
 	if ($_SESSION['fingerprint'] != $FINGERPRINT) {
-		echo 'bad fingerprint';
+		// bad fingerprint
+		util_wipeSession();
+		util_redirectToAppPage('error.php?err=202', 'failure', 'msg_lti_failed_authentication');
 		exit;
 	}
 
-	# Create database connection object
+	// Create database connection object
 	$DB = util_createDbConnection();
 
-
+	// create user object
 	$USER = User::getOneFromDb(['username' => $_SESSION['userdata']['username']], $DB);
+	// ensure username exists in database
 	if (!$USER->matchesDb) {
-		echo 'user did not load correctly';
-		exit;
-	}
-
-
-	// ensure username exists in application database, else error
-	if(!util_checkUsernameExistsInDB($_SESSION['userdata']['username'])){
-		// failure to find a match between LTI provided username and this application's username (db)
+		// username does not exist
 		util_wipeSession();
-		util_redirectToAppPage('error.php', 'failure', 'msg_lti_failed_authentication');
+		util_redirectToAppPage('error.php?err=203', 'failure', 'msg_lti_failed_authentication');
+		exit;
 	}
 
 

@@ -16,14 +16,14 @@
 
 	require_once(dirname(__FILE__) . '/lti_lib.php');
 
-	// Cancel any existing session
+	// Session Maintenance: Cancel any existing session
 	session_start();
 	$_SESSION = array();
 	session_destroy();
 
-	// Initialise database (checks for valid connection or returns false)
+	// Initialise database (valid connection, else returns false); initiates session_start()
 	$db = NULL;
-	init($db); // for local dev work: init($db, FALSE);
+	init($db);
 
 	$data_connector = LTI_Data_Connector::getDataConnector(LTI_DB_TABLENAME_PREFIX, $db);
 	$tool           = new LTI_Tool_Provider($data_connector, 'doLaunch'); // note that this callback fxn is deprecated but still functional as of 20150505
@@ -42,9 +42,12 @@
 		// Quick Check: if no user_id, then return FALSE
 		if ($tool_provider->user->getId()) {
 
-			// Session Maintenance
-			util_wipeSession(); // Clear all existing session data
-			$FINGERPRINT = util_generateRequestFingerprint(); // Prevent/complicate session hijacking ands XSS attacks
+			// Session Maintenance: Clear all existing session data
+			util_wipeSession();
+			// Session Maintenance: Update the current session id with a newly generated one
+			session_regenerate_id(TRUE);
+			// Session Maintenance: Prevent/complicate session hijacking ands XSS attacks
+			$FINGERPRINT = util_generateRequestFingerprint();
 
 			// Store values from Tool Consumer (Instructure Canvas) as SESSION to persist them for use in this application
 			// These SESSION values are used in lti_lib.php and throughout the application

@@ -20,6 +20,7 @@
 			$this->assertEqual(count(Term::$fields), 6);
 
 			$this->assertTrue(in_array('term_id', Term::$fields));
+			$this->assertTrue(in_array('canvas_term_id', Term::$fields));
 			$this->assertTrue(in_array('term_idstr', Term::$fields));
 			$this->assertTrue(in_array('name', Term::$fields));
 			$this->assertTrue(in_array('start_date', Term::$fields));
@@ -44,7 +45,7 @@
 		//// DB interaction tests
 
 		function testTermDBInsert() {
-			$t = new Term(['term_id' => 50, 'term_idstr' => '23F', 'name' => 'Fall 2022', 'start_date' => '2022-09-10T00:00:00-05:00', 'end_date' => '2022-12-21T00:00:00-05:00', 'DB' => $this->DB]);
+			$t = new Term(['term_id' => 50, 'canvas_term_id' => 0, 'term_idstr' => '23F', 'name' => 'Fall 2022', 'start_date' => '2022-09-10T00:00:00-05:00', 'end_date' => '2022-12-21T00:00:00-05:00', 'DB' => $this->DB]);
 
 			$t->updateDb();
 
