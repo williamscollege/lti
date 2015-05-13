@@ -535,6 +535,7 @@ $(document).ready(function () {
 
 	$("#link_show_signup_controls").click(function () {
 		$("#signupControls").show();
+		$("#signupUsername").focus();
 		$(this).hide();
 		// reset input fields
 		resetSignupFields();

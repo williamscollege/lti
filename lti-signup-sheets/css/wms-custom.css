@@ -129,29 +129,44 @@ Purpose: Openings list styles
 	background-color: #f9fbff;
 }
 
+/*=======================================
+Purpose: Override Bootstrap Tabs Styling: add border to tab box
+==========================================*/
+
+.tab-container {
+	position: relative;
+	padding: 10px;
+	margin: 15px 0px;
+	background-color: #FFF;
+	border: 1px solid #DDD;
+	box-shadow: none;
+}
+
+/* modify container padding */
+.tab-container.wms_print_MySignups, .tab-container.wms_print_OnMySheets {
+	padding: 15px 0px 0px 0px;
+}
+UL#boxMySignupsHeader, UL#boxSignupsOnMySheetsHeader {
+	padding: 0px 11px;
+}
 
 /*=======================================
 Purpose: Placement for extra buttons
 ==========================================*/
 
 #buttons_list_openings {
-	margin: -44px 0px 29px 285px;
+	margin: -44px 0px 29px 291px;
 	white-space: nowrap;
 }
 
-#buttons_my_signups {
+#buttons_my_signups, #buttons_on_my_sheets {
 	position: relative;
 	top: -25px;
-	left: 110px;
+	right: 8px;
+	text-align: right;
 	white-space: nowrap;
 }
 
-#buttons_on_my_sheets {
-	position: relative;
-	top: -25px;
-	left: 125px;
-	white-space: nowrap;
-}
 #tabMySignups, #tabOthersSignups{
 	margin-top: -15px;
 }
@@ -309,8 +324,8 @@ span[data-cal-date] {
 /* close x for DOM overlay */
 #wms_custom_close_x{
 	position: relative;
-	top: -16px;
-	right: -12px;
+	top: -12px;
+	right: -8px;
 }
 
 .wms-custom-datepicker{
@@ -410,16 +425,6 @@ UL.wms-signups LI {
 	top: 60px;
 	right: 20px;
 	width: 400px;
-}
-
-/* Bootstrap Tabs Styling: add border to tab box */
-.tab-container {
-	position: relative;
-	padding: 15px;
-	margin: 15px 0px;
-	background-color: #FFF;
-	border: 1px solid #DDD;
-	box-shadow: none;
 }
 
 /* remove dotted line around the clicked "A" element */

@@ -145,7 +145,7 @@
 						<div class="tab-container PrintArea wms_print_MySignups" role="tabpanel" data-example-id="set1">
 							<ul id="boxMySignupsHeader" class="nav nav-tabs" role="tablist">
 								<li role="presentation" class="active">
-									<strong>My Signups</strong>
+									<strong>I've Signed Up</strong>
 								</li>
 							</ul>
 							<div id="boxMySignupsContent" class="tab-content">
@@ -153,8 +153,8 @@
 								<div id="buttons_my_signups">
 									<!-- PrintArea: Print a specific div -->
 									<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_MySignups" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
-									<!-- Button: go to today -->
-									<a href="#" id="scroll-to-todayish-my-signups" type="button" class="btn btn-success btn-xs" title="go to (date nearest) today">go to today</a>&nbsp;&nbsp;&nbsp;
+									<!-- Button: today -->
+									<a href="#" id="scroll-to-todayish-my-signups" type="button" class="btn btn-success btn-xs" title="go to date nearest today">today</a>&nbsp;
 									<!-- TOGGLE LINK: Show optional details -->
 									<a href="#" id="link_for_opening_details_1" type="button" class="btn btn-info btn-xs" title="toggle details">show details</a>
 								</div>
@@ -228,8 +228,8 @@
 								<div id="buttons_on_my_sheets">
 									<!-- PrintArea: Print a specific div -->
 									<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_OnMySheets" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
-									<!-- Button: go to today -->
-									<a href="#" id="scroll-to-todayish-others-signups" type="button" class="btn btn-success btn-xs" title="go to (date nearest) today">go to today</a>&nbsp;&nbsp;&nbsp;
+									<!-- Button: today -->
+									<a href="#" id="scroll-to-todayish-others-signups" type="button" class="btn btn-success btn-xs" title="go to date nearest today">today</a>&nbsp;
 									<!-- TOGGLE LINK: Show optional details -->
 									<a href="#" id="link_for_opening_details_2" type="button" class="btn btn-info btn-xs" title="toggle details">show details</a>
 								</div>
