@@ -58,10 +58,11 @@
 		/* static functions */
 
 		public static function cmp($a, $b) {
-			if ($a->name == $b->name) {
+			// compare strings as lowercase w/o effecting actual values
+			if (strtolower($a->name) == strtolower($b->name)) {
 				return 0;
 			}
-			return ($a->name < $b->name) ? -1 : 1;
+			return (strtolower($a->name) < strtolower($b->name)) ? -1 : 1;
 		}
 
 

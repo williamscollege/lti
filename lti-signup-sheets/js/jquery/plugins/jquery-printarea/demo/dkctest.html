@@ -57,6 +57,7 @@
 
     <div class="PrintArea area2 all" style="border-color: #999;">
         <div>Print Area 2</div>
+<!--<iframe src="http://www.w3schools.com/Html/html_iframe.asp" width="100%" height="100%" scrolling="hidden"></iframe>-->
         <span style="color: #000777;">print me</span>
         <span class="test">xyz</span>
         <br>
@@ -175,7 +176,7 @@
             var headElements = $("input#addElements").is(":checked") ? '<meta charset="utf-8" />,<meta http-equiv="X-UA-Compatible" content="IE=edge"/>' : '';
 
             var options = { mode : mode, popClose : close, extraCss : extraCss, retainAttr : keepAttr, extraHead : headElements };
-
+//console.dir(options);return;
             $( print ).printArea( options );
         });
 

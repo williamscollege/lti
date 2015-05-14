@@ -56,7 +56,6 @@
 							echo "active";
 						} ?>">
 							<a id="nav-link-available-openings" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheet_openings_all.php">
-								<i class="glyphicon glyphicon-pencil"></i>
 								<b><?php echo ucfirst(util_lang('sheet_openings_all')); ?></b>
 							</a>
 						</li>
@@ -64,7 +63,6 @@
 							echo "active";
 						} ?>">
 							<a id="nav-link-my-sheets" href="<?php echo APP_ROOT_PATH; ?>/app_code/sheets_all.php">
-								<i class="glyphicon glyphicon-wrench"></i>
 								<b><?php echo ucfirst(util_lang('sheets_all')); ?></b>
 							</a>
 						</li>
@@ -72,7 +70,6 @@
 							echo "active";
 						} ?>">
 							<a id="nav-link-help" href="<?php echo APP_ROOT_PATH; ?>/app_code/help.php">
-								<i class="glyphicon glyphicon-question-sign"></i>
 								<b><?php echo ucfirst(util_lang('help')); ?></b>
 							</a>
 						</li>

@@ -7,7 +7,11 @@
 	if ($IS_AUTHENTICATED) {
 
 		echo "<div id=\"content_container\">"; // begin: div#content_container
-		echo "<p>NOTE: Below is temporary text from Moodle help file</p>";
+		?>
+		<h2>Frequently Asked Questions</h2>
+
+
+		<p>NOTE: Below is temporary text from Moodle help file</p>
 
 		// NOTE: START placeholder text from old Moodle Signup Sheets help file
 		?>
@@ -91,10 +95,14 @@
 			how soon a signup has to be to count as 'impending') by configuring the block.</p>
 		<ol>
 			<li>go to the course page</li>
-			<li>click the 'Edit this page' button on the upper right <br /><img src="<?php echo APP_ROOT_PATH; ?>/img/help/03_turn_editing_mode_on_button.png" alt="" /></li>
-			<li>on the Sign-up Sheets block, click the configure/edit icon <img src="<?php echo APP_ROOT_PATH; ?>/img/help/04_antd_block_in_editing_mode.png" alt="" /></li>
-			<li>choose how far to look ahead, this Save Changes <img src="<?php echo APP_ROOT_PATH; ?>/img/help/05_configuring_block_look_ahead.png" alt="" /></li>
-			<li>click the 'Turn editing off' button on the upper right <br /><img src="<?php echo APP_ROOT_PATH; ?>/img/help/06_turn_editing_mode_off_button.png" alt="" /></li>
+			<li>click the 'Edit this page' button on the upper right
+				<br /><img src="<?php echo APP_ROOT_PATH; ?>/img/help/03_turn_editing_mode_on_button.png" alt="" /></li>
+			<li>on the Sign-up Sheets block, click the configure/edit icon
+				<img src="<?php echo APP_ROOT_PATH; ?>/img/help/04_antd_block_in_editing_mode.png" alt="" /></li>
+			<li>choose how far to look ahead, this Save Changes <img src="<?php echo APP_ROOT_PATH; ?>/img/help/05_configuring_block_look_ahead.png" alt="" />
+			</li>
+			<li>click the 'Turn editing off' button on the upper right
+				<br /><img src="<?php echo APP_ROOT_PATH; ?>/img/help/06_turn_editing_mode_off_button.png" alt="" /></li>
 		</ol>
 
 
@@ -396,7 +404,22 @@
 			message you want to email, change the subject if you like, and click the Send button.</p>
 
 		<img src="<?php echo APP_ROOT_PATH; ?>/img/help/44_antd_edit_opening_email.png" alt="annotated screenshot of message sending" />
+
+
+		<h2>Help</h2>
+		<p><i class="glyphicon glyphicon-question-sign"></i> More questions?</p>
 		<?php
+		if (isset($managersList)) {
+			# TODO - need to implement this list from somewhere
+			// show list of managers for this group
+			echo "<p>Please contact: " . $managersList . "</p>";
+		}
+		else {
+			# show default suypport address
+			echo "<p>Please contact: <a href=\"mailto:itech@" . INSTITUTION_DOMAIN . "?subject=SignupSheets_Help_Request\"><i class=\"glyphicon glyphicon-envelope\"></i> itech@" . INSTITUTION_DOMAIN . "</a></p>";
+		}
+
+
 		// NOTE: END placeholder text from old Moodle Signup Sheets help file
 		echo "</div>"; // end: div#content_container
 	}

@@ -136,7 +136,7 @@ $(document).ready(function () {
 						if (data.which_action == 'add-sheetgroup') {
 							// * Add Sheetgroup *
 							// update visible UI
-							$("#container-add-new-group").before(data.html_output);
+							$("#container-add-new-group").after(data.html_output);
 						}
 						else if (data.which_action == 'edit-sheetgroup') {
 							// * Edit Sheetgroup *

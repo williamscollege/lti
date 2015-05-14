@@ -101,6 +101,15 @@ Purpose: Edit Opening - Signup someone to an opening
 
 
 /*=======================================
+Purpose: CSS overrides pre-existing max-height; otherwise, PrintArea jQuery plugin will output (for print) only what is visible within pane boundary
+==========================================*/
+
+.printareaPatch{
+	margin-top: 0px !important;
+	max-height: 100% !important;
+}
+
+/*=======================================
 Purpose: Openings list styles
 ==========================================*/
 

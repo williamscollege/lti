@@ -27,13 +27,21 @@
 
 		// static factory function to populate new object with desired base values
 		public static function createNewSheetgroupForUser($user_id, $name, $description, $dbConnection) {
+			// determine if the user lacks an active default sheet group
+			$sg_all    = SUS_Sheetgroup::getAllFromDb(['owner_user_id' => $user_id], $dbConnection);
+			$flag_is_default = 0;
+			if (count($sg_all) <= 0) {
+				// this will be user's first active sheetgroup
+				$flag_is_default = 1;
+			}
+
 			// 'sheetgroup_id', 'created_at', 'updated_at', 'flag_delete', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
 			return new SUS_Sheetgroup([
 				'created_at'                 => util_currentDateTimeString_asMySQL(),
 				'updated_at'                 => util_currentDateTimeString_asMySQL(),
 				'flag_delete'                => 0,
 				'owner_user_id'              => $user_id,
-				'flag_is_default'            => 1,
+				'flag_is_default'            => $flag_is_default,
 				'name'                       => $name,
 				'description'                => $description,
 				'max_g_total_user_signups'   => -1,
@@ -42,10 +50,11 @@
 		}
 
 		public static function cmp($a, $b) {
-			if ($a->name == $b->name) {
+			// compare strings as lowercase w/o effecting actual values
+			if (strtolower($a->name) == strtolower($b->name)) {
 				return 0;
 			}
-			return ($a->name < $b->name) ? -1 : 1;
+			return (strtolower($a->name) < strtolower($b->name)) ? -1 : 1;
 		}
 
 		/* public functions */

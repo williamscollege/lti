@@ -39,6 +39,11 @@
 
 		echo "<div id=\"content_container\">"; // begin: div#content_container
 
+		// add new sheetgroup
+		echo "<p id=\"container-add-new-group\" class='pull-right'>\n";
+		echo "<a href=\"#modalSheetgroup\" class=\"btn btn-primary sus-add-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" title=\"Add group\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new group</a>";
+		echo "</p>";
+
 		// ***************************
 		// fetch managed sheets
 		// ***************************
@@ -53,10 +58,13 @@
 			echo "<th class=\"col-sm-1 text-right\"><a class=\"btn btn-xs btn-default disabled\" disabled=\"disabled\" title=\"Cannot delete\"><i class=\"glyphicon glyphicon-minus-sign\"></i></a>&nbsp;</th></tr>";
 			foreach ($USER->managed_sheets as $mgr_sheet) {
 				echo "<tr><td class=\"col-sm-11\">";
-				echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . htmlentities($mgr_sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit sheet\">" . htmlentities($mgr_sheet->name, ENT_QUOTES, 'UTF-8') . "</a>";
+				// title
+				echo htmlentities($mgr_sheet->name, ENT_QUOTES, 'UTF-8');
 				$owner = User::getOneFromDb(['user_id' => $mgr_sheet->owner_user_id], $DB);
 				echo " <small>(owned by " . htmlentities($owner->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($owner->last_name, ENT_QUOTES, 'UTF-8') . ")</small>";
 				echo "</td><td class=\"col-sm-1 text-right\">";
+				// edit icon
+				echo "<a class=\"btn btn-xs btn-primary\" href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . htmlentities($mgr_sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit sheet\"><i class=\"glyphicon glyphicon-pencil\"></i></a>&nbsp;";
 				// show placeholder icon (disabled)
 				echo "<a class=\"btn btn-xs btn-default disabled\" disabled=\"disabled\" title=\"Cannot delete\"><i class=\"glyphicon glyphicon-minus-sign\"></i></a>&nbsp;";
 				echo "</td></tr>";
@@ -70,7 +78,7 @@
 		$USER->cacheSheetgroups();
 		// util_prePrintR($USER->sheetgroups);
 
-		// if the user lacks a default sheet group, create one
+		// if the user lacks an active default sheet group, create one
 		if (!$USER->sheetgroups) // create group since none exists
 		{
 			// create an object for the insert_record function
@@ -126,11 +134,6 @@
 			// complete sheetgroup
 			echo "</table>\n";
 		}
-
-		// add new sheetgroup
-		echo "<p id=\"container-add-new-group\">\n";
-		echo "<a href=\"#modalSheetgroup\" class=\"btn btn-primary sus-add-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" title=\"Add group\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new group</a>";
-		echo "</p>";
 
 		echo "</div>"; // end: div#content_container
 	}

@@ -18,11 +18,15 @@ $(document).ready(function () {
 	// Important note: The desired div must be assigned a unique class called: "wms_print_XYZ" (i.e. wms_print_CalSetup, wms_print_EditOne, wms_print_OpeningSignup)
 	$(".wmsPrintArea").click(function () {
 		var print_this_area = $(this).data("what-area-to-print");
+		//alert($('.'+print_this_area).html()); //return;
 		var options = {
-			mode: "iframe",
+			mode: "popup", // avoid mode: "iframe" (bug): big spaces created if multiple pages are to be printed
 			standard: "html5"
 		};
-		$("div.PrintArea." + print_this_area).printArea([options]);
+		// CSS overrides pre-existing max-height; otherwise, PrintArea jQuery plugin will output (for print) only what is visible within pane boundary
+		$("#openings-list-container, #container-my-signups, #container-others-signups").addClass("printareaPatch");
+		$("div." + print_this_area).printArea(options);
+		$("#openings-list-container, #container-my-signups, #container-others-signups").removeClass("printareaPatch");
 	});
 });
 
