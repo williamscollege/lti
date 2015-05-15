@@ -604,7 +604,7 @@
 						</div>
 
 						<div class="modal-footer">
-							<button type="submit" id="btnNewOpeningSubmit" class="btn btn-success" data-loading-text="Saving...">Save</button>
+							<button type="submit" id="btnNewOpeningSubmit" class="btn btn-primary" data-loading-text="Saving...">Save</button>
 							<button type="reset" id="btnNewOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">Cancel
 							</button>
 						</div>
@@ -802,7 +802,7 @@
 											<label for="btnEditOpeningSubmit" class="col-sm-3 control-label">&nbsp;</label>
 
 											<div class="col-sm-9">
-												<button type="button" id="btnEditOpeningSubmit" class="btn btn-success" data-loading-text="Saving...">Save
+												<button type="button" id="btnEditOpeningSubmit" class="btn btn-primary" data-loading-text="Saving...">Save
 												</button>
 												<button type="reset" id="btnEditOpeningCancel" class="btn btn-default btn-link btn-cancel" data-dismiss="modal">
 													Cancel
@@ -849,7 +849,7 @@
 												<label for="btnEditOpeningAddSignup" class="col-sm-3 control-label">&nbsp;</label>
 
 												<div class="col-sm-8">
-													<a href="#" type="button" id="btnEditOpeningAddSignup" class="btn btn-success" data-loading-text="Saving..." title="Save signup">Save</a>
+													<a href="#" type="button" id="btnEditOpeningAddSignup" class="btn btn-primary" data-loading-text="Saving..." title="Save signup">Save</a>
 													<a href="#" type="button" id="btnEditOpeningCancelSignup" class="btn btn-default btn-link btn-cancel" title="Cancel">Cancel</a>
 												</div>
 											</div>

@@ -148,7 +148,7 @@ $(document).ready(function () {
 							$("#btn-edit-sheetgroup-id-" + sheetgroup_id).attr("data-for-sheetgroup-max-pending", sheetgroup_max_pending);
 
 							// update visible UI
-							$("#btn-edit-sheetgroup-id-" + sheetgroup_id).text(sheetgroup_name);
+							$("#display-name-sheetgroup-id-" + sheetgroup_id).text(sheetgroup_name);
 						}
 						else {
 							// error message

@@ -14,16 +14,14 @@ $(document).ready(function () {
 	$('#content_container').prepend('<div id="page_alert_div" class="alert alert-dismissible small" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span id="page_alert_message"></span></div>');
 	$('#page_alert_div').hide();
 
-	// PrintArea: Print a specific div
-	// Important note: The desired div must be assigned a unique class called: "wms_print_XYZ" (i.e. wms_print_CalSetup, wms_print_EditOne, wms_print_OpeningSignup)
+	// PrintArea: Print any specific div (the div is assigned a unique class called: "wms_print_XYZ"; eg, wms_print_CalSetup, wms_print_EditOne, wms_print_OpeningSignup)
 	$(".wmsPrintArea").click(function () {
 		var print_this_area = $(this).data("what-area-to-print");
-		//alert($('.'+print_this_area).html()); //return;
 		var options = {
 			mode: "popup", // avoid mode: "iframe" (bug): big spaces created if multiple pages are to be printed
 			standard: "html5"
 		};
-		// CSS overrides pre-existing max-height; otherwise, PrintArea jQuery plugin will output (for print) only what is visible within pane boundary
+		// CSS overrides pre-existing max-height, removes scrollbar; otherwise, PrintArea jQuery plugin outputs to print only what is visible within visible boundary
 		$("#openings-list-container, #container-my-signups, #container-others-signups").addClass("printareaPatch");
 		$("div." + print_this_area).printArea(options);
 		$("#openings-list-container, #container-my-signups, #container-others-signups").removeClass("printareaPatch");

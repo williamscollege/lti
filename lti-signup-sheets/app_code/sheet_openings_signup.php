@@ -81,9 +81,9 @@
 									<span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size: 24px;"></span>
 									to see a summary of the openings on that day, and click on that icon to
 									get a more detailed list (which replaces this help text).
-									Click <a href="#" class="wms-custom-add" title="Sign up"><i class="glyphicon glyphicon-plus"></i>&nbsp;Signup</a>
+									Click <a href="#" class="wms-demo-add" title="Sign up"><i class="glyphicon glyphicon-plus"></i>&nbsp;Signup</a>
 									to add yourself or
-									<a href="#" class="wms-custom-delete" title="Cancel signup"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel&nbsp;signup</a>
+									<a href="#" class="wms-demo-delete" title="Cancel signup"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel&nbsp;signup</a>
 									to remove yourself from a given opening.
 								</p>
 

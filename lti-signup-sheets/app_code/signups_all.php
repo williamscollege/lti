@@ -50,7 +50,7 @@
 				if (!$signup['sheet_flag_private_signups']) {
 					// public: Users can see everyone who signed up
 					$rendered .= "<li class=\"list-signups list-signup-id-" . htmlentities($u['signup_id'], ENT_QUOTES, 'UTF-8') . "\">" . htmlentities($u['full_name'], ENT_QUOTES, 'UTF-8');
-					$rendered .= "<span class=\"\">";
+					$rendered .= "<span class=\"\">&nbsp;";
 					if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
 						// TODO - add functionality to link click through
 						// only allow self to cancel signup
@@ -64,7 +64,7 @@
 				elseif ($signup['sheet_flag_private_signups'] && $u['username'] == $USER->username) {
 					// private: Users can only see their own signup
 					$rendered .= "<li class=\"list-signups list-signup-id-" . htmlentities($u['signup_id'], ENT_QUOTES, 'UTF-8') . "\">" . htmlentities($u['full_name'], ENT_QUOTES, 'UTF-8');
-					$rendered .= "<span class=\"\">";
+					$rendered .= "<span class=\"\">&nbsp;";
 					if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
 						// TODO - add functionality to link click through
 						$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . htmlentities($signup['opening_id'], ENT_QUOTES, 'UTF-8') . "\" data-for-signup-id=\"" . htmlentities($u['signup_id'], ENT_QUOTES, 'UTF-8') . "\" data-for-signup-name=\"" . htmlentities($u['full_name'], ENT_QUOTES, 'UTF-8') . "\" data-for-sheet-name=\"" . htmlentities($signup['sheet_name'], ENT_QUOTES, 'UTF-8') . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";
@@ -104,8 +104,8 @@
 				// begin: loop through signed up users
 				foreach ($signedupUsers as $u) {
 					$rendered .= "<li class=\"list-signups list-signup-id-" . htmlentities($u['signup_id'], ENT_QUOTES, 'UTF-8') . "\">" . htmlentities($u['full_name'], ENT_QUOTES, 'UTF-8');
-					$rendered .= " <span class=\"toggle_opening_details small\">(" . htmlentities($u['username'], ENT_QUOTES, 'UTF-8') . ", " . util_datetimeFormatted($u['signup_created_at']) . ")</span> ";
-					$rendered .= "<span class=\"\">";
+					$rendered .= "<span class=\"toggle_opening_details small\">&nbsp;(" . htmlentities($u['username'], ENT_QUOTES, 'UTF-8') . ", " . util_datetimeFormatted($u['signup_created_at']) . ")</span>";
+					$rendered .= "<span class=\"\">&nbsp;";
 					if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
 						// TODO - add functionality to link click through
 						$rendered .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . htmlentities($signup['opening_id'], ENT_QUOTES, 'UTF-8') . "\" data-for-signup-id=\"" . htmlentities($u['signup_id'], ENT_QUOTES, 'UTF-8') . "\" data-for-signup-name=\"" . htmlentities($u['full_name'], ENT_QUOTES, 'UTF-8') . "\" data-for-sheet-name=\"" . htmlentities($signup['sheet_name'], ENT_QUOTES, 'UTF-8') . "\" title=\"Cancel signup\"><i class=\"glyphicon glyphicon-remove\"></i></a>";

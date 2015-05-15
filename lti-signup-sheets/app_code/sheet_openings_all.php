@@ -114,45 +114,51 @@
 
 			if ($course_based_sheets && $other_based_sheets) {
 				// begin table
-				echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
+				echo "<table class=\"table table-condensed table-bordered table-hover col-sm-12\">";
 				echo "<tr class=\"\"><th class=\"col-sm-6 info\">Sheets available because I am enrolled in...</th></tr>";
-				echo "<tr><td>";
 
 				foreach ($course_based_sheets as $course => $items) {
-					echo "<strong>" . htmlentities($course, ENT_QUOTES, 'UTF-8') . "</strong>";
+					echo "<tr><td>";
+					echo "<p>" . htmlentities($course, ENT_QUOTES, 'UTF-8') . "</p>";
 					echo "<ul>" . $items . "</ul>";
+					echo "</td></tr>";
 				}
-				echo "</td></tr></table>";
+				echo "</table>";
 				// end table
 
 				// begin table
-				echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
+				echo "<table class=\"table table-condensed table-bordered table-hover col-sm-12\">";
 				echo "<tr class=\"\"><th class=\"col-sm-6 info\">Sheets available because...</th></tr>";
 				echo "<tr><td>";
 
 				foreach ($other_based_sheets as $reason => $items) {
-					echo "<strong>" . htmlentities(substr($reason, 3), ENT_QUOTES, 'UTF-8') . "</strong>";
+					echo "<tr><td>";
+					echo "<p>" . htmlentities(substr($reason, 3), ENT_QUOTES, 'UTF-8') . "</p>";
 					echo "<ul>" . $items . "</ul>";
+					echo "</td></tr>";
 				}
-				echo "</td></tr></table>";
+				echo "</table>";
 				// end table
 			}
 			else // only one list has info
 			{
 				// begin table
-				echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
+				echo "<table class=\"table table-condensed table-bordered table-hover col-sm-12\">";
 				echo "<tr class=\"\"><th class=\"col-sm-6 info\">I can sign up for these because...</th></tr>";
-				echo "<tr><td>";
 
 				foreach ($course_based_sheets as $course => $items) {
-					echo "<strong>" . htmlentities($course, ENT_QUOTES, 'UTF-8') . "</strong>";
+					echo "<tr><td>";
+					echo "<p>" . htmlentities($course, ENT_QUOTES, 'UTF-8') . "</p>";
 					echo "<ul>" . $items . "</ul>";
+					echo "<br /></td></tr>";
 				}
 				foreach ($other_based_sheets as $reason => $items) {
-					echo "<br /><strong>" . htmlentities(substr($reason, 3), ENT_QUOTES, 'UTF-8') . "</strong>";
+					echo "<tr><td>";
+					echo "<p>" . htmlentities(substr($reason, 3), ENT_QUOTES, 'UTF-8') . "</p>";
 					echo "<ul>" . $items . "</ul>";
+					echo "</td></tr>";
 				}
-				echo "</td></tr></table>";
+				echo "</table>";
 				// end table
 			}
 		}

@@ -241,11 +241,11 @@ $(document).ready(function () {
 		$("#toggle_openings_instructions").hide();
 		$("#display_opening_signup_details").show().html(dataset);
 		// prepend a 'close' button to DOM overlay
-		$("#display_opening_signup_details").prepend('<a href="#" title="close" id="wms_custom_close_x" class="close"><span aria-hidden="true">&times;</span></a>');
+		$("#display_opening_signup_details").prepend('<a href="#" title="close" id="wms_demo_close_x" class="close"><span aria-hidden="true">&times;</span></a>');
 	});
 
 	// close opening signup details (DOM overlay previously copied from calendar)
-	$(document).on('click', '#wms_custom_close_x', function () {
+	$(document).on('click', '#wms_demo_close_x', function () {
 		$("#toggle_openings_instructions").show();
 		$("#display_opening_signup_details").hide();
 	});

@@ -101,12 +101,13 @@ Purpose: Edit Opening - Signup someone to an opening
 
 
 /*=======================================
-Purpose: CSS overrides pre-existing max-height; otherwise, PrintArea jQuery plugin will output (for print) only what is visible within pane boundary
+Purpose: CSS overrides pre-existing max-height, removes scrollbar; otherwise, PrintArea jQuery plugin outputs to print only what is visible within visible boundary
 ==========================================*/
 
 .printareaPatch{
 	margin-top: 0px !important;
 	max-height: 100% !important;
+	overflow-y: hidden !important;
 }
 
 /*=======================================
@@ -263,75 +264,111 @@ span[data-cal-date] {
 	margin-right: 3px;
 }
 
-/* opening control links (edit, delete, add signup) */
-.sus-edit-opening, .sus-edit-signup {
-	margin-left: 1px;
-	margin-right: 1px;
-	padding: 0px 3px;
-}
-
-.sus-edit-opening:hover, .sus-edit-signup:hover {
-	background-color: #57D283;
-}
-
-.sus-delete-opening {
-	margin-left: 1px;
-	margin-right: 1px;
-	padding: 0px 3px;
-	color: #ff0000;
-}
-
-.sus-delete-opening:hover {
-	background-color: #F7A9AD;
-	color: #ff0000;
-}
-
 .sus-delete-signup {
-	margin-right: 5px;
-	padding: 0px 3px;
-	border: none;
 	background-color: transparent;
+	margin-right: 5px;
+	padding: 1px 2px 0px 3px;
+	border: 1px solid transparent;
 	color: #ff0000;
 }
 
 .sus-delete-signup:hover {
-	background-color: #F7A9AD;
+	background-color: #EBEBEB;
+	border: 1px solid #D1D1D1;
+	color: #ff0000;
+}
+
+/* opening control links (edit, delete, add signup) */
+.sus-edit-opening, .sus-edit-signup {
+	background-color: transparent;
+	padding: 1px 2px 0px 3px;
+	border: 1px solid transparent;
+}
+
+.sus-edit-opening:hover, .sus-edit-signup:hover {
+	background-color: #EBEBEB;
+	border: 1px solid #D1D1D1;
+}
+
+.sus-delete-opening {
+	background-color: transparent;
+	padding: 1px 2px 0px 3px;
+	border: 1px solid transparent;
+	color: #ff0000;
+}
+
+.sus-delete-opening:hover {
+	background-color: #EBEBEB;
+	border: 1px solid #D1D1D1;
 	color: #ff0000;
 }
 
 .sus-add-someone-to-opening {
-	margin-left: 1px;
-	margin-right: 1px;
-	padding: 0px 3px;
+	background-color: transparent;
+	padding: 1px 1px 0px 3px;
+	border: 1px solid transparent;
 }
 
 .sus-add-someone-to-opening:hover {
-	background-color: #57D283;
+	background-color: #EBEBEB;
+	border: 1px solid #D1D1D1;
 }
 
-/* modal: Edit Opening / Signups */
-.wms-custom-add {
-	margin: 0px 1px;
-	padding: 0px 3px;
+/* classes for renderAsHtmlOpeningWithLimitedControls */
+.sus-add-me-to-opening {
+	background-color: transparent;
+	padding: 1px 2px 0px 3px;
+	border: 1px solid transparent;
 }
 
-.wms-custom-add:hover {
-	background-color: #57D283;
+.sus-add-me-to-opening:hover {
+	background-color: #EBEBEB;
+	border: 1px solid #D1D1D1;
 }
 
-.wms-custom-delete {
-	margin: 0px 1px;
-	padding: 0px 3px;
+.sus-delete-me-from-opening {
+	background-color: transparent;
+	padding: 1px 2px 0px 3px;
+	border: 1px solid transparent;
 	color: #ff0000;
 }
 
-.wms-custom-delete:hover {
-	background-color: #F7A9AD;
+.sus-delete-me-from-opening:hover {
+	background-color: #EBEBEB;
+	border: 1px solid #D1D1D1;
+	color: #ff0000;
+}
+
+/* modal with basic instructions */
+.wms-demo-add {
+	white-space: nowrap;
+	background-color: transparent;
+	padding: 1px 2px 0px 3px;
+	border: 1px solid transparent;
+}
+
+.wms-demo-add:hover {
+	background-color: #EBEBEB;
+	border: 1px solid #D1D1D1;
+}
+
+
+.wms-demo-delete {
+	white-space: nowrap;
+	background-color: transparent;
+	padding: 1px 2px 0px 3px;
+	border: 1px solid transparent;
+	color: #ff0000;
+}
+
+.wms-demo-delete:hover {
+	background-color: #EBEBEB;
+	border: 1px solid #D1D1D1;
 	color: #ff0000;
 }
 
 /* close x for DOM overlay */
-#wms_custom_close_x{
+#wms_demo_close_x{
 	position: relative;
 	top: -12px;
 	right: -8px;
@@ -340,23 +377,6 @@ span[data-cal-date] {
 .wms-custom-datepicker{
 	background-color: #ffffff !important;
 	border: 1px solid #A9A9A9 !important;;
-}
-
-/* classes for renderAsHtmlOpeningWithLimitedControls */
-.sus-add-me-to-opening {
-}
-
-.sus-add-me-to-opening:hover {
-	background-color: #57D283;
-}
-
-.sus-delete-me-from-opening {
-	color: #ff0000;
-}
-
-.sus-delete-me-from-opening:hover {
-	background-color: #F7A9AD;
-	color: #ff0000;
 }
 
 /* ensure uniform btn sizes for repeating days of week */

@@ -307,9 +307,9 @@ $(document).ready(function () {
 		else {
 			// delete single opening (NOT part of a group/series)
 			var params = {
-				title: "Delete Opening",
+				title: "Delete opening",
 				message: "Really delete this opening?<br /><br /><strong>" + $(this).siblings('.opening-time-range').html() + "</strong>" + openingName,
-				label: "Delete Opening",
+				label: "Delete opening",
 				class: "btn btn-danger",
 				url: "../ajax_actions/ajax_actions.php",
 				ajax_action: "delete-opening",

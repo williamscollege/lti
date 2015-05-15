@@ -303,7 +303,7 @@
 
 										<div class="form-group">
 											<div class="text-right">
-												<button type="submit" id="btnSheetInfoSubmit" class="btn btn-success btn" data-loading-text="Saving...">Save
+												<button type="submit" id="btnSheetInfoSubmit" class="btn btn-primary" data-loading-text="Saving...">Save
 												</button>
 												<a href="<?php echo APP_ROOT_PATH; ?>/app_code/sheets_all.php" id="btnSheetInfoCancel" class="btn btn-default btn-link btn-cancel">Cancel</a>
 											</div>

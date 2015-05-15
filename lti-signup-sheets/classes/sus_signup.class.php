@@ -61,7 +61,7 @@
 			$rendered = '';
 
 			$rendered .= "<a href=\"#\" class=\"sus-edit-signup\" data-for-opening-id=\"" . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . "\" data-for-signup-id=\"" . htmlentities($this->signup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-username=\"" . htmlentities($userDisplayUsername, ENT_QUOTES, 'UTF-8') . "\"  data-for-signup-admin-comment=\"" . htmlentities($this->admin_comment, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit signup\"><i class=\"glyphicon glyphicon-wrench\"></i> </a>";
-			$rendered .= "<a href=\"#\" class=\"sus-delete-signup wms-custom-delete\" data-bb=\"alert_callback\" data-for-opening-id=\"" . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . "\" data-for-signup-id=\"" . htmlentities($this->signup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-signup-name=\"" . htmlentities($userDisplayFullname, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>";
+			$rendered .= "<a href=\"#\" class=\"sus-delete-signup\" data-bb=\"alert_callback\" data-for-opening-id=\"" . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . "\" data-for-signup-id=\"" . htmlentities($this->signup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-signup-name=\"" . htmlentities($userDisplayFullname, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete signup\"><i class=\"glyphicon glyphicon-remove\"></i> </a>";
 			$rendered .= htmlentities($userDisplayFullname, ENT_QUOTES, 'UTF-8');
 			$rendered .= ' <span class="small">(' . htmlentities($userDisplayUsername, ENT_QUOTES, 'UTF-8') . ', ' . util_datetimeFormatted($this->created_at) . ')</span> ';
 			if ($this->admin_comment) {

@@ -178,8 +178,8 @@
 
 			$rendered = $this->_renderHtml_BEGIN();
 			$rendered .= '<a href="#" class="sus-edit-opening" data-opening-id="' . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . '" data-toggle="modal" data-target="#modal-edit-opening" title="Edit opening"><i class="glyphicon glyphicon-wrench"></i></a>';
-			$rendered .= '<a href="#" class="sus-delete-opening" data-opening-id="' . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . '" data-count-openings-in-group-id="' . $repeating_data_attr . '"  title="Delete Opening"><i class="glyphicon glyphicon-remove"></i></a>';
-			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-opening-id="' . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . '" data-toggle="modal" data-target="#modal-edit-opening" title="Sign up"><i class="glyphicon glyphicon-plus"></i></a>' . $repeating_event . '<br />';
+			$rendered .= '<a href="#" class="sus-delete-opening" data-opening-id="' . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . '" data-count-openings-in-group-id="' . $repeating_data_attr . '"  title="Delete opening"><i class="glyphicon glyphicon-remove"></i></a>';
+			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-opening-id="' . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . '" data-toggle="modal" data-target="#modal-edit-opening" title="Add sign up"><i class="glyphicon glyphicon-plus"></i></a>' . $repeating_event . '<br />';
 			$rendered .= $this->_renderHtml_END($signedupUserIds, TRUE);
 
 			return $rendered;
@@ -200,7 +200,7 @@
 
 				// show 'cancel signup' btn ("I am signed up for this future opening")
 				if ($is_own_signup) {
-					$rendered .= '<a href="#" class="sus-delete-me-from-opening" data-opening-id="' . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . '" title="Delete my signup"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel signup</a>';
+					$rendered .= '<a href="#" class="sus-delete-me-from-opening" data-opening-id="' . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . '" title="Cancel my signup"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel signup</a>';
 				}
 				// show 'signup' btn ("I am not signed up for this future opening")
 				elseif (count($this->signups) < $this->max_signups || $this->max_signups == -1) {
