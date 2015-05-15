@@ -292,7 +292,7 @@ span[data-cal-date] {
 
 .sus-delete-opening {
 	background-color: transparent;
-	padding: 1px 2px 0px 3px;
+	padding: 1px 3px 0px 3px;
 	border: 1px solid transparent;
 	color: #ff0000;
 }
@@ -305,7 +305,7 @@ span[data-cal-date] {
 
 .sus-add-someone-to-opening {
 	background-color: transparent;
-	padding: 1px 1px 0px 3px;
+	padding: 1px 2px 0px 3px;
 	border: 1px solid transparent;
 }
 
