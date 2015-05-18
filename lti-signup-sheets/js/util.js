@@ -249,10 +249,10 @@ function updateDOM(action_ary, ret, data) {
 
 			// restore default text if no signups remain in either container
 			if ($('#container-my-signups .list-signups').length == 0) {
-				$('#container-my-signups').html("<div class='bg-info'>You have not yet signed up for any sheet openings.<br />To sign-up, click on &quot;Available Openings&quot; (above).</div>");
+				$('#container-my-signups').html("<div class='bg-info'>You have not yet signed up for any sheet openings.<br />To sign-up, click on <strong>&quot;Available Openings&quot;</strong> (above).</div>");
 			}
 			if ($('#container-others-signups .list-signups').length == 0) {
-				$('#container-others-signups').html("<div class='bg-info'>No one has signed up on your sheets.</div>");
+				$('#container-others-signups').html("<div class='bg-info'>No one has signed up on your sheets.<br />To see your sheets, click on <strong>&quot;Sheets&quot;</strong> (above).</div>");
 			}
 			// console.log('container-my-signups = ' + $('#container-my-signups .list-signups').length + ', container-others-signups = ' + $('#container-others-signups .list-signups').length);
 		}
