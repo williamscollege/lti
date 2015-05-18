@@ -19,7 +19,7 @@
 		if (count($USER->sheet_openings_all) == 0) {
 			echo "<table class=\"table table-condensed table-bordered col-sm-12\">";
 			echo "<tr class=\"\">";
-			echo "<th class=\"col-sm-6 bg-info\">There are no sheets on which you can sign up.</th>";
+			echo "<th class=\"col-sm-6 bg-info\">There currently are no sheets on which you can sign up.</th>";
 			echo "</tr>";
 			echo "</table>";
 		}
@@ -96,11 +96,11 @@
 						}
 						break;
 					case "byhasaccount":
-						if (isset($other_based_sheets["G) you have an account on this system"])) {
-							$other_based_sheets["G) you have an account on this system"] .= "<li>$base_sheet_link</li>";
+						if (isset($other_based_sheets["G) I have an account on "  . LMS_DOMAIN])) {
+							$other_based_sheets["G) I have an account on " . LMS_DOMAIN] .= "<li>$base_sheet_link</li>";
 						}
 						else {
-							$other_based_sheets["G) you have an account on this system"] = "<li>$base_sheet_link</li>";
+							$other_based_sheets["G) I have an account on " . LMS_DOMAIN] = "<li>$base_sheet_link</li>";
 						}
 						break;
 					default:
