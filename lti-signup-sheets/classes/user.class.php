@@ -537,7 +537,7 @@
 				JOIN (
 					SELECT DISTINCT
 						a.sheet_id" .
-				($includeAccessRecords ? '
+						($includeAccessRecords ? '
 						,a.access_id AS access_id
 						,a.created_at AS created_at
 						,a.updated_at AS updated_at
@@ -548,73 +548,73 @@
 					FROM
 						sus_access AS a
 					WHERE
-						(a.type='byhasaccount')
+						a.type='byhasaccount'
 						OR
-						(a.type='byuser'
-						 AND (a.constraint_data = '{$this->username}'))
+						(	a.type='byuser'
+							AND a.constraint_data = '{$this->username}'
+						)
 						OR
-						(a.type='byrole'
-						 AND a.constraint_data = 'teacher'
-						 AND $for_user_id IN (
-							SELECT DISTINCT
-							usr.user_id
-							FROM
-							enrollments AS enr
-							JOIN course_roles AS crs_role ON crs_role.course_role_name = enr.course_role_name
-							JOIN users AS usr ON usr.user_id = enr.user_id
-							JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
-							WHERE
-							crs_role.course_role_name = 'teacher'
-							AND usr.user_id = $for_user_id))
-						OR
-						(a.type='byrole'
-						 AND a.constraint_data = 'student'
-						 AND $for_user_id IN (
-							SELECT DISTINCT
-							usr.user_id
-							FROM
-							enrollments AS enr
-							JOIN course_roles AS crs_role ON crs_role.course_role_name = enr.course_role_name
-							JOIN users AS usr ON usr.user_id = enr.user_id
-							JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
-							WHERE
-							crs_role.course_role_name = 'student'
-							AND usr.user_id = $for_user_id))
-						OR
-						(a.type='bycourse'
-						 AND a.constraint_data IN (
-							SELECT DISTINCT
-							crs.course_idstr
-							FROM
-							enrollments AS enr
-							JOIN users AS usr ON usr.user_id = enr.user_id
-							JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
-							WHERE
-							usr.user_id = $for_user_id))
-						OR
-						(a.type='byinstr'
-						 AND a.constraint_id IN (
-							SELECT DISTINCT
-							usr.user_id
-							FROM
-							enrollments AS enr
-							JOIN course_roles AS crs_role ON crs_role.course_role_name = enr.course_role_name
-							JOIN users AS usr ON usr.user_id = enr.user_id
-							JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
-							WHERE
-							crs_role.course_role_name = 'teacher'
-							AND crs.course_id IN (
+						(	a.type='byrole'
+							 AND a.constraint_data = 'teacher'
+							 AND $for_user_id IN (
 								SELECT DISTINCT
-									crs.course_id
+									usr.user_id
 								FROM
 									enrollments AS enr
-									JOIN course_roles AS crs_role ON crs_role.course_role_name = enr.course_role_name
-									JOIN users AS usr ON usr.user_id = enr.user_id
-									JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
+								JOIN users AS usr ON usr.canvas_user_id = enr.canvas_user_id
 								WHERE
-									crs_role.course_role_name = 'student'
-									AND usr.user_id = $for_user_id
-							)))
+									enr.course_role_name = 'teacher'
+								AND usr.user_id=$for_user_id)
+						)
+						OR
+						(	a.type='byrole'
+							 AND a.constraint_data = 'student'
+							 AND $for_user_id IN (
+								SELECT DISTINCT
+									usr.user_id
+								FROM
+									enrollments AS enr
+								JOIN users AS usr ON usr.canvas_user_id = enr.canvas_user_id
+								WHERE
+									enr.course_role_name = 'student'
+								AND usr.user_id=$for_user_id)
+						)
+						OR
+						(	a.type='bycourse'
+							 AND a.constraint_data IN (
+								SELECT DISTINCT
+									crs.course_idstr
+								FROM
+									enrollments AS enr
+								JOIN users AS usr ON usr.canvas_user_id = enr.canvas_user_id
+								-- JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
+								WHERE
+									usr.user_id = $for_user_id)
+						)
+						OR
+						(	a.type='byinstr'
+						 	AND a.constraint_id IN (
+								SELECT DISTINCT
+									usr.user_id
+								FROM
+									enrollments AS enr
+								JOIN users AS usr ON usr.canvas_user_id = enr.canvas_user_id
+								JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
+								WHERE
+									enr.course_role_name = 'teacher'
+								AND crs.course_id IN (
+									SELECT DISTINCT
+										crs.course_id
+									FROM
+										enrollments AS enr
+										JOIN users AS usr ON usr.canvas_user_id = enr.canvas_user_id
+										JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
+									WHERE
+										enr.course_role_name = 'student'
+										AND usr.user_id = $for_user_id
+								)
+							)
+						)
 				" .
 				###############################
 				# NOTE: this is Williams specific, and is how access by grad year is
