@@ -583,11 +583,10 @@
 						(	a.type='bycourse'
 							 AND a.constraint_data IN (
 								SELECT DISTINCT
-									crs.course_idstr
+									enr.course_idstr
 								FROM
 									enrollments AS enr
 								JOIN users AS usr ON usr.canvas_user_id = enr.canvas_user_id
-								-- JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
 								WHERE
 									usr.user_id = $for_user_id)
 						)
