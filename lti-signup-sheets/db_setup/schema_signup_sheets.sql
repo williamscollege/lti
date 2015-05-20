@@ -11,7 +11,6 @@ FOR TESTING ONLY:
 	DROP TABLE `users`;
 	DROP TABLE `courses`;
 	DROP TABLE `enrollments`;
-	-- DROP TABLE `course_roles`;
 	DROP TABLE `sus_sheetgroups`;
 	DROP TABLE `sus_sheets`;
 	DROP TABLE `sus_openings`;
@@ -23,7 +22,6 @@ FOR TESTING ONLY:
 	DELETE FROM `users`;
 	DELETE FROM `courses`;
 	DELETE FROM `enrollments`;
-	DELETE FROM `course_roles`;
 	DELETE FROM `sus_sheetgroups`;
 	DELETE FROM `sus_sheets`;
 	DELETE FROM `sus_openings`;
@@ -35,7 +33,6 @@ FOR TESTING ONLY:
 	SELECT * FROM `users`;
 	SELECT * FROM `courses`;
 	SELECT * FROM `enrollments`;
-	SELECT * FROM `course_roles`;
 	SELECT * FROM `sus_sheetgroups`;
 	SELECT * FROM `sus_sheets`;
 	SELECT * FROM `sus_openings`;
@@ -143,14 +140,6 @@ CREATE TABLE IF NOT EXISTS `enrollments` (
 	INDEX `section_idstr` (`section_idstr`),
 	INDEX `flag_delete` (`flag_delete`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
-
-CREATE TABLE IF NOT EXISTS `course_roles` (
-	`course_role_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`priority` INT NOT NULL,
-	`course_role_name` VARCHAR(255) NOT NULL,
-	`flag_delete` BIT(1) NOT NULL DEFAULT 0
-)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Sync with data sent from PS to Canvas';
-/* priority: Highest teacher role is priority = 10; lowest alumni priority is > 30 */
 
 CREATE TABLE IF NOT EXISTS `sus_sheetgroups` (
 	`sheetgroup_id` BIGINT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -278,18 +267,4 @@ CREATE TABLE IF NOT EXISTS `queued_messages` (
 	INDEX `sheet_id` (`sheet_id`),
 	INDEX `opening_id` (`opening_id`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='holds messages in queue prior to independent sending mechanism';
-
-
-# ----------------------------
-# Required: The Absolute Minimalist Approach to Initial Data Population
-# ----------------------------
-
-# Required constant values for 'course_roles' table
-INSERT INTO
-	course_roles
-VALUES
-	(1,10,'teacher',0),
-	(2,20,'student',0),
-	(3,30,'observer',0),
-	(4,40,'alumni',0);
 

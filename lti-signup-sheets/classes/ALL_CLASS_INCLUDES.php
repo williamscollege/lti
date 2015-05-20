@@ -14,7 +14,6 @@
 	require_once(dirname(__FILE__) . '/user.class.php');
 	require_once(dirname(__FILE__) . '/course.class.php');
 	require_once(dirname(__FILE__) . '/enrollment.class.php');
-	require_once(dirname(__FILE__) . '/course_role.class.php');
 
 	require_once(dirname(__FILE__) . '/sus_sheetgroup.class.php');
 	require_once(dirname(__FILE__) . '/sus_sheet.class.php');
