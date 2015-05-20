@@ -5,10 +5,9 @@
 
 	/*
 	 * This file contains a series of methods for creating known test data in a target database
-	 * NOTE: Course_roles are pre-populated and fixed - there is no creation nor removal of test data for those tables
 	*/
 
-	/*
+	/* Example format:
 	function createTestData_XXXX($dbConn) {
 		// 1100 series ids
 		# XXXX: user_id, username, email, first_name, last_name, created_at, updated_at, flag_is_system_admin, flag_is_banned, flag_delete
