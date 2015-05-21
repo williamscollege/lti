@@ -17,7 +17,7 @@
 		}
 
 		function testCourseAtributesExist() {
-			$this->assertEqual(count(Course::$fields), 7);
+			$this->assertEqual(count(Course::$fields), 10);
 
 			$this->assertTrue(in_array('course_id', Course::$fields));
 			$this->assertTrue(in_array('course_idstr', Course::$fields));
@@ -25,6 +25,9 @@
 			$this->assertTrue(in_array('long_name', Course::$fields));
 			$this->assertTrue(in_array('account_idstr', Course::$fields));
 			$this->assertTrue(in_array('term_idstr', Course::$fields));
+			$this->assertTrue(in_array('canvas_course_id', Course::$fields));
+			$this->assertTrue(in_array('begins_at_str', Course::$fields));
+			$this->assertTrue(in_array('ends_at_str', Course::$fields));
 			$this->assertTrue(in_array('flag_delete', Course::$fields));
 		}
 
