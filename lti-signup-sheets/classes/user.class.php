@@ -129,7 +129,7 @@
 		// load explicitly calls the DB (generally called indirectly from related cache fxn)
 		public function loadEnrollments() {
 			$this->enrollments = [];
-			$this->enrollments = Enrollment::getAllFromDb(['user_id' => $this->user_id], $this->dbConnection);
+			$this->enrollments = Enrollment::getAllFromDb(['canvas_user_id' => $this->user_id], $this->dbConnection);
 			usort($this->enrollments, 'Enrollment::cmp');
 		}
 

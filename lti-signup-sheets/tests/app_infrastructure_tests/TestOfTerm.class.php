@@ -17,7 +17,7 @@
 		}
 
 		function testTermAtributesExist() {
-			$this->assertEqual(count(Term::$fields), 6);
+			$this->assertEqual(count(Term::$fields), 7);
 
 			$this->assertTrue(in_array('term_id', Term::$fields));
 			$this->assertTrue(in_array('canvas_term_id', Term::$fields));

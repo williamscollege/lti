@@ -26,9 +26,11 @@
 		}
 
 		function testUserAtributesExist() {
-			$this->assertEqual(count(User::$fields), 10);
+			$this->assertEqual(count(User::$fields), 12);
 
 			$this->assertTrue(in_array('user_id', User::$fields));
+			$this->assertTrue(in_array('canvas_user_id', User::$fields));
+			$this->assertTrue(in_array('sis_user_id', User::$fields));
 			$this->assertTrue(in_array('username', User::$fields));
 			$this->assertTrue(in_array('email', User::$fields));
 			$this->assertTrue(in_array('first_name', User::$fields));
@@ -178,9 +180,8 @@
 
 			$u1->cacheMyAvailableSheetOpenings();
 
-			$this->assertEqual(2, count($u1->sheet_openings_all));
+			$this->assertEqual(1, count($u1->sheet_openings_all));
 			$this->assertEqual(601, $u1->sheet_openings_all[0]['s_id']);
-			$this->assertEqual(602, $u1->sheet_openings_all[1]['s_id']);
 		}
 
 

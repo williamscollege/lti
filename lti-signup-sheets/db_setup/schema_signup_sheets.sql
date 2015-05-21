@@ -128,7 +128,6 @@ CREATE TABLE IF NOT EXISTS `enrollments` (
 	`canvas_course_id` INT NOT NULL DEFAULT 0,
 	`canvas_role_name` VARCHAR(255) NULL,
 	`course_idstr` VARCHAR(255) NOT NULL,
-	`user_id` INT NOT NULL,
 	`course_role_name` VARCHAR(48) NOT NULL,
 	`section_idstr` VARCHAR(255) NULL,
 	`flag_delete` BIT(1) NOT NULL DEFAULT 0,
