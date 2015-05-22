@@ -5,10 +5,9 @@
 
 	/*
 	 * This file contains a series of methods for creating known test data in a target database
-	 * NOTE: Course_roles are pre-populated and fixed - there is no creation nor removal of test data for those tables
 	*/
 
-	/*
+	/* Example format:
 	function createTestData_XXXX($dbConn) {
 		// 1100 series ids
 		# XXXX: user_id, username, email, first_name, last_name, created_at, updated_at, flag_is_system_admin, flag_is_banned, flag_delete
@@ -128,24 +127,24 @@
 
 	function createTestData_Enrollments($dbConn) {
 		// 400 series ids
-		# enrollment: 'enrollment_id', 'canvas_user_id', 'canvas_course_id', 'canvas_role_name', 'course_idstr', 'user_id', 'course_role_name', 'section_idstr', 'flag_delete'
+		# enrollment: 'enrollment_id', 'canvas_user_id', 'canvas_course_id', 'canvas_role_name', 'course_idstr', 'course_role_name', 'section_idstr', 'flag_delete'
 		$addTestSql  = "INSERT INTO " . Enrollment::$dbTable . " VALUES
-			(401, 0, 0, '', '15F-ARTH-101-01', 101, 'teacher', '15F-ARTH-101-01', 0),
-			(402, 0, 0, '', '15F-ARTH-101-01', 102, 'teacher', '15F-ARTH-101-01', 0),
-			(403, 0, 0, '', '15F-ARTH-101-01', 103, 'student', '15F-ARTH-101-01', 0),
-			(404, 0, 0, '', '15F-ARTH-101-01', 104, 'student', '15F-ARTH-101-01', 0),
-			(405, 0, 0, '', '15F-ARTH-101-01', 105, 'student', '15F-ARTH-101-01', 0),
-			(406, 0, 0, '', '15F-ARTH-101-01', 106, 'student', '15F-ARTH-101-01', 0),
-			(407, 0, 0, '', '15F-ARTH-101-01', 107, 'student', '15F-ARTH-101-01', 1),
-			(408, 0, 0, '', '15F-ARTH-101-01', 108, 'student', '15F-ARTH-101-01', 1),
-			(409, 0, 0, '', '15F-ARTH-101-01', 109, 'student', '15F-ARTH-101-01', 0),
-			(410, 0, 0, '', '15F-ARTH-101-01', 110, 'student', '15F-ARTH-101-01', 0),
-			(411, 0, 0, '', '15F-BIOL-101-01', 101, 'teacher', '15F-BIOL-101-01', 0),
-			(412, 0, 0, '', '15F-BIOL-101-01', 102, 'student', '15F-BIOL-101-01', 0),
-			(413, 0, 0, '', '15F-BIOL-101-01', 103, 'student', '15F-BIOL-101-01', 0),
-			(414, 0, 0, '', '15F-BIOL-101-01', 104, 'student', '15F-BIOL-101-01', 0),
-			(415, 0, 0, '', '15F-CHEM-101-01', 104, 'student', '15F-CHEM-101-01', 0),
-			(416, 0, 0, '', '15F-MATH-101-01', 104, 'student', '15F-MATH-101-01', 0)
+			(401, 101, 0, '', '15F-ARTH-101-01', 'teacher', '15F-ARTH-101-01', 0),
+			(402, 102, 0, '', '15F-ARTH-101-01', 'teacher', '15F-ARTH-101-01', 0),
+			(403, 103, 0, '', '15F-ARTH-101-01', 'student', '15F-ARTH-101-01', 0),
+			(404, 104, 0, '', '15F-ARTH-101-01', 'student', '15F-ARTH-101-01', 0),
+			(405, 105, 0, '', '15F-ARTH-101-01', 'student', '15F-ARTH-101-01', 0),
+			(406, 106, 0, '', '15F-ARTH-101-01', 'student', '15F-ARTH-101-01', 0),
+			(407, 107, 0, '', '15F-ARTH-101-01', 'student', '15F-ARTH-101-01', 1),
+			(408, 108, 0, '', '15F-ARTH-101-01', 'student', '15F-ARTH-101-01', 1),
+			(409, 109, 0, '', '15F-ARTH-101-01', 'student', '15F-ARTH-101-01', 0),
+			(410, 110, 0, '', '15F-ARTH-101-01', 'student', '15F-ARTH-101-01', 0),
+			(411, 101, 0, '', '15F-BIOL-101-01', 'teacher', '15F-BIOL-101-01', 0),
+			(412, 102, 0, '', '15F-BIOL-101-01', 'student', '15F-BIOL-101-01', 0),
+			(413, 103, 0, '', '15F-BIOL-101-01', 'student', '15F-BIOL-101-01', 0),
+			(414, 104, 0, '', '15F-BIOL-101-01', 'student', '15F-BIOL-101-01', 0),
+			(415, 104, 0, '', '15F-CHEM-101-01', 'student', '15F-CHEM-101-01', 0),
+			(416, 104, 0, '', '15F-MATH-101-01', 'student', '15F-MATH-101-01', 0)
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();

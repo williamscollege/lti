@@ -17,11 +17,13 @@
 		}
 
 		function testEnrollmentAtributesExist() {
-			$this->assertEqual(count(Enrollment::$fields), 6);
+			$this->assertEqual(count(Enrollment::$fields), 8);
 
 			$this->assertTrue(in_array('enrollment_id', Enrollment::$fields));
+			$this->assertTrue(in_array('canvas_user_id', Enrollment::$fields));
+			$this->assertTrue(in_array('canvas_course_id', Enrollment::$fields));
+			$this->assertTrue(in_array('canvas_role_name', Enrollment::$fields));
 			$this->assertTrue(in_array('course_idstr', Enrollment::$fields));
-			$this->assertTrue(in_array('user_id', Enrollment::$fields));
 			$this->assertTrue(in_array('course_role_name', Enrollment::$fields));
 			$this->assertTrue(in_array('section_idstr', Enrollment::$fields));
 			$this->assertTrue(in_array('flag_delete', Enrollment::$fields));
@@ -30,10 +32,10 @@
 		//// static methods
 
 		function testCmp() {
-			$e1 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-ROCK-101-01', 'user_id' => 200, 'course_role_name' => 'teacher', 'section_idstr' => '25F-ROCK-101-01', 'DB' => $this->DB]);
-			$e2 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-SCISSORS-101-01', 'user_id' => 201, 'course_role_name' => 'student', 'section_idstr' => '25F-SCISSORS-101-01', 'DB' => $this->DB]);
-			$e3 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-ROCK-101-01', 'user_id' => 202, 'course_role_name' => 'student', 'section_idstr' => '25F-ROCK-101-01', 'DB' => $this->DB]);
-			$e4 = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-PAPER-101-01', 'user_id' => 200, 'course_role_name' => 'student', 'section_idstr' => '25F-PAPER-101-01', 'DB' => $this->DB]);
+			$e1 = new Enrollment(['enrollment_id' => 50, 'canvas_user_id' => 200, 'course_idstr' => '25F-ROCK-101-01', 'course_role_name' => 'teacher', 'section_idstr' => '25F-ROCK-101-01', 'DB' => $this->DB]);
+			$e2 = new Enrollment(['enrollment_id' => 50, 'canvas_user_id' => 201, 'course_idstr' => '25F-SCISSORS-101-01', 'course_role_name' => 'student', 'section_idstr' => '25F-SCISSORS-101-01', 'DB' => $this->DB]);
+			$e3 = new Enrollment(['enrollment_id' => 50, 'canvas_user_id' => 202, 'course_idstr' => '25F-ROCK-101-01', 'course_role_name' => 'student', 'section_idstr' => '25F-ROCK-101-01', 'DB' => $this->DB]);
+			$e4 = new Enrollment(['enrollment_id' => 50, 'canvas_user_id' => 200, 'course_idstr' => '25F-PAPER-101-01', 'course_role_name' => 'student', 'section_idstr' => '25F-PAPER-101-01', 'DB' => $this->DB]);
 
 			$this->assertEqual(Enrollment::cmp($e1, $e2), -1);
 			$this->assertEqual(Enrollment::cmp($e1, $e1), 0);
@@ -44,7 +46,7 @@
 		//// DB interaction tests
 
 		function testEnrollmentDBInsert() {
-			$e = new Enrollment(['enrollment_id' => 50, 'course_idstr' => '25F-ROCK-101-01', 'user_id' => 200, 'course_role_name' => 'teacher', 'section_idstr' => '25F-ROCK-101-01', 'DB' => $this->DB]);
+			$e = new Enrollment(['enrollment_id' => 50, 'canvas_user_id' => 200, 'course_idstr' => '25F-ROCK-101-01', 'course_role_name' => 'teacher', 'section_idstr' => '25F-ROCK-101-01', 'DB' => $this->DB]);
 
 			$e->updateDb();
 

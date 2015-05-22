@@ -7,7 +7,6 @@
 		public static $dbTable = 'users';
 		public static $entity_type_label = 'user';
 
-		public $course_roles;
 		public $enrollments;
 		public $sheetgroups;
 		public $sheets;
@@ -35,7 +34,6 @@
 			//				die("This user does not exist in the database. Abort.");
 			//			}
 
-			$this->course_roles         = array();
 			$this->enrollments          = array();
 			$this->sheetgroups          = array();
 			$this->sheets               = array();
@@ -46,7 +44,6 @@
 		}
 
 		public function clearCaches() {
-			$this->course_roles         = array();
 			$this->enrollments          = array();
 			$this->sheetgroups          = array();
 			$this->sheets               = array();
@@ -66,25 +63,6 @@
 				return ($a->first_name < $b->first_name) ? -1 : 1;
 			}
 			return ($a->last_name < $b->last_name) ? -1 : 1;
-		}
-
-		public static function getUsersByCourseRole($role, $dbconn) {
-			$users = User::getAllFromDb(['flag_is_banned' => FALSE, 'flag_delete' => FALSE], $dbconn);
-
-			$usersByRole = [];
-
-			foreach ($users as $u) {
-				$u->loadCourseRoles();
-
-				foreach ($u->course_roles as $cr) {
-
-					if ($cr->course_role_name == $role) {
-						array_push($usersByRole, $u->user_id);
-					}
-
-				}
-			}
-			return $usersByRole;
 		}
 
 
@@ -142,31 +120,6 @@
 		}
 
 		// cache provides data while eliminating unnecessary DB calls
-		public function cacheCourseRoles() {
-			if (!$this->course_roles) {
-				$this->loadCourseRoles();
-			}
-		}
-
-		// load explicitly calls the DB (generally called indirectly from related cache fxn)
-		public function loadCourseRoles() {
-			$course_role_names = array();
-			$this->cacheEnrollments();
-
-			foreach ($this->enrollments as $enr) {
-				if (!in_array($enr->course_role_name, $course_role_names)) {
-					$course_role_names[] = $enr->course_role_name;
-				}
-			}
-
-			$this->course_roles = [];
-			foreach ($course_role_names as $crname) {
-				$this->course_roles[] = Course_Role::getOneFromDb(['course_role_name' => $crname], $this->dbConnection);
-			}
-			usort($this->course_roles, 'Course_Role::cmp');
-		}
-
-		// cache provides data while eliminating unnecessary DB calls
 		public function cacheEnrollments() {
 			if (!$this->enrollments) {
 				$this->loadEnrollments();
@@ -176,7 +129,7 @@
 		// load explicitly calls the DB (generally called indirectly from related cache fxn)
 		public function loadEnrollments() {
 			$this->enrollments = [];
-			$this->enrollments = Enrollment::getAllFromDb(['user_id' => $this->user_id], $this->dbConnection);
+			$this->enrollments = Enrollment::getAllFromDb(['canvas_user_id' => $this->user_id], $this->dbConnection);
 			usort($this->enrollments, 'Enrollment::cmp');
 		}
 
@@ -537,7 +490,7 @@
 				JOIN (
 					SELECT DISTINCT
 						a.sheet_id" .
-				($includeAccessRecords ? '
+						($includeAccessRecords ? '
 						,a.access_id AS access_id
 						,a.created_at AS created_at
 						,a.updated_at AS updated_at
@@ -548,73 +501,72 @@
 					FROM
 						sus_access AS a
 					WHERE
-						(a.type='byhasaccount')
+						a.type='byhasaccount'
 						OR
-						(a.type='byuser'
-						 AND (a.constraint_data = '{$this->username}'))
+						(	a.type='byuser'
+							AND a.constraint_data = '{$this->username}'
+						)
 						OR
-						(a.type='byrole'
-						 AND a.constraint_data = 'teacher'
-						 AND $for_user_id IN (
-							SELECT DISTINCT
-							usr.user_id
-							FROM
-							enrollments AS enr
-							JOIN course_roles AS crs_role ON crs_role.course_role_name = enr.course_role_name
-							JOIN users AS usr ON usr.user_id = enr.user_id
-							JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
-							WHERE
-							crs_role.course_role_name = 'teacher'
-							AND usr.user_id = $for_user_id))
-						OR
-						(a.type='byrole'
-						 AND a.constraint_data = 'student'
-						 AND $for_user_id IN (
-							SELECT DISTINCT
-							usr.user_id
-							FROM
-							enrollments AS enr
-							JOIN course_roles AS crs_role ON crs_role.course_role_name = enr.course_role_name
-							JOIN users AS usr ON usr.user_id = enr.user_id
-							JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
-							WHERE
-							crs_role.course_role_name = 'student'
-							AND usr.user_id = $for_user_id))
-						OR
-						(a.type='bycourse'
-						 AND a.constraint_data IN (
-							SELECT DISTINCT
-							crs.course_idstr
-							FROM
-							enrollments AS enr
-							JOIN users AS usr ON usr.user_id = enr.user_id
-							JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
-							WHERE
-							usr.user_id = $for_user_id))
-						OR
-						(a.type='byinstr'
-						 AND a.constraint_id IN (
-							SELECT DISTINCT
-							usr.user_id
-							FROM
-							enrollments AS enr
-							JOIN course_roles AS crs_role ON crs_role.course_role_name = enr.course_role_name
-							JOIN users AS usr ON usr.user_id = enr.user_id
-							JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
-							WHERE
-							crs_role.course_role_name = 'teacher'
-							AND crs.course_id IN (
+						(	a.type='byrole'
+							 AND a.constraint_data = 'teacher'
+							 AND $for_user_id IN (
 								SELECT DISTINCT
-									crs.course_id
+									usr.user_id
 								FROM
 									enrollments AS enr
-									JOIN course_roles AS crs_role ON crs_role.course_role_name = enr.course_role_name
-									JOIN users AS usr ON usr.user_id = enr.user_id
-									JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
+								JOIN users AS usr ON usr.canvas_user_id = enr.canvas_user_id
 								WHERE
-									crs_role.course_role_name = 'student'
-									AND usr.user_id = $for_user_id
-							)))
+									enr.course_role_name = 'teacher'
+								AND usr.user_id=$for_user_id)
+						)
+						OR
+						(	a.type='byrole'
+							 AND a.constraint_data = 'student'
+							 AND $for_user_id IN (
+								SELECT DISTINCT
+									usr.user_id
+								FROM
+									enrollments AS enr
+								JOIN users AS usr ON usr.canvas_user_id = enr.canvas_user_id
+								WHERE
+									enr.course_role_name = 'student'
+								AND usr.user_id=$for_user_id)
+						)
+						OR
+						(	a.type='bycourse'
+							 AND a.constraint_data IN (
+								SELECT DISTINCT
+									enr.course_idstr
+								FROM
+									enrollments AS enr
+								JOIN users AS usr ON usr.canvas_user_id = enr.canvas_user_id
+								WHERE
+									usr.user_id = $for_user_id)
+						)
+						OR
+						(	a.type='byinstr'
+						 	AND a.constraint_id IN (
+								SELECT DISTINCT
+									usr.user_id
+								FROM
+									enrollments AS enr
+								JOIN users AS usr ON usr.canvas_user_id = enr.canvas_user_id
+								JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
+								WHERE
+									enr.course_role_name = 'teacher'
+								AND crs.course_id IN (
+									SELECT DISTINCT
+										crs.course_id
+									FROM
+										enrollments AS enr
+										JOIN users AS usr ON usr.canvas_user_id = enr.canvas_user_id
+										JOIN courses AS crs ON crs.course_idstr = enr.course_idstr
+									WHERE
+										enr.course_role_name = 'student'
+										AND usr.user_id = $for_user_id
+								)
+							)
+						)
 				" .
 				###############################
 				# NOTE: this is Williams specific, and is how access by grad year is
