@@ -7,6 +7,8 @@
 # is designed to run on a repeated basis (e.g. a few times a day via
 # cron) to maintain a local cache of this info.
 
+# TO RUN: nohup ./cache_canvas_data.pl > LOG_cache_canvas_data.txt &
+
 #######################################################################
 # NOTE: this process has little to no security! Values from curl calls
 # are inserted directly into the DB inside SQL statement with minimal
@@ -575,7 +577,7 @@ sub getCanvasUsersArray {
 	#print Dumper(\@canvas_users);
 	#exit;
 
-	sleep(1); # no DOS attack simulator...
+	sleep(2); # no DOS attack simulator...
 
 	$users_page++;
     }
@@ -609,7 +611,7 @@ sub getCanvasCoursesArray {
 	#print Dumper(\@canvas_courses);
 	#exit;
 
-	sleep(1); # no DOS attack simulator...
+	sleep(2); # no DOS attack simulator...
 
 	$courses_page++;
     }
@@ -643,7 +645,7 @@ sub getCanvasEnrollmentsForCoursesArray {
 	#print Dumper(\@canvas_enrollments);
 	#exit;
 
-	sleep(1); # no DOS attack simulator...
+	sleep(2); # no DOS attack simulator...
 
 	$enrollments_page++;
     }
