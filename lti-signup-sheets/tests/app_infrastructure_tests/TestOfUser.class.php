@@ -26,9 +26,11 @@
 		}
 
 		function testUserAtributesExist() {
-			$this->assertEqual(count(User::$fields), 10);
+			$this->assertEqual(count(User::$fields), 12);
 
 			$this->assertTrue(in_array('user_id', User::$fields));
+			$this->assertTrue(in_array('canvas_user_id', User::$fields));
+			$this->assertTrue(in_array('sis_user_id', User::$fields));
 			$this->assertTrue(in_array('username', User::$fields));
 			$this->assertTrue(in_array('email', User::$fields));
 			$this->assertTrue(in_array('first_name', User::$fields));
@@ -110,50 +112,6 @@
 			$this->assertEqual(4, count($u1->enrollments));
 		}
 
-		function testCacheCourseRoles() {
-			$u1 = User::getOneFromDb(['user_id' => 101], $this->DB);
-			$u2 = User::getOneFromDb(['user_id' => 102], $this->DB);
-			$u3 = new User(['user_id' => 50, 'username' => 'falb1', 'first_name' => 'Fred', 'last_name' => 'Albertson', 'DB' => $this->DB]);
-			$u4 = User::getOneFromDb(['user_id' => 110], $this->DB);
-
-			$u1->cacheCourseRoles();
-			$this->assertEqual(1, count($u1->course_roles));
-			$this->assertEqual('teacher', $u1->course_roles[0]->course_role_name);
-
-			$u2->cacheCourseRoles();
-			$this->assertEqual(2, count($u2->course_roles));
-			$this->assertEqual('teacher', $u2->course_roles[0]->course_role_name);
-			$this->assertEqual('student', $u2->course_roles[1]->course_role_name);
-
-			$u3->cacheCourseRoles();
-			$this->assertEqual(0, count($u3->course_roles));
-
-			$u4->cacheCourseRoles();
-			$this->assertEqual(1, count($u4->course_roles));
-		}
-
-		function testLoadCourseRoles() {
-			$u1 = User::getOneFromDb(['user_id' => 101], $this->DB);
-			$u2 = User::getOneFromDb(['user_id' => 102], $this->DB);
-			$u3 = new User(['user_id' => 50, 'username' => 'falb1', 'first_name' => 'Fred', 'last_name' => 'Albertson', 'DB' => $this->DB]);
-			$u4 = User::getOneFromDb(['user_id' => 110], $this->DB);
-
-			$u1->loadCourseRoles();
-			$this->assertEqual(1, count($u1->course_roles));
-			$this->assertEqual('teacher', $u1->course_roles[0]->course_role_name);
-
-			$u2->loadCourseRoles();
-			$this->assertEqual(2, count($u2->course_roles));
-			$this->assertEqual('teacher', $u2->course_roles[0]->course_role_name);
-			$this->assertEqual('student', $u2->course_roles[1]->course_role_name);
-
-			$u3->loadCourseRoles();
-			$this->assertEqual(0, count($u3->course_roles));
-
-			$u4->loadCourseRoles();
-			$this->assertEqual(1, count($u4->course_roles));
-		}
-
 		function testCacheSheetgroups() {
 			$u1 = User::getOneFromDb(['user_id' => 101], $this->DB);
 			$u2 = User::getOneFromDb(['user_id' => 102], $this->DB);
@@ -222,9 +180,8 @@
 
 			$u1->cacheMyAvailableSheetOpenings();
 
-			$this->assertEqual(2, count($u1->sheet_openings_all));
+			$this->assertEqual(1, count($u1->sheet_openings_all));
 			$this->assertEqual(601, $u1->sheet_openings_all[0]['s_id']);
-			$this->assertEqual(602, $u1->sheet_openings_all[1]['s_id']);
 		}
 
 
@@ -263,14 +220,6 @@
 
 			// TODO - should let caller/program know there's a problem
 			$this->assertFalse($status);
-		}
-
-		function testGetUsersByCourseRole() {
-			$allStudents = User::getUsersByCourseRole('student', $this->DB);
-			$this->assertEqual(7, count($allStudents));
-
-			$allTeachers = User::getUsersByCourseRole('teacher', $this->DB);
-			$this->assertEqual(2, count($allTeachers));
 		}
 
 		//	util_prePrintR($u1);

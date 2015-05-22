@@ -4,6 +4,7 @@
 cfg.php
 config.php
 *.cfg.php
+CONFIG_*
 *.config.php
 *.bak
 *~

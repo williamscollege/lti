@@ -18,7 +18,6 @@
 			$this->addFile('app_infrastructure_tests/TestOfTerm.class.php');
 			$this->addFile('app_infrastructure_tests/TestOfCourse.class.php');
 			$this->addFile('app_infrastructure_tests/TestOfEnrollment.class.php');
-			$this->addFile('app_infrastructure_tests/TestOfCourseRole.class.php');
 
 			$this->addFile('app_infrastructure_tests/TestOfSUS_Sheetgroup.class.php');
 			$this->addFile('app_infrastructure_tests/TestOfSUS_Sheet.class.php');
