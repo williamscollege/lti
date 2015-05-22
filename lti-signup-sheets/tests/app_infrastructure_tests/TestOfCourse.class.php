@@ -96,7 +96,7 @@
 			$c2->cacheEnrollments();
 			$this->assertEqual(4, count($c2->enrollments));
 			$this->assertEqual('15F-BIOL-101-01', $c2->enrollments[0]->course_idstr);
-			$this->assertEqual(101, $c2->enrollments[3]->user_id);
+			$this->assertEqual(101, $c2->enrollments[3]->canvas_user_id);
 
 			$c3->cacheEnrollments();
 			$this->assertEqual(0, count($c3->enrollments));
@@ -122,7 +122,7 @@
 			$c2->loadEnrollments();
 			$this->assertEqual(4, count($c2->enrollments));
 			$this->assertEqual('15F-BIOL-101-01', $c2->enrollments[0]->course_idstr);
-			$this->assertEqual(101, $c2->enrollments[3]->user_id);
+			$this->assertEqual(101, $c2->enrollments[3]->canvas_user_id);
 
 			$c3->loadEnrollments();
 			$this->assertEqual(0, count($c3->enrollments));

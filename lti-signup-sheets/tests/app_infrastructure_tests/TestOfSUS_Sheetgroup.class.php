@@ -44,7 +44,7 @@
 			$sg1->updateDb();
 			$this->assertTrue($sg1->matchesDb);
 
-			$sg2 = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $s->sheetgroup_id], $this->DB);
+			$sg2 = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $sg1->sheetgroup_id], $this->DB);
 
 			$this->assertTrue($sg2->matchesDb);
 			$this->assertEqual($sg2->owner_user_id, 5);
