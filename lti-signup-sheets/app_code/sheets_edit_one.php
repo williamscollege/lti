@@ -337,7 +337,7 @@
 									<div class="form-group">
 										<p><strong>Who can sign up</strong></p>
 
-										<!-- List: Courses -->
+										<!-- List: My Courses -->
 										<span class="small"><strong>People in these courses</strong><br /></span>
 
 										<div id="access_by_course_enr_list" class="cb_list">
@@ -367,7 +367,7 @@
 											</div>
 										</div>
 
-										<!-- List: Instructors -->
+										<!-- List: All Instructors -->
 										<div class="wms_tiny_break"><br /></div>
 										<span class="small"><strong>People in courses taught by</strong><br /></span>
 
@@ -377,9 +377,9 @@
 													$instr_enrollments = Enrollment::getAllFromDb(['course_role_name' => 'teacher'], $DB);
 													$instr_uid_hash    = [];
 													foreach ($instr_enrollments as $i) {
-														array_push($instr_uid_hash, $i->user_id);
+														array_push($instr_uid_hash, $i->canvas_user_id);
 													}
-													$instr_users = User::getAllFromDb(['user_id' => $instr_uid_hash], $DB);
+													$instr_users = User::getAllFromDb(['canvas_user_id' => $instr_uid_hash], $DB);
 													usort($instr_users, 'User::cmp');
 
 													if (count($instr_users) == 0) {
