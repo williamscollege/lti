@@ -10,7 +10,7 @@
 	/* Example format:
 	function createTestData_XXXX($dbConn) {
 		// 1100 series ids
-		# XXXX: user_id, username, email, first_name, last_name, created_at, updated_at, flag_is_system_admin, flag_is_banned, flag_delete
+		# XXXX: user_id, canvas_user_id, sis_user_id, username, email, first_name, last_name, created_at, updated_at, flag_is_system_admin, flag_is_banned, flag_delete
 		$addTestSql  = "INSERT INTO " . XXXX::$dbTable . " VALUES
 			(1,NOW(),NOW())
 		";

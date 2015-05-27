@@ -41,7 +41,7 @@
 
 		// add new sheetgroup
 		echo "<div id=\"container-add-new-group\" class=\"row\">";
-		echo "<div class=\"col-sm-12\"><p class=\"pull-right\"><a href=\"#modalSheetgroup\" class=\"btn btn-primary sus-add-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" title=\"Add group\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new group</a></p></div>";
+		echo "<div class=\"col-xs-12\"><p class=\"pull-right\"><a href=\"#modalSheetgroup\" class=\"btn btn-primary sus-add-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" title=\"Add group\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new group</a></p></div>";
 		echo "</div>";
 
 		// ***************************
@@ -53,15 +53,15 @@
 		// display managed sheets
 		if (count($USER->managed_sheets) > 0) {
 			echo "<table class=\"table table-condensed table-bordered table-hover\">";
-			echo "<tr class=\"success\"><th class=\"col-sm-11\">Sheets I manage that are owned by others...</th>";
-			echo "<th class=\"col-sm-1 text-right text-nowrap\">&nbsp;</th></tr>";
+			echo "<tr class=\"success\"><th class=\"col-xs-11\">Sheets I manage that are owned by others...</th>";
+			echo "<th class=\"col-xs-1 text-nowrap\">&nbsp;</th></tr>";
 			foreach ($USER->managed_sheets as $mgr_sheet) {
-				echo "<tr><td class=\"col-sm-11\">";
+				echo "<tr><td class=\"col-xs-11\">";
 				// title
 				echo htmlentities($mgr_sheet->name, ENT_QUOTES, 'UTF-8');
 				$owner = User::getOneFromDb(['user_id' => $mgr_sheet->owner_user_id], $DB);
 				echo " <small>(owned by " . htmlentities($owner->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($owner->last_name, ENT_QUOTES, 'UTF-8') . ")</small>";
-				echo "</td><td class=\"col-sm-1 text-right text-nowrap\">";
+				echo "</td><td class=\"col-xs-1 text-nowrap\">";
 				// icon: edit
 				echo "<a class=\"btn btn-xs btn-primary\" href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . htmlentities($mgr_sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit sheet\"><i class=\"glyphicon glyphicon-pencil\"></i></a>&nbsp;";
 				// icon: delete (disabled)
@@ -103,10 +103,10 @@
 
 			// header: sheetgroup
 			echo "<table class=\"table table-condensed table-bordered table-hover\">";
-			echo "<tr class=\"info\"><th class=\"col-sm-11\">";
+			echo "<tr class=\"info\"><th class=\"col-xs-11\">";
 			// title
 			echo "<span id=\"display-name-sheetgroup-id-" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\">" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "</span>";
-			echo "</th><th class=\"col-sm-1 text-right text-nowrap\">";
+			echo "</th><th class=\"col-xs-1 text-nowrap\">";
 			// icon: edit
 			echo "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" class=\"sus-edit-sheetgroup btn btn-xs btn-primary\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-name=\"" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-description=\"" . htmlentities($sheetgroup->description, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-max-total=\"" . htmlentities($sheetgroup->max_g_total_user_signups, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-max-pending=\"" . htmlentities($sheetgroup->max_g_pending_user_signups, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit group\"><i class=\"glyphicon glyphicon-pencil\"></i></a>&nbsp;";
 			if (!$sheetgroup->flag_is_default) {
@@ -122,10 +122,10 @@
 			// list sheets
 			$sheetgroup->cacheSheets();
 			foreach ($sheetgroup->sheets as $sheet) {
-				echo "<tr><td class=\"col-sm-11\">";
+				echo "<tr><td class=\"col-xs-11\">";
 				// title
 				echo htmlentities($sheet->name, ENT_QUOTES, 'UTF-8');
-				echo "</td><td class=\"col-sm-1 text-right text-nowrap\">";
+				echo "</td><td class=\"col-xs-1 text-nowrap\">";
 				// icon: edit
 				echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . htmlentities($sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" id=\"btn-edit-sheet-id-" . htmlentities($sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" class=\"sus-edit-sheet btn btn-xs btn-primary\" data-for-sheet-name=\"" . htmlentities($sheet->name, ENT_QUOTES, 'UTF-8') . "\"  title=\"Edit sheet\"><i class=\"glyphicon glyphicon-pencil\"></i></a>&nbsp;";
 				// icon: delete
@@ -134,7 +134,7 @@
 			}
 
 			// add new sheet
-			echo "<tr><td class=\"col-sm-12\" colspan=\"2\">";
+			echo "<tr><td class=\"col-xs-12\" colspan=\"2\">";
 			echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "&sheet=new\" class=\"btn btn-xs btn-primary\"  title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
 			echo "</td></tr>\n";
 

@@ -39,7 +39,7 @@
 	# Callback function to process a valid launch request.
 	function doLaunch($tool_provider) {
 
-		// Quick Check: if no user_id, then return FALSE
+		// Quick Check: if no lti user_id, then return FALSE
 		if ($tool_provider->user->getId()) {
 
 			// Session Maintenance: Clear all existing session data
@@ -64,7 +64,6 @@
 			// Examples of other sometimes useful values:
 			// $_SESSION['custom_canvas_course_id'] = $tool_provider->resource_link->getSetting('custom_canvas_course_id', '');
 			// $_SESSION['user_consumer_key'] = $tool_provider->user->getResourceLink()->getConsumer()->getKey(); //unnecessary
-			// $_SESSION['user_id']           = $tool_provider->user->getId(); //unnecessary
 			// $_SESSION['isStudent']         = $tool_provider->user->isLearner();  //unnecessary
 			// $_SESSION['oauth_nonce']   = $tool_provider->resource_link->getSetting('oauth_nonce', ''); // empty
 			// $_SESSION['roles']         = $tool_provider->resource_link->getSetting('roles', '');

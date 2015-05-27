@@ -416,7 +416,7 @@
 			}
 			$fetchStmt = self::_buildFetchStatement($fetchAttr, $this->dbConnection);
 
-			//$fetchSql = "SELECT user_id,username,email,first_name,last_name,sort_name,flag_is_system_admin,flag_is_banned,flag_delete FROM users WHERE 1=1 AND username = 'mockUser' AND flag_is_system_admin = false AND flag_is_banned = false AND flag_delete = false";
+			//$fetchSql = "SELECT user_id,canvas_user_id,sis_user_id,username,email,first_name,last_name,sort_name,flag_is_system_admin,flag_is_banned,flag_delete FROM users WHERE 1=1 AND username = 'mockUser' AND flag_is_system_admin = false AND flag_is_banned = false AND flag_delete = false";
 			//$fetchStmt = $this->dbConnection->prepare($fetchSql);
 
 

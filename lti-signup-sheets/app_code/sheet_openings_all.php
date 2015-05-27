@@ -28,7 +28,11 @@
 			$other_based_sheets  = [];
 			foreach ($USER->sheet_openings_all as $sheet) {
 
-				$base_sheet_link = "<a href=\"" . APP_ROOT_PATH . "/app_code/sheet_openings_signup.php?sheet=" . htmlentities($sheet['s_id'], ENT_QUOTES, 'UTF-8') . "\"  class=\"\" title=\"Signup for Openings\">" . htmlentities($sheet['s_name'], ENT_QUOTES, 'UTF-8') . "</a> (" . htmlentities($sheet['s_description'], ENT_QUOTES, 'UTF-8') . ")";
+				$base_sheet_link = "<a href=\"" . APP_ROOT_PATH . "/app_code/sheet_openings_signup.php?sheet=" . htmlentities($sheet['s_id'], ENT_QUOTES, 'UTF-8') . "\"  class=\"\" title=\"Signup for Openings\">" . htmlentities($sheet['s_name'], ENT_QUOTES, 'UTF-8') . "</a>";
+				// if exists, also show description
+				if ($sheet['s_description']){
+					$base_sheet_link .= " (" . htmlentities($sheet['s_description'], ENT_QUOTES, 'UTF-8') . ")";
+				}
 
 				// NOTE: the A) through G) leads on the keys are used to sort. The display trims the first 3 chars from the key.
 				switch ($sheet["a_type"]) {

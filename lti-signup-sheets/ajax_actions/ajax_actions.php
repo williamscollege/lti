@@ -412,22 +412,19 @@
 
 		// 4 do adds
 		if (count($to_add) > 0) {
-			// only fetch big user object if we are going to add a username
-			$obj_all_users = User::getAllFromDb([], $DB);
-			// remove cruft
-			// create hash of usernames
-			$obj_all_attr_usernames = Db_Linked::arrayOfAttrValues($obj_all_users, 'username');
+			// iterate through usernames; verify that each username actually exists in database
 			foreach ($to_add as $username_to_add) {
-				if (!in_array($username_to_add, $obj_all_attr_usernames)) {
-					// username does not exist
-					$results["notes"] .= "invalid username: " . htmlentities($username_to_add, ENT_QUOTES, 'UTF-8') . "<br />\n";
-				}
-				else {
+				$check_user_exists = User::getOneFromDb(['username' => $username_to_add], $DB);
+				if ($check_user_exists->matchesDb) {
 					$access_record = SUS_Access::createNewAccess($access_type, $primaryID, 0, $username_to_add, $DB);
 					$access_record->updateDb();
 					if (!$access_record->matchesDb) {
 						$results["notes"] .= "could not save access for " . htmlentities($username_to_add, ENT_QUOTES, 'UTF-8') . "<br />\n";
 					}
+				}
+				else {
+					// username does not exist
+					$results["notes"] .= "invalid username: " . htmlentities($username_to_add, ENT_QUOTES, 'UTF-8') . "<br />\n";
 				}
 			}
 		}
