@@ -302,7 +302,7 @@ foreach my $canvas_course_data (@canvas_courses) {
     $num_courses_canvas++;
     #print Dumper($canvas_course_data);
     #exit;
-    my $course_idstr = $canvas_course_data->{'course_code'};
+    my $course_idstr = $canvas_course_data->{'sis_course_id'};
     if (! $course_idstr) {
 	$course_idstr = 'UNKNOWN';
     }
@@ -405,7 +405,6 @@ foreach my $live_course_canvas_id (keys(%live_courses)) {
 	$db_enrollments{$combo_key}->{'canvas_course_id'} = $db_enrollment_data[2];
 	$db_enrollments{$combo_key}->{'canvas_role_name'} = $db_enrollment_data[3];
 	$db_enrollments{$combo_key}->{'course_idstr'} = $db_enrollment_data[4];
-	$db_enrollments{$combo_key}->{'user_id'} = $db_enrollment_data[5];
 	$db_enrollments{$combo_key}->{'course_role_name'} = $db_enrollment_data[6];
 	$db_enrollments{$combo_key}->{'section_idstr'} = $db_enrollment_data[7];
     }
@@ -436,7 +435,6 @@ foreach my $live_course_canvas_id (keys(%live_courses)) {
 	    $inserts{$combo_key}->{'canvas_course_id'} = $canvas_enrollment->{'course_id'};
 	    $inserts{$combo_key}->{'canvas_role_name'} = $canvas_enrollment->{'role'};
 	    $inserts{$combo_key}->{'course_idstr'} = $live_courses{$canvas_enrollment->{'course_id'}};
-	    $inserts{$combo_key}->{'user_id'} = $live_users{$canvas_enrollment->{'user_id'}};
 
 	    if ($inserts{$combo_key}->{'canvas_role_name'} eq 'TeacherEnrollment') {
 		$inserts{$combo_key}->{'course_role_name'} = 'teacher';
@@ -461,15 +459,12 @@ foreach my $live_course_canvas_id (keys(%live_courses)) {
 #    ???? f) run the updates - NOTE: I don't think there are actually any updates to run - just adds and deletes (update --> ignore)
 
 #    g) run the inserts
-    my $insert_enrollments_sql = "INSERT INTO enrollments (canvas_user_id,canvas_course_id,canvas_role_name,course_idstr,user_id,course_role_name,section_idstr)";
+    my $insert_enrollments_sql = "INSERT INTO enrollments (canvas_user_id,canvas_course_id,canvas_role_name,course_idstr,course_role_name,section_idstr)";
     my $values_prefix = ' VALUES ';
     my $num_inserted = 0;
     foreach my $ins_key (keys(%inserts)) {
 	my $e = $inserts{$ins_key};
-	if (! $e->{'user_id'}) {
-	    $e->{'user_id'} = -1;
-	}
-	$insert_enrollments_sql .= "$values_prefix($e->{'canvas_user_id'},$e->{'canvas_course_id'},'$e->{'canvas_role_name'}','$e->{'course_idstr'}',$e->{'user_id'},'$e->{'course_role_name'}','$e->{'section_idstr'}')";
+	$insert_enrollments_sql .= "$values_prefix($e->{'canvas_user_id'},$e->{'canvas_course_id'},'$e->{'canvas_role_name'}','$e->{'course_idstr'}','$e->{'course_role_name'}','$e->{'section_idstr'}')";
 	$values_prefix = ' ,';
 	$num_inserted++;
     }
