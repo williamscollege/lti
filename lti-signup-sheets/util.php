@@ -97,7 +97,6 @@
 				util_redirectToAppPage('error.php?err=302', 'failure', 'msg_lti_cannot_set_cookie');
 				exit;
 			}
-
 		}
 		elseif ((!isset($_SESSION[APP_STR . '_id'])) || ($_COOKIE[APP_STR . '_id'] != $_SESSION[APP_STR . '_id'])) {
 			// there was an appropriately named cookie, but the value doesn't match the one associated with this session

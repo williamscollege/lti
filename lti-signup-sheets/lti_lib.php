@@ -12,6 +12,7 @@
 	# This page provides general functions to support the application.
 
 
+	require_once(dirname(__FILE__) . '/institution.cfg.php');
 	require_once(dirname(__FILE__) . '/lti_db.php');
 
 
@@ -63,10 +64,12 @@
 
 	# Get the web path to the application
 	function getAppPath() {
-		$root = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']);
-		$dir  = str_replace('\\', '/', dirname(__FILE__));
-		$path = str_replace($root, '', $dir) . '/';
-		return $path;
+		return APP_ROOT_PATH . '/';
+
+		# $root = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']);
+		# $dir  = str_replace('\\', '/', dirname(__FILE__));
+		# $path = str_replace($root, '', $dir) . '/';
+		# return $path;
 	}
 
 
