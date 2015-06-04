@@ -188,19 +188,19 @@
 			$testObj = Trial_Db_Linked::getOneFromDb(['dblinktest_id' => '5'], $this->DB);
 			$this->assertTrue($testObj->matchesDb);
 
-			$testObj->charfield = 'new char data';
+			$testObj->charfield = "new char apostrophe's data";
 			$this->assertFalse($testObj->matchesDb);
-			$this->assertEqual($testObj->charfield, 'new char data');
+			$this->assertEqual($testObj->charfield, "new char apostrophe's data");
 
 			$testObj->updateDb();
 			$this->assertTrue($testObj->matchesDb);
-			$this->assertEqual($testObj->charfield, 'new char data');
+			$this->assertEqual($testObj->charfield, "new char apostrophe's data");
 
 			$selectSql  = "SELECT dblinktest_id,charfield,intfield,flagfield FROM dblinktest WHERE dblinktest_id=5";
 			$selectStmt = $this->DB->prepare($selectSql);
 			$selectStmt->execute();
 			$selectResult = $selectStmt->fetch(PDO::FETCH_ASSOC);
-			$this->assertEqual($selectResult['charfield'], 'new char data');
+			$this->assertEqual($selectResult['charfield'], "new char apostrophe's data");
 		}
 
 		function testUpdateNewSomethingWithId() {

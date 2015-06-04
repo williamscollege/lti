@@ -4,7 +4,7 @@
 
 	Db_Linked is a basic root class for objects that are tied to a DB record - e.g. users, eq_groups, eq_items, etc. It provides simple functions to select, insert, and update the DB record associated with the object. NOTE: it does NOT support a delete method, and it does NOT load associations (e.g. group membership). If that kind of functionality is needed it should be implemented in a sub-class (for now, anyway, we're trying to keep this pretty streamlined).
 
-	To use this, make a sub-class of it and set the fields, primaryKeyField, and dbTable atttributes as appropriate. E.g.
+	To use this, make a sub-class of it and set the fields, primaryKeyField, and dbTable attributes as appropriate. E.g.
 
 		class Trial_Db_Linked extends Db_Linked {
 			public static $fields = array('dblinktest_id','charfield','intfield','flagfield');
@@ -530,6 +530,7 @@
 			}
 			else {
 				$updateSql = 'UPDATE ' . static::$dbTable . ' SET ' . static::$primaryKeyField . '=' . $this->fieldValues[static::$primaryKeyField];
+
 				foreach (static::$fields as $k) {
 					if ($k != static::$primaryKeyField) {
 						$updateSql .= ', ' . $this->sanitizeFieldName($k) . ' = :' . $k;

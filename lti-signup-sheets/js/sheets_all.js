@@ -7,9 +7,10 @@ $(document).ready(function () {
 	// Delete sheet
 	$(document).on("click", ".sus-delete-sheet", function () {
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-sheet-id');
+
 		var params = {
 			title: "Delete Sheet",
-			message: "This sheet will be deleted. Really delete this sheet?<br /><br /><strong>&quot;" + $(this).parent('TD').prev().children("A").attr('data-for-sheet-name') + "&quot;</strong>",
+			message: "This sheet will be deleted. Really delete this sheet?<br /><br /><strong>&quot;" + $(this).prev().attr('data-for-sheet-name') + "&quot;</strong>",
 			label: "Delete Sheet",
 			class: "btn btn-danger",
 			url: "../ajax_actions/ajax_actions.php",
@@ -24,7 +25,7 @@ $(document).ready(function () {
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-sheetgroup-id');
 		var params = {
 			title: "Delete Group",
-			message: "Any sheets in this group will be deleted. Really delete this group?<br /><br /><strong>&quot;" + $(this).parent('TH').prev().children("A").attr('data-for-sheetgroup-name') + "&quot;</strong>",
+			message: "Any sheets in this group will be deleted. Really delete this group?<br /><br /><strong>&quot;" + $(this).prev().attr('data-for-sheetgroup-name') + "&quot;</strong>",
 			label: "Delete Group",
 			class: "btn btn-danger",
 			url: "../ajax_actions/ajax_actions.php",

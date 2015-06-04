@@ -168,17 +168,17 @@
 			// show text message if opening belongs to a group (opening_group_id)
 			// echo "opening_group_id=". $this->opening_group_id . ",cnt=" . $openings_per_group_ary[$this->opening_group_id] . "<br />";
 			$repeating_event     = "";
-			$repeating_data_attr = 1; // set default value, in event that
+			$count_openings = 1; // set default value (opening is repeating if it has > 1 opening in group)
 			if (isset($openings_per_group_ary[$this->opening_group_id])) {
-				$repeating_data_attr = $openings_per_group_ary[$this->opening_group_id];
+				$count_openings = $openings_per_group_ary[$this->opening_group_id];
 				if ($openings_per_group_ary[$this->opening_group_id] > 1) {
-					$repeating_event = '&nbsp;<abbr title="Repeating opening" class="text-muted">repeats</abbr>';
+					$repeating_event = '&nbsp;<span title="Repeating opening" class="text-muted">(repeats)</span>';
 				}
 			}
 
 			$rendered = $this->_renderHtml_BEGIN();
 			$rendered .= '<a href="#" class="sus-edit-opening" data-opening-id="' . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . '" data-toggle="modal" data-target="#modal-edit-opening" title="Edit opening"><i class="glyphicon glyphicon-wrench"></i></a>';
-			$rendered .= '<a href="#" class="sus-delete-opening" data-opening-id="' . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . '" data-count-openings-in-group-id="' . $repeating_data_attr . '"  title="Delete opening"><i class="glyphicon glyphicon-remove"></i></a>';
+			$rendered .= '<a href="#" class="sus-delete-opening" data-opening-id="' . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . '" data-count-openings-in-group-id="' . $count_openings . '"  title="Delete opening"><i class="glyphicon glyphicon-remove"></i></a>';
 			$rendered .= '<a href="#" class="sus-add-someone-to-opening" data-opening-id="' . htmlentities($this->opening_id, ENT_QUOTES, 'UTF-8') . '" data-toggle="modal" data-target="#modal-edit-opening" title="Add sign up"><i class="glyphicon glyphicon-plus"></i></a>' . $repeating_event . '<br />';
 			$rendered .= $this->_renderHtml_END($signedupUserIds, TRUE);
 

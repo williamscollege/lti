@@ -41,7 +41,7 @@
 
 		// add new sheetgroup
 		echo "<div id=\"container-add-new-group\" class=\"row\">";
-		echo "<div class=\"col-xs-12\"><p class=\"pull-right\"><a href=\"#modalSheetgroup\" class=\"btn btn-primary sus-add-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" title=\"Add group\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new group</a></p></div>";
+		echo "<div class=\"col-xs-12\"><p class=\"pull-right\"><a href=\"#modalSheetgroup\" class=\"btn btn-primary sus-add-sheetgroup\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" title=\"Add a new group\"><i class=\"glyphicon glyphicon-plus\"></i> Add group</a></p></div>";
 		echo "</div>";
 
 		// ***************************
@@ -135,7 +135,7 @@
 
 			// add new sheet
 			echo "<tr><td class=\"col-xs-12\" colspan=\"2\">";
-			echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "&sheet=new\" class=\"btn btn-xs btn-primary\"  title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
+			echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "&sheet=new\" class=\"btn btn-xs btn-primary\"  title=\"Add a new sheet to this group\"><i class=\"glyphicon glyphicon-plus\"></i> Add sheet</a>";
 			echo "</td></tr>\n";
 
 			// complete sheetgroup

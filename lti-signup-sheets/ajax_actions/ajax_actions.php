@@ -44,13 +44,13 @@
 		$sg = SUS_Sheetgroup::createNewSheetgroupForUser($USER->user_id, $name, $description, $DB);
 
 		$sg->owner_user_id              = $ownerUserID;
-		$sg->name                       = $name;
-		$sg->description                = $description;
 		$sg->max_g_total_user_signups   = $maxTotal;
 		$sg->max_g_pending_user_signups = $maxPending;
 		$sg->updated_at                 = date("Y-m-d H:i:s");
 
 		$sg->updateDb();
+		//echo 'SG UPDATED:\n'; #dkc debug
+		//util_prePrintR($sg); #dkc debug
 
 		if (!$sg->matchesDb) {
 			// error: matching record already exists
@@ -80,7 +80,7 @@
 		$results['html_output'] .= "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-for-sheetgroup-id=\"" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-trash\"></i> Group</a>&nbsp;";
 		$results['html_output'] .= "</th></tr>";
 		$results['html_output'] .= "<tr><td class=\"col-sm-12\" colspan=\"2\">";
-		$results['html_output'] .= "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "&sheet=new\" class=\"btn btn-xs btn-primary\" title=\"Add new sheet\"><i class=\"glyphicon glyphicon-plus\"></i> Add a new sheet to this group</a>";
+		$results['html_output'] .= "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheetgroup=" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "&sheet=new\" class=\"btn btn-xs btn-primary\" title=\"Add a new sheet to this group\"><i class=\"glyphicon glyphicon-plus\"></i> Add sheet</a>";
 		$results['html_output'] .= "</td></tr>";
 		$results['html_output'] .= "</tbody></table>";
 	}
@@ -683,7 +683,12 @@
 			exit;
 		}
 
-		$results['html_render_opening'] = $o->renderAsHtmlOpeningWithFullControls();
+		// count openings for this single opening_group_id (opening is repeating if it has > 1 opening in group)
+		$countOpeningsInGroup_ary = [];
+		$countOpeningsInGroup = count(SUS_Opening::getAllFromDb(['opening_group_id' => $o->opening_group_id], $DB));
+		$countOpeningsInGroup_ary[$o->opening_id] = $countOpeningsInGroup;
+
+		$results['html_render_opening'] = $o->renderAsHtmlOpeningWithFullControls($countOpeningsInGroup_ary);
 
 		$o->cacheSignups();
 
