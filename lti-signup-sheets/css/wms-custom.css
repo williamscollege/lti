@@ -48,7 +48,7 @@ div.wms_tiny_break {
 .cb_list {
 	border: 1px solid #DDD;
 	overflow: auto;
-	height: 80px;
+	height: 90px;
 	padding: 0px !important;
 	margin: 0px !important;
 }

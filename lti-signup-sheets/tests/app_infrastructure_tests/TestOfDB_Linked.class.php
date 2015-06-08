@@ -188,19 +188,20 @@
 			$testObj = Trial_Db_Linked::getOneFromDb(['dblinktest_id' => '5'], $this->DB);
 			$this->assertTrue($testObj->matchesDb);
 
-			$testObj->charfield = "new char apostrophe's data";
+			$testObj->charfield = "Five is < 7 & Yannick Noah is France's \"best\" tennis player.";
 			$this->assertFalse($testObj->matchesDb);
-			$this->assertEqual($testObj->charfield, "new char apostrophe's data");
+			$this->assertEqual($testObj->charfield, "Five is < 7 & Yannick Noah is France's \"best\" tennis player.");
 
 			$testObj->updateDb();
 			$this->assertTrue($testObj->matchesDb);
-			$this->assertEqual($testObj->charfield, "new char apostrophe's data");
+			$this->assertEqual($testObj->charfield, "Five is < 7 & Yannick Noah is France's \"best\" tennis player.");
 
+			// Note SimpleTest is not setup to test for UTF-8 character encoding --DKC
 			$selectSql  = "SELECT dblinktest_id,charfield,intfield,flagfield FROM dblinktest WHERE dblinktest_id=5";
 			$selectStmt = $this->DB->prepare($selectSql);
 			$selectStmt->execute();
 			$selectResult = $selectStmt->fetch(PDO::FETCH_ASSOC);
-			$this->assertEqual($selectResult['charfield'], "new char apostrophe's data");
+			$this->assertEqual($selectResult['charfield'], "Five is < 7 & Yannick Noah is France's \"best\" tennis player.");
 		}
 
 		function testUpdateNewSomethingWithId() {
@@ -494,7 +495,7 @@
 			$testObj->flagfield = FALSE;
 			$testObj->charfield = 'this is a "quotes" test';
 			$attrib_string      = $testObj->fieldsAsDataAttribs();
-			$this->assertEqual('data-dblinktest_id="43" data-charfield="this is a &quot;quotes&quot; test" data-intfield="42" data-flagfield="0"', $attrib_string);
+			$this->assertEqual('data-dblinktest_id="43" data-charfield="this is a "quotes" test" data-intfield="42" data-flagfield="0"', $attrib_string);
 
 			$testObj->charfield = 'this is a string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test';
 			$attrib_string      = $testObj->fieldsAsDataAttribs();

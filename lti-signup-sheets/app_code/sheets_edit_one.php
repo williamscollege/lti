@@ -171,7 +171,9 @@
 										<!--DKC IMPORTANT (normal): set class to: ''-->
 										<!--DKC IMPORTANT (testing): set class to: 'active'-->
 										<li role="presentation" class="">
-											<a href="#tabSheetAccess" role="tab" data-toggle="tab" aria-controls="tabSheetAccess" aria-expanded="false">Sheet
+											<!-- show spinner icon (visual placeholder) until DOM content (hidden) has fully loaded -->
+											<span id="spinner_tabSheetAccess"><img height="39" width="36" src="../img/spinner.gif" />&nbsp;Sheet Access</span>
+											<a href="#tabSheetAccess" id="anchor_tabSheetAccess" class="hidden" role="tab" data-toggle="tab" aria-controls="tabSheetAccess" aria-expanded="false">Sheet
 												Access</a>
 										</li>
 									<?php
@@ -179,7 +181,6 @@
 								?>
 							</ul>
 							<div id="boxSheetContent" class="tab-content">
-
 								<!-- Begin: Basic Sheet Info -->
 								<!--DKC IMPORTANT (normal): set class to: 'tab-pane fade active in'-->
 								<!--DKC IMPORTANT (testing): set class to: 'tab-pane fade'-->
@@ -313,195 +314,206 @@
 								</div>
 								<!-- End: Basic Sheet Info -->
 
-								<!-- Begin: Sheet Access-->
-								<!--DKC IMPORTANT (normal): set class to: 'tab-pane fade'-->
-								<!--DKC IMPORTANT (testing): set class to: 'tab-pane fade active in'-->
-								<div role="tabpanel" id="tabSheetAccess" class="tab-pane fade" aria-labelledby="tabSheetAccess">
-									<div class="form-group">
-										<strong>Who can see signups</strong><br />
+								<?php
+									// for a new sheet: hide advanced settings
+									if (!$sheetIsNew) {
+										?>
+										<!-- Begin: Sheet Access-->
+										<!--DKC IMPORTANT (normal): set class to: 'tab-pane fade'-->
+										<!--DKC IMPORTANT (testing): set class to: 'tab-pane fade active in'-->
+										<div role="tabpanel" id="tabSheetAccess" class="tab-pane fade" aria-labelledby="tabSheetAccess">
+											<div class="form-group">
+												<strong>Who can see signups</strong><br />
 
-										<div class="radio small col-sm-12">
-											<label>
-												<input type="radio" id="radioSignupPrivacy1" name="radioSignupPrivacy" <?php echo ($s && $s->flag_private_signups == 0) ? " checked=\"checked\" " : ''; ?> value="0">
-												Users can see who signed up when
-											</label>
-										</div>
-										<div class="radio small col-sm-12">
-											<label>
-												<input type="radio" id="radioSignupPrivacy2" name="radioSignupPrivacy" <?php echo ($s && $s->flag_private_signups == 1) ? " checked=\"checked\" " : ''; ?> value="1">
-												Users can only see their own signups
-											</label>
-										</div>
-									</div>
+												<div class="radio small col-sm-12">
+													<label>
+														<input type="radio" id="radioSignupPrivacy1" name="radioSignupPrivacy" <?php echo ($s && $s->flag_private_signups == 0) ? " checked=\"checked\" " : ''; ?> value="0">
+														Users can see who signed up when
+													</label>
+												</div>
+												<div class="radio small col-sm-12">
+													<label>
+														<input type="radio" id="radioSignupPrivacy2" name="radioSignupPrivacy" <?php echo ($s && $s->flag_private_signups == 1) ? " checked=\"checked\" " : ''; ?> value="1">
+														Users can only see their own signups
+													</label>
+												</div>
+											</div>
 
-									<div class="form-group">
-										<p><strong>Who can sign up</strong></p>
+											<div class="form-group">
+												<p><strong>Who can sign up</strong></p>
 
-										<!-- List: My Courses -->
-										<span class="small"><strong>People in these courses</strong><br /></span>
+												<!-- List: My Courses -->
+												<span class="small"><strong>People in these courses</strong><br /></span>
 
-										<div id="access_by_course_enr_list" class="cb_list">
-											<div class="checkbox small col-sm-12">
-												<?php
-													$USER->cacheEnrollments();
-													if (count($USER->enrollments) == 0) {
-														echo "You are not enrolled in any courses.<br />";
-													}
-													else {
-														// fetch which courses, if any, that this user has already given access
-														$s->cacheAccess();
-														// iterate this user's enrollments
-														foreach ($USER->enrollments as $enr) {
-															$checkboxSelected = "";
+												<div id="access_by_course_enr_list" class="cb_list">
+													<div class="checkbox small col-sm-12">
+														<?php
+															$USER->cacheEnrollments();
+															if (count($USER->enrollments) == 0) {
+																echo "You are not enrolled in any courses.<br />";
+															}
+															else {
+																// fetch which courses, if any, that this user has already given access
+																$s->cacheAccess();
+																// iterate this user's enrollments
+																foreach ($USER->enrollments as $enr) {
+																	$checkboxSelected = "";
 
-															// fetch any user granted access values for these courses
-															foreach ($s->access as $a) {
-																if ($a->type == "bycourse" && $a->constraint_data == $enr->course_idstr) {
-																	$checkboxSelected = " checked=\"checked\" ";
+																	// fetch any user granted access values for these courses
+																	foreach ($s->access as $a) {
+																		if ($a->type == "bycourse" && $a->constraint_data == $enr->course_idstr) {
+																			$checkboxSelected = " checked=\"checked\" ";
+																		}
+																	}
+																	echo "<label><input type=\"checkbox\" id=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_course_ckboxes\"  name=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"bycourse\" data-permval=\"" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "</label><br />";
 																}
 															}
-															echo "<label><input type=\"checkbox\" id=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_course_ckboxes\"  name=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"bycourse\" data-permval=\"" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "</label><br />";
-														}
-													}
-												?>
-											</div>
-										</div>
+														?>
+													</div>
+												</div>
 
-										<!-- List: All Instructors -->
-										<div class="wms_tiny_break"><br /></div>
-										<span class="small"><strong>People in courses taught by</strong><br /></span>
+												<!-- List: All Instructors -->
+												<div class="wms_tiny_break"><br /></div>
+												<span class="small"><strong>People in courses taught by</strong><br /></span>
 
-										<div id="access_by_instr_list" class="cb_list">
-											<div class="checkbox small col-sm-12">
-												<?php
-													$instr_enrollments = Enrollment::getAllFromDb(['course_role_name' => 'teacher'], $DB);
-													$instr_uid_hash    = [];
-													foreach ($instr_enrollments as $i) {
-														array_push($instr_uid_hash, $i->canvas_user_id);
-													}
-													$instr_users = User::getAllFromDb(['canvas_user_id' => $instr_uid_hash], $DB);
-													usort($instr_users, 'User::cmp');
+												<div id="access_by_instr_list" class="cb_list">
+													<div class="checkbox small col-sm-12">
+														<?php
+															$instr_enrollments = Enrollment::getAllFromDb(['course_role_name' => 'teacher'], $DB);
+															$instr_uid_hash    = [];
+															foreach ($instr_enrollments as $i) {
+																array_push($instr_uid_hash, $i->canvas_user_id);
+															}
+															$instr_users = User::getAllFromDb(['canvas_user_id' => $instr_uid_hash], $DB);
+															usort($instr_users, 'User::cmp');
 
-													if (count($instr_users) == 0) {
-														echo "There are no instructors in any courses.<br />";
-													}
-													else {
-														// fetch which courses, if any, that this user has already given access
-														$s->cacheAccess();
+															if (count($instr_users) == 0) {
+																echo "There are no instructors in any courses.<br />";
+															}
+															else {
+																// fetch which courses, if any, that this user has already given access
+																$s->cacheAccess();
 
-														// iterate this user's enrollments
-														foreach ($instr_users as $u) {
-															$checkboxSelected = "";
+																// iterate this user's enrollments
+																foreach ($instr_users as $u) {
+																	$checkboxSelected = "";
 
-															// fetch any user granted access values for these courses
-															foreach ($s->access as $a) {
-																if ($a->type == "byinstr" && $a->constraint_id == $u->user_id) {
-																	$checkboxSelected = " checked=\"checked\" ";
+																	// fetch any user granted access values for these courses
+																	foreach ($s->access as $a) {
+																		if ($a->type == "byinstr" && $a->constraint_id == $u->user_id) {
+																			$checkboxSelected = " checked=\"checked\" ";
+																		}
+																	}
+																	echo "<label><input type=\"checkbox\" id=\"access_by_instr_" . htmlentities($u->user_id, ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_instructor_ckboxes\" name=\"access_by_instr_" . htmlentities($u->user_id, ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"byinstr\" data-permval=\"" . htmlentities($u->user_id, ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($u->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($u->last_name, ENT_QUOTES, 'UTF-8') . "</label><br />";
 																}
 															}
-															echo "<label><input type=\"checkbox\" id=\"access_by_instr_" . htmlentities($u->user_id, ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_instructor_ckboxes\" name=\"access_by_instr_" . htmlentities($u->user_id, ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"byinstr\" data-permval=\"" . htmlentities($u->user_id, ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($u->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($u->last_name, ENT_QUOTES, 'UTF-8') . "</label><br />";
-														}
-													}
-												?>
-											</div>
-										</div>
+														?>
+													</div>
+												</div>
 
-										<!-- List: These People -->
-										<div class="wms_tiny_break"><br /></div>
+												<!-- List: These People -->
+												<div class="wms_tiny_break"><br /></div>
 										<span class="small"><strong>These people: Williams username(s)</strong>
 											<button type="button" class="btn btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
 												<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
 										</span>
-										<?php
-											// create array of usernames where access type = 'byuser'
-											$byuser_ary = [];
-											foreach ($s->access as $a) {
-												if ($a->type == "byuser") {
-													array_push($byuser_ary, $a->constraint_data);
-												}
-											}
-											sort($byuser_ary);
-											// util_prePrintR($byuser_ary);
-										?>
-
-										<div id="access_by_user">
-											<textarea id="textAccessByUserList" name="textAccessByUserList" data-permtype="byuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $byuser_ary); ?></textarea>
-										</div>
-
-										<!-- Bootstrap panel -->
-										<!-- List: People who are a -->
-										<div class="wms_tiny_break"><br /></div>
-										<span class="small"><strong>People who are a...</strong><br /></span>
-
-										<div class="panel panel-default">
-											<div id="access_by_role_list" class="panel-body nopadding">
-												<div id="wms_panel_list" class="checkbox small col-sm-12">
-													<?php
-														// util_prePrintR($s->access);
-														// fetch any user granted access values for these courses
-														$checkboxSelected_byrole_teacher = "";
-														$checkboxSelected_byrole_student = "";
-														$checkboxSelected_byhasaccount   = "";
-														foreach ($s->access as $a) {
-															if ($a->type == "byrole" && $a->constraint_data == "teacher") {
-																$checkboxSelected_byrole_teacher = " checked=\"checked\" ";
-															}
-															elseif ($a->type == "byrole" && $a->constraint_data == "student") {
-																$checkboxSelected_byrole_student = " checked=\"checked\" ";
-															}
-															elseif ($a->type == "byhasaccount" && $a->constraint_data == "all") {
-																$checkboxSelected_byhasaccount = " checked=\"checked\" ";
-															}
+												<?php
+													// create array of usernames where access type = 'byuser'
+													$byuser_ary = [];
+													foreach ($s->access as $a) {
+														if ($a->type == "byuser") {
+															array_push($byuser_ary, $a->constraint_data);
 														}
-													?>
+													}
+													sort($byuser_ary);
+													// util_prePrintR($byuser_ary);
+												?>
 
-													<label>
-														<input type="checkbox" id="access_by_role_teacher" name="access_by_role_teacher" data-permtype="teacher" data-permval="byrole" <?php echo $checkboxSelected_byrole_teacher; ?>>
-														Teacher of a course
-													</label><br />
-													<label>
-														<input type="checkbox" id="access_by_role_student" name="access_by_role_student" data-permtype="student" data-permval="byrole" <?php echo $checkboxSelected_byrole_student; ?>>
-														Student in a course
-													</label><br />
-													<label>
-														<input type="checkbox" id="access_by_any" name="access_by_any" data-permtype="byhasaccount" data-permval="all" <?php echo $checkboxSelected_byhasaccount; ?>>
-														Glow user
-													</label>
+												<div id="access_by_user">
+													<textarea id="textAccessByUserList" name="textAccessByUserList" data-permtype="byuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $byuser_ary); ?></textarea>
 												</div>
-											</div>
-										</div>
 
-										<!-- Admin management-->
-										<div class="form-group">
-											<p><strong>Who can manage the sheet</strong></p>
+												<!-- Bootstrap panel -->
+												<!-- List: People who are a -->
+												<div class="wms_tiny_break"><br /></div>
+												<span class="small"><strong>People who are a...</strong><br /></span>
 
-											<!-- List: These People -->
+												<div class="panel panel-default">
+													<div id="access_by_role_list" class="panel-body nopadding">
+														<div id="wms_panel_list" class="checkbox small col-sm-12">
+															<?php
+																// util_prePrintR($s->access);
+																// fetch any user granted access values for these courses
+																$checkboxSelected_byrole_teacher = "";
+																$checkboxSelected_byrole_student = "";
+																$checkboxSelected_byhasaccount   = "";
+																foreach ($s->access as $a) {
+																	if ($a->type == "byrole" && $a->constraint_data == "teacher") {
+																		$checkboxSelected_byrole_teacher = " checked=\"checked\" ";
+																	}
+																	elseif ($a->type == "byrole" && $a->constraint_data == "student") {
+																		$checkboxSelected_byrole_student = " checked=\"checked\" ";
+																	}
+																	elseif ($a->type == "byhasaccount" && $a->constraint_data == "all") {
+																		$checkboxSelected_byhasaccount = " checked=\"checked\" ";
+																	}
+																}
+															?>
+															<label>
+																<input type="checkbox" id="access_by_role_teacher" name="access_by_role_teacher" data-permtype="teacher" data-permval="byrole" title="Teacher of a course" <?php echo $checkboxSelected_byrole_teacher; ?>>
+																Teacher
+															</label>&nbsp;
+															<label>
+																<input type="checkbox" id="access_by_role_student" name="access_by_role_student" data-permtype="student" data-permval="byrole" title="Student in a course" <?php echo $checkboxSelected_byrole_student; ?>>
+																Student
+															</label>&nbsp;
+															<label>
+																<input type="checkbox" id="access_by_any" name="access_by_any" data-permtype="byhasaccount" data-permval="all" title="Any GLOW user" <?php echo $checkboxSelected_byhasaccount; ?>>
+																Glow user
+															</label>
+														</div>
+													</div>
+												</div>
+
+												<!-- Admin management-->
+												<div class="form-group">
+													<p><strong>Who can manage the sheet</strong></p>
+
+													<!-- List: These People -->
 											<span class="small"><strong>These people: Williams username(s)</strong>
 												<button type="button" class="btn btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
 													<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
 											</span>
 
-											<?php
-												// create array of usernames where access type = 'adminbyuser'
-												$adminbyuser_ary = [];
-												foreach ($s->access as $a) {
-													if ($a->type == "adminbyuser") {
-														array_push($adminbyuser_ary, $a->constraint_data);
-													}
-												}
-												sort($adminbyuser_ary);
-												// util_prePrintR($adminbyuser_ary);
-											?>
+													<?php
+														// create array of usernames where access type = 'adminbyuser'
+														$adminbyuser_ary = [];
+														foreach ($s->access as $a) {
+															if ($a->type == "adminbyuser") {
+																array_push($adminbyuser_ary, $a->constraint_data);
+															}
+														}
+														sort($adminbyuser_ary);
+														// util_prePrintR($adminbyuser_ary);
+													?>
 
-											<div id="access_by_user">
-												<textarea id="textAdminByUserList" name="textAdminByUserList" data-permtype="adminbyuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $adminbyuser_ary); ?></textarea>
+													<div id="access_by_user">
+														<textarea id="textAdminByUserList" name="textAdminByUserList" data-permtype="adminbyuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $adminbyuser_ary); ?></textarea>
+													</div>
+												</div>
+
 											</div>
+											<!--end div.form-group-->
 										</div>
-
-									</div>
-									<!--end div.form-group-->
-								</div>
-								<!-- End: Sheet Access-->
+										<script>
+											// display DOM content, hide spinner
+											$("#spinner_tabSheetAccess").addClass("hidden");
+											$("#anchor_tabSheetAccess").removeClass("hidden");
+										</script>
+										<!-- End: Sheet Access-->
+									<?php
+									}
+								?>
 							</div>
 						</div>
 					</div>
@@ -515,7 +527,10 @@
 						?>
 						<div class="col-sm-6">
 							<div class="row">
-								<div class="tab-container" role="tabpanel" data-example-id="set2">
+								<!-- show spinner icon (visual placeholder) until DOM content (hidden) has fully loaded -->
+								<span id="spinner_calendarTabs"><img height="39" width="36" src="../img/spinner.gif" />&nbsp;Calendar Openings</span>
+
+								<div id="content_calendarTabs" class="tab-container hidden" role="tabpanel" data-example-id="set2">
 									<ul id="boxOpeningsHeader" class="nav nav-tabs" role="tablist">
 										<li role="presentation" class="active">
 											<a href="#tabOpeningsCalendar" role="tab" data-toggle="tab" aria-controls="tabOpeningsCalendar" aria-expanded="false">Calendar
@@ -603,6 +618,11 @@
 								</div>
 							</div>
 						</div>
+						<script>
+							// display DOM content, hide spinner
+							$("#spinner_calendarTabs").addClass("hidden");
+							$("#content_calendarTabs").removeClass("hidden");
+						</script>
 					<?php
 					}
 				?>

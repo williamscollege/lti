@@ -99,7 +99,10 @@
 				<!-- Calendar Openings / List Openings -->
 				<div class="col-sm-6">
 					<div class="row">
-						<div class="tab-container" role="tabpanel" data-example-id="set2">
+						<!-- show spinner icon (visual placeholder) until DOM content (hidden) has fully loaded -->
+						<span id="spinner_calendarTabs"><img height="39" width="36" src="../img/spinner.gif" />&nbsp;Calendar Openings</span>
+
+						<div id="content_calendarTabs" class="tab-container hidden" role="tabpanel" data-example-id="set2">
 							<ul id="boxOpenings" class="nav nav-tabs" role="tablist">
 								<li role="presentation" class="active">
 									<a href="#tabOpeningsCalendar" role="tab" data-toggle="tab" aria-controls="tabOpeningsCalendar" aria-expanded="false">Calendar
@@ -185,6 +188,11 @@
 						</div>
 					</div>
 				</div>
+				<script>
+					// display DOM content, hide spinner
+					$("#spinner_calendarTabs").addClass("hidden");
+					$("#content_calendarTabs").removeClass("hidden");
+				</script>
 			</div>
 		</div> <!-- end: div.container -->
 
