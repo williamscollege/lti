@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-	// initial default conditions
+	// initial default condition: focus cursor
 	$("#input_sheet_name").focus().select();
 
 
@@ -207,7 +207,6 @@ $(document).ready(function () {
 		};
 		updateSheetAccess(params);
 	});
-
 
 	$("#textAccessByUserList,#textAdminByUserList").on("change", function () {
 		var eleClickedId = $(this).attr("id");

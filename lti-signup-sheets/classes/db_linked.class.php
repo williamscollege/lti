@@ -167,7 +167,9 @@
 					}
 				}
 				else {
-					$qpar[':' . $k] = htmlentities($this->fieldValues[$k], ENT_QUOTES, 'UTF-8');
+					// removed htmlentities fxn on data write; prevent XSS attacks by always using htmlentities fxn to encode fetched DB content prior to display (DKC, 20150608)
+					// $qpar[':' . $k] = htmlentities($this->fieldValues[$k], ENT_QUOTES, 'UTF-8'); // ORIGINAL
+					$qpar[':' . $k] = $this->fieldValues[$k];
 				}
 			}
 			return $qpar;
@@ -269,10 +271,10 @@
 			//		print_r($identHash);
 
 			$fetchSql = static::buildFetchSql($identHash);
-//						            echo '<pre>';
-//						            print_r($identHash);
-//								    echo "\n$fetchSql\n";
-//						            echo'</pre>';
+			//						            echo '<pre>';
+			//						            print_r($identHash);
+			//								    echo "\n$fetchSql\n";
+			//						            echo'</pre>';
 
 			$fetchStmt = $usingDb->prepare($fetchSql);
 
@@ -325,7 +327,7 @@
 					}
 				}
 				else {
-					$k_parts     = preg_split('/\s+/', $k);
+					$k_parts = preg_split('/\s+/', $k);
 					//util_prePrintR($k_parts);
 					$num_k_parts = count($k_parts);
 					if ($num_k_parts == 1) {
@@ -609,7 +611,9 @@
 					}
 				}
 				elseif (strlen($this->fieldValues[$k]) <= 255) {
-					$field_val = htmlentities($this->fieldValues[$k], ENT_QUOTES, 'UTF-8');
+					// removed htmlentities fxn on data write; prevent XSS attacks by always using htmlentities fxn to encode fetched DB content prior to display (DKC, 20150608)
+					// $field_val = htmlentities($this->fieldValues[$k], ENT_QUOTES, 'UTF-8'); // ORIGINAL
+					$field_val = $this->fieldValues[$k];
 				}
 				$ret .= "data-$k=\"$field_val\"";
 			}
