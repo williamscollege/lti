@@ -323,7 +323,7 @@
 										<!--DKC IMPORTANT (testing): set class to: 'tab-pane fade active in'-->
 										<div role="tabpanel" id="tabSheetAccess" class="tab-pane fade" aria-labelledby="tabSheetAccess">
 											<div class="form-group">
-												<strong>Who can see signups</strong><br />
+												<u><strong>Who can see signups?</strong></u><br />
 
 												<div class="radio small col-sm-12">
 													<label>
@@ -340,7 +340,7 @@
 											</div>
 
 											<div class="form-group">
-												<p><strong>Who can sign up</strong></p>
+												<u><strong>Who can sign up?</strong></u><br />
 
 												<!-- List: My Courses -->
 												<span class="small"><strong>People in these courses</strong><br /></span>
@@ -379,13 +379,17 @@
 												<div id="access_by_instr_list" class="cb_list">
 													<div class="checkbox small col-sm-12">
 														<?php
-															$instr_enrollments = Enrollment::getAllFromDb(['course_role_name' => 'teacher'], $DB);
-															$instr_uid_hash    = [];
-															foreach ($instr_enrollments as $i) {
-																array_push($instr_uid_hash, $i->canvas_user_id);
-															}
-															$instr_users = User::getAllFromDb(['canvas_user_id' => $instr_uid_hash], $DB);
-															usort($instr_users, 'User::cmp');
+															// BEGIN: measure code execution
+															// $startCodeTimer = microtime(TRUE); // debugging
+
+															// Use Custom SQL to relieve bottleneck
+															$sql  = "SELECT DISTINCT users.* FROM enrollments INNER JOIN users ON enrollments.canvas_user_id = users.canvas_user_id WHERE enrollments.course_role_name = 'teacher' ORDER BY users.last_name ASC, users.first_name ASC;";
+															$stmt = $DB->prepare($sql);
+															$stmt->execute();
+															$instr_users = $stmt->fetchAll(PDO::FETCH_ASSOC); // TODO - still necessary to convert record set to an array?
+
+															// END: measure code execution
+															// echo "Custom SQL inner join: " . (microtime(TRUE) - $startCodeTimer) . "<br />"; // debugging
 
 															if (count($instr_users) == 0) {
 																echo "There are no instructors in any courses.<br />";
@@ -400,11 +404,12 @@
 
 																	// fetch any user granted access values for these courses
 																	foreach ($s->access as $a) {
-																		if ($a->type == "byinstr" && $a->constraint_id == $u->user_id) {
+																		// if ($a->type == "byinstr" && $a->constraint_id == $u->user_id) {
+																		if ($a->type == "byinstr" && $a->constraint_id == $u['user_id']) {
 																			$checkboxSelected = " checked=\"checked\" ";
 																		}
 																	}
-																	echo "<label><input type=\"checkbox\" id=\"access_by_instr_" . htmlentities($u->user_id, ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_instructor_ckboxes\" name=\"access_by_instr_" . htmlentities($u->user_id, ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"byinstr\" data-permval=\"" . htmlentities($u->user_id, ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($u->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($u->last_name, ENT_QUOTES, 'UTF-8') . "</label><br />";
+																	echo "<label><input type=\"checkbox\" id=\"access_by_instr_" . htmlentities($u['user_id'], ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_instructor_ckboxes\" name=\"access_by_instr_" . htmlentities($u['user_id'], ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"byinstr\" data-permval=\"" . htmlentities($u['user_id'], ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($u['first_name'], ENT_QUOTES, 'UTF-8') . " " . htmlentities($u['last_name'], ENT_QUOTES, 'UTF-8') . "</label><br />";
 																}
 															}
 														?>
@@ -413,10 +418,10 @@
 
 												<!-- List: These People -->
 												<div class="wms_tiny_break"><br /></div>
-										<span class="small"><strong>These people: Williams username(s)</strong>
-											<button type="button" class="btn btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
-												<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
-										</span>
+												<span class="small"><strong>These people: Williams username(s)</strong>
+													<button type="button" class="btn btn-xs btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
+														<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
+												</span>
 												<?php
 													// create array of usernames where access type = 'byuser'
 													$byuser_ary = [];
@@ -438,52 +443,51 @@
 												<div class="wms_tiny_break"><br /></div>
 												<span class="small"><strong>People who are a...</strong><br /></span>
 
-												<div class="panel panel-default">
-													<div id="access_by_role_list" class="panel-body nopadding">
-														<div id="wms_panel_list" class="checkbox small col-sm-12">
-															<?php
-																// util_prePrintR($s->access);
-																// fetch any user granted access values for these courses
-																$checkboxSelected_byrole_teacher = "";
-																$checkboxSelected_byrole_student = "";
-																$checkboxSelected_byhasaccount   = "";
-																foreach ($s->access as $a) {
-																	if ($a->type == "byrole" && $a->constraint_data == "teacher") {
-																		$checkboxSelected_byrole_teacher = " checked=\"checked\" ";
-																	}
-																	elseif ($a->type == "byrole" && $a->constraint_data == "student") {
-																		$checkboxSelected_byrole_student = " checked=\"checked\" ";
-																	}
-																	elseif ($a->type == "byhasaccount" && $a->constraint_data == "all") {
-																		$checkboxSelected_byhasaccount = " checked=\"checked\" ";
-																	}
+												<div id="access_by_role_list">
+													<div id="wms_panel_list" class="checkbox small col-sm-12">
+														<?php
+															// util_prePrintR($s->access);
+															// fetch any user granted access values for these courses
+															$checkboxSelected_byrole_teacher = "";
+															$checkboxSelected_byrole_student = "";
+															$checkboxSelected_byhasaccount   = "";
+															foreach ($s->access as $a) {
+																if ($a->type == "byrole" && $a->constraint_data == "teacher") {
+																	$checkboxSelected_byrole_teacher = " checked=\"checked\" ";
 																}
-															?>
-															<label>
-																<input type="checkbox" id="access_by_role_teacher" name="access_by_role_teacher" data-permtype="teacher" data-permval="byrole" title="Teacher of a course" <?php echo $checkboxSelected_byrole_teacher; ?>>
-																Teacher
-															</label>&nbsp;
-															<label>
-																<input type="checkbox" id="access_by_role_student" name="access_by_role_student" data-permtype="student" data-permval="byrole" title="Student in a course" <?php echo $checkboxSelected_byrole_student; ?>>
-																Student
-															</label>&nbsp;
-															<label>
-																<input type="checkbox" id="access_by_any" name="access_by_any" data-permtype="byhasaccount" data-permval="all" title="Any GLOW user" <?php echo $checkboxSelected_byhasaccount; ?>>
-																Glow user
-															</label>
-														</div>
+																elseif ($a->type == "byrole" && $a->constraint_data == "student") {
+																	$checkboxSelected_byrole_student = " checked=\"checked\" ";
+																}
+																elseif ($a->type == "byhasaccount" && $a->constraint_data == "all") {
+																	$checkboxSelected_byhasaccount = " checked=\"checked\" ";
+																}
+															}
+														?>
+														<label>
+															<input type="checkbox" id="access_by_role_teacher" name="access_by_role_teacher" data-permtype="teacher" data-permval="byrole" title="Teacher of a course" <?php echo $checkboxSelected_byrole_teacher; ?>>
+															Teacher
+														</label>&nbsp;
+														<label>
+															<input type="checkbox" id="access_by_role_student" name="access_by_role_student" data-permtype="student" data-permval="byrole" title="Student in a course" <?php echo $checkboxSelected_byrole_student; ?>>
+															Student
+														</label>&nbsp;
+														<label>
+															<input type="checkbox" id="access_by_any" name="access_by_any" data-permtype="byhasaccount" data-permval="all" title="Any GLOW user" <?php echo $checkboxSelected_byhasaccount; ?>>
+															Glow user
+														</label>
 													</div>
 												</div>
 
 												<!-- Admin management-->
 												<div class="form-group">
-													<p><strong>Who can manage the sheet</strong></p>
+													<span class="wms_tiny_break"><br /></span>
+													<u><strong>Who can manage this sheet?</strong></u><br />
 
 													<!-- List: These People -->
-											<span class="small"><strong>These people: Williams username(s)</strong>
-												<button type="button" class="btn btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
-													<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
-											</span>
+													<span class="small"><strong>These people: Williams username(s)</strong>
+														<button type="button" class="btn btn-xs btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
+															<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
+													</span>
 
 													<?php
 														// create array of usernames where access type = 'adminbyuser'

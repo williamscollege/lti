@@ -66,16 +66,16 @@
 		// 109 has no roles (implicit 'public' role)
 		// 110 is admin?
 		$addTestSql  = "INSERT INTO " . User::$dbTable . " VALUES
-            (101,0,0,'" . Auth_Base::$TEST_USERNAME . "','" . Auth_Base::$TEST_EMAIL . "','" . Auth_Base::$TEST_FNAME . "','" . Auth_Base::$TEST_LNAME . "',NOW(),NOW(),0,0,0),
-            (102,0,0,'tusr2','tusr2@williams.edu','Tu2F','Tu2L',NOW(),NOW(),0,0,0),
-            (103,0,0,'tusr3','tusr3@williams.edu','Tu3F','Tu3L',NOW(),NOW(),0,0,0),
-            (104,0,0,'tusr4','tusr4@williams.edu','Tu4F','Tu4L',NOW(),NOW(),0,0,0),
-            (105,0,0,'tusr5','tusr5@williams.edu','Tu5F','Tu5L',NOW(),NOW(),0,0,0),
-            (106,0,0,'tusr6','tusr6@williams.edu','Tu6F','Tu6L',NOW(),NOW(),1,0,0),
-            (107,0,0,'tusr7','tusr7@williams.edu','Tu7F','Tu7L',NOW(),NOW(),0,1,0),
-            (108,0,0,'tusr8','tusr8@williams.edu','Tu8F','Tu8L',NOW(),NOW(),0,0,1),
-            (109,0,0,'tusr9','tusr9@williams.edu','Tu9F','Tu9L',NOW(),NOW(),0,0,0),
-            (110,0,0,'tusr10','tusr10@williams.edu','Tu10F','TuL',NOW(),NOW(),0,0,0)
+            (101,101,0,'" . Auth_Base::$TEST_USERNAME . "','" . Auth_Base::$TEST_EMAIL . "','" . Auth_Base::$TEST_FNAME . "','" . Auth_Base::$TEST_LNAME . "',NOW(),NOW(),0,0,0),
+            (102,102,0,'tusr2','tusr2@williams.edu','Tu2F','Tu2L',NOW(),NOW(),0,0,0),
+            (103,103,0,'tusr3','tusr3@williams.edu','Tu3F','Tu3L',NOW(),NOW(),0,0,0),
+            (104,104,0,'tusr4','tusr4@williams.edu','Tu4F','Tu4L',NOW(),NOW(),0,0,0),
+            (105,105,0,'tusr5','tusr5@williams.edu','Tu5F','Tu5L',NOW(),NOW(),0,0,0),
+            (106,106,0,'tusr6','tusr6@williams.edu','Tu6F','Tu6L',NOW(),NOW(),1,0,0),
+            (107,107,0,'tusr7','tusr7@williams.edu','Tu7F','Tu7L',NOW(),NOW(),0,1,0),
+            (108,108,0,'tusr8','tusr8@williams.edu','Tu8F','Tu8L',NOW(),NOW(),0,0,1),
+            (109,109,0,'tusr9','tusr9@williams.edu','Tu9F','Tu9L',NOW(),NOW(),0,0,0),
+            (110,110,0,'tusr10','tusr10@williams.edu','Tu10F','TuL',NOW(),NOW(),0,0,0)
         ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
