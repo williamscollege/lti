@@ -350,7 +350,7 @@
 			 *                          returned array.
 			 * [dkc: obsolete param] @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
 			 * [dkc: obsolete param] @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
-			 * @return mixed an array of objects, or false if no records were found or an error occured.
+			 * @return mixed an array of objects, or false if no records were found or an error occurred.
 			 */
 			// $sql = "SELECT * FROM ".SUS_Sheetgroup::$dbTable;
 			// $sql  = "SELECT * FROM sus_sheetgroups INNER JOIN sus_sheets ON sus_sheetgroups.sheetgroup_id = sus_sheets.sheetgroup_id INNER JOIN sus_openings ON sus_openings.sheet_id = sus_sheets.sheet_id INNER JOIN sus_signups ON sus_signups.opening_id = sus_openings.opening_id WHERE sus_sheetgroups.sheetgroup_id = " . htmlentities($s->sheetgroup_id, ENT_QUOTES, 'UTF-8') . " AND  sus_signups.signup_user_id = " . htmlentities($USER->user_id, ENT_QUOTES, 'UTF-8');
@@ -537,7 +537,7 @@
 			 *                          returned array.
 			 * [dkc: obsolete param] @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
 			 * [dkc: obsolete param] @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
-			 * @return mixed an array of objects, or false if no records were found or an error occured.
+			 * @return mixed an array of objects, or false if no records were found or an error occurred.
 			 */
 			// $sql = "SELECT * FROM ".SUS_Sheetgroup::$dbTable;
 			// $sql  = "SELECT * FROM sus_sheetgroups INNER JOIN sus_sheets ON sus_sheetgroups.sheetgroup_id = sus_sheets.sheetgroup_id INNER JOIN sus_openings ON sus_openings.sheet_id = sus_sheets.sheet_id INNER JOIN sus_signups ON sus_signups.opening_id = sus_openings.opening_id WHERE sus_sheetgroups.sheetgroup_id = " . htmlentities($s->sheetgroup_id, ENT_QUOTES, 'UTF-8') . " AND  sus_signups.signup_user_id = " . htmlentities($USER->user_id, ENT_QUOTES, 'UTF-8');
@@ -595,7 +595,7 @@
 		 * NOTE: this relies on a mysql back end, I've taken out all the oracle related hacks
 		 *
 		 * @param object an ADODB RecordSet object.
-		 * @return mixed mixed an array of objects, or false if an error occured or the RecordSet was empty.
+		 * @return mixed mixed an array of objects, or false if an error occurred or the RecordSet was empty.
 		 */
 		public function sus_recordset_to_array($rs) {
 
