@@ -463,24 +463,25 @@
 																}
 															}
 														?>
-														<label>
-															<input type="checkbox" id="access_by_role_teacher" name="access_by_role_teacher" data-permtype="teacher" data-permval="byrole" title="Teacher of a course" <?php echo $checkboxSelected_byrole_teacher; ?>>
-															Teacher
-														</label>&nbsp;
-														<label>
-															<input type="checkbox" id="access_by_role_student" name="access_by_role_student" data-permtype="student" data-permval="byrole" title="Student in a course" <?php echo $checkboxSelected_byrole_student; ?>>
-															Student
-														</label>&nbsp;
-														<label>
-															<input type="checkbox" id="access_by_any" name="access_by_any" data-permtype="byhasaccount" data-permval="all" title="Any GLOW user" <?php echo $checkboxSelected_byhasaccount; ?>>
-															Glow user
-														</label>
+														<p>
+															<label>
+																<input type="checkbox" id="access_by_role_teacher" name="access_by_role_teacher" data-permtype="teacher" data-permval="byrole" title="Teacher of a course" <?php echo $checkboxSelected_byrole_teacher; ?>>
+																Teacher
+															</label>&nbsp;
+															<label>
+																<input type="checkbox" id="access_by_role_student" name="access_by_role_student" data-permtype="student" data-permval="byrole" title="Student in a course" <?php echo $checkboxSelected_byrole_student; ?>>
+																Student
+															</label>&nbsp;
+															<label>
+																<input type="checkbox" id="access_by_any" name="access_by_any" data-permtype="byhasaccount" data-permval="all" title="Any GLOW user" <?php echo $checkboxSelected_byhasaccount; ?>>
+																Glow user
+															</label>
+														</p>
 													</div>
 												</div>
 
 												<!-- Admin management-->
 												<div class="form-group">
-													<span class="wms_tiny_break"><br /></span>
 													<u><strong>Who can manage this sheet?</strong></u><br />
 
 													<!-- List: These People -->
