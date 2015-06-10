@@ -573,7 +573,7 @@
 												<?php
 													$s->cacheOpenings();
 
-													// count openings per each opening_group_id
+													// count how many openings belong to this opening_group_id (an opening is "repeating" if it has > 1 opening per opening_group_id)
 													$countOpeningsPerGroup_ary = array_count_values(array_map(function ($item) {
 														return $item->opening_group_id;
 													}, $s->openings));

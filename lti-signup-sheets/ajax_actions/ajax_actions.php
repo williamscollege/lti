@@ -683,10 +683,10 @@
 			exit;
 		}
 
-		// count openings for this single opening_group_id (opening is repeating if it has > 1 opening in group)
+		// count how many openings belong to this opening_group_id (an opening is "repeating" if it has > 1 opening per opening_group_id)
 		$countOpeningsInGroup_ary = [];
 		$countOpeningsInGroup = count(SUS_Opening::getAllFromDb(['opening_group_id' => $o->opening_group_id], $DB));
-		$countOpeningsInGroup_ary[$o->opening_id] = $countOpeningsInGroup;
+		$countOpeningsInGroup_ary[$o->opening_group_id] = $countOpeningsInGroup;
 
 		$results['html_render_opening'] = $o->renderAsHtmlOpeningWithFullControls($countOpeningsInGroup_ary);
 
