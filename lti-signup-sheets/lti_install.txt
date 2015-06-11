@@ -5,10 +5,9 @@ Follow these steps when using the application with a MySQL or SQLite database:
 
 1.  Install this codebase into your web directory
 2.  Edit the preexisting institution.cfg.php file to enter the database connection details.
-2.5 Use the schema_*.sql file to create the database tables manually.
+3   Use the schema_*.sql file to create the database tables manually.
 	For non-PDO connections check the LTI_Tool_Provider site (http://www.spvsoftwareproducts.com/php/lti_tool_provider/) for a suitable data connector.
-3.  Add some restriction to prevent unauthorised access to the admin directory; for example, using an Apache .htaccess file.
-4.  Open the admin/index.php page in a web browser and configure a tool consumer (enter a key, secret and ensure it is enabled).
+4.  Open the admin-lti-dashboard/index.php page (from a separate github repo) in a web browser and configure a tool consumer (enter a key, secret and ensure it is enabled).
 5.  Use an LTI Tool Consumer to launch the application as an instructor using the tool consumer credentials entered in step 4 and the launch.php page as the launch URL.
 	If the launch fails try including a custom parameter named "debug" with a value of "true" in the launch request for a more detailed explanation.
 6.  Add one or more items for the resource link.

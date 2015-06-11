@@ -39,7 +39,7 @@
 	# echo (dirname(__FILE__) . '\\' . LTI_FOLDER . '\LTI_Tool_Provider.php<br />');
 	# DKC-Modification: set working path up one level for admin folder
 	//chdir("..");
-	require_once(dirname(__FILE__) . '/../lti_lib.php');
+	require_once(dirname(__FILE__) . '/lti_lib.php');
 
 
 	// Initialise session and database
@@ -121,6 +121,7 @@
 
 	// Page header
 	$title = LTI_APP_NAME . ': Manage tool consumers';
+	$institution_name = LANG_INSTITUTION_NAME;
 	$page  = <<< EOD
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -128,11 +129,11 @@
 <meta http-equiv="content-language" content="EN" />
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <title>{$title}</title>
-<link href="../css/rating.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="/css/rating.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-<h1>{$title}</h1>
+<h1><img src="img/institution-logo-50.png" alt="{$institution_name}" title="{$institution_name}" />&nbsp;{$title}</h1>
 
 EOD;
 
@@ -218,14 +219,14 @@ EOD;
 				}
 				$page .= <<< EOD
   <tr class="{$trclass}">
-    <td>{$consumer->name}</td>
+    <td><img src="img/institution-logo-16.png" alt="{$institution_name}" title="{$institution_name}" />&nbsp;{$consumer->name}</td>
     <td>{$consumer->getKey()}</td>
     <td><span title="{$consumer->consumer_guid}">{$consumer->consumer_version}</span></td>
-    <td class="aligncentre"><img src="../img/{$available}.gif" alt="{$available_alt}" title="{$available_alt}" /></td>
-    <td class="aligncentre"><img src="../img/{$protected}.gif" alt="{$protected_alt}" title="{$protected_alt}" /></td>
+    <td class="aligncentre"><img src="img/{$available}.gif" alt="{$available_alt}" title="{$available_alt}" /></td>
+    <td class="aligncentre"><img src="img/{$protected}.gif" alt="{$protected_alt}" title="{$protected_alt}" /></td>
     <td>{$last}</td>
     <td class="iconcolumn aligncentre">
-      <a href="./?key={$trkey}"><img src="../img/edit.png" title="Edit consumer" alt="Edit consumer" /></a>&nbsp;<a href="./?do=delete&amp;key={$trkey}" onclick="return confirm('Delete consumer; are you sure?');"><img src="../img/delete.png" title="Delete consumer" alt="Delete consumer" /></a>
+      <a href="./?key={$trkey}"><img src="img/edit.png" title="Edit consumer" alt="Edit consumer" />Edit</a>&nbsp;&nbsp;&#124;&nbsp;&nbsp;<a href="./?do=delete&amp;key={$trkey}" onclick="return confirm('Delete consumer; are you sure?');"><img src="img/delete.png" title="Delete consumer" alt="Delete consumer" />Delete</a>
     </td>
   </tr>
 
