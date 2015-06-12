@@ -6,8 +6,8 @@
 	# ---------------------------
 
 	# Application folder path
-	define('APP_STR',       'admin-lti-dashboard');
-	define('APP_FOLDER',    'http://localhost/' . APP_STR); // use HTTPS for live use
+	define('APP_STR',       'folder/subdirectory');
+	define('APP_FOLDER',    'http://localhost/' . APP_STR); // Use HTTPS for live/staging servers!
 	define('APP_ROOT_PATH', '/' . APP_STR);
 
 	# Institution Name
@@ -18,8 +18,8 @@
 	define('LTI_FOLDER',       'lti/');
 
 	# LTI database connection
-	define('LTI_DB_NAME',     'mysql:host=localhost;dbname=lti_development_db');
+	define('LTI_DB_NAME',     'mysql:host=localhost;dbname=your_name_of_db');
 	define('LTI_DB_USERNAME', 'yourusername');
-	define('LTI_DB_PASSWORD', 'yourlivefancypassword');
+	define('LTI_DB_PASSWORD', 'yourfancypassword');
 	define('LTI_DB_TABLENAME_PREFIX', '');
 
