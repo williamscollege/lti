@@ -5,7 +5,7 @@ Follow these steps when using the application with a MySQL or SQLite database:
 
 1.  Install this codebase into your web directory
 2.  Edit the preexisting institution.cfg.php file to enter the database connection details.
-2.5 Use the schema_*.sql file to create the database tables manually.
+3	Use the db_setup/schema_lti_setup.sql file to create the database tables manually.
 	For non-PDO connections check the LTI_Tool_Provider site (http://www.spvsoftwareproducts.com/php/lti_tool_provider/) for a suitable data connector.
-3.  Add some restriction to prevent unauthorised access to this directory; for example, using an Apache .htaccess file.
-4.  Open the index.php page in a web browser and configure a tool consumer (enter a key, secret and ensure it is enabled).
+4.  Add some restriction to prevent unauthorised access to this directory; for example, using an Apache .htaccess file.
+5.  Open the index.php page in a web browser and configure a tool consumer (enter a key, secret and ensure it is enabled).

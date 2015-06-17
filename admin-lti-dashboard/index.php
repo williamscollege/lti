@@ -1,7 +1,7 @@
 <?php
 	/*
 	 *  rating - Rating: an example LTI tool provider
-	 *  Copyright (C) 2013  Stephen P Vickers
+	 *  Copyright (C) 2015  Stephen P Vickers
 	 *
 	 *  This program is free software; you can redistribute it and/or modify
 	 *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@
 	 *    1.0.00   2-Jan-13  Initial release
 	 *    1.0.01  17-Jan-13  Minor update
 	 *    1.1.00   5-Jun-13  Added Outcomes service option
+	 *    1.2.00  20-May-15  Changed to use class method overrides for handling LTI requests
+	 *                       Added support for Content-Item message
 	*/
 
 	/*
@@ -36,11 +38,11 @@
 	 * ***           ***
 	*/
 
-	# echo (dirname(__FILE__) . '\\' . LTI_FOLDER . '\LTI_Tool_Provider.php<br />');
-	# DKC-Modification: set working path up one level for admin folder
-	//chdir("..");
-	require_once(dirname(__FILE__) . '/lti_lib.php');
+	/*
+	 * File refactored by: David Keiser-Clark, Williams College OIT (removed heredoc's, added bootstrap framework, added application variables)
+	*/
 
+	require_once(dirname(__FILE__) . '/lti_lib.php');
 
 	// Initialise session and database
 	$db = NULL;
@@ -50,7 +52,7 @@
 	if ($ok) {
 		// Create LTI Tool Provider instance
 		$data_connector = LTI_Data_Connector::getDataConnector(LTI_DB_TABLENAME_PREFIX, $db);
-		$tool           = new LTI_Tool_Provider(NULL, $data_connector);
+		$tool           = new LTI_Tool_Provider($data_connector);
 		// Check for consumer key and action parameters
 		$action = '';
 		if (isset($_REQUEST['key'])) {
@@ -116,203 +118,250 @@
 
 		// Fetch a list of existing tool consumer records
 		$consumers = $tool->getConsumers();
-
 	}
 
-	// Page header
-	$title = LTI_APP_NAME . ': Manage tool consumers';
-	$institution_name = LANG_INSTITUTION_NAME;
-	$page  = <<< EOD
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+?>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="content-language" content="EN" />
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<title>{$title}</title>
-<link href="/css/rating.css" media="screen" rel="stylesheet" type="text/css" />
+	<title><?php echo LTI_APP_NAME; ?></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="<?php echo LTI_APP_NAME; ?>">
+	<meta name="author" content="<?php echo LANG_AUTHOR_NAME; ?>">
+	<!-- CSS: Framework -->
+	<link rel="stylesheet" href="<?php echo PATH_BOOTSTRAP_CSS; ?>" type="text/css" media="all">
+	<!-- CSS: Plugins -->
+	<link rel="stylesheet" href="<?php echo PATH_JQUERYUI_CSS; ?>" />
+	<!-- jQuery: Framework -->
+	<script src="<?php echo PATH_JQUERY_JS; ?>"></script>
+	<script src="<?php echo PATH_JQUERYUI_JS; ?>"></script>
 </head>
-
 <body>
-<h1><img src="img/institution-logo-50.png" alt="{$institution_name}" title="{$institution_name}" />&nbsp;{$title}</h1>
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="page-header">
+				<h1>
+					<?php echo LANG_INSTITUTION_NAME . ": " . LTI_APP_NAME; ?>
+					<small><br />Manage tool consumers</small>
+				</h1>
+			</div>
 
-EOD;
-
-	// Display warning message if access does not appear to have been restricted
-	if (!(isset($_SERVER['AUTH_TYPE']) && isset($_SERVER['REMOTE_USER']) && isset($_SERVER['PHP_AUTH_PW']))) {
-		$page .= <<< EOD
-<p><strong>*** WARNING *** Access to this page should be restricted to application administrators only.</strong></p>
-
-EOD;
-	}
-
-	// Check for any messages to be displayed
-	if (isset($_SESSION['error_message'])) {
-		$page .= <<< EOD
-<p style="font-weight: bold; color: #f00;">ERROR: {$_SESSION['error_message']}</p>
-
-EOD;
-		unset($_SESSION['error_message']);
-	}
-
-	if (isset($_SESSION['message'])) {
-		$page .= <<< EOD
-<p style="font-weight: bold; color: #00f;">{$_SESSION['message']}</p>
-
-EOD;
-		unset($_SESSION['message']);
-	}
-
-	// Display table of existing tool consumer records
-	if ($ok) {
-
-		if (count($consumers) <= 0) {
-			$page .= <<< EOD
-<p>No consumers have been added yet.</p>
-
-EOD;
-		}
-		else {
-			$page .= <<< EOD
-<table class="items" border="1" cellpadding="3">
-<thead>
-  <tr>
-    <th>Name</th>
-    <th>Key</th>
-    <th>Version</th>
-    <th>Available?</th>
-    <th>Protected?</th>
-    <th>Last access</th>
-    <th>Options</th>
-  </tr>
-</thead>
-<tbody>
-
-EOD;
-			foreach ($consumers as $consumer) {
-				$trkey = urlencode($consumer->getKey());
-				if ($key == $consumer->getKey()) {
-					$update_consumer = $consumer;
+			<?php
+				// Display warning message if access does not appear to have been restricted
+				if (!(isset($_SERVER['AUTH_TYPE']) && isset($_SERVER['REMOTE_USER']) && isset($_SERVER['PHP_AUTH_PW']))) {
+					echo "<p class='text-danger'><strong>This page should be restricted to application administrators only.</strong></p>";
 				}
-				if (!$consumer->getIsAvailable()) {
-					$available     = 'cross';
-					$available_alt = 'Not available';
-					$trclass       = 'notvisible';
+
+				// Check for any messages to be displayed
+				if (isset($_SESSION['error_message'])) {
+					echo "<p style=\"font-weight: bold; color: #f00;\">ERROR: " . $_SESSION['error_message'] . "</p>";
+					unset($_SESSION['error_message']);
+				}
+
+				if (isset($_SESSION['message'])) {
+					echo "<p style=\"font-weight: bold; color: #00f;\">" . $_SESSION['message'] . "</p>";
+					unset($_SESSION['message']);
+				}
+
+				// Display table of existing tool consumer records
+				if ($ok) {
+				if (count($consumers) <= 0) {
+					echo "<p>No consumers have been added yet.</p>";
 				}
 				else {
-					$available     = 'tick';
-					$available_alt = 'Available';
-					$trclass       = '';
+					?>
+					<table class="table table-condensed table-bordered table-hover">
+						<thead>
+						<tr class="bg-info">
+							<th>Name</th>
+							<th>Key</th>
+							<th>Version</th>
+							<th>Available?</th>
+							<th>Protected?</th>
+							<th>Last access</th>
+							<th>Options</th>
+						</tr>
+						</thead>
+						<tbody>
+						<?php
+							foreach ($consumers as $consumer) {
+								$trkey = urlencode($consumer->getKey());
+								if ($key == $consumer->getKey()) {
+									$update_consumer = $consumer;
+								}
+								if (!$consumer->getIsAvailable()) {
+									$available      = 'ban-circle';
+									$available_alt  = 'Not available';
+									$display_status = 'bg-danger';
+								}
+								else {
+									$available      = 'ok';
+									$available_alt  = 'Available';
+									$display_status = '';
+								}
+								if ($consumer->protected) {
+									$protected     = 'ok';
+									$protected_alt = 'Protected';
+								}
+								else {
+									$protected     = 'ban-circle';
+									$protected_alt = 'Not protected';
+								}
+								if (is_null($consumer->last_access)) {
+									$last = 'None';
+								}
+								else {
+									$last = date('j-m-Y', $consumer->last_access);
+								}
+								?>
+								<tr class="<?php echo $display_status; ?>">
+									<td>
+										<img src="img/institution-logo-16.png" alt="<?php echo LANG_INSTITUTION_NAME; ?>" title="<?php echo LANG_INSTITUTION_NAME; ?>" />&nbsp;<?php echo $consumer->name; ?>
+									</td>
+									<td><?php echo $consumer->getKey(); ?></td>
+									<td><span title="<?php echo $consumer->consumer_guid; ?>"><?php echo $consumer->consumer_version; ?></span></td>
+									<td>
+										<i class="glyphicon glyphicon-<?php echo $available; ?>" title="<?php echo $available_alt; ?>"></i>
+									</td>
+									<td>
+										<i class="glyphicon glyphicon-<?php echo $protected; ?>" title="<?php echo $protected_alt; ?>"></i>
+									</td>
+									<td><?php echo $last; ?></td>
+									<td>
+										<a href="./?key=<?php echo $trkey; ?>#edit" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-pencil"></i>&nbsp;Edit</a>&nbsp;&nbsp;
+										<a href="./?do=delete&amp;key=<?php echo $trkey; ?>" class="btn btn-xs btn-danger" onclick="return confirm('Delete consumer; are you sure?');"><i class="glyphicon glyphicon-remove"></i>&nbsp;Delete</a>
+									</td>
+								</tr>
+							<?php
+							}
+						?>
+						</tbody>
+					</table>
+				<?php
 				}
-				if ($consumer->protected) {
-					$protected     = 'tick';
-					$protected_alt = 'Protected';
+
+				// Display form for adding/editing a tool consumer
+				if (isset($update_consumer->created)) {
+					$mode = 'Update';
+					$type = ' disabled="disabled"';
+					$key1 = '';
+					$key2 = 'key';
 				}
 				else {
-					$protected     = 'cross';
-					$protected_alt = 'Not protected';
+					$mode = 'Add new';
+					$type = '';
+					$key1 = 'key';
+					$key2 = '';
 				}
-				if (is_null($consumer->last_access)) {
-					$last = 'None';
+				$name   = htmlentities($update_consumer->name);
+				$key    = htmlentities($update_consumer->getKey());
+				$secret = htmlentities($update_consumer->secret);
+				if ($update_consumer->enabled) {
+					$enabled = ' checked="checked"';
 				}
 				else {
-					$last = date('j-M-Y', $consumer->last_access);
+					$enabled = '';
 				}
-				$page .= <<< EOD
-  <tr class="{$trclass}">
-    <td><img src="img/institution-logo-16.png" alt="{$institution_name}" title="{$institution_name}" />&nbsp;{$consumer->name}</td>
-    <td>{$consumer->getKey()}</td>
-    <td><span title="{$consumer->consumer_guid}">{$consumer->consumer_version}</span></td>
-    <td class="aligncentre"><img src="img/{$available}.gif" alt="{$available_alt}" title="{$available_alt}" /></td>
-    <td class="aligncentre"><img src="img/{$protected}.gif" alt="{$protected_alt}" title="{$protected_alt}" /></td>
-    <td>{$last}</td>
-    <td class="iconcolumn aligncentre">
-      <a href="./?key={$trkey}"><img src="img/edit.png" title="Edit consumer" alt="Edit consumer" />Edit</a>&nbsp;&nbsp;&#124;&nbsp;&nbsp;<a href="./?do=delete&amp;key={$trkey}" onclick="return confirm('Delete consumer; are you sure?');"><img src="img/delete.png" title="Delete consumer" alt="Delete consumer" />Delete</a>
-    </td>
-  </tr>
+				$enable_from = '';
+				if (!is_null($update_consumer->enable_from)) {
+					$enable_from = date('j-m-Y H:i', $update_consumer->enable_from);
+				}
+				$enable_until = '';
+				if (!is_null($update_consumer->enable_until)) {
+					$enable_until = date('j-m-Y H:i', $update_consumer->enable_until);
+				}
+				if ($update_consumer->protected) {
+					$protected = ' checked="checked"';
+				}
+				else {
+					$protected = '';
+				}
+			?>
+			<h2><br /><a name="edit"></a><?php echo $mode; ?> consumer</h2>
 
-EOD;
-			}
-			$page .= <<< EOD
-</tbody>
-</table>
+			<form method="post" action="./" role="form" class="form-horizontal">
+				<input type="hidden" name="do" value="add" />
+				<input type="hidden" name="<?php echo $key2; ?>" value="<?php echo $key; ?>" />
 
-EOD;
 
-		}
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="name">Name *</label>
 
-		// Display form for adding/editing a tool consumer
-		if (isset($update_consumer->created)) {
-			$mode = 'Update';
-			$type = ' disabled="disabled"';
-			$key1 = '';
-			$key2 = 'key';
-		}
-		else {
-			$mode = 'Add new';
-			$type = '';
-			$key1 = 'key';
-			$key2 = '';
-		}
-		$name   = htmlentities($update_consumer->name);
-		$key    = htmlentities($update_consumer->getKey());
-		$secret = htmlentities($update_consumer->secret);
-		if ($update_consumer->enabled) {
-			$enabled = ' checked="checked"';
-		}
-		else {
-			$enabled = '';
-		}
-		$enable_from = '';
-		if (!is_null($update_consumer->enable_from)) {
-			$enable_from = date('j-M-Y H:i', $update_consumer->enable_from);
-		}
-		$enable_until = '';
-		if (!is_null($update_consumer->enable_until)) {
-			$enable_until = date('j-M-Y H:i', $update_consumer->enable_until);
-		}
-		if ($update_consumer->protected) {
-			$protected = ' checked="checked"';
-		}
-		else {
-			$protected = '';
-		}
-		$page .= <<< EOD
-<h2>{$mode} consumer</h2>
+					<div class="col-sm-5">
+						<input type="text" id="name" name="name" class="form-control input-sm" placeholder="Name" maxlength="50" value="<?php echo $name; ?>" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="<?php echo $key1; ?>">Key *</label>
 
-<form action="./" method="post">
-<div class="box">
-  <span class="label">Name:<span class="required" title="required">*</span></span>&nbsp;<input name="name" type="text" size="50" maxlength="200" value="{$name}" /><br />
-  <span class="label">Key:<span class="required" title="required">*</span></span>&nbsp;<input name="{$key1}" type="text" size="75" maxlength="200" value="{$key}"{$type} /><br />
-  <span class="label">Secret:<span class="required" title="required">*</span></span>&nbsp;<input name="secret" type="text" size="75" maxlength="200" value="{$secret}" /><br />
-  <span class="label">Enabled?</span>&nbsp;<input name="enabled" type="checkbox" value="1"{$enabled} /><br />
-  <span class="label">Enable from:</span>&nbsp;<input name="enable_from" type="text" size="50" maxlength="200" value="{$enable_from}" /><br />
-  <span class="label">Enable until:</span>&nbsp;<input name="enable_until" type="text" size="50" maxlength="200" value="{$enable_until}" /><br />
-  <span class="label">Protected?</span>&nbsp;<input name="protected" type="checkbox" value="1"{$protected} /><br />
-  <br />
-  <input type="hidden" name="do" value="add" />
-  <input type="hidden" name="{$key2}" value="{$key}" />
-  <span class="label"><span class="required" title="required">*</span>&nbsp;=&nbsp;required field</span>&nbsp;<input type="submit" value="{$mode} consumer" />
+					<div class=" col-sm-5">
 
-EOD;
+						<input type="text" id="<?php echo $key1; ?>" name="<?php echo $key1; ?>" class="form-control input-sm" placeholder="Key" maxlength="50" value="<?php echo $key; ?>" <?php echo $type; ?> />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="secret">Secret *</label>
 
-		if (isset($update_consumer->created)) {
-			$page .= <<< EOD
-  &nbsp;<input type="reset" value="Cancel" onclick="location.href='./';" />
+					<div class=" col-sm-5">
+						<input type="text" id="secret" name="secret" class="form-control input-sm" placeholder="Secret" maxlength="200" value="<?php echo $secret; ?>" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 text-right">
+						<label for="enabled">Enabled?</label>
+					</div>
+					<div class=" col-sm-5">
+						<input type="checkbox" id="enabled" name="enabled" class="input" value="1" <?php echo $enabled; ?> />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="enable_from">Enable from</label>
 
-EOD;
+					<div class=" col-sm-5">
+						<input type="text" id="enable_from" name="enable_from" class="form-control input-sm" placeholder="dd-mm-yyyy hh:mm" maxlength="25" value="<?php echo $enable_from; ?>" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="enable_until">Enable until</label>
 
-		}
-	}
+					<div class=" col-sm-5">
+						<input type="text" id="enable_until" name="enable_until" class="form-control input-sm" placeholder="dd-mm-yyyy hh:mm" maxlength="25" value="<?php echo $enable_until; ?>" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 text-right">
+						<label for="protected">Protected?</label>
+					</div>
+					<div class=" col-sm-5">
+						<input type="checkbox" id="protected" name="protected" class="input" value="1" <?php echo $protected; ?> />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="btn_submit"></label>
 
-	// Page footer
-	$page .= <<< EOD
+					<div class=" col-sm-5">
+						<p>
+							<input type="submit" id="btn_submit" name="btn_submit" class="btn btn-primary" value="<?php echo $mode; ?> consumer" />
+							<?php
+								if (isset($update_consumer->created)) {
+									echo "&nbsp;<input type=\"reset\" value=\"Cancel\" class=\"btn btn-link\" onclick=\"location.href='./';\" />";
+								}
+							?>
+						</p>
+					</div>
+				</div>
+
+				<?php
+					// close the big conditional statement ($ok)
+					}
+				?>
+			</form>
+		</div>
+		<!-- /.col -->
+	</div>
+	<!-- /.row -->
 </div>
-</form>
+<!-- /.container -->
 </body>
 </html>
-
-EOD;
-
-	// Display page
-	echo $page;
-

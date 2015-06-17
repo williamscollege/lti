@@ -1,0 +1,52 @@
+<?php
+	/*
+	 *  rating - Rating: an example LTI tool provider
+	 *  Copyright (C) 2015  Stephen P Vickers
+	 *
+	 *  This program is free software; you can redistribute it and/or modify
+	 *  it under the terms of the GNU General Public License as published by
+	 *  the Free Software Foundation; either version 2 of the License, or
+	 *  (at your option) any later version.
+	 *
+	 *  This program is distributed in the hope that it will be useful,
+	 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 *  GNU General Public License for more details.
+	 *
+	 *  You should have received a copy of the GNU General Public License along
+	 *  with this program; if not, write to the Free Software Foundation, Inc.,
+	 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+	 *
+	 *  Contact: stephen@spvsoftwareproducts.com
+	 *
+	 *  Version history:
+	 *    1.0.00   2-Jan-13  Initial release
+	 *    1.0.01  17-Jan-13  Minor update
+	 *    1.1.00   5-Jun-13  Added Outcomes service option
+	 *    1.2.00  20-May-15  Changed to use class method overrides for handling LTI requests
+	 *                       Added support for Content-Item message
+	*/
+
+	/*
+	 * This page contains the configuration settings for the application.
+	 */
+
+
+	# LTI Application Settings
+	define('APP_NAME', 'LTIYourAppName');
+	define('SESSION_NAME', 'PHPYourAppName');
+	define('LTI_FOLDER', 'lti/');
+	define('TOOL_CONSUMER_URL', 'https://institution.instructure.com/');
+	define('TOOL_CONSUMER_AUTH_TOKEN', 'Authorization: Bearer 1~TOKEN_HERE');
+
+	# LTI Database Connection
+	define('DB_NAME', 'mysql:dbname=rating;host=localhost'); // e.g. 'mysql:dbname=MyDb;host=localhost'
+	define('DB_USERNAME', 'yourusername');
+	define('DB_PASSWORD', 'yourlocalfancypassword');
+	define('DB_TABLENAME_PREFIX', '');
+
+	# LTI LMS app settings
+	# LTI Name:				pretty name
+	# LTI Key:				your-key-name
+	# LTI Secret:			your-big-secret
+	# Configuration Type:	XML

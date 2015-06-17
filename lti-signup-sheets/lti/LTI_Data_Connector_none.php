@@ -1,7 +1,7 @@
 <?php
 /**
  * LTI_Tool_Provider - PHP class to include in an external tool to handle connections with an LTI 1 compliant tool consumer
- * Copyright (C) 2014  Stephen P Vickers
+ * Copyright (C) 2015  Stephen P Vickers
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -31,6 +31,8 @@
  *   2.3.04  13-Aug-13
  *   2.3.05  29-Jul-14
  *   2.3.06   5-Aug-14
+ *   2.4.00  10-Apr-15
+ *   2.5.00  20-May-15
 */
 
 ###

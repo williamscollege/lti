@@ -1,7 +1,7 @@
 <?php
 /**
  * LTI_Tool_Provider - PHP class to include in an external tool to handle connections with an LTI 1 compliant tool consumer
- * Copyright (C) 2014  Stephen P Vickers
+ * Copyright (C) 2015  Stephen P Vickers
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,6 +32,8 @@
  *   2.3.05  29-Jul-14  Added support for date and time formats
  *                      Added support of Oracle PDO driver
  *   2.3.06   5-Aug-14
+ *   2.4.00  10-Apr-15
+ *   2.5.00  20-May-15  Updated Resource_Link_save to allow for changes in ID values
 */
 
 ###
@@ -360,6 +362,7 @@ class LTI_Data_Connector_PDO extends LTI_Data_Connector {
     $settingsValue = json_encode($resource_link->settings);
     $key = $resource_link->getKey();
     $id = $resource_link->getId();
+    $previous_id = $resource_link->getId(TRUE);
     if (is_null($resource_link->created)) {
       $sql = 'INSERT INTO ' . $this->dbTableNamePrefix . LTI_Data_Connector::RESOURCE_LINK_TABLE_NAME . ' ' .
              '(consumer_key, context_id, lti_context_id, lti_resource_id, title, settings, ' .
@@ -378,7 +381,7 @@ class LTI_Data_Connector_PDO extends LTI_Data_Connector {
       $query->bindValue('share_approved', $resource_link->share_approved, PDO::PARAM_INT);
       $query->bindValue('created', $now, PDO::PARAM_STR);
       $query->bindValue('updated', $now, PDO::PARAM_STR);
-    } else {
+    } else if ($id == $previous_id) {
       $sql = 'UPDATE ' . $this->dbTableNamePrefix . LTI_Data_Connector::RESOURCE_LINK_TABLE_NAME . ' ' .
              'SET lti_context_id = :lti_context_id, lti_resource_id = :lti_resource_id, title = :title, settings = :settings, ' .
              'primary_consumer_key = :primary_consumer_key, primary_context_id = :primary_context_id, share_approved = :share_approved, updated = :updated ' .
@@ -386,6 +389,23 @@ class LTI_Data_Connector_PDO extends LTI_Data_Connector {
       $query = $this->db->prepare($sql);
       $query->bindValue('key', $key, PDO::PARAM_STR);
       $query->bindValue('id', $id, PDO::PARAM_STR);
+      $query->bindValue('lti_context_id', $resource_link->lti_context_id, PDO::PARAM_STR);
+      $query->bindValue('lti_resource_id', $resource_link->lti_resource_id, PDO::PARAM_STR);
+      $query->bindValue('title', $resource_link->title, PDO::PARAM_STR);
+      $query->bindValue('settings', $settingsValue, PDO::PARAM_STR);
+      $query->bindValue('primary_consumer_key', $resource_link->primary_consumer_key, PDO::PARAM_STR);
+      $query->bindValue('primary_context_id', $resource_link->primary_resource_link_id, PDO::PARAM_STR);
+      $query->bindValue('share_approved', $resource_link->share_approved, PDO::PARAM_INT);
+      $query->bindValue('updated', $now, PDO::PARAM_STR);
+    } else {
+      $sql = 'UPDATE ' . $this->dbTableNamePrefix . LTI_Data_Connector::RESOURCE_LINK_TABLE_NAME . ' ' .
+             'SET context_id = :new_id, lti_context_id = :lti_context_id, lti_resource_id = :lti_resource_id, title = :title, settings = :settings, ' .
+             'primary_consumer_key = :primary_consumer_key, primary_context_id = :primary_context_id, share_approved = :share_approved, updated = :updated ' .
+             'WHERE (consumer_key = :key) AND (context_id = :old_id)';
+      $query = $this->db->prepare($sql);
+      $query->bindValue('key', $key, PDO::PARAM_STR);
+      $query->bindValue('old_id', $previous_id, PDO::PARAM_STR);
+      $query->bindValue('new_id', $id, PDO::PARAM_STR);
       $query->bindValue('lti_context_id', $resource_link->lti_context_id, PDO::PARAM_STR);
       $query->bindValue('lti_resource_id', $resource_link->lti_resource_id, PDO::PARAM_STR);
       $query->bindValue('title', $resource_link->title, PDO::PARAM_STR);
