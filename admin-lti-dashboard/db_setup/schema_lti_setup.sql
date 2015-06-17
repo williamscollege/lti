@@ -61,8 +61,8 @@ CREATE TABLE IF NOT EXISTS lti_consumer (
 	consumer_version varchar(255) DEFAULT NULL,
 	consumer_guid varchar(255) DEFAULT NULL,
 	css_path varchar(255) DEFAULT NULL,
-	protected tinyint(1) NOT NULL,
-	enabled tinyint(1) NOT NULL,
+	protected tinyint NOT NULL,
+	enabled tinyint NOT NULL,
 	enable_from datetime DEFAULT NULL,
 	enable_until datetime DEFAULT NULL,
 	last_access date DEFAULT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS lti_context (
 	settings text,
 	primary_consumer_key varchar(255) DEFAULT NULL,
 	primary_context_id varchar(255) DEFAULT NULL,
-	share_approved tinyint(1) DEFAULT NULL,
+	share_approved tinyint DEFAULT NULL,
 	created datetime NOT NULL,
 	updated datetime NOT NULL,
 	PRIMARY KEY (consumer_key, context_id)
@@ -107,27 +107,27 @@ CREATE TABLE IF NOT EXISTS lti_share_key (
 	share_key_id varchar(32) NOT NULL,
 	primary_consumer_key varchar(255) NOT NULL,
 	primary_context_id varchar(255) NOT NULL,
-	auto_approve tinyint(1) NOT NULL,
+	auto_approve tinyint NOT NULL,
 	expires datetime NOT NULL,
 	PRIMARY KEY (share_key_id)
 ) ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='lti_share_key';
 
 ALTER TABLE lti_context
-ADD CONSTRAINT lti_context_consumer_FK1 FOREIGN KEY (consumer_key)
-REFERENCES lti_consumer (consumer_key);
+  ADD CONSTRAINT lti_context_consumer_FK1 FOREIGN KEY (consumer_key)
+    REFERENCES lti_consumer (consumer_key);
 
 ALTER TABLE lti_context
-ADD CONSTRAINT lti_context_context_FK1 FOREIGN KEY (primary_consumer_key, primary_context_id)
-REFERENCES lti_context (consumer_key, context_id);
+  ADD CONSTRAINT lti_context_context_FK1 FOREIGN KEY (primary_consumer_key, primary_context_id)
+    REFERENCES lti_context (consumer_key, context_id);
 
 ALTER TABLE lti_user
-ADD CONSTRAINT lti_user_context_FK1 FOREIGN KEY (consumer_key, context_id)
-REFERENCES lti_context (consumer_key, context_id);
+  ADD CONSTRAINT lti_user_context_FK1 FOREIGN KEY (consumer_key, context_id)
+    REFERENCES lti_context (consumer_key, context_id);
 
 ALTER TABLE lti_nonce
-ADD CONSTRAINT lti_nonce_consumer_FK1 FOREIGN KEY (consumer_key)
-REFERENCES lti_consumer (consumer_key);
+  ADD CONSTRAINT lti_nonce_consumer_FK1 FOREIGN KEY (consumer_key)
+    REFERENCES lti_consumer (consumer_key);
 
 ALTER TABLE lti_share_key
-ADD CONSTRAINT lti_share_key_context_FK1 FOREIGN KEY (primary_consumer_key, primary_context_id)
-REFERENCES lti_context (consumer_key, context_id);
+  ADD CONSTRAINT lti_share_key_context_FK1 FOREIGN KEY (primary_consumer_key, primary_context_id)
+    REFERENCES lti_context (consumer_key, context_id);

@@ -12,6 +12,7 @@
 
 	# Institution Name
 	define('LANG_INSTITUTION_NAME', 'Your Institution');
+	define('LANG_AUTHOR_NAME', 'Your Name');
 
 	# LTI application settings
 	define('LTI_APP_NAME',     'LTIYourAppName');
@@ -23,3 +24,17 @@
 	define('LTI_DB_PASSWORD', 'yourfancypassword');
 	define('LTI_DB_TABLENAME_PREFIX', '');
 
+	# ---------------------------
+	# External Content Delivery Network
+	# ---------------------------
+	# ***** Google CDN: https://developers.google.com/speed/libraries/devguide#jquery
+	define('PATH_JQUERY_JS', '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js');
+	define('PATH_JQUERYUI_JS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js');
+	define('PATH_JQUERYUI_CSS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/dot-luv/jquery-ui.min.css');
+
+	# ---------------------------
+	# Local File Paths
+	# ---------------------------
+	# ***** Bootstrap: http://getbootstrap.com/
+	define('PATH_BOOTSTRAP_JS', APP_ROOT_PATH . '/js/bootstrap/js/bootstrap.min.js?rel=3.3.4');
+	define('PATH_BOOTSTRAP_CSS', APP_ROOT_PATH . '/js/bootstrap/css/bootstrap.min.css?rel=3.3.4');

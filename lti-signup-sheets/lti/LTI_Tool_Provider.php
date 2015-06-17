@@ -1,7 +1,7 @@
 <?php
 /**
  * LTI_Tool_Provider - PHP class to include in an external tool to handle connections with an LTI 1 compliant tool consumer
- * Copyright (C) 2014  Stephen P Vickers
+ * Copyright (C) 2015  Stephen P Vickers
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -49,6 +49,10 @@
  *                      Added methods for generating signed auto-submit forms for LTI messages
  *                      Added classes for Content-item objects
  *                      Added support for unofficial ConfigureLaunchRequest and DashboardRequest messages
+ *   2.5.00  20-May-15  Added LTI_HTTP_Message class to handle the sending of HTTP requests
+ *                      Added workflow for automatically assigning resource link ID on first launch of a content-item message created link
+ *                      Enhanced checking of parameter values
+ *                      Added mediaTypes and documentTargets properties to LTI_Tool_Provider class for ContentItemSelectionRequest messages
  */
 
 /**
@@ -60,7 +64,7 @@ require_once('OAuth.php');
  * Class to represent an LTI Tool Provider
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_Tool_Provider {
@@ -110,7 +114,6 @@ class LTI_Tool_Provider {
  *  @var boolean True if the last request was successful.
  */
   public $isOK = TRUE;
-
 /**
  *  @var LTI_Tool_Consumer Tool Consumer object.
  */
@@ -167,6 +170,14 @@ class LTI_Tool_Provider {
  *  @var string URL to redirect user to on successful completion of the request.
  */
   protected $redirectURL = NULL;
+/**
+ *  @var string URL to redirect user to on successful completion of the request.
+ */
+  protected $mediaTypes = NULL;
+/**
+ *  @var string URL to redirect user to on successful completion of the request.
+ */
+  protected $documentTargets = NULL;
 /**
  *  @var string HTML to be displayed on a successful completion of the request.
  */
@@ -562,7 +573,18 @@ EOD;
               $error_url .= '&lti_errorlog=' . urlencode("Debug error: $this->reason");
             }
           }
-          header("Location: {$error_url}");
+          if (!is_null($this->consumer) && isset($_POST['lti_message_type']) && ($_POST['lti_message_type'] === 'ContentItemSelectionRequest')) {
+            $form_params = array();
+            if (isset($_POST['data'])) {
+              $form_params['data'] = $_POST['data'];
+            }
+            $version = (isset($_POST['lti_version'])) ? $_POST['lti_version'] : LTI_Tool_Provider::LTI_VERSION1;
+            $form_params = $this->consumer->signParameters($error_url, 'ContentItemSelection', $version, $form_params);
+            $page = LTI_Tool_Provider::sendForm($error_url, $form_params);
+            echo $page;
+          } else {
+            header("Location: {$error_url}");
+          }
           exit;
         } else {
           if (!is_null($this->error_output)) {
@@ -614,11 +636,44 @@ EOD;
           $this->reason = 'Missing resource link ID.';
         }
       } else if ($_POST['lti_message_type'] == 'ContentItemSelectionRequest') {
-        $this->isOK = ((isset($_POST['accept_media_types']) && (strlen(trim($_POST['accept_media_types'])) > 0)) &&
-                       (isset($_POST['accept_presentation_document_targets']) && (strlen(trim($_POST['accept_presentation_document_targets'])) > 0)) &&
-                       (isset($_POST['content_item_return_url']) && (strlen(trim($_POST['content_item_return_url'])) > 0)));
-        if (!$this->isOK) {
-          $this->reason = 'Missing message parameters.';
+        if (isset($_POST['accept_media_types']) && (strlen(trim($_POST['accept_media_types'])) > 0)) {
+          $mediaTypes = array_filter(explode(',', str_replace(' ', '', $_POST['accept_media_types'])), 'strlen');
+          $mediaTypes = array_unique($mediaTypes);
+          $this->isOK = count($mediaTypes) > 0;
+          if (!$this->isOK) {
+            $this->reason = 'No accept_media_types found.';
+          } else {
+            $this->mediaTypes = $mediaTypes;
+          }
+        } else {
+          $this->isOK = FALSE;
+        }
+        if ($this->isOK && isset($_POST['accept_presentation_document_targets']) && (strlen(trim($_POST['accept_presentation_document_targets'])) > 0)) {
+          $documentTargets = array_filter(explode(',', str_replace(' ', '', $_POST['accept_presentation_document_targets'])), 'strlen');
+          $documentTargets = array_unique($documentTargets);
+          $this->isOK = count($documentTargets) > 0;
+          if (!$this->isOK) {
+            $this->reason = 'Missing or empty accept_presentation_document_targets parameter.';
+          } else {
+            foreach ($documentTargets as $documentTarget) {
+              $this->isOK = $this->checkValue($documentTarget, array('embed', 'frame', 'iframe', 'window', 'popup', 'overlay', 'none'),
+                 'Invalid value in accept_presentation_document_targets parameter: %s.');
+              if (!$this->isOK) {
+                break;
+              }
+            }
+            if ($this->isOK) {
+              $this->documentTargets = $documentTargets;
+            }
+          }
+        } else {
+          $this->isOK = FALSE;
+        }
+        if ($this->isOK) {
+          $this->isOK = isset($_POST['content_item_return_url']) && (strlen(trim($_POST['content_item_return_url'])) > 0);
+          if (!$this->isOK) {
+            $this->reason = 'Missing content_item_return_url parameter.';
+          }
         }
       }
     }
@@ -705,6 +760,34 @@ EOD;
     }
 
 #
+### Validate other message parameter values
+#
+    if ($this->isOK) {
+      if ($_POST['lti_message_type'] != 'ContentItemSelectionRequest') {
+        if (isset($_POST['launch_presentation_document_target'])) {
+          $this->isOK = $this->checkValue($_POST['launch_presentation_document_target'], array('embed', 'frame', 'iframe', 'window', 'popup', 'overlay'),
+             'Invalid value for launch_presentation_document_target parameter: %s.');
+        }
+      } else {
+        if (isset($_POST['accept_unsigned'])) {
+          $this->isOK = $this->checkValue($_POST['accept_unsigned'], array('true', 'false'), 'Invalid value for accept_unsigned parameter: %s.');
+        }
+        if ($this->isOK && isset($_POST['accept_multiple'])) {
+          $this->isOK = $this->checkValue($_POST['accept_multiple'], array('true', 'false'), 'Invalid value for accept_multiple parameter: %s.');
+        }
+        if ($this->isOK && isset($_POST['accept_copy_advice'])) {
+          $this->isOK = $this->checkValue($_POST['accept_copy_advice'], array('true', 'false'), 'Invalid value for accept_copy_advice parameter: %s.');
+        }
+        if ($this->isOK && isset($_POST['auto_create'])) {
+          $this->isOK = $this->checkValue($_POST['auto_create'], array('true', 'false'), 'Invalid value for auto_create parameter: %s.');
+        }
+        if ($this->isOK && isset($_POST['can_confirm'])) {
+          $this->isOK = $this->checkValue($_POST['can_confirm'], array('true', 'false'), 'Invalid value for can_confirm parameter: %s.');
+        }
+      }
+    }
+
+#
 ### Validate message parameter constraints
 #
     if ($this->isOK) {
@@ -738,7 +821,11 @@ EOD;
 ### Set the request context/resource link
 #
       if (isset($_POST['resource_link_id'])) {
-        $this->resource_link = new LTI_Resource_Link($this->consumer, trim($_POST['resource_link_id']));
+        $content_item_id = '';
+        if (isset($_POST['custom_content_item_id'])) {
+          $content_item_id = $_POST['custom_content_item_id'];
+        }
+        $this->resource_link = new LTI_Resource_Link($this->consumer, trim($_POST['resource_link_id']), $content_item_id);
         if (isset($_POST['context_id'])) {
           $this->resource_link->lti_context_id = trim($_POST['context_id']);
         }
@@ -777,43 +864,43 @@ EOD;
             $this->resource_link->setSetting($name, $value);
           }
         }
+      }
 #
 ### Set the user instance
 #
-        $user_id = '';
-        if (isset($_POST['user_id'])) {
-          $user_id = trim($_POST['user_id']);
-        }
-        $this->user = new LTI_User($this->resource_link, $user_id);
+      $user_id = '';
+      if (isset($_POST['user_id'])) {
+        $user_id = trim($_POST['user_id']);
+      }
+      $this->user = new LTI_User($this->resource_link, $user_id);
 #
 ### Set the user name
 #
-        $firstname = (isset($_POST['lis_person_name_given'])) ? $_POST['lis_person_name_given'] : '';
-        $lastname = (isset($_POST['lis_person_name_family'])) ? $_POST['lis_person_name_family'] : '';
-        $fullname = (isset($_POST['lis_person_name_full'])) ? $_POST['lis_person_name_full'] : '';
-        $this->user->setNames($firstname, $lastname, $fullname);
+      $firstname = (isset($_POST['lis_person_name_given'])) ? $_POST['lis_person_name_given'] : '';
+      $lastname = (isset($_POST['lis_person_name_family'])) ? $_POST['lis_person_name_family'] : '';
+      $fullname = (isset($_POST['lis_person_name_full'])) ? $_POST['lis_person_name_full'] : '';
+      $this->user->setNames($firstname, $lastname, $fullname);
 #
 ### Set the user email
 #
-        $email = (isset($_POST['lis_person_contact_email_primary'])) ? $_POST['lis_person_contact_email_primary'] : '';
-        $this->user->setEmail($email, $this->defaultEmail);
+      $email = (isset($_POST['lis_person_contact_email_primary'])) ? $_POST['lis_person_contact_email_primary'] : '';
+      $this->user->setEmail($email, $this->defaultEmail);
 #
 ### Set the user roles
 #
-        if (isset($_POST['roles'])) {
-          $this->user->roles = LTI_Tool_Provider::parseRoles($_POST['roles']);
-        }
+      if (isset($_POST['roles'])) {
+        $this->user->roles = LTI_Tool_Provider::parseRoles($_POST['roles']);
+      }
 #
 ### Save the user instance
 #
-        if (isset($_POST['lis_result_sourcedid'])) {
-          if ($this->user->lti_result_sourcedid != $_POST['lis_result_sourcedid']) {
-            $this->user->lti_result_sourcedid = $_POST['lis_result_sourcedid'];
-            $this->user->save();
-          }
-        } else if (!empty($this->user->lti_result_sourcedid)) {
-          $this->user->delete();
+      if (isset($_POST['lis_result_sourcedid'])) {
+        if ($this->user->lti_result_sourcedid != $_POST['lis_result_sourcedid']) {
+          $this->user->lti_result_sourcedid = $_POST['lis_result_sourcedid'];
+          $this->user->save();
         }
+      } else if (!empty($this->user->lti_result_sourcedid)) {
+        $this->user->delete();
       }
 #
 ### Initialise the consumer and check for changes
@@ -978,6 +1065,22 @@ EOD;
 
   }
 
+/**
+ * Validate a parameter value from an array of permitted values.
+ *
+ * @return boolean True if value is valid
+ */
+  private function checkValue($value, $values, $reason) {
+
+    $ok = in_array($value, $values);
+    if (!$ok && !empty($reason)) {
+      $this->reason = sprintf($reason, $value);
+    }
+
+    return $ok;
+
+  }
+
 }
 
 
@@ -985,7 +1088,7 @@ EOD;
  * Class to represent a tool consumer
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_Tool_Consumer {
@@ -1252,7 +1355,7 @@ class LTI_Tool_Consumer {
  * Class to represent a tool consumer resource link
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_Resource_Link {
@@ -1369,6 +1472,10 @@ class LTI_Resource_Link {
  */
   private $id = NULL;
 /**
+ * @var string Previous ID for this resource link.
+ */
+  private $previous_id = NULL;
+/**
  * @var boolean Whether the settings value have changed since last saved.
  */
   private $settings_changed = FALSE;
@@ -1384,15 +1491,23 @@ class LTI_Resource_Link {
 /**
  * Class constructor.
  *
- * @param string $consumer Consumer key value
- * @param string $id       Resource link ID value
+ * @param string $consumer         Consumer key value
+ * @param string $id               Resource link ID value
+ * @param string $current_id       Current ID of resource link (optional, default is NULL)
  */
-  public function __construct($consumer, $id) {
+  public function __construct($consumer, $id, $current_id = NULL) {
 
     $this->consumer = $consumer;
     $this->id = $id;
+    $this->previous_id = $this->id;
     if (!empty($id)) {
       $this->load();
+      if (is_null($this->created) && !empty($current_id)) {
+        $this->id = $current_id;
+        $this->load();
+        $this->id = $id;
+        $this->previous_id = $current_id;
+      }
     } else {
       $this->initialise();
     }
@@ -1470,11 +1585,19 @@ class LTI_Resource_Link {
 /**
  * Get resource link ID.
  *
+ * @param string $previous   TRUE if previous ID value is to be returned (optional, default is FALSE)
+ *
  * @return string ID for this resource link.
  */
-  public function getId() {
+  public function getId($previous = FALSE) {
 
-    return $this->id;
+    if ($previous) {
+      $id = $this->previous_id;
+    } else {
+      $id = $this->id;
+    }
+
+    return $id;
 
   }
 
@@ -2035,16 +2158,21 @@ EOF;
   private function doService($type, $url, $params) {
 
     $ok = FALSE;
+    $this->ext_request = NULL;
+    $this->ext_request_headers = '';
     $this->ext_response = NULL;
+    $this->ext_response_headers = '';
     if (!empty($url)) {
-      $params = $this->consumer->signParameters($url, $type, LTI_Tool_Provider::LTI_VERSION1, $params);
+      $params = $this->consumer->signParameters($url, $type, $this->consumer->lti_version, $params);
 // Connect to tool consumer
-      $this->ext_response = $this->do_post_request($url, $params);
+      $http = new LTI_HTTP_Message($url, 'POST', $params);
 // Parse XML response
-      if ($this->ext_response) {
+      if ($http->send()) {
+        $this->ext_response = $http->response;
+        $this->ext_response_headers = $http->response_headers;
         try {
           $this->ext_doc = new DOMDocument();
-          $this->ext_doc->loadXML($this->ext_response);
+          $this->ext_doc->loadXML($http->response);
           $this->ext_nodes = $this->domnode_to_array($this->ext_doc->documentElement);
           if (isset($this->ext_nodes['statusinfo']['codemajor']) && ($this->ext_nodes['statusinfo']['codemajor'] == 'Success')) {
             $ok = TRUE;
@@ -2052,6 +2180,8 @@ EOF;
         } catch (Exception $e) {
         }
       }
+      $this->ext_request = $http->request;
+      $this->ext_request_headers = $http->request_headers;
     }
 
     return $ok;
@@ -2070,7 +2200,10 @@ EOF;
   private function doLTI11Service($type, $url, $xml) {
 
     $ok = FALSE;
+    $this->ext_request = NULL;
+    $this->ext_request_headers = '';
     $this->ext_response = NULL;
+    $this->ext_response_headers = '';
     if (!empty($url)) {
       $id = uniqid();
       $xmlRequest = <<< EOD
@@ -2102,12 +2235,14 @@ EOD;
       $header = $req->to_header();
       $header .= "\nContent-Type: application/xml";
 // Connect to tool consumer
-      $this->ext_response = $this->do_post_request($url, $xmlRequest, $header);
+      $http = new LTI_HTTP_Message($url, 'POST', $xmlRequest, $header);
 // Parse XML response
-      if ($this->ext_response) {
+      if ($http->send()) {
+        $this->ext_response = $http->response;
+        $this->ext_response_headers = $http->response_headers;
         try {
           $this->ext_doc = new DOMDocument();
-          $this->ext_doc->loadXML($this->ext_response);
+          $this->ext_doc->loadXML($http->response);
           $this->ext_nodes = $this->domnode_to_array($this->ext_doc->documentElement);
           if (isset($this->ext_nodes['imsx_POXHeader']['imsx_POXResponseHeaderInfo']['imsx_statusInfo']['imsx_codeMajor']) &&
               ($this->ext_nodes['imsx_POXHeader']['imsx_POXResponseHeaderInfo']['imsx_statusInfo']['imsx_codeMajor'] == 'success')) {
@@ -2116,85 +2251,11 @@ EOD;
         } catch (Exception $e) {
         }
       }
+      $this->ext_request = $http->request;
+      $this->ext_request_headers = $http->request_headers;
     }
 
     return $ok;
-
-  }
-
-/**
- * Get the response from an HTTP POST request.
- *
- * @param string $url    URL to send request to
- * @param array  $params Associative array of parameter values to be passed
- * @param string $header Values to include in the request header (optional, default is none)
- *
- * @return string response contents, empty if the request was not successfull
- */
-  private function do_post_request($url, $params, $header = NULL) {
-
-    $ok = FALSE;
-    if (is_array($params)) {
-      $data = http_build_query($params);
-    } else {
-      $data = $params;
-    }
-    $this->ext_request = $data;
-    $resp = '';
-// Try using curl if available
-    if (function_exists('curl_init')) {
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $url);
-      if (!empty($header)) {
-        $headers = explode("\n", $header);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-      } else {
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-      }
-      curl_setopt($ch, CURLOPT_POST, TRUE);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-      curl_setopt($ch, CURLINFO_HEADER_OUT, TRUE);
-      curl_setopt($ch, CURLOPT_HEADER, TRUE);
-      curl_setopt($ch, CURLOPT_SSLVERSION, 3);
-      $ch_resp = curl_exec($ch);
-      $ok = $ch_resp !== FALSE;
-      if ($ok) {
-        $ch_resp = str_replace("\r\n", "\n", $ch_resp);
-        $ch_resp_split = explode("\n\n", $ch_resp, 2);
-        if ((count($ch_resp_split) > 1) && (substr($ch_resp_split[1], 0, 5) == 'HTTP/')) {
-          $ch_resp_split = explode("\n\n", $ch_resp_split[1], 2);
-        }
-        $this->ext_response_headers = $ch_resp_split[0];
-        $resp = $ch_resp_split[1];
-        $ok = curl_getinfo($ch, CURLINFO_HTTP_CODE) < 400;
-      }
-      $this->ext_request_headers = str_replace("\r\n", "\n", curl_getinfo($ch, CURLINFO_HEADER_OUT));
-      curl_close($ch);
-    } else {
-// Try using fopen if curl was not available or did not work (could have been an SSL certificate issue)
-      $opts = array('method' => 'POST',
-                    'content' => $data
-                   );
-      if (!empty($header)) {
-        $opts['header'] = explode("\n", $header);
-      }
-      try {
-        $ctx = stream_context_create(array('http' => $opts));
-        $fp = @fopen($url, 'rb', false, $ctx);
-        if ($fp) {
-          $resp = @stream_get_contents($fp);
-          $ok = $resp !== FALSE;
-        }
-      } catch (Exception $e) {
-        $ok = FALSE;
-      }
-      $this->ext_request_headers = '';
-      $this->ext_response_headers = '';
-    }
-    $response = $resp;
-
-    return $response;
 
   }
 
@@ -2260,7 +2321,7 @@ EOD;
  * @see LTI_Resource_Link
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_Context extends LTI_Resource_Link {
@@ -2293,7 +2354,7 @@ class LTI_Context extends LTI_Resource_Link {
  * Class to represent an outcome
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_Outcome {
@@ -2388,7 +2449,7 @@ class LTI_Outcome {
  * Class to represent a tool consumer nonce
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_Consumer_Nonce {
@@ -2488,7 +2549,7 @@ class LTI_Consumer_Nonce {
  * Class to represent a tool consumer resource link share key
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_Resource_Link_Share_Key {
@@ -2656,7 +2717,7 @@ class LTI_Resource_Link_Share_Key {
  * @see LTI_Resource_Link_Share_Key
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_Context_Share_Key extends LTI_Resource_Link_Share_Key {
@@ -2689,7 +2750,7 @@ class LTI_Context_Share_Key extends LTI_Resource_Link_Share_Key {
  * Class to represent a tool consumer resource link share
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_Resource_Link_Share {
@@ -2727,7 +2788,7 @@ class LTI_Resource_Link_Share {
  * @see LTI_Resource_Link_Share
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_Context_Share extends LTI_Resource_Link_Share {
@@ -2757,7 +2818,7 @@ class LTI_Context_Share extends LTI_Resource_Link_Share {
  * Class to represent a tool consumer user
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_User {
@@ -2853,7 +2914,9 @@ class LTI_User {
   public function load() {
 
     $this->initialise();
-    $this->resource_link->getConsumer()->getDataConnector()->User_load($this);
+    if (!is_null($this->resource_link)) {
+      $this->resource_link->getConsumer()->getDataConnector()->User_load($this);
+    }
 
   }
 
@@ -2864,7 +2927,7 @@ class LTI_User {
  */
   public function save() {
 
-    if (!empty($this->lti_result_sourcedid)) {
+    if (!empty($this->lti_result_sourcedid) && !is_null($this->resource_link)) {
       $ok = $this->resource_link->getConsumer()->getDataConnector()->User_save($this);
     } else {
       $ok = TRUE;
@@ -2881,7 +2944,13 @@ class LTI_User {
  */
   public function delete() {
 
-    return $this->resource_link->getConsumer()->getDataConnector()->User_delete($this);
+    if (!is_null($this->resource_link)) {
+      $ok = $this->resource_link->getConsumer()->getDataConnector()->User_delete($this);
+    } else {
+      $ok = TRUE;
+    }
+
+    return $ok;
 
   }
 
@@ -2920,7 +2989,11 @@ class LTI_User {
   public function getId($id_scope = NULL) {
 
     if (empty($id_scope)) {
-      $id_scope = $this->resource_link->getConsumer()->id_scope;
+      if (!is_null($this->resource_link)) {
+        $id_scope = $this->resource_link->getConsumer()->id_scope;
+      } else {
+        $id_scope = LTI_Tool_Provider::ID_SCOPE_ID_ONLY;
+      }
     }
     switch ($id_scope) {
       case LTI_Tool_Provider::ID_SCOPE_GLOBAL:
@@ -3068,7 +3141,7 @@ class LTI_User {
  * Class to represent a content-item image object
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_Content_Item_Image {
@@ -3099,7 +3172,7 @@ class LTI_Content_Item_Image {
  * Class to represent a content-item object
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_Content_Item {
@@ -3133,7 +3206,7 @@ class LTI_Content_Item {
  *
  * @param string $url  URL value
  */
-  function setUrl($url) {
+  public function setUrl($url) {
 
     if (!empty($url)) {
       $this->url = $url;
@@ -3148,7 +3221,7 @@ class LTI_Content_Item {
  *
  * @param string $mediaType  Media type value
  */
-  function setMediaType($mediaType) {
+  public function setMediaType($mediaType) {
 
     if (!empty($mediaType)) {
       $this->mediaType = $mediaType;
@@ -3188,6 +3261,11 @@ class LTI_Content_Item {
 
   }
 
+/**
+ * Wrap the content items to form a complete application/vnd.ims.lti.v1.contentitems+json media type instance.
+ *
+ * @param mixed $items  An array of content items or a single item
+ */
   public static function toJson($items) {
 
     $data = array();
@@ -3211,7 +3289,7 @@ class LTI_Content_Item {
  * Class to represent a content-item placement object
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_Content_Item_Placement {
@@ -3248,7 +3326,155 @@ class LTI_Content_Item_Placement {
  * Class to represent an OAuth datastore
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
+ * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
+ */
+class LTI_HTTP_Message {
+
+/**
+ * @var request Request body.
+ */
+  public $request = NULL;
+
+/**
+ * @var request_headers Request headers.
+ */
+  public $request_headers = '';
+
+/**
+ * @var response Response body.
+ */
+  public $response = NULL;
+
+/**
+ * @var response_headers Response headers.
+ */
+  public $response_headers = '';
+
+/**
+ * @var status Status of response (0 if undetermined).
+ */
+  public $status = 0;
+
+/**
+ * @var error Error message
+ */
+  public $error = '';
+
+/**
+ * @var url Request URL.
+ */
+  private $url = NULL;
+
+/**
+ * @var method Request method.
+ */
+  private $method = NULL;
+
+/**
+ * Class constructor.
+ *
+ * @param string $url     URL to send request to
+ * @param string $method  Request method to use (optional, default is GET)
+ * @param mixed  $params  Associative array of parameter values to be passed or message body (optional, default is none)
+ * @param string $header  Values to include in the request header (optional, default is none)
+ */
+  function __construct($url, $method = 'GET', $params = NULL, $header = NULL) {
+
+    $this->url = $url;
+    $this->method = strtoupper($method);
+    if (is_array($params)) {
+      $this->request = http_build_query($params);
+    } else {
+      $this->request = $params;
+    }
+    if (!empty($header)) {
+      $this->request_headers = explode("\n", $header);
+    }
+
+  }
+
+/**
+ * Send the request to the target URL.
+ *
+ * @return boolean TRUE if the request was successful
+ */
+  public function send() {
+
+    $ok = FALSE;
+// Try using curl if available
+    if (function_exists('curl_init')) {
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $this->url);
+      if (!empty($this->request_headers)) {
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->request_headers);
+      } else {
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+      }
+      if ($this->method == 'POST') {
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request);
+      } else if ($this->method != 'GET') {
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method);
+        if (!is_null($this->request)) {
+          curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request);
+        }
+      }
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+      curl_setopt($ch, CURLINFO_HEADER_OUT, TRUE);
+      curl_setopt($ch, CURLOPT_HEADER, TRUE);
+      curl_setopt($ch, CURLOPT_SSLVERSION,3);
+      $ch_resp = curl_exec($ch);
+      $ok = $ch_resp !== FALSE;
+      if ($ok) {
+        $ch_resp = str_replace("\r\n", "\n", $ch_resp);
+        $ch_resp_split = explode("\n\n", $ch_resp, 2);
+        if ((count($ch_resp_split) > 1) && (substr($ch_resp_split[1], 0, 5) == 'HTTP/')) {
+          $ch_resp_split = explode("\n\n", $ch_resp_split[1], 2);
+        }
+        $this->response_headers = $ch_resp_split[0];
+        $resp = $ch_resp_split[1];
+        $this->status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $ok = $this->status < 400;
+        if (!$ok) {
+          $this->error = curl_error($ch);
+        }
+      }
+      $this->request_headers = str_replace("\r\n", "\n", curl_getinfo($ch, CURLINFO_HEADER_OUT));
+      curl_close($ch);
+      $this->response = $resp;
+    } else {
+// Try using fopen if curl was not available
+      $opts = array('method' => $this->method,
+                    'content' => $this->request
+                   );
+      if (!empty($this->request_headers)) {
+        $opts['header'] = $this->request_headers;
+      }
+      try {
+        $ctx = stream_context_create(array('http' => $opts));
+        $fp = @fopen($this->url, 'rb', false, $ctx);
+        if ($fp) {
+          $resp = @stream_get_contents($fp);
+          $ok = $resp !== FALSE;
+        }
+      } catch (Exception $e) {
+        $ok = FALSE;
+      }
+    }
+
+    return $ok;
+
+  }
+
+}
+
+
+/**
+ * Class to represent an OAuth datastore
+ *
+ * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 class LTI_OAuthDataStore extends OAuthDataStore {
@@ -3359,7 +3585,7 @@ class LTI_OAuthDataStore extends OAuthDataStore {
  * Abstract class to provide a connection to a persistent store for LTI objects
  *
  * @author  Stephen P Vickers <stephen@spvsoftwareproducts.com>
- * @version 2.4.00
+ * @version 2.5.00
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
  */
 abstract class LTI_Data_Connector {

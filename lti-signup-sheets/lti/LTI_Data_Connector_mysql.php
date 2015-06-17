@@ -1,7 +1,7 @@
 <?php
 /**
  * LTI_Tool_Provider - PHP class to include in an external tool to handle connections with an LTI 1 compliant tool consumer
- * Copyright (C) 2014  Stephen P Vickers
+ * Copyright (C) 2015  Stephen P Vickers
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -31,6 +31,8 @@
  *   2.3.04  13-Aug-13
  *   2.3.05  29-Jul-14  Added support for date and time formats
  *   2.3.06   5-Aug-14
+ *   2.4.00  10-Apr-15
+ *   2.5.00  20-May-15  Updated Resource_Link_save to allow for changes in ID values
 */
 
 ###
@@ -309,15 +311,18 @@ class LTI_Data_Connector_MySQL extends LTI_Data_Connector {
     $time = time();
     $now = date("{$this->date_format} {$this->time_format}", $time);
     $settingsValue = serialize($resource_link->settings);
+    $key = $resource_link->getKey();
+    $id = $resource_link->getId();
+    $previous_id = $resource_link->getId(TRUE);
     if (is_null($resource_link->created)) {
       $sql = sprintf("INSERT INTO {$this->dbTableNamePrefix}" . LTI_Data_Connector::RESOURCE_LINK_TABLE_NAME . ' (consumer_key, context_id, ' .
                      'lti_context_id, lti_resource_id, title, settings, primary_consumer_key, primary_context_id, share_approved, created, updated) ' .
                      "VALUES (%s, %s, %s, %s, %s, '{$settingsValue}', %s, %s, {$approved}, '{$now}', '{$now}')",
-         LTI_Data_Connector::quoted($resource_link->getKey()), LTI_Data_Connector::quoted($resource_link->getId()),
+         LTI_Data_Connector::quoted($key), LTI_Data_Connector::quoted($id),
          LTI_Data_Connector::quoted($resource_link->lti_context_id), LTI_Data_Connector::quoted($resource_link->lti_resource_id),
          LTI_Data_Connector::quoted($resource_link->title),
          LTI_Data_Connector::quoted($resource_link->primary_consumer_key), LTI_Data_Connector::quoted($resource_link->primary_resource_link_id));
-    } else {
+    } else if ($id == $previous_id) {
       $sql = sprintf("UPDATE {$this->dbTableNamePrefix}" . LTI_Data_Connector::RESOURCE_LINK_TABLE_NAME . ' SET ' .
                      "lti_context_id = %s, lti_resource_id = %s, title = %s, settings = '{$settingsValue}', ".
                      "primary_consumer_key = %s, primary_context_id = %s, share_approved = {$approved}, updated = '{$now}' " .
@@ -325,7 +330,17 @@ class LTI_Data_Connector_MySQL extends LTI_Data_Connector {
          LTI_Data_Connector::quoted($resource_link->lti_context_id), LTI_Data_Connector::quoted($resource_link->lti_resource_id),
          LTI_Data_Connector::quoted($resource_link->title),
          LTI_Data_Connector::quoted($resource_link->primary_consumer_key), LTI_Data_Connector::quoted($resource_link->primary_resource_link_id),
-         LTI_Data_Connector::quoted($resource_link->getKey()), LTI_Data_Connector::quoted($resource_link->getId()));
+         LTI_Data_Connector::quoted($key), LTI_Data_Connector::quoted($id));
+    } else {
+      $sql = sprintf("UPDATE {$this->dbTableNamePrefix}" . LTI_Data_Connector::RESOURCE_LINK_TABLE_NAME . ' SET ' .
+                     "context_id = %s, lti_context_id = %s, lti_resource_id = %s, title = %s, settings = '{$settingsValue}', ".
+                     "primary_consumer_key = %s, primary_context_id = %s, share_approved = {$approved}, updated = '{$now}' " .
+                     'WHERE (consumer_key = %s) AND (context_id = %s)',
+         LTI_Data_Connector::quoted($id),
+         LTI_Data_Connector::quoted($resource_link->lti_context_id), LTI_Data_Connector::quoted($resource_link->lti_resource_id),
+         LTI_Data_Connector::quoted($resource_link->title),
+         LTI_Data_Connector::quoted($resource_link->primary_consumer_key), LTI_Data_Connector::quoted($resource_link->primary_resource_link_id),
+         LTI_Data_Connector::quoted($key), LTI_Data_Connector::quoted($previous_id));
     }
     $ok = mysql_query($sql);
     if ($ok) {
