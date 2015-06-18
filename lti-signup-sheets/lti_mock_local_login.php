@@ -2,7 +2,7 @@
 	/***********************************************
 	 ** LTI Application: "Signup Sheets"
 	 ** MOCK AUTHENTICATION "login" page to enable testing on localhost
-	 ** Author: David Keiser-Clark, Williams College OIT
+	 ** Author: David Keiser-Clark, Williams College
 	 ***********************************************/
 
 	require_once(dirname(__FILE__) . '/institution.cfg.php');

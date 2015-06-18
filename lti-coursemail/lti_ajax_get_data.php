@@ -1,7 +1,7 @@
 <?php
 
-	require_once('lti_lib.php');
-	require_once('util.php');
+	require_once(dirname(__FILE__) . '/lti_lib.php');
+	require_once(dirname(__FILE__) . '/util.php');
 
 	#------------------------------------------------#
 	# Fetch AJAX values

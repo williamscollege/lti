@@ -2,7 +2,7 @@
 	/***********************************************
 	 ** Project: "Course Email" (LTI application)
 	 ** Purpose: Easily email course participants using your preferred email client (i.e Gmail, Thunderbird, Outlook, Mac Mail, etc.)
-	 ** Author: Williams College OIT, David Keiser-Clark
+	 ** Author: David Keiser-Clark, Williams College
 	 ** Current features:
 	 **  - Global selector: select/deselect all course participants
 	 **  - Roles: select/deselect everyone, students, TA's, or teachers
@@ -28,8 +28,8 @@
 	 ***********************************************/
 
 
-	require_once('lti_lib.php');
-	require_once('util.php');
+	require_once(dirname(__FILE__) . '/lti_lib.php');
+	require_once(dirname(__FILE__) . '/util.php');
 
 	// Initialise database
 	$db = NULL;

@@ -1,7 +1,7 @@
 /***********************************************
- ** LTI: "Generic Kaltura Embed"
+ ** LTI Application: "Generic Kaltura Embed"
  ** Purpose: Build a dynamic LTI video player that will play the requested video based on Kaltura params (entry_id, wid) while leveraging Canvas LDAP authentication.
- ** Author: Williams College OIT, David Keiser-Clark
+ ** Author: David Keiser-Clark, Williams College
  ***********************************************/
 
 $(document).ready(function () {

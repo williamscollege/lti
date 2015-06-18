@@ -1,8 +1,8 @@
 <?php
 	/***********************************************
-	 ** LTI: "Generic Kaltura Embed"
+	 ** LTI Application: "Generic Kaltura Embed"
 	 ** Purpose: Build a dynamic LTI video player that will play the requested video based on Kaltura params (entry_id, wid) while leveraging Canvas LDAP authentication.
-	 ** Author: Williams College OIT, David Keiser-Clark
+	 ** Author: David Keiser-Clark, Williams College
 	 ** Current features:
 	 **  - Requires two Kaltura params (entry_id, wid)
 	 **  - Builds video player based on Kaltura params
@@ -10,7 +10,7 @@
 
 
 	require_once('lib.php');
-	require_once('util.php');
+	require_once(dirname(__FILE__) . '/util.php');
 
 	// Initialise database
 	$db = NULL;

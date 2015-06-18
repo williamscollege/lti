@@ -1,7 +1,7 @@
 /***********************************************
- ** LTI: "Course Email"
+ ** LTI Application: "Course Email"
  ** Purpose: Easily email course participants using your preferred email client (i.e Gmail, Thunderbird, Outlook, Mac Mail, etc.)
- ** Author: Williams College OIT, David Keiser-Clark
+ ** Author: David Keiser-Clark, Williams College
  ***********************************************/
 
 $(document).ready(function () {

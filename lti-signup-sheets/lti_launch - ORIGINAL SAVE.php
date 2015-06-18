@@ -6,10 +6,10 @@
 	 **    A request to launch this application from within the LMS results in the Tool Consumer attempting an LTI handshake with the Tool Provider.
 	 **    If successful, the user is allowed access to whatever permissions or features the application grants.
 	 **    If not successful, then an error message results and access is blocked.
-	 ** Author: David Keiser-Clark, Williams College OIT
+	 ** Author: David Keiser-Clark, Williams College
 	 ***********************************************/
 
-	# This page processes a launch request from an LTI tool consumer.
+	# This page processes a launch request from an LTI tool consumer
 
 	require_once(dirname(__FILE__) . '/institution.cfg.php');
 	require_once(dirname(__FILE__) . '/util.php');
