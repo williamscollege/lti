@@ -39,7 +39,7 @@
 	*/
 
 	/*
-	 * File refactored by: David Keiser-Clark, Williams College OIT (removed heredoc's, added bootstrap framework, added application variables)
+	 * File refactored by: David Keiser-Clark, Williams College (removed heredoc's, added bootstrap framework, added application variables)
 	*/
 
 	require_once(dirname(__FILE__) . '/lti_lib.php');

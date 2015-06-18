@@ -28,13 +28,13 @@
 */
 
 /*
- * This page processes a launch request from an LTI tool consumer.
+ * This page processes a launch request from an LTI tool consumer
  */
 
   require_once('lib.php');
 
 
-// Cancel any existing session
+// Session Maintenance: Cancel any existing session
   session_name(SESSION_NAME);
   session_start();
   $_SESSION = array();

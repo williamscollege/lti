@@ -1,10 +1,10 @@
 <?php
 	/***********************************************
-	 ** LTI: "Signup Sheets"
+	 ** LTI Application: "Signup Sheets"
 	 ** Purpose: This tool lets any user create a sheet with openings at specific times, and then allows other users to sign up for those openings.
 	 ** Purpose: This is analogous to a list of times and dates on a piece of paper that is passed around or posted on a door and on which people would put their name:
 	 ** Purpose: for example: signing up for a particular lab slot, scheduling office hours, picking a study group time, or more general things like planning a party.
-	 ** Author: David Keiser-Clark, Williams College OIT
+	 ** Author: David Keiser-Clark, Williams College
 	 ***********************************************/
 
 	require_once(dirname(__FILE__) . '/institution.cfg.php');
