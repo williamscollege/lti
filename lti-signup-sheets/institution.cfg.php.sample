@@ -12,9 +12,9 @@
 	define('FINGERPRINT_SALT', 'yoursalthere');
 
 	# Application folder path
-	define('APP_STR',       'lti-signup-sheets');
-	define('APP_FOLDER',    'http://localhost/'.APP_STR); // use HTTPS for live use
-	define('APP_ROOT_PATH', '/'.APP_STR);
+	define('APP_STR',       'folder/subdirectory');
+	define('APP_FOLDER',    'http://localhost/'.APP_STR); // Use HTTPS for live/staging servers!
+	define('APP_ROOT_PATH', '/' . APP_STR);
 
 	# Database connection
 	define('DB_SERVER', 'live_server_address');
@@ -41,13 +41,13 @@
 	# LTI Secret:			your-big-secret
 
 	# LTI application settings
-	define('LTI_APP_NAME',     'LTIYourAppName');
+	define('LTI_APP_NAME',     'LTI Your App Name');
 	define('LTI_FOLDER',       'lti/');
 	define('LTI_TOOL_CONSUMER_URL',        'https://institution.instructure.com/');
 	define('LTI_TOOL_CONSUMER_AUTH_TOKEN', 'Authorization: Bearer 1~TOKEN_HERE');
 
 	# LTI database connection
-	define('LTI_DB_NAME',     'mysql:host=localhost;dbname=lti_development_db');
+	define('LTI_DB_NAME',     'mysql:host=localhost;dbname=your_name_of_db');
 	define('LTI_DB_USERNAME', 'yourusername');
 	define('LTI_DB_PASSWORD', 'yourlivefancypassword');
 	define('LTI_DB_TABLENAME_PREFIX', '');
@@ -56,16 +56,16 @@
 	# External Content Delivery Network
 	# ---------------------------
 	# ***** Google CDN: https://developers.google.com/speed/libraries/devguide#jquery
-	define('PATH_JQUERY_JS', '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js');
-	define('PATH_JQUERYUI_JS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js');
-	define('PATH_JQUERYUI_CSS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/dot-luv/jquery-ui.min.css');
+	define('PATH_JQUERY_JS', '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
+	define('PATH_JQUERYUI_JS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js');
+	define('PATH_JQUERYUI_CSS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/dot-luv/jquery-ui.min.css');
 
 	# ---------------------------
 	# Local File Paths
 	# ---------------------------
 	# ***** Bootstrap: http://getbootstrap.com/
-	define('PATH_BOOTSTRAP_JS', APP_ROOT_PATH . '/js/bootstrap/js/bootstrap.min.js?rel=3.3.4');
-	define('PATH_BOOTSTRAP_CSS', APP_ROOT_PATH . '/js/bootstrap/css/bootstrap.min.css?rel=3.3.4');
+	define('PATH_BOOTSTRAP_JS', APP_ROOT_PATH . '/js/bootstrap/js/bootstrap.min.js?rel=3.3.5');
+	define('PATH_BOOTSTRAP_CSS', APP_ROOT_PATH . '/js/bootstrap/css/bootstrap.min.css?rel=3.3.5');
 	# ***** Bootstrap-Bootbox: http://bootboxjs.com/ (GitHub: https://github.com/makeusabrew/bootbox/releases)
 	define('PATH_BOOTSTRAP_BOOTBOX_JS', APP_ROOT_PATH . '/js/jquery/plugins/bootstrap-bootbox/bootbox.min.js?rel=4.4.0');
 	# ***** Bootstrap-Calendar: https://github.com/Serhioromano/bootstrap-calendar/releases (http://bootstrap-calendar.azurewebsites.net/)

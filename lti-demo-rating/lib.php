@@ -31,7 +31,7 @@
  * This page provides general functions to support the application.
  */
 
-  require_once('db.php');
+  require_once(dirname(__FILE__) . '/db.php');
 
 ###  Uncomment the next line to log error messages
 //  error_reporting(E_ALL);

@@ -1,8 +1,8 @@
 <?php
 	/***********************************************
-	 ** LTI Application: "Signup Sheets"
-	 ** About LTI: This application uses LTI to pass minimal user data from the user's authenticated session with the registered Tool Consumer (i.e. Instructure Canvas)
-	 **    This LTI must initially be registered with the Tool Consumer.
+	 ** Application: "Admin LTI Dashboard"
+	 ** About LTI: An application uses LTI to pass minimal user data from the user's authenticated session with the registered Tool Consumer (i.e. Instructure Canvas)
+	 **    An LTI must initially be registered with the Tool Consumer.
 	 **    A request to launch this application from within the LMS results in the Tool Consumer attempting an LTI handshake with the Tool Provider.
 	 **    If successful, the user is allowed access to whatever permissions or features the application grants.
 	 **    If not successful, then an error message results and access is blocked.

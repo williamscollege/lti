@@ -1,57 +1,52 @@
 <?php
 
-	# copy this file to config.php and replace the example values
-	# below with the ones appropriate for your institution
+	# ---------------------------
+	# copy this file to institution.cfg.php and replace the example values
+	# below with the ones appropriate for you institution
+	# ---------------------------
 
-	/***********************************************
-	 ** LTI: "Generic Kaltura Embed"
-	 ** Purpose: Configuration Settings
-	 ** Author: Williams College OIT, David Keiser-Clark
-	 ***********************************************/
+	# Application folder path
+	define('APP_STR',       'folder/subdirectory');
+	define('APP_FOLDER',    'http://localhost/'.APP_STR); // Use HTTPS for live/staging servers!
+	define('APP_ROOT_PATH', '/' . APP_STR);
 
-	define('LTI_TOOL_PROVIDER_SERVER_NAME', $_SERVER["SERVER_NAME"]);
+	# Institution Name
+	define('LANG_INSTITUTION_NAME', 'Your Institution');
+	define('LANG_AUTHOR_NAME', 'Your Name');
 
-	if ((LTI_TOOL_PROVIDER_SERVER_NAME == "localhost") OR (LTI_TOOL_PROVIDER_SERVER_NAME == "127.0.0.1")) {
+	# LTI application settings
+	define('LTI_APP_NAME',     'LTI Your App Name');
+	define('LTI_SESSION_NAME', 'PHPYourAppName');
+	define('LTI_FOLDER',       'lti/');
+	define('LTI_TOOL_CONSUMER_URL', 'https://institution.instructure.com/');
+	define('LTI_TOOL_CONSUMER_AUTH_TOKEN', 'none');
 
-		### LOCAL ###
+	# LTI database connection
+	define('LTI_DB_NAME',     'mysql:host=localhost;dbname=your_name_of_db');
+	define('LTI_DB_USERNAME', 'yourusername');
+	define('LTI_DB_PASSWORD', 'yourlocalfancypassword');
+	define('LTI_DB_TABLENAME_PREFIX', '');
 
-		# LTI Application Settings
-		define('LTI_APP_NAME', 'LTIYourAppName');
-		define('LTI_SESSION_NAME', 'PHPYourAppName');
-		define('LTI_FOLDER', 'lti');
-		define('LTI_TOOL_CONSUMER_URL', 'https://institution.instructure.com/');
-		define('LTI_TOOL_CONSUMER_AUTH_TOKEN', 'none');
+	# ---------------------------
+	# LTI LMS App Settings
+	# ---------------------------
+	# Configuration Type:	XML
+	# LTI Name:		pretty name
+	# LTI Key:		your-key-name
+	# LTI Secret:		your-big-secret
 
-		# LTI Database Connection
-		define('LTI_DB_NAME', 'mysql:dbname=rating;host=localhost'); // e.g. 'mysql:dbname=MyDb;host=localhost'
-		define('LTI_DB_USERNAME', 'yourusername');
-		define('LTI_DB_PASSWORD', 'yourlocalfancypassword');
-		define('LTI_DB_TABLENAME_PREFIX', '');
+	# ---------------------------
+	# External Content Delivery Network
+	# ---------------------------
+	# ***** Google CDN: https://developers.google.com/speed/libraries/devguide#jquery
+	define('PATH_JQUERY_JS', '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
+	define('PATH_JQUERYUI_JS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js');
+	define('PATH_JQUERYUI_CSS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/dot-luv/jquery-ui.min.css');
 
-	}
-	else {
-
-		### LIVE ###
-
-		# LTI LMS app settings
-		# LTI Name:		pretty name
-		# LTI Key:		your-key-name
-		# LTI Secret:		your-big-secret
-		# Configuration Type:	XML
-
-		# LTI Application Settings
-		define('LTI_APP_NAME', 'LTIYourAppName');
-		define('LTI_SESSION_NAME', 'PHPYourAppName');
-		define('LTI_FOLDER', 'lti/');
-		define('LTI_TOOL_CONSUMER_URL', 'https://institution.instructure.com/');
-		define('LTI_TOOL_CONSUMER_AUTH_TOKEN', 'Authorization: Bearer 1~TOKEN_HERE');
-
-		# LTI Database Connection
-		# TODO: Change or eliminate 'rating' DB
-		define('LTI_DB_NAME', 'mysql:dbname=rating;host=127.0.0.1');
-		define('LTI_DB_USERNAME', 'yourusername');
-		define('LTI_DB_PASSWORD', 'yourlivefancypassword');
-		define('LTI_DB_TABLENAME_PREFIX', '');
-
-	}
+	# ---------------------------
+	# Local File Paths
+	# ---------------------------
+	# ***** Bootstrap: http://getbootstrap.com/
+	define('PATH_BOOTSTRAP_JS', APP_ROOT_PATH . '/js/bootstrap/js/bootstrap.min.js?rel=3.3.5');
+	define('PATH_BOOTSTRAP_CSS', APP_ROOT_PATH . '/js/bootstrap/css/bootstrap.min.css?rel=3.3.5');
 

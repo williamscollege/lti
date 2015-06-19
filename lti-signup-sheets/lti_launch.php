@@ -109,7 +109,6 @@
 			}
 			$this->error_output = $msg;
 		}
-
 	}
 
 
@@ -130,3 +129,4 @@
 		$tool->reason = $_SESSION['error_message'];
 	}
 	$tool->handle_request();
+
