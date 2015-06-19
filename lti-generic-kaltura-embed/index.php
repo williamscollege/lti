@@ -9,7 +9,8 @@
 	 ***********************************************/
 
 
-	require_once('lib.php');
+	require_once(dirname(__FILE__) . '/config.php');
+	require_once(dirname(__FILE__) . '/lib.php');
 	require_once(dirname(__FILE__) . '/util.php');
 
 	// Initialise database
@@ -68,7 +69,6 @@
 	/* TEST OUTPUT:
 	echo '<br /><br /><strong>Debugging:</strong>';
 	echo "<br />HTTP_REFERER : " . $_SERVER['HTTP_REFERER'];
-	echo '<br />Tool Provider: ' . LTI_TOOL_PROVIDER_SERVER_NAME;
 	echo "<br />URL: " . $url;
 	echo "<br />Querystring: " . $querystring;
 	echo "<br />Querystring (array of values):";
@@ -112,14 +112,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Generic Kaltura Embed</title>
-	<!-- Bootstrap: ensure proper rendering and touch zooming -->
+	<title><?php echo LTI_APP_NAME; ?></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!-- CSS Framework: Bootstrap -->
-	<!-- CSS Custom -->
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<!-- JavaScript Bootstrap plugins (compiled) -->
-	<!-- JavaScript Custom -->
+	<meta name="description" content="<?php echo LTI_APP_NAME; ?>">
+	<meta name="author" content="<?php echo LANG_AUTHOR_NAME; ?>">
+	<!-- CSS: Framework -->
+	<!-- CSS: Plugins -->
+	<!-- jQuery: Framework -->
+	<!-- jQuery: Plugins -->
+	<!-- local JS -->
 </head>
 <body>
 

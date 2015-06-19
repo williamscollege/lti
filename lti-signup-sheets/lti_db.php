@@ -9,10 +9,9 @@
 	 ** Author: David Keiser-Clark, Williams College
 	 ***********************************************/
 
-	# This page provides functions for accessing the database.
+	# This page provides a function to verify that database connection exists
+
 	require_once(dirname(__FILE__) . '/institution.cfg.php');
-
-
 	require_once(dirname(__FILE__) . '/' . LTI_FOLDER . 'LTI_Tool_Provider.php');
 
 	# Modification needed for local development work

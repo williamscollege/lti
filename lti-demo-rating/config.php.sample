@@ -33,7 +33,7 @@
 
 
 	# LTI Application Settings
-	define('APP_NAME', 'LTIYourAppName');
+	define('APP_NAME', 'LTI Your App Name');
 	define('SESSION_NAME', 'PHPYourAppName');
 	define('LTI_FOLDER', 'lti/');
 	define('TOOL_CONSUMER_URL', 'https://institution.instructure.com/');

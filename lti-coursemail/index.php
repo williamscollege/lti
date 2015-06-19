@@ -28,6 +28,7 @@
 	 ***********************************************/
 
 
+	require_once(dirname(__FILE__) . '/config.php');
 	require_once(dirname(__FILE__) . '/lti_lib.php');
 	require_once(dirname(__FILE__) . '/util.php');
 
@@ -35,26 +36,24 @@
 	$db = NULL;
 	init($db);
 
-	/* TEST OUTPUT:
-		echo '<p>Tool Provider: ' . LTI_TOOL_PROVIDER_SERVER_NAME . '</p>';
-	*/
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Course Email</title>
-	<!-- Bootstrap: ensure proper rendering and touch zooming -->
+	<title><?php echo LTI_APP_NAME; ?></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!-- CSS Framework: Bootstrap -->
-	<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<!-- CSS Custom -->
-	<link href="css/coursemail.css" rel="stylesheet">
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<!-- JavaScript Bootstrap plugins (compiled) -->
-	<script src="../bootstrap/js/bootstrap.min.js"></script>
-	<!-- JavaScript Custom -->
-	<script src="js/coursemail.js" language="javascript"></script>
+	<meta name="description" content="<?php echo LTI_APP_NAME; ?>">
+	<meta name="author" content="<?php echo LANG_AUTHOR_NAME; ?>">
+	<!-- CSS: Framework -->
+	<link rel="stylesheet" href="<?php echo PATH_BOOTSTRAP_CSS; ?>" type="text/css" media="all">
+	<!-- CSS: Plugins -->
+	<link rel="stylesheet" href="<?php echo APP_ROOT_PATH; ?>/css/coursemail.css" type="text/css" media="all">
+	<!-- jQuery: Framework -->
+	<script src="<?php echo PATH_JQUERY_JS; ?>"></script>
+	<!-- jQuery: Plugins -->
+	<script src="<?php echo PATH_BOOTSTRAP_JS; ?>"></script>
+	<!-- local JS -->
+	<script src="<?php echo APP_ROOT_PATH; ?>/js/util.js"></script>
 </head>
 <body>
 <form name="frmCourseEmail" id="frmCourseEmail" role="form">

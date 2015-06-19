@@ -20,7 +20,7 @@
 		<title><?php echo $pageTitle . ' [' . LANG_APP_NAME . ']'; ?></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="<?php echo LANG_APP_NAME; ?>">
-		<meta name="author" content="Williams College OIT Project Group">
+		<meta name="author" content="<?php echo LANG_AUTHOR_NAME; ?>">
 		<!-- CSS: Framework -->
 		<link rel="stylesheet" href="<?php echo PATH_BOOTSTRAP_CSS; ?>" type="text/css" media="all">
 		<!-- CSS: Plugins -->
