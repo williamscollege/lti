@@ -16,14 +16,6 @@
 		<lticm:property name="tool_id">LTI-GenericKalturaEmbed</lticm:property>
 		<lticm:property name="privacy_level">public</lticm:property>
 		<lticm:property name="domain">williams.edu</lticm:property>
-		<lticm:options name="course_navigation">
-			<lticm:property name="url">https://apps2.williams.edu/lti-generic-kaltura-embed/launch.php</lticm:property>
-			<lticm:property name="icon_url">https://apps2.williams.edu/lti-generic-kaltura-embed/images/lti-wms-icon-logo.png</lticm:property>
-			<lticm:property name="default">enabled</lticm:property>
-			<lticm:property name="visibility">public</lticm:property>
-			<lticm:property name="text">Generic Kaltura Embed</lticm:property>
-			<lticm:property name="enabled">true</lticm:property>
-		</lticm:options>
 	</blti:extensions>
 	<cartridge_bundle identifierref="BLTI001_Bundle"/>
 	<cartridge_icon identifierref="BLTI001_Icon"/>
