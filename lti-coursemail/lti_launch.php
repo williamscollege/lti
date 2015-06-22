@@ -38,13 +38,13 @@
 				// These SESSION values are used in lti_lib.php and throughout the application
 
 				// Initialise the user session and persist values
-				$_SESSION['consumer_key']      = $tool_provider->consumer->getKey();
-				$_SESSION['resource_id']       = $tool_provider->resource_link->getId();
-				$_SESSION['user_consumer_key'] = $tool_provider->user->getResourceLink()->getConsumer()->getKey();
-				$_SESSION['user_id']           = $tool_provider->user->getId();
-				$_SESSION['isStudent']         = $tool_provider->user->isLearner();
+				$_SESSION['consumer_key']      = $this->consumer->getKey();
+				$_SESSION['resource_id']       = $this->resource_link->getId();
+				$_SESSION['user_consumer_key'] = $this->user->getResourceLink()->getConsumer()->getKey();
+				$_SESSION['user_id']           = $this->user->getId();
+				$_SESSION['isStudent']         = $this->user->isLearner();
 				// Store values from Tool Consumer (Instructure Canvas)
-				$_SESSION['custom_canvas_course_id'] = $tool_provider->resource_link->getSetting('custom_canvas_course_id', '');
+				$_SESSION['custom_canvas_course_id'] = $this->resource_link->getSetting('custom_canvas_course_id', '');
 
 				// echo '<pre>';print_r($_SESSION);echo '</pre>'; exit; // debugging
 				// echo '<pre>';print_r($this);echo '</pre>'; exit; // debugging

@@ -33,9 +33,9 @@
 		// These SESSION values are used in lti_lib.php and throughout the application
 
 		// Persist values
-		$_SESSION['consumer_key']         = "my_consumer_key"; // $tool_provider->consumer->getKey(); // LTI form value found in db [lti_consumer.consumer_key]
-		$_SESSION['resource_id']          = "my_resource_id"; // $tool_provider->resource_link->getId(); // LTI form value found in db [lti_context.lti_resource_id]
-		$_SESSION['userdata']['username'] = TESTINGUSER; // $tool_provider->resource_link->getSetting('custom_canvas_user_login_id', '');"" // LTI form value
+		$_SESSION['consumer_key']         = "my_consumer_key"; // $this->consumer->getKey(); // LTI form value found in db [lti_consumer.consumer_key]
+		$_SESSION['resource_id']          = "my_resource_id"; // $this->resource_link->getId(); // LTI form value found in db [lti_context.lti_resource_id]
+		$_SESSION['userdata']['username'] = TESTINGUSER; // $this->resource_link->getSetting('custom_canvas_user_login_id', '');"" // LTI form value
 		$_SESSION['isAuthenticated']      = TRUE; // this value is specific to application
 		$_SESSION['fingerprint']          = $FINGERPRINT; // this value is specific to application
 
