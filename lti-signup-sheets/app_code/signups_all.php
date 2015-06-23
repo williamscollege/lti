@@ -153,10 +153,10 @@
 								<div id="buttons_my_signups">
 									<!-- PrintArea: Print a specific div -->
 									<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_MySignups" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
-									<!-- Button: today -->
-									<a href="#" id="scroll-to-todayish-my-signups" type="button" class="btn btn-success btn-xs" title="go to date nearest today">today</a>&nbsp;
 									<!-- TOGGLE LINK: Show optional details -->
-									<a href="#" id="link_for_opening_details_1" type="button" class="btn btn-info btn-xs" title="toggle details">show details</a>
+									<a href="#" id="link_for_details_my_signups" type="button" class="btn btn-link btn-xs" title="toggle details">show details</a>&nbsp;&#124;
+									<!-- TOGGLE LINK: Show optional history -->
+									<a href="#" id="link_for_history_my_signups" type="button" class="btn btn-link btn-xs" title="toggle history">show history</a>
 								</div>
 								<div role="tabpanel" id="tabMySignups" class="tab-pane fade active in" aria-labelledby="tabMySignups">
 									<?php
@@ -184,7 +184,7 @@
 													if ($lastOpeningDate) {
 														echo '</div>' . "\n";
 													}
-													$relative_time_class = 'in-the-past';
+													$relative_time_class = 'in-the-past toggle_opening_history';
 													//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
 													if ($curOpeningDate == $todayYmd) {
 														$relative_time_class = 'in-the-present';
@@ -228,10 +228,10 @@
 								<div id="buttons_on_my_sheets">
 									<!-- PrintArea: Print a specific div -->
 									<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_OnMySheets" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
-									<!-- Button: today -->
-									<a href="#" id="scroll-to-todayish-others-signups" type="button" class="btn btn-success btn-xs" title="go to date nearest today">today</a>&nbsp;
 									<!-- TOGGLE LINK: Show optional details -->
-									<a href="#" id="link_for_opening_details_2" type="button" class="btn btn-info btn-xs" title="toggle details">show details</a>
+									<a href="#" id="link_for_details_others_signups" type="button" class="btn btn-link btn-xs" title="toggle details">show details</a>&nbsp;&#124;
+									<!-- TOGGLE LINK: Show optional history -->
+									<a href="#" id="link_for_history_others_signups" type="button" class="btn btn-link btn-xs" title="toggle history">show history</a>
 								</div>
 								<div role="tabpanel" id="tabOthersSignups" class="tab-pane fade active in" aria-labelledby="tabOthersSignups">
 									<?php
@@ -259,7 +259,7 @@
 													if ($lastOpeningDate) {
 														echo '</div>' . "\n";
 													}
-													$relative_time_class = 'in-the-past';
+													$relative_time_class = 'in-the-past toggle_opening_history';
 													//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
 													if ($curOpeningDate == $todayYmd) {
 														$relative_time_class = 'in-the-present';

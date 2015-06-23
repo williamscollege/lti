@@ -116,9 +116,6 @@ Purpose: Openings list styles
 
 #openings-list-container, #container-my-signups, #container-others-signups {
 	margin-top: -20px;
-	max-height: 591px;
-	overflow-y: scroll;
-	position: relative;
 }
 
 #openings-list-container .opening-list-for-date, #container-my-signups .opening-list-for-date, #container-others-signups .opening-list-for-date {
