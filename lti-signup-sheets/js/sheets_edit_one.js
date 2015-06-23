@@ -285,30 +285,21 @@ $(document).ready(function () {
 		});
 	}
 
-	$('#scroll-to-todayish-openings').click(function () {
-		scrollOpeningsListToTodayish();
+	// Set initial condition: hide history
+	$("#tabOpeningsList .toggle_opening_history").hide();
+
+	// Display optional history
+	$('#link_for_history_openings').click(function () {
+		if ($("#tabOpeningsList .toggle_opening_history").hasClass('wmsToggle')) {
+			// hide history
+			$("#tabOpeningsList .toggle_opening_history").removeClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
+			$("#link_for_history_openings").text('show history');
+		}
+		else {
+			// show history
+			$("#tabOpeningsList .toggle_opening_history").addClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
+			$("#link_for_history_openings").text('hide history');
+		}
 	});
-
-	function scrollOpeningsListToTodayish() {
-		var closestFutureOpeningsList = $('#openings-list-container .in-the-present');
-		//console.log(closestFutureOpeningsList);
-
-		if (!closestFutureOpeningsList.length) {
-			//console.log('no present - looking to the past');
-			closestFutureOpeningsList = $('#openings-list-container .in-the-past').prev();
-		}
-		//console.log(closestFutureOpeningsList);
-
-		if (!closestFutureOpeningsList.length) {
-			//console.log('no present nor past - looking to the future');
-			closestFutureOpeningsList = $('#openings-list-container .in-the-future').last();
-		}
-		//console.log(closestFutureOpeningsList);
-
-		if (closestFutureOpeningsList.length) {
-			$('#openings-list-container').scrollTop($('#openings-list-container').scrollTop() + $(closestFutureOpeningsList).position().top);
-		}
-		$(closestFutureOpeningsList).first().effect("highlight", {color: '#C9E5C9'}, 300);
-	}
 
 });

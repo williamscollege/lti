@@ -131,8 +131,8 @@
 									<div id="buttons_list_openings">
 										<!-- PrintArea: Print a specific div -->
 										<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_OpeningSignup" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
-										<!-- Button: today -->
-										<a href="#" id="scroll-to-todayish-openings" type="button" class="btn btn-success btn-xs" title="go to date nearest today">today</a>
+										<!-- TOGGLE LINK: Show optional history -->
+										<a href="#" id="link_for_history_openings" type="button" class="btn btn-link btn-xs" title="toggle history">show history</a>
 									</div>
 
 									<div id="openings-list-container">
@@ -157,7 +157,7 @@
 													}
 
 													// determine: past/present/future
-													$relative_time_class = 'in-the-past';
+													$relative_time_class = 'in-the-past toggle_opening_history';
 													if ($curOpeningDate == $todayYmd) {
 														$relative_time_class = 'in-the-present';
 													}
