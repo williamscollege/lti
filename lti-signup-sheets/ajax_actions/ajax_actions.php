@@ -634,8 +634,8 @@
 				// Queue messages for:
 				// Email owner on signup or cancel
 				// Email owner on upcoming signup
-				// Email admin on signup or cancel
-				// Email admin on upcoming signup
+				// Email admins on signup or cancel
+				// Email admins on upcoming signup
 				// TODO - Need to implement proper array values here
 				if ($obj->$sheet->flag_alert_owner_signup || $obj->$sheet->flag_alert_owner_imminent || $obj->$sheet->flag_alert_admin_signup || $obj->$sheet->flag_alert_admin_imminent) {
 					prep_for_QueuedMessage($DB, $u->user_id, $u->email, $subject, $body, $su->opening_id, $subject, $body, $opening->opening_id, $sheet->sheet_id);

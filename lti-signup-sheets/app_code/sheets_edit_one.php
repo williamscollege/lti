@@ -293,11 +293,11 @@
 												</label><br />
 												<label>
 													<input type="checkbox" id="checkAlertAdminSignup" name="checkAlertAdminSignup"<?php echo ($s && $s->flag_alert_admin_signup) ? ' checked="checked"' : ''; ?>>
-													Email <strong>admin</strong> on signup or cancel
+													Email <strong>admins</strong> on signup or cancel
 												</label><br />
 												<label>
 													<input type="checkbox" id="checkAlertAdminImminent" name="checkAlertAdminImminent"<?php echo ($s && $s->flag_alert_admin_imminent) ? ' checked="checked"' : ''; ?>>
-													Email <strong>admin</strong> on upcoming signup
+													Email <strong>admins</strong> on upcoming signup
 												</label>
 											</div>
 										</div>
@@ -328,7 +328,7 @@
 												<div class="radio small col-sm-12">
 													<label>
 														<input type="radio" id="radioSignupPrivacy1" name="radioSignupPrivacy" <?php echo ($s && $s->flag_private_signups == 0) ? " checked=\"checked\" " : ''; ?> value="0">
-														Users can see who signed up when
+														Users can see all signups
 													</label>
 												</div>
 												<div class="radio small col-sm-12">
@@ -342,141 +342,143 @@
 											<div class="form-group">
 												<u><strong>Who can sign up?</strong></u><br />
 
-												<!-- List: My Courses -->
-												<span class="small"><strong>People in these courses</strong><br /></span>
+												<div class="wms_indent_tiny">
+													<!-- List: My Courses -->
+													<span class="small"><strong>People in these courses</strong><br /></span>
 
-												<div id="access_by_course_enr_list" class="cb_list">
-													<div class="checkbox small col-sm-12">
-														<?php
-															$USER->cacheEnrollments();
-															if (count($USER->enrollments) == 0) {
-																echo "You are not enrolled in any courses.<br />";
-															}
-															else {
-																// fetch which courses, if any, that this user has already given access
-																$s->cacheAccess();
-																// iterate this user's enrollments
-																foreach ($USER->enrollments as $enr) {
-																	$checkboxSelected = "";
-
-																	// fetch any user granted access values for these courses
-																	foreach ($s->access as $a) {
-																		if ($a->type == "bycourse" && $a->constraint_data == $enr->course_idstr) {
-																			$checkboxSelected = " checked=\"checked\" ";
-																		}
-																	}
-																	echo "<label><input type=\"checkbox\" id=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_course_ckboxes\"  name=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"bycourse\" data-permval=\"" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "</label><br />";
+													<div id="access_by_course_enr_list" class="cb_list">
+														<div class="checkbox small col-sm-12">
+															<?php
+																$USER->cacheEnrollments();
+																if (count($USER->enrollments) == 0) {
+																	echo "You are not enrolled in any courses.<br />";
 																}
-															}
-														?>
-													</div>
-												</div>
+																else {
+																	// fetch which courses, if any, that this user has already given access
+																	$s->cacheAccess();
+																	// iterate this user's enrollments
+																	foreach ($USER->enrollments as $enr) {
+																		$checkboxSelected = "";
 
-												<!-- List: All Instructors -->
-												<div class="wms_tiny_break"><br /></div>
-												<span class="small"><strong>People in courses taught by</strong><br /></span>
-
-												<div id="access_by_instr_list" class="cb_list">
-													<div class="checkbox small col-sm-12">
-														<?php
-															// BEGIN: measure code execution
-															// $startCodeTimer = microtime(TRUE); // debugging
-
-															// Use Custom SQL to relieve bottleneck
-															$sql  = "SELECT DISTINCT users.* FROM enrollments INNER JOIN users ON enrollments.canvas_user_id = users.canvas_user_id WHERE enrollments.course_role_name = 'teacher' ORDER BY users.last_name ASC, users.first_name ASC;";
-															$stmt = $DB->prepare($sql);
-															$stmt->execute();
-															$instr_users = $stmt->fetchAll(PDO::FETCH_ASSOC); // TODO - still necessary to convert record set to an array?
-
-															// END: measure code execution
-															// echo "Custom SQL inner join: " . (microtime(TRUE) - $startCodeTimer) . "<br />"; // debugging
-
-															if (count($instr_users) == 0) {
-																echo "There are no instructors in any courses.<br />";
-															}
-															else {
-																// fetch which courses, if any, that this user has already given access
-																$s->cacheAccess();
-
-																// iterate this user's enrollments
-																foreach ($instr_users as $u) {
-																	$checkboxSelected = "";
-
-																	// fetch any user granted access values for these courses
-																	foreach ($s->access as $a) {
-																		// if ($a->type == "byinstr" && $a->constraint_id == $u->user_id) {
-																		if ($a->type == "byinstr" && $a->constraint_id == $u['user_id']) {
-																			$checkboxSelected = " checked=\"checked\" ";
+																		// fetch any user granted access values for these courses
+																		foreach ($s->access as $a) {
+																			if ($a->type == "bycourse" && $a->constraint_data == $enr->course_idstr) {
+																				$checkboxSelected = " checked=\"checked\" ";
+																			}
 																		}
+																		echo "<label><input type=\"checkbox\" id=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_course_ckboxes\"  name=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"bycourse\" data-permval=\"" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "</label><br />";
 																	}
-																	echo "<label><input type=\"checkbox\" id=\"access_by_instr_" . htmlentities($u['user_id'], ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_instructor_ckboxes\" name=\"access_by_instr_" . htmlentities($u['user_id'], ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"byinstr\" data-permval=\"" . htmlentities($u['user_id'], ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($u['first_name'], ENT_QUOTES, 'UTF-8') . " " . htmlentities($u['last_name'], ENT_QUOTES, 'UTF-8') . "</label><br />";
 																}
-															}
-														?>
+															?>
+														</div>
 													</div>
-												</div>
 
-												<!-- List: These People -->
-												<div class="wms_tiny_break"><br /></div>
+													<!-- List: All Instructors -->
+													<div class="wms_tiny_break"><br /></div>
+													<span class="small"><strong>People in courses taught by</strong><br /></span>
+
+													<div id="access_by_instr_list" class="cb_list">
+														<div class="checkbox small col-sm-12">
+															<?php
+																// BEGIN: measure code execution
+																// $startCodeTimer = microtime(TRUE); // debugging
+
+																// Use Custom SQL to relieve bottleneck
+																$sql  = "SELECT DISTINCT users.* FROM enrollments INNER JOIN users ON enrollments.canvas_user_id = users.canvas_user_id WHERE enrollments.course_role_name = 'teacher' ORDER BY users.last_name ASC, users.first_name ASC;";
+																$stmt = $DB->prepare($sql);
+																$stmt->execute();
+																$instr_users = $stmt->fetchAll(PDO::FETCH_ASSOC); // TODO - still necessary to convert record set to an array?
+
+																// END: measure code execution
+																// echo "Custom SQL inner join: " . (microtime(TRUE) - $startCodeTimer) . "<br />"; // debugging
+
+																if (count($instr_users) == 0) {
+																	echo "There are no instructors in any courses.<br />";
+																}
+																else {
+																	// fetch which courses, if any, that this user has already given access
+																	$s->cacheAccess();
+
+																	// iterate this user's enrollments
+																	foreach ($instr_users as $u) {
+																		$checkboxSelected = "";
+
+																		// fetch any user granted access values for these courses
+																		foreach ($s->access as $a) {
+																			// if ($a->type == "byinstr" && $a->constraint_id == $u->user_id) {
+																			if ($a->type == "byinstr" && $a->constraint_id == $u['user_id']) {
+																				$checkboxSelected = " checked=\"checked\" ";
+																			}
+																		}
+																		echo "<label><input type=\"checkbox\" id=\"access_by_instr_" . htmlentities($u['user_id'], ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_instructor_ckboxes\" name=\"access_by_instr_" . htmlentities($u['user_id'], ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"byinstr\" data-permval=\"" . htmlentities($u['user_id'], ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($u['first_name'], ENT_QUOTES, 'UTF-8') . " " . htmlentities($u['last_name'], ENT_QUOTES, 'UTF-8') . "</label><br />";
+																	}
+																}
+															?>
+														</div>
+													</div>
+
+													<!-- List: These People -->
+													<div class="wms_tiny_break"><br /></div>
 												<span class="small"><strong>These people: Williams username(s)</strong>
 													<button type="button" class="btn btn-xs btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
 														<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
 												</span>
-												<?php
-													// create array of usernames where access type = 'byuser'
-													$byuser_ary = [];
-													foreach ($s->access as $a) {
-														if ($a->type == "byuser") {
-															array_push($byuser_ary, $a->constraint_data);
-														}
-													}
-													sort($byuser_ary);
-													// util_prePrintR($byuser_ary);
-												?>
-
-												<div id="access_by_user">
-													<textarea id="textAccessByUserList" name="textAccessByUserList" data-permtype="byuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $byuser_ary); ?></textarea>
-												</div>
-
-												<!-- Bootstrap panel -->
-												<!-- List: People who are a -->
-												<div class="wms_tiny_break"><br /></div>
-												<span class="small"><strong>People who are a...</strong><br /></span>
-
-												<div id="access_by_role_list">
-													<div id="wms_panel_list" class="checkbox small col-sm-12">
-														<?php
-															// util_prePrintR($s->access);
-															// fetch any user granted access values for these courses
-															$checkboxSelected_byrole_teacher = "";
-															$checkboxSelected_byrole_student = "";
-															$checkboxSelected_byhasaccount   = "";
-															foreach ($s->access as $a) {
-																if ($a->type == "byrole" && $a->constraint_data == "teacher") {
-																	$checkboxSelected_byrole_teacher = " checked=\"checked\" ";
-																}
-																elseif ($a->type == "byrole" && $a->constraint_data == "student") {
-																	$checkboxSelected_byrole_student = " checked=\"checked\" ";
-																}
-																elseif ($a->type == "byhasaccount" && $a->constraint_data == "all") {
-																	$checkboxSelected_byhasaccount = " checked=\"checked\" ";
-																}
+													<?php
+														// create array of usernames where access type = 'byuser'
+														$byuser_ary = [];
+														foreach ($s->access as $a) {
+															if ($a->type == "byuser") {
+																array_push($byuser_ary, $a->constraint_data);
 															}
-														?>
-														<p>
-															<label>
-																<input type="checkbox" id="access_by_role_teacher" name="access_by_role_teacher" data-permtype="teacher" data-permval="byrole" title="Teacher of a course" <?php echo $checkboxSelected_byrole_teacher; ?>>
-																Teacher
-															</label>&nbsp;
-															<label>
-																<input type="checkbox" id="access_by_role_student" name="access_by_role_student" data-permtype="student" data-permval="byrole" title="Student in a course" <?php echo $checkboxSelected_byrole_student; ?>>
-																Student
-															</label>&nbsp;
-															<label>
-																<input type="checkbox" id="access_by_any" name="access_by_any" data-permtype="byhasaccount" data-permval="all" title="Any GLOW user" <?php echo $checkboxSelected_byhasaccount; ?>>
-																Glow user
-															</label>
-														</p>
+														}
+														sort($byuser_ary);
+														// util_prePrintR($byuser_ary);
+													?>
+
+													<div id="access_by_user">
+														<textarea id="textAccessByUserList" name="textAccessByUserList" data-permtype="byuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $byuser_ary); ?></textarea>
+													</div>
+
+													<!-- Bootstrap panel -->
+													<!-- List: People who are a -->
+													<div class="wms_tiny_break"><br /></div>
+													<span class="small"><strong>People who are a...</strong><br /></span>
+
+													<div id="access_by_role_list">
+														<div id="wms_panel_list" class="checkbox small col-sm-12">
+															<?php
+																// util_prePrintR($s->access);
+																// fetch any user granted access values for these courses
+																$checkboxSelected_byrole_teacher = "";
+																$checkboxSelected_byrole_student = "";
+																$checkboxSelected_byhasaccount   = "";
+																foreach ($s->access as $a) {
+																	if ($a->type == "byrole" && $a->constraint_data == "teacher") {
+																		$checkboxSelected_byrole_teacher = " checked=\"checked\" ";
+																	}
+																	elseif ($a->type == "byrole" && $a->constraint_data == "student") {
+																		$checkboxSelected_byrole_student = " checked=\"checked\" ";
+																	}
+																	elseif ($a->type == "byhasaccount" && $a->constraint_data == "all") {
+																		$checkboxSelected_byhasaccount = " checked=\"checked\" ";
+																	}
+																}
+															?>
+															<p>
+																<label>
+																	<input type="checkbox" id="access_by_role_teacher" name="access_by_role_teacher" data-permtype="teacher" data-permval="byrole" title="Teacher of a course" <?php echo $checkboxSelected_byrole_teacher; ?>>
+																	Teacher
+																</label>&nbsp;
+																<label>
+																	<input type="checkbox" id="access_by_role_student" name="access_by_role_student" data-permtype="student" data-permval="byrole" title="Student in a course" <?php echo $checkboxSelected_byrole_student; ?>>
+																	Student
+																</label>&nbsp;
+																<label>
+																	<input type="checkbox" id="access_by_any" name="access_by_any" data-permtype="byhasaccount" data-permval="all" title="Any GLOW user" <?php echo $checkboxSelected_byhasaccount; ?>>
+																	Glow user
+																</label>
+															</p>
+														</div>
 													</div>
 												</div>
 
@@ -484,26 +486,28 @@
 												<div class="form-group">
 													<u><strong>Who can manage this sheet?</strong></u><br />
 
-													<!-- List: These People -->
-													<span class="small"><strong>These people: Williams username(s)</strong>
-														<button type="button" class="btn btn-xs btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
-															<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
-													</span>
+													<div class="wms_indent_tiny">
+														<!-- List: These People -->
+														<span class="small"><strong>These people: Williams username(s)</strong>
+															<button type="button" class="btn btn-xs btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
+																<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
+														</span>
 
-													<?php
-														// create array of usernames where access type = 'adminbyuser'
-														$adminbyuser_ary = [];
-														foreach ($s->access as $a) {
-															if ($a->type == "adminbyuser") {
-																array_push($adminbyuser_ary, $a->constraint_data);
+														<?php
+															// create array of usernames where access type = 'adminbyuser'
+															$adminbyuser_ary = [];
+															foreach ($s->access as $a) {
+																if ($a->type == "adminbyuser") {
+																	array_push($adminbyuser_ary, $a->constraint_data);
+																}
 															}
-														}
-														sort($adminbyuser_ary);
-														// util_prePrintR($adminbyuser_ary);
-													?>
+															sort($adminbyuser_ary);
+															// util_prePrintR($adminbyuser_ary);
+														?>
 
-													<div id="access_by_user">
-														<textarea id="textAdminByUserList" name="textAdminByUserList" data-permtype="adminbyuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $adminbyuser_ary); ?></textarea>
+														<div id="access_by_user">
+															<textarea id="textAdminByUserList" name="textAdminByUserList" data-permtype="adminbyuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $adminbyuser_ary); ?></textarea>
+														</div>
 													</div>
 												</div>
 
@@ -565,7 +569,8 @@
 												<!-- PrintArea: Print a specific div -->
 												<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_EditOne" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
 												<!-- TOGGLE LINK: Show optional history -->
-												<a href="#" id="link_for_history_openings" type="button" class="btn btn-link btn-xs" title="toggle history">show history</a>
+												<a href="#" id="link_for_history_openings" type="button" class="btn btn-link btn-xs" title="toggle history">show
+													history</a>
 											</div>
 
 											<div id="openings-list-container">

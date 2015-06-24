@@ -11,8 +11,9 @@
 		// ***************************
 		// fetch available openings
 		// ***************************
+		$USER->loadMyAvailableSheetOpenings();
 		$USER->cacheMyAvailableSheetOpenings();
-		// util_prePrintR($USER->sheet_openings_all); // debugging
+		 util_prePrintR($USER->sheet_openings_all); // debugging
 
 
 		// display sheet_openings_all: "I can signup for..."
@@ -29,19 +30,25 @@
 			foreach ($USER->sheet_openings_all as $sheet) {
 
 				$base_sheet_link = "<a href=\"" . APP_ROOT_PATH . "/app_code/sheet_openings_signup.php?sheet=" . htmlentities($sheet['s_id'], ENT_QUOTES, 'UTF-8') . "\"  class=\"\" title=\"Signup for Openings\">" . htmlentities($sheet['s_name'], ENT_QUOTES, 'UTF-8') . "</a>";
+				// show the sheet owner's name
+				$person = User::getOneFromDb(['user_id' => $sheet["s_owner_user_id"]], $DB);
+				$base_sheet_link .= " (" . htmlentities($person->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($person->last_name, ENT_QUOTES, 'UTF-8');
+
 				// if exists, also show description
 				if ($sheet['s_description']){
-					$base_sheet_link .= " (" . htmlentities($sheet['s_description'], ENT_QUOTES, 'UTF-8') . ")";
+					$base_sheet_link .= ": <span class=\"text-muted\">&quot;" . htmlentities($sheet['s_description'], ENT_QUOTES, 'UTF-8') . "&quot;</span>";
 				}
+				// end visual parenthesis
+				$base_sheet_link .= ")";
 
 				// NOTE: the A) through G) leads on the keys are used to sort. The display trims the first 3 chars from the key.
 				switch ($sheet["a_type"]) {
 					case "byuser":
 						if (isset($other_based_sheets["A) I was specifically given access"])) {
-							$other_based_sheets["A) I was specifically given access"] .= "<li>$base_sheet_link</li>";
+							$other_based_sheets["A) I was given access"] .= "<li>$base_sheet_link</li>";
 						}
 						else {
-							$other_based_sheets["A) I was specifically given access"] = "<li>$base_sheet_link</li>";
+							$other_based_sheets["A) I was given access"] = "<li>$base_sheet_link</li>";
 						}
 						break;
 					case "bycourse":
@@ -73,38 +80,38 @@
 						}
 						break;
 					case "bygradyear":
-						if (isset($other_based_sheets["D) your grad year is {$sheet["a_constraint_data"]}"])) {
-							$other_based_sheets["D) your grad year is {$sheet["a_constraint_data"]}"] .= "<li>$base_sheet_link</li>";
+						if (isset($other_based_sheets["D) my grad year is {$sheet["a_constraint_data"]}"])) {
+							$other_based_sheets["D) my grad year is {$sheet["a_constraint_data"]}"] .= "<li>$base_sheet_link</li>";
 						}
 						else {
-							$other_based_sheets["D) your grad year is {$sheet["a_constraint_data"]}"] = "<li>$base_sheet_link</li>";
+							$other_based_sheets["D) my grad year is {$sheet["a_constraint_data"]}"] = "<li>$base_sheet_link</li>";
 						}
 						break;
 					case "byrole":
 						if ($sheet["a_constraint_data"] == "teacher") {
-							if (isset($other_based_sheets["E) I am teaching a course"])) {
-								$other_based_sheets["E) I am teaching a course"] .= "<li>$base_sheet_link</li>";
+							if (isset($other_based_sheets["E) I am a teacher"])) {
+								$other_based_sheets["E) I am a teacher"] .= "<li>$base_sheet_link</li>";
 							}
 							else {
-								$other_based_sheets["E) I am teaching a course"] = "<li>$base_sheet_link</li>";
+								$other_based_sheets["E) I am a teacher"] = "<li>$base_sheet_link</li>";
 							}
 						}
 						elseif ($sheet["a_constraint_data"] == "student") {
-							if (isset($other_based_sheets["F) I am a student in a course"])) {
-								$other_based_sheets["F) I am a student in a course"] .= "<li>$base_sheet_link</li>";
+							if (isset($other_based_sheets["F) I am a student"])) {
+								$other_based_sheets["F) I am a student"] .= "<li>$base_sheet_link</li>";
 							}
 							else {
-								$other_based_sheets["F) I am a student in a course"] = "<li>$base_sheet_link</li>";
+								$other_based_sheets["F) I am a student"] = "<li>$base_sheet_link</li>";
 							}
 
 						}
 						break;
 					case "byhasaccount":
-						if (isset($other_based_sheets["G) I have an account on "  . LMS_DOMAIN])) {
-							$other_based_sheets["G) I have an account on " . LMS_DOMAIN] .= "<li>$base_sheet_link</li>";
+						if (isset($other_based_sheets["G) I have an account"])) {
+							$other_based_sheets["G) I have an account"] .= "<li>$base_sheet_link</li>";
 						}
 						else {
-							$other_based_sheets["G) I have an account on " . LMS_DOMAIN] = "<li>$base_sheet_link</li>";
+							$other_based_sheets["G) I have an account"] = "<li>$base_sheet_link</li>";
 						}
 						break;
 					default:
@@ -133,7 +140,6 @@
 				// begin table
 				echo "<table class=\"table table-condensed table-bordered table-hover col-sm-12\">";
 				echo "<tr class=\"\"><th class=\"col-sm-6 info\">Sheets available because...</th></tr>";
-				echo "<tr><td>";
 
 				foreach ($other_based_sheets as $reason => $items) {
 					echo "<tr><td>";
