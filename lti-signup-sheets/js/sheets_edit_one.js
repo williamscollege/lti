@@ -53,8 +53,16 @@ $(document).ready(function () {
 			}
 		},
 		messages: {
-			inputSheetName: "Please enter a sheet name"
+			inputSheetName: {
+				required: "Please enter a sheet name",
+				minlength: "Please enter a longer sheet name"
+			}
 		},
+		//errorPlacement: function(label, element) {
+		//	label.addClass('wms-validation-fix');
+		//	label.insertAfter(element);
+		//},
+		//wrapper: 'span',
 		highlight: function (element) {
 			$(element).closest('.form-group').removeClass('success').addClass('error'); //.removeClass('success')
 		},
@@ -71,11 +79,9 @@ $(document).ready(function () {
 		//		$("div.error").hide();
 		//	}
 		//},
-		success: function (element) {
-			element
-			//.text('OK!').addClass('valid')
-			//.closest('.form-group').addClass('success').removeClass('error');//.addClass('success');
-		},
+		//success: function (element) {
+		//	//.text('OK!').addClass('valid')
+		//},
 		submitHandler: function (form) {
 			// show button loading text (bootstrap)
 			$("#btnSheetInfoSubmit").button('loading');

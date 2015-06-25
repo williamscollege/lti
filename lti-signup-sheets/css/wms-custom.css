@@ -468,8 +468,8 @@ UL.nav.nav-tabs LI A {
 /*Purpose: Legacy CSS to Extend/customize the CSS for jQuery 'validation.js' plugin
 /*=======================================*/
 LABEL.valid {
-	width: 24px;
-	height: 24px;
+	/*width: 24px;*/
+	/*height: 24px;*/
 	background: url(../img/valid.png) no-repeat center center;
 	display: inline-block;
 	text-indent: -9999px;
@@ -478,12 +478,12 @@ LABEL.valid {
 LABEL.error {
 	font-weight: bold;
 	color: #ff0000;
-	padding: 2px 8px;
-	margin-top: 2px;
+	padding: 0px 10px;
+	/*margin-top: 2px;*/
 }
 
 .text-warning {
 	color: #E17823;
 }
-
+/*.wms-validation-fix{}*/
 
