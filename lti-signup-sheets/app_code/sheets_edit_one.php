@@ -323,7 +323,7 @@
 										<!--DKC IMPORTANT (testing): set class to: 'tab-pane fade active in'-->
 										<div role="tabpanel" id="tabSheetAccess" class="tab-pane fade" aria-labelledby="tabSheetAccess">
 											<div class="form-group">
-												<u><strong>Who can see signups?</strong></u><br />
+												<strong>Who can see signups?</strong><br />
 
 												<div class="radio small col-sm-12">
 													<label>
@@ -340,7 +340,7 @@
 											</div>
 
 											<div class="form-group">
-												<u><strong>Who can sign up?</strong></u><br />
+												<strong>Who can sign up?</strong><br />
 
 												<div class="wms_indent_tiny">
 													<!-- List: My Courses -->
@@ -419,7 +419,7 @@
 
 													<!-- List: These People -->
 													<div class="wms_tiny_break"><br /></div>
-												<span class="small"><strong>These people: Williams username(s)</strong>
+												<span class="small"><strong>And/or this list of Williams usernames</strong>
 													<button type="button" class="btn btn-xs btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
 														<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
 												</span>
@@ -442,7 +442,7 @@
 													<!-- Bootstrap panel -->
 													<!-- List: People who are a -->
 													<div class="wms_tiny_break"><br /></div>
-													<span class="small"><strong>People who are a...</strong><br /></span>
+													<span class="small"><strong>And/or people in any course who are</strong><br /></span>
 
 													<div id="access_by_role_list">
 														<div id="wms_panel_list" class="checkbox small col-sm-12">
@@ -466,16 +466,16 @@
 															?>
 															<p>
 																<label>
-																	<input type="checkbox" id="access_by_role_teacher" name="access_by_role_teacher" data-permtype="teacher" data-permval="byrole" title="Teacher of a course" <?php echo $checkboxSelected_byrole_teacher; ?>>
-																	Teacher
+																	<input type="checkbox" id="access_by_role_teacher" name="access_by_role_teacher" data-permtype="teacher" data-permval="byrole" title="Teachers" <?php echo $checkboxSelected_byrole_teacher; ?>>
+																	Teachers
 																</label>&nbsp;
 																<label>
-																	<input type="checkbox" id="access_by_role_student" name="access_by_role_student" data-permtype="student" data-permval="byrole" title="Student in a course" <?php echo $checkboxSelected_byrole_student; ?>>
-																	Student
+																	<input type="checkbox" id="access_by_role_student" name="access_by_role_student" data-permtype="student" data-permval="byrole" title="Students" <?php echo $checkboxSelected_byrole_student; ?>>
+																	Students
 																</label>&nbsp;
 																<label>
-																	<input type="checkbox" id="access_by_any" name="access_by_any" data-permtype="byhasaccount" data-permval="all" title="Any GLOW user" <?php echo $checkboxSelected_byhasaccount; ?>>
-																	Glow user
+																	<input type="checkbox" id="access_by_any" name="access_by_any" data-permtype="byhasaccount" data-permval="all" title="Everyone (teachers, students, auditors, etc.)" <?php echo $checkboxSelected_byhasaccount; ?>>
+																	Everyone
 																</label>
 															</p>
 														</div>
@@ -484,11 +484,11 @@
 
 												<!-- Admin management-->
 												<div class="form-group">
-													<u><strong>Who can manage this sheet?</strong></u><br />
+													<strong>Who can manage this sheet?</strong><br />
 
 													<div class="wms_indent_tiny">
 														<!-- List: These People -->
-														<span class="small"><strong>These people: Williams username(s)</strong>
+														<span class="small"><strong>This list of Williams usernames</strong>
 															<button type="button" class="btn btn-xs btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
 																<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
 														</span>

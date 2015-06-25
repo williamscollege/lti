@@ -11,9 +11,8 @@
 		// ***************************
 		// fetch available openings
 		// ***************************
-		$USER->loadMyAvailableSheetOpenings();
 		$USER->cacheMyAvailableSheetOpenings();
-		 util_prePrintR($USER->sheet_openings_all); // debugging
+		// util_prePrintR($USER->sheet_openings_all); // debugging
 
 
 		// display sheet_openings_all: "I can signup for..."
@@ -29,12 +28,13 @@
 			$other_based_sheets  = [];
 			foreach ($USER->sheet_openings_all as $sheet) {
 
+				// show sheet name
 				$base_sheet_link = "<a href=\"" . APP_ROOT_PATH . "/app_code/sheet_openings_signup.php?sheet=" . htmlentities($sheet['s_id'], ENT_QUOTES, 'UTF-8') . "\"  class=\"\" title=\"Signup for Openings\">" . htmlentities($sheet['s_name'], ENT_QUOTES, 'UTF-8') . "</a>";
-				// show the sheet owner's name
+				// show sheet owner's name
 				$person = User::getOneFromDb(['user_id' => $sheet["s_owner_user_id"]], $DB);
 				$base_sheet_link .= " (" . htmlentities($person->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($person->last_name, ENT_QUOTES, 'UTF-8');
 
-				// if exists, also show description
+				// if exists: show sheet's description
 				if ($sheet['s_description']){
 					$base_sheet_link .= ": <span class=\"text-muted\">&quot;" . htmlentities($sheet['s_description'], ENT_QUOTES, 'UTF-8') . "&quot;</span>";
 				}
