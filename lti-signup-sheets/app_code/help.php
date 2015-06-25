@@ -269,7 +269,7 @@
 			here.</p>
 
 		<ul>
-			<li>People in these courses - This is a list of course in which you are enrolled, either as a student or a teacher. By checking the box next to a
+			<li>People in my courses - This is a list of course in which you are enrolled, either as a student or a teacher. By checking the box next to a
 				course you
 				allow anyone enrolled in that course to sign up on this sheet.
 			</li>

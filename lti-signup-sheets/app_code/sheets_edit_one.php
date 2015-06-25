@@ -344,7 +344,7 @@
 
 												<div class="wms_indent_tiny">
 													<!-- List: My Courses -->
-													<span class="small"><strong>People in these courses</strong><br /></span>
+													<span class="small"><strong>People in my courses</strong><br /></span>
 
 													<div id="access_by_course_enr_list" class="cb_list">
 														<div class="checkbox small col-sm-12">
@@ -375,7 +375,7 @@
 
 													<!-- List: All Instructors -->
 													<div class="wms_tiny_break"><br /></div>
-													<span class="small"><strong>People in courses taught by</strong><br /></span>
+													<span class="small"><strong>And/or people in courses taught by</strong><br /></span>
 
 													<div id="access_by_instr_list" class="cb_list">
 														<div class="checkbox small col-sm-12">
