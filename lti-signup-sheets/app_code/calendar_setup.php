@@ -817,7 +817,7 @@
 									<div class="col-sm-11">
 										<div class="pull-right signupSorters">
 											<!-- PrintArea: Print a specific div -->
-											<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_CalSetup" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
+											<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_CalSetup" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>
 											<span class="small">Sort by:
 												<a href="#" id="signup_sort_by_last_name" title="Sort by last name">Last name</a> &#124;
 												<a href="#" id="signup_sort_by_signup_order" title="Sort by signup order">Signup order</a>

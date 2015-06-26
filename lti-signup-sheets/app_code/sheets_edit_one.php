@@ -129,10 +129,7 @@
 			$s = SUS_Sheet::createNewSheet($USER->user_id, $DB);
 		}
 
-
 		echo "<div id=\"content_container\">"; // begin: div#content_container
-		// breadcrumbs
-		echo "<h5 class=\"small\"><a href=\"" . APP_ROOT_PATH . "/app_code/sheets_all.php\" title=\"" . ucfirst(util_lang('sheets_all')) . "\">" . ucfirst(util_lang('sheets_all')) . "</a>&nbsp;&gt;&nbsp;" . ($s->name != '' ? htmlentities($s->name, ENT_QUOTES, 'UTF-8') : 'New Sheet') . "</h5>";
 
 
 		// ***************************
@@ -141,7 +138,45 @@
 		$USER->cacheSheetgroups();
 		// util_prePrintR($USER->managed_sheets);
 
+
+		// ***************************
+		// breadcrumbs: begin
+		// ***************************
+		$available_sheets = "<select id=\"breadcrumbs_select_list\" class=\"input-sm\">";
+		// iterate: sheetgroups
+		foreach ($USER->sheetgroups as $sheetgroup) {
+			// optgroup: display sheetgroup
+			$available_sheets .= "<optgroup label=\"" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "\">";
+
+			// option: list each sheet
+			$sheetgroup->cacheSheets();
+			$flag_new_sheet = FALSE;
+			foreach ($sheetgroup->sheets as $sheet) {
+				// option: is new sheet?
+				if (!$flag_new_sheet) {
+					if(isset($_REQUEST["sheetgroup"]) AND $sheet->sheetgroup_id == $_REQUEST["sheetgroup"]){
+						if ($s->name == '') {
+							$available_sheets .= "<option value=\"\" selected=\"selected\">New Sheet</option>";
+							$flag_new_sheet = TRUE;
+						}
+					}
+				}
+
+				// is selected?
+				$str_selected = "";
+				if ($sheet->sheet_id == $s->sheet_id) {
+					$str_selected = " selected=\"selected\" ";
+				}
+				// option: list each sheet
+				$available_sheets .= "<option value=\"" . $sheet->sheet_id . "\"" . $str_selected . ">" . htmlentities($sheet->name, ENT_QUOTES, 'UTF-8') . "</option>";
+			}
+			$available_sheets .= "</optgroup>";
+		}
+		$available_sheets .= "</select>";
+		echo "<h5 class=\"small\"><a href=\"" . APP_ROOT_PATH . "/app_code/sheets_all.php\" title=\"" . ucfirst(util_lang('sheets_all')) . "\">" . ucfirst(util_lang('sheets_all')) . "</a>&nbsp;&gt;&nbsp;" . $available_sheets . "</h5>";
+		// breadcrumbs: end
 		?>
+
 		<div class="container">
 			<?php
 				// display error message, if exists
@@ -567,7 +602,7 @@
 										<div role="tabpanel" id="tabOpeningsList" class="tab-pane fade PrintArea wms_print_EditOne" aria-labelledby="tabOpeningsList">
 											<div id="buttons_list_openings">
 												<!-- PrintArea: Print a specific div -->
-												<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_EditOne" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
+												<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_EditOne" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>
 												<!-- TOGGLE LINK: Show optional history -->
 												<a href="#" id="link_for_history_openings" type="button" class="btn btn-link btn-xs" title="toggle history">show
 													history</a>
