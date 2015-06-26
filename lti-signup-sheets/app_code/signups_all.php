@@ -152,7 +152,7 @@
 								<!-- Begin: My Signups (Content) -->
 								<div id="buttons_my_signups">
 									<!-- PrintArea: Print a specific div -->
-									<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_MySignups" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
+									<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_MySignups" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>
 									<!-- TOGGLE LINK: Show optional details -->
 									<a href="#" id="link_for_details_my_signups" type="button" class="btn btn-link btn-xs" title="toggle details">show details</a>&nbsp;&#124;
 									<!-- TOGGLE LINK: Show optional history -->
@@ -227,7 +227,7 @@
 								<!-- Begin: Signups on my Sheets (Content) -->
 								<div id="buttons_on_my_sheets">
 									<!-- PrintArea: Print a specific div -->
-									<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_OnMySheets" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
+									<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_OnMySheets" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>
 									<!-- TOGGLE LINK: Show optional details -->
 									<a href="#" id="link_for_details_others_signups" type="button" class="btn btn-link btn-xs" title="toggle details">show details</a>&nbsp;&#124;
 									<!-- TOGGLE LINK: Show optional history -->

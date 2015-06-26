@@ -46,9 +46,33 @@
 		}
 
 		echo "<div id=\"content_container\">"; // begin: div#content_container
-		// breadcrumbs
-		echo "<h5 class=\"small\"><a href=\"" . APP_ROOT_PATH . "/app_code/sheet_openings_all.php\" title=\"" . ucfirst(util_lang('sheet_openings_all')) . "\">" . ucfirst(util_lang('sheet_openings_all')) . "</a>&nbsp;&gt;&nbsp;" . htmlentities($s->name, ENT_QUOTES, 'UTF-8') . "</h5>";
+
+
+		// ***************************
+		// fetch available openings
+		// ***************************
+		$USER->cacheMyAvailableSheetOpenings();
+		// util_prePrintR($USER->sheet_openings_all); // debugging
+
+
+		// ***************************
+		// breadcrumbs: begin
+		// ***************************
+		$available_sheets = "<select id=\"breadcrumbs_select_list\" class=\"input-sm\">";
+		foreach ($USER->sheet_openings_all as $sheet) {
+			// is selected?
+			$str_selected = "";
+			if ($sheet['s_id'] == $s->sheet_id) {
+				$str_selected = " selected=\"selected\" ";
+			}
+			// option: list each sheet
+			$available_sheets .= "<option value=\"" . $sheet['s_id'] . "\"" . $str_selected . ">" . htmlentities($sheet['s_name'], ENT_QUOTES, 'UTF-8') . "</option>";
+		}
+		$available_sheets .= "</select>";
+		echo "<h5 class=\"small\"><a href=\"" . APP_ROOT_PATH . "/app_code/sheet_openings_all.php\" title=\"" . ucfirst(util_lang('sheet_openings_all')) . "\">" . ucfirst(util_lang('sheet_openings_all')) . "</a>&nbsp;&gt;&nbsp;" . $available_sheets . "</h5>";
+		// breadcrumbs: end
 		?>
+
 		<div class="container">
 			<div class="row">
 				<!-- Basic Sheet Info / Sheet Access -->
@@ -130,9 +154,10 @@
 								<div role="tabpanel" id="tabOpeningsList" class="tab-pane fade PrintArea wms_print_OpeningSignup" aria-labelledby="tabOpeningsList">
 									<div id="buttons_list_openings">
 										<!-- PrintArea: Print a specific div -->
-										<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_OpeningSignup" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>&nbsp;
+										<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_OpeningSignup" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>
 										<!-- TOGGLE LINK: Show optional history -->
-										<a href="#" id="link_for_history_openings" type="button" class="btn btn-link btn-xs" title="toggle history">show history</a>
+										<a href="#" id="link_for_history_openings" type="button" class="btn btn-link btn-xs" title="toggle history">show
+											history</a>
 									</div>
 
 									<div id="openings-list-container">

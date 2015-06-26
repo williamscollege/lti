@@ -255,6 +255,13 @@ $(document).ready(function () {
 		$("#display_opening_signup_details").hide();
 	});
 
+	// select list: redirect to new page on change
+	$("#breadcrumbs_select_list").change(function () {
+		var cur_url = location.href;
+		var base_url = cur_url.split(".php");
+		location.href = ( base_url[0] + ".php?sheet=" + $(this).val() );
+	});
+
 
 	// ***************************
 	// helper functions

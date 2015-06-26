@@ -11,10 +11,9 @@
 		<h2>Frequently Asked Questions</h2>
 
 
-		<p>NOTE: Below is temporary text from Moodle help file</p>
+		<h4 class="text-capitalize text-danger">This outdated help page will be updated towards end of summer (2015).</h4>
+		<p>&nbsp;</p>
 
-		// NOTE: START placeholder text from old Moodle Signup Sheets help file
-		?>
 		<ul>
 			<li><a href="#SignupSheets-WhatareSignupSheets">What are Sign-up Sheets?</a></li>
 			<li><a href="#SignupSheets-WhocanuseSignupSheets">Who can use Sign-up Sheets?</a></li>
