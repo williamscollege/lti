@@ -380,7 +380,7 @@
 													<!-- List: My (current) Courses and/or (all) Organizations (within Canvas LMS, these are specified as sub-accounts)-->
 													<span class="small"><strong>People in my courses and/or organizations</strong><br /></span>
 
-													<div id="access_by_course_enr_list" class="cb_list_tall">
+													<div id="access_by_course_enr_list" class="cb_list">
 														<div class="checkbox small col-sm-12">
 															<?php
 																$USER->cacheEnrollments();
@@ -411,7 +411,7 @@
 													<div class="wms_tiny_break"><br /></div>
 													<span class="small"><strong>And/or people in courses taught by</strong><br /></span>
 
-													<div id="access_by_instr_list" class="cb_list_short">
+													<div id="access_by_instr_list" class="cb_list">
 														<div class="checkbox small col-sm-12">
 															<?php
 																// BEGIN: measure code execution
