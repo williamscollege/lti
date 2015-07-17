@@ -540,7 +540,7 @@
 														?>
 
 														<div id="access_by_user">
-															<textarea id="textAdminByUserList" name="textAdminByUserList" data-permtype="adminbyuser" class="form-control input-sm text-danger" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $adminbyuser_ary); ?></textarea>
+															<textarea style="border-color: red" id="textAdminByUserList" name="textAdminByUserList" data-permtype="adminbyuser" class="form-control input-sm text-danger" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $adminbyuser_ary); ?></textarea>
 														</div>
 													</div>
 												</div>
