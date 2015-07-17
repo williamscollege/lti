@@ -400,7 +400,16 @@
 																				$checkboxSelected = " checked=\"checked\" ";
 																			}
 																		}
-																		echo "<label><input type=\"checkbox\" id=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_course_ckboxes\"  name=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"bycourse\" data-permval=\"" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "</label><br />";
+																		// for organizations: show course short_name instead of variable length course_idstr
+																		// standard format of organization course_idstr is: "ORG-Some-Name-Here-20150715"
+																		if (substr($enr->course_idstr, 0, 3) == "ORG") {
+																			$course = Course::getOneFromDb(['canvas_course_id' => $enr->canvas_course_id], $DB);
+																			echo "<label><input type=\"checkbox\" id=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_course_ckboxes\"  name=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"bycourse\" data-permval=\"" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($course->short_name, ENT_QUOTES, 'UTF-8') . "</label><br />";
+																		}
+																		else {
+																			// all courses show the standard course_idstr
+																			echo "<label><input type=\"checkbox\" id=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_course_ckboxes\"  name=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"bycourse\" data-permval=\"" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "</label><br />";
+																		}
 																	}
 																}
 															?>
