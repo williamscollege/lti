@@ -45,23 +45,16 @@ div.wms_tiny_break {
 }
 
 /*custom combo-box*/
-.cb_list_short {
+.cb_list {
 	border: 1px solid #DDD;
 	overflow: auto;
-	height: 70px;
-	padding: 0px !important;
-	margin: 0px !important;
-}
-.cb_list_tall {
-	border: 1px solid #DDD;
-	overflow: auto;
-	height: 110px;
+	height: 90px;
 	padding: 0px !important;
 	margin: 0px !important;
 }
 
 /*custom combo-box: create custom padding for DIV contents inside this combo-box*/
-.cb_list_short DIV, .cb_list_tall DIV, #wms_panel_list {
+.cb_list DIV, #wms_panel_list {
 	margin-top: 0 !important;
 	margin-bottom: 0 !important;
 }
