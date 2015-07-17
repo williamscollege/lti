@@ -5,7 +5,9 @@ $CFG{'DB_NAME'} = 'signup_sheets';
 $CFG{'DB_USER'} = 'someusernamewithinsertupdateanddeleteprivs';
 $CFG{'DB_PASS'} = 'somepassword';
 
-$CFG{'CANVAS_ACCOUNT'} = '99999';
+$CFG{'CANVAS_ACCOUNT'} = '99999';						# main institutional account
+$CFG{'CANVAS_SUBACCOUNT_ORGS'} = '1111111';				# institutional sub-account
+$CFG{'CANVAS_SUBACCOUNT_SUMMERCOURSES'} = '1111112';	# institutional sub-account
 
 $CFG{'CURL_TARGET_HOST'} = 'institution.instructure.com';
 $CFG{'CURL_AUTH_TOKEN'} = 'Authorization: Bearer yourauthorizationbearertokenstring';
