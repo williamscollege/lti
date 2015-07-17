@@ -237,7 +237,7 @@ CREATE TABLE IF NOT EXISTS `sus_access` (
 	`sheet_id` bigint(10) unsigned default NULL,
 	`type` varchar(48) default NULL,
 	`constraint_id` bigint(10) unsigned default NULL,
-	`constraint_data` varchar(32) default NULL,
+	`constraint_data` varchar(255) default NULL,
 	`broadness` int(11) default NULL,
 	INDEX `sheet_id` (`sheet_id`),
 	INDEX `type` (`type`),

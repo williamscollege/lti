@@ -154,14 +154,13 @@
 			foreach ($sheetgroup->sheets as $sheet) {
 				// option: is new sheet?
 				if (!$flag_new_sheet) {
-					if(isset($_REQUEST["sheetgroup"]) AND $sheet->sheetgroup_id == $_REQUEST["sheetgroup"]){
+					if (isset($_REQUEST["sheetgroup"]) AND $sheet->sheetgroup_id == $_REQUEST["sheetgroup"]) {
 						if ($s->name == '') {
 							$available_sheets .= "<option value=\"\" selected=\"selected\">New Sheet</option>";
 							$flag_new_sheet = TRUE;
 						}
 					}
 				}
-
 				// is selected?
 				$str_selected = "";
 				if ($sheet->sheet_id == $s->sheet_id) {
@@ -378,15 +377,15 @@
 												<strong>Who can sign up?</strong><br />
 
 												<div class="wms_indent_tiny">
-													<!-- List: My Courses -->
-													<span class="small"><strong>People in my courses</strong><br /></span>
+													<!-- List: My (current) Courses and/or (all) Organizations (within Canvas LMS, these are specified as sub-accounts)-->
+													<span class="small"><strong>People in my courses and/or organizations</strong><br /></span>
 
-													<div id="access_by_course_enr_list" class="cb_list">
+													<div id="access_by_course_enr_list" class="cb_list_tall">
 														<div class="checkbox small col-sm-12">
 															<?php
 																$USER->cacheEnrollments();
 																if (count($USER->enrollments) == 0) {
-																	echo "You are not enrolled in any courses.<br />";
+																	echo "You are not enrolled in any courses or organizations.<br />";
 																}
 																else {
 																	// fetch which courses, if any, that this user has already given access
@@ -412,7 +411,7 @@
 													<div class="wms_tiny_break"><br /></div>
 													<span class="small"><strong>And/or people in courses taught by</strong><br /></span>
 
-													<div id="access_by_instr_list" class="cb_list">
+													<div id="access_by_instr_list" class="cb_list_short">
 														<div class="checkbox small col-sm-12">
 															<?php
 																// BEGIN: measure code execution
@@ -518,8 +517,8 @@
 												</div>
 
 												<!-- Admin management-->
-												<div class="form-group">
-													<strong>Who can manage this sheet?</strong><br />
+												<div class="form-group text-danger">
+													<strong>Who can <u>manage</u> this sheet?</strong><br />
 
 													<div class="wms_indent_tiny">
 														<!-- List: These People -->
@@ -541,7 +540,7 @@
 														?>
 
 														<div id="access_by_user">
-															<textarea id="textAdminByUserList" name="textAdminByUserList" data-permtype="adminbyuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $adminbyuser_ary); ?></textarea>
+															<textarea id="textAdminByUserList" name="textAdminByUserList" data-permtype="adminbyuser" class="form-control input-sm text-danger" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $adminbyuser_ary); ?></textarea>
 														</div>
 													</div>
 												</div>
