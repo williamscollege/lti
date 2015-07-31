@@ -154,9 +154,11 @@
 									<!-- PrintArea: Print a specific div -->
 									<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_MySignups" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>
 									<!-- TOGGLE LINK: Show optional details -->
-									<a href="#" id="link_for_details_my_signups" type="button" class="btn btn-link btn-xs" title="toggle details">show details</a>&nbsp;&#124;
+									<a href="#" id="link_for_details_my_signups" type="button" class="btn btn-link btn-xs" title="toggle details">show
+										details</a>&nbsp;&#124;
 									<!-- TOGGLE LINK: Show optional history -->
-									<a href="#" id="link_for_history_my_signups" type="button" class="btn btn-link btn-xs" title="toggle history">show history</a>
+									<a href="#" id="link_for_history_my_signups" type="button" class="btn btn-link btn-xs" title="toggle history">show
+										history</a>
 								</div>
 								<div role="tabpanel" id="tabMySignups" class="tab-pane fade active in" aria-labelledby="tabMySignups">
 									<?php
@@ -170,9 +172,10 @@
 										else {
 											echo '<div id="container-my-signups">' . "\n";
 
-											$lastOpeningDate = '';
-											$daysOpenings    = [];
-											$todayYmd        = explode(' ', util_currentDateTimeString())[0];
+											$flagFutureMySignups = FALSE;
+											$lastOpeningDate     = '';
+											$daysOpenings        = [];
+											$todayYmd            = explode(' ', util_currentDateTimeString())[0];
 											foreach ($USER->signups_all as $signup) {
 												$curOpeningDate = explode(' ', $signup['begin_datetime'])[0];
 												if ($curOpeningDate != $lastOpeningDate) {
@@ -188,9 +191,11 @@
 													//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
 													if ($curOpeningDate == $todayYmd) {
 														$relative_time_class = 'in-the-present';
+														$flagFutureMySignups = TRUE; // set boolean flag
 													}
 													elseif ($curOpeningDate > $todayYmd) {
 														$relative_time_class = 'in-the-future';
+														$flagFutureMySignups = TRUE; // set boolean flag
 													}
 													echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($signup['begin_datetime']), "m/d/Y") . '</h4>';
 													$daysOpenings = [];
@@ -203,6 +208,12 @@
 												echo renderAsHtmlForMySignups($op);
 											}
 											echo '</div>' . "\n"; // end: .opening-list-for-date
+
+											// display placeholder message
+											if (!$flagFutureMySignups) {
+												echo '<div class="opening-list-for-date in-the-future"><br /><em>There are no signups for future dates.</em></div>';
+											}
+
 											echo '</div>' . "\n"; // end: #container-my-signups
 										}
 									?>
@@ -229,9 +240,11 @@
 									<!-- PrintArea: Print a specific div -->
 									<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_OnMySheets" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>
 									<!-- TOGGLE LINK: Show optional details -->
-									<a href="#" id="link_for_details_others_signups" type="button" class="btn btn-link btn-xs" title="toggle details">show details</a>&nbsp;&#124;
+									<a href="#" id="link_for_details_others_signups" type="button" class="btn btn-link btn-xs" title="toggle details">show
+										details</a>&nbsp;&#124;
 									<!-- TOGGLE LINK: Show optional history -->
-									<a href="#" id="link_for_history_others_signups" type="button" class="btn btn-link btn-xs" title="toggle history">show history</a>
+									<a href="#" id="link_for_history_others_signups" type="button" class="btn btn-link btn-xs" title="toggle history">show
+										history</a>
 								</div>
 								<div role="tabpanel" id="tabOthersSignups" class="tab-pane fade active in" aria-labelledby="tabOthersSignups">
 									<?php
@@ -245,6 +258,7 @@
 										else {
 											echo '<div id="container-others-signups">' . "\n";
 
+											$flagFutureOnMySheets = FALSE;
 											$lastOpeningDate = '';
 											$daysOpenings    = [];
 											$todayYmd        = explode(' ', util_currentDateTimeString())[0];
@@ -263,9 +277,11 @@
 													//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
 													if ($curOpeningDate == $todayYmd) {
 														$relative_time_class = 'in-the-present';
+														$flagFutureOnMySheets = TRUE; // set boolean flag
 													}
 													elseif ($curOpeningDate > $todayYmd) {
 														$relative_time_class = 'in-the-future';
+														$flagFutureOnMySheets = TRUE; // set boolean flag
 													}
 													echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($signup['begin_datetime']), "m/d/Y") . '</h4>';
 													$daysOpenings = [];
@@ -279,6 +295,12 @@
 												echo renderAsHtmlForOthersSignups($op);
 											}
 											echo '</div>' . "\n"; // end: .opening-list-for-date
+
+											// display placeholder message
+											if (!$flagFutureOnMySheets) {
+												echo '<div class="opening-list-for-date in-the-future"><br /><em>There are no signups for future dates.</em></div>';
+											}
+
 											echo '</div>' . "\n"; // end: #container-others-signups
 										}
 									?>
