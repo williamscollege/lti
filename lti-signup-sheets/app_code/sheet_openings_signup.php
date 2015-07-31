@@ -163,6 +163,7 @@
 									<div id="openings-list-container">
 										<?php
 											$s->cacheOpenings();
+											$flagFutureOpeningSignup = FALSE;
 											$lastOpeningDate = '';
 											$daysOpenings    = [];
 											$todayYmd        = explode(' ', util_currentDateTimeString())[0];
@@ -185,9 +186,11 @@
 													$relative_time_class = 'in-the-past toggle_opening_history';
 													if ($curOpeningDate == $todayYmd) {
 														$relative_time_class = 'in-the-present';
+														$flagFutureOpeningSignup = TRUE; // set boolean flag
 													}
 													elseif ($curOpeningDate > $todayYmd) {
 														$relative_time_class = 'in-the-future';
+														$flagFutureOpeningSignup = TRUE; // set boolean flag
 													}
 													echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($opening->begin_datetime), "m/d/Y") . '</h4>';
 													$daysOpenings = [];
@@ -204,6 +207,11 @@
 												echo $op->renderAsHtmlOpeningWithLimitedControls($USER->user_id) . "\n";
 											}
 											echo '</div>' . "\n";
+
+											// display placeholder message
+											if (!$flagFutureOpeningSignup) {
+												echo '<div class="opening-list-for-date in-the-future"><br /><em>There are no openings for future dates.</em></div>';
+											}
 										?>
 
 									</div>

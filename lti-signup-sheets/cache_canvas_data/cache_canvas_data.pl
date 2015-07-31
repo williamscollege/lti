@@ -7,8 +7,6 @@
 # is designed to run on a repeated basis (e.g. a few times a day via
 # cron) to maintain a local cache of this info.
 
-# TO RUN: nohup ./cache_canvas_data.pl > LOG_cache_canvas_data.txt &
-
 #######################################################################
 # NOTE: this process has little to no security! Values from curl calls
 # are inserted directly into the DB inside SQL statement with minimal
@@ -29,7 +27,7 @@ use lib "$Bin/JSON-2.53/lib";
 
 use JSON;
 
-my $LOG_LEVEL = 1; # 0=run silently; 1=typical logging for cron-based runs; 2-3=richer logging level; 4-10=generally debugging/dev logging levels
+my $LOG_LEVEL = 3; # 0=run silently; 1=typical logging for cron-based runs; 2-3=richer logging level; 4-10=generally debugging/dev logging levels
 
 our %CFG = ();
 require "$Bin/CONFIG_cache_canvas_data.pl";
@@ -46,7 +44,7 @@ my $CURRENT_DATE_TZ = "$year-$month-$day".'T00:00:00-05:00Z';
 
 my $GLOBAL_curl_calls = 0;
 
-myLog(1,"\n---------------\n$CURRENT_DATE collect_canvas_data.pl");
+myLog(1,"\n========================================================================\n========================================================================\n$CURRENT_DATE collect_canvas_data.pl START AT ".localtime());
 
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------
@@ -145,7 +143,7 @@ foreach my $canvas_term_data (@canvas_terms) {
 
     $terms_map_canvas_to_idstr{$canvas_term_id} = $idstr;
 
-    if ($end ge $CURRENT_DATE) {
+    if (1==0 || $end ge $CURRENT_DATE) {
 	$num_terms_live++;
 	$live_terms{$canvas_term_data->{'sis_term_id'}} = $canvas_term_id;
     }
@@ -279,15 +277,27 @@ while (my @db_course_data = $courses_result->fetchrow_array) {
 #print Dumper(\%db_courses);
 #exit;
 
-# 1. get all the courses from canvas using a curl call
+# 1 fetch all the organizations (regardless of term stuff)
+# 1.5 get all the courses from canvas using a curl call
 # 2. parse the json into a useable data structure
 my @canvas_courses = ();
+
+getCanvasCoursesForSubAccounts(\@canvas_courses);
+
+# print Dumper(\@canvas_courses);
+# exit;
+
 #foreach my $term_canvas_id (values(%live_terms)) {
 foreach my $live_term (keys(%live_terms)) {
-    myLog(2,"live term $live_term canvas term id: $live_terms{$live_term}");
+    myLog(3,"getting courses for live term $live_term, canvas term id: $live_terms{$live_term}");
 #    getCanvasCoursesArray($term_canvas_id,\@canvas_courses);
     getCanvasCoursesArray($live_terms{$live_term},\@canvas_courses);
 }
+
+
+#curl 'https://williams.instructure.com/api/v1/accounts/98616/courses' -X GET -F 'per_page=100' -F 'page=1' -F 'by_subaccounts[]=131002' -F 'by_subaccounts[]=137352' -H 'Authorization: Bearer 1~oYy3YtyYwR5SahHcaJYNXkNpKmTjNYwjWwHEDwaxuGBfPS6GwMBlYaAsriuxD8IK'
+
+
 #print Dumper(\@canvas_courses);
 myLog(3,"canvas course count is ".(scalar @canvas_courses));
 #exit;
@@ -302,6 +312,7 @@ foreach my $canvas_course_data (@canvas_courses) {
     $num_courses_canvas++;
     #print Dumper($canvas_course_data);
     #exit;
+#    my $course_idstr = $canvas_course_data->{'course_code'};
     my $course_idstr = $canvas_course_data->{'sis_course_id'};
     if (! $course_idstr) {
 	$course_idstr = 'UNKNOWN';
@@ -405,6 +416,7 @@ foreach my $live_course_canvas_id (keys(%live_courses)) {
 	$db_enrollments{$combo_key}->{'canvas_course_id'} = $db_enrollment_data[2];
 	$db_enrollments{$combo_key}->{'canvas_role_name'} = $db_enrollment_data[3];
 	$db_enrollments{$combo_key}->{'course_idstr'} = $db_enrollment_data[4];
+#	$db_enrollments{$combo_key}->{'user_id'} = $db_enrollment_data[5];
 	$db_enrollments{$combo_key}->{'course_role_name'} = $db_enrollment_data[6];
 	$db_enrollments{$combo_key}->{'section_idstr'} = $db_enrollment_data[7];
     }
@@ -435,6 +447,7 @@ foreach my $live_course_canvas_id (keys(%live_courses)) {
 	    $inserts{$combo_key}->{'canvas_course_id'} = $canvas_enrollment->{'course_id'};
 	    $inserts{$combo_key}->{'canvas_role_name'} = $canvas_enrollment->{'role'};
 	    $inserts{$combo_key}->{'course_idstr'} = $live_courses{$canvas_enrollment->{'course_id'}};
+#	    $inserts{$combo_key}->{'user_id'} = $live_users{$canvas_enrollment->{'user_id'}};
 
 	    if ($inserts{$combo_key}->{'canvas_role_name'} eq 'TeacherEnrollment') {
 		$inserts{$combo_key}->{'course_role_name'} = 'teacher';
@@ -459,11 +472,15 @@ foreach my $live_course_canvas_id (keys(%live_courses)) {
 #    ???? f) run the updates - NOTE: I don't think there are actually any updates to run - just adds and deletes (update --> ignore)
 
 #    g) run the inserts
+#    my $insert_enrollments_sql = "INSERT INTO enrollments (canvas_user_id,canvas_course_id,canvas_role_name,course_idstr,user_id,course_role_name,section_idstr)";
     my $insert_enrollments_sql = "INSERT INTO enrollments (canvas_user_id,canvas_course_id,canvas_role_name,course_idstr,course_role_name,section_idstr)";
     my $values_prefix = ' VALUES ';
     my $num_inserted = 0;
     foreach my $ins_key (keys(%inserts)) {
 	my $e = $inserts{$ins_key};
+#	if (! $e->{'user_id'}) {
+#	    $e->{'user_id'} = -1;
+#	}
 	$insert_enrollments_sql .= "$values_prefix($e->{'canvas_user_id'},$e->{'canvas_course_id'},'$e->{'canvas_role_name'}','$e->{'course_idstr'}','$e->{'course_role_name'}','$e->{'section_idstr'}')";
 	$values_prefix = ' ,';
 	$num_inserted++;
@@ -476,6 +493,8 @@ foreach my $live_course_canvas_id (keys(%live_courses)) {
 myLog(1,"*  enrollments from canvas: $enrollments_canvas; enrollments inserted: $enrollments_inserts; enrollments deleted: $enrollments_deletes");
 
 myLog(1,"*  total curl calls: $GLOBAL_curl_calls");
+
+myLog(1,"\ncollect_canvas_data.pl STOP AT ".localtime()."\n========================================================================\n========================================================================");
 
 exit;
 
@@ -562,7 +581,10 @@ sub getCanvasUsersArray {
     
         # 2. parse the json into a useable data structure
 	# done if it's empty, otherwise append it to our accumulator
-	@user_set = @{(decode_json($canvas_users_json))};
+#	@user_set = ();
+#	if (! (0 === strpos($canvas_users_json,'(end of string)'))) {
+	    @user_set = @{(decode_json($canvas_users_json))};
+#	}
 	myLog(10,"page # $users_page; user set has ".(scalar @user_set));
 	if (! @user_set) {
 	    last;
@@ -612,6 +634,48 @@ sub getCanvasCoursesArray {
     }
 }
 
+sub getCanvasCoursesForSubAccounts {
+    my ($courses_array_ref) = @_;    
+
+    # loop to fetch 100 at a time, accumulating until none returned
+    my @course_set = ();
+    my $courses_page = 1;
+    while ($courses_page < 100) {
+
+	# 1. get the courses from canvas using a curl call
+
+	my $curl_call = "curl -s -H '$CFG{'CURL_AUTH_TOKEN'}' -X GET -F 'per_page=100' -F 'page=$courses_page'";
+	foreach my $sub_acct_name (keys(%{$CFG{'CANVAS_SUBACCOUNTS'}})) {
+	    $curl_call .= " -F 'by_subaccounts[]=".$CFG{'CANVAS_SUBACCOUNTS'}->{$sub_acct_name}."'";
+	}
+	$curl_call .= " 'https://$CFG{'CURL_TARGET_HOST'}/api/v1/accounts/$CFG{'CANVAS_ACCOUNT'}/courses'";
+
+	myLog(8,"\n-----------\ncurl $curl_call\n-----------");
+
+	my $canvas_courses_json = `curl $curl_call`;
+	$GLOBAL_curl_calls++;
+	
+	myLog(10,"canvas courses JSON:\n$canvas_courses_json");
+	#exit;
+    
+        # 2. parse the json into a useable data structure
+	# done if it's empty, otherwise append it to our accumulator
+	@course_set = @{(decode_json($canvas_courses_json))};
+	myLog(10,"page # $courses_page; course set has ".(scalar @course_set));
+	if (! @course_set) {
+	    last;
+	} else {
+	    push(@$courses_array_ref,@course_set);
+	}
+	#print Dumper(\@canvas_courses);
+	#exit;
+
+	sleep(2); # no DOS attack simulator...
+
+	@course_set = ();
+	$courses_page++;
+    }
+}
 
 #-----------------------------------------------------------------------
 

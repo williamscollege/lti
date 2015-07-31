@@ -378,7 +378,7 @@
 
 												<div class="wms_indent_tiny">
 													<!-- List: My (current) Courses and/or (all) Organizations (within Canvas LMS, these are specified as sub-accounts)-->
-													<span class="small"><strong>People in my courses and/or organizations</strong><br /></span>
+													<span class="small"><strong>People in my <em>published</em> courses or organizations</strong><br /></span>
 
 													<div id="access_by_course_enr_list" class="cb_list">
 														<div class="checkbox small col-sm-12">
@@ -400,14 +400,15 @@
 																				$checkboxSelected = " checked=\"checked\" ";
 																			}
 																		}
-																		// for organizations: show course short_name instead of variable length course_idstr
-																		// standard format of organization course_idstr is: "ORG-Some-Name-Here-20150715"
+																		// display organizations and/or courses
 																		if (substr($enr->course_idstr, 0, 3) == "ORG") {
+																			// for organizations: show course short_name (instead of variable length course_idstr)
+																			// note: the standard format of organization course_idstr is: "ORG-Some-Name-Here-20150715"
 																			$course = Course::getOneFromDb(['canvas_course_id' => $enr->canvas_course_id], $DB);
 																			echo "<label><input type=\"checkbox\" id=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_course_ckboxes\"  name=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"bycourse\" data-permval=\"" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($course->short_name, ENT_QUOTES, 'UTF-8') . "</label><br />";
 																		}
 																		else {
-																			// all courses show the standard course_idstr
+																			// for courses: show the standard course_idstr
 																			echo "<label><input type=\"checkbox\" id=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" class=\"access_by_course_ckboxes\"  name=\"access_by_course_enr_" . htmlentities($enr->enrollment_id, ENT_QUOTES, 'UTF-8') . "\" data-permtype=\"bycourse\" data-permval=\"" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "\"" . $checkboxSelected . ">" . htmlentities($enr->course_idstr, ENT_QUOTES, 'UTF-8') . "</label><br />";
 																		}
 																	}
@@ -418,7 +419,7 @@
 
 													<!-- List: All Instructors -->
 													<div class="wms_tiny_break"><br /></div>
-													<span class="small"><strong>And/or people in courses taught by</strong><br /></span>
+													<span class="small"><strong>And/or people in <em>published</em> courses taught by</strong><br /></span>
 
 													<div id="access_by_instr_list" class="cb_list">
 														<div class="checkbox small col-sm-12">
@@ -463,7 +464,7 @@
 													<!-- List: These People -->
 													<div class="wms_tiny_break"><br /></div>
 												<span class="small"><strong>And/or this list of Williams usernames</strong>
-													<button type="button" class="btn btn-xs btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
+													<button type="button" class="btn btn-xs btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by spaces and/or commas (example: jdoe1, pvalley asmith2)">
 														<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
 												</span>
 													<?php
@@ -479,7 +480,7 @@
 													?>
 
 													<div id="access_by_user">
-														<textarea id="textAccessByUserList" name="textAccessByUserList" data-permtype="byuser" class="form-control input-sm" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $byuser_ary); ?></textarea>
+														<textarea id="textAccessByUserList" name="textAccessByUserList" data-permtype="byuser" class="form-control input-sm" placeholder="Separate usernames by spaces and/or commas (example: jdoe1, pvalley asmith2)" rows="1"><?php echo implode(", ", $byuser_ary); ?></textarea>
 													</div>
 
 													<!-- Bootstrap panel -->
@@ -532,7 +533,7 @@
 													<div class="wms_indent_tiny">
 														<!-- List: These People -->
 														<span class="small"><strong>This list of Williams usernames</strong>
-															<button type="button" class="btn btn-xs btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by white space and/or commas">
+															<button type="button" class="btn btn-xs btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by spaces and/or commas (example: jdoe1, pvalley asmith2)">
 																<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
 														</span>
 
@@ -549,7 +550,7 @@
 														?>
 
 														<div id="access_by_user">
-															<textarea style="border-color: red" id="textAdminByUserList" name="textAdminByUserList" data-permtype="adminbyuser" class="form-control input-sm text-danger" placeholder="Separate usernames by white space and/or commas" rows="1"><?php echo implode(", ", $adminbyuser_ary); ?></textarea>
+															<textarea style="border-color: red" id="textAdminByUserList" name="textAdminByUserList" data-permtype="adminbyuser" class="form-control input-sm text-danger" placeholder="Separate usernames by spaces and/or commas (example: jdoe1, pvalley asmith2)" rows="1"><?php echo implode(", ", $adminbyuser_ary); ?></textarea>
 														</div>
 													</div>
 												</div>
@@ -627,6 +628,7 @@
 													}, $s->openings));
 													// util_prePrintR($countOpeningsPerGroup_ary);
 
+													$flagFutureOpeningSignup = FALSE;
 													$lastOpeningDate = '';
 													$daysOpenings    = [];
 													$todayYmd        = explode(' ', util_currentDateTimeString())[0];
@@ -646,9 +648,11 @@
 															//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
 															if ($curOpeningDate == $todayYmd) {
 																$relative_time_class = 'in-the-present';
+																$flagFutureOpeningSignup = FALSE;
 															}
 															elseif ($curOpeningDate > $todayYmd) {
 																$relative_time_class = 'in-the-future';
+																$flagFutureOpeningSignup = FALSE;
 															}
 															echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($opening->begin_datetime), "m/d/Y") . '</h4>';
 															$daysOpenings = [];
@@ -662,6 +666,11 @@
 														echo $op->renderAsHtmlOpeningWithFullControls($countOpeningsPerGroup_ary) . "\n";
 													}
 													echo '</div>' . "\n";
+
+													// display placeholder message
+													if (!$flagFutureOpeningSignup) {
+														echo '<div class="opening-list-for-date in-the-future"><br /><em>There are no openings for future dates.</em></div>';
+													}
 												?>
 
 											</div>

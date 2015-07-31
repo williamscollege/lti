@@ -1,0 +1,80 @@
+-----------------------------------
+Query:	Get aggregate count of duplicate user records (based on Canvas' canonical 'canvas_user_id' field)
+	-- Note: Expect 15-30 username changes per year (by HR Dept via PeopleSoft)
+	-- Results in two Canvas records for one user. example:
+	-- eg: canvas_user_id = 6138649, user_id = 3893, username = mmm13
+	-- eg: canvas_user_id = 6138649, user_id = 6278, username = mjm11
+-----------------------------------
+	SELECT count(`user_id`) as cnt, MAX(`username`), user_id, canvas_user_id
+	FROM `users`
+	GROUP BY `canvas_user_id`
+	HAVING cnt > 1	
+	ORDER BY cnt DESC;
+	
+	SET @canvas_uid = 6295251;
+	SELECT * from users where `canvas_user_id` = @canvas_uid;
+
+Solution:
+	-- Transfer all records related to old user_id to new user_id (same person, but now has 2 SUS records)
+
+	SET @uid_old = 5141;
+	SET @uid_new = 6257;
+	
+	SELECT * FROM `users` WHERE `user_id` = @uid_old OR `user_id` = @uid_new;
+	
+	UPDATE queued_messages SET user_id = @uid_new WHERE user_id = @uid_old;
+	UPDATE sus_access SET constraint_id = @uid_new WHERE constraint_id = @uid_old;
+	UPDATE sus_sheetgroups SET owner_user_id = @uid_new WHERE owner_user_id = @uid_old;
+	UPDATE sus_sheets SET owner_user_id = @uid_new WHERE owner_user_id = @uid_old;
+	UPDATE sus_signups SET signup_user_id = @uid_new WHERE signup_user_id = @uid_old;
+	UPDATE users SET flag_delete = 1 WHERE user_id = @uid_old;
+	
+	SELECT * FROM `users` WHERE flag_delete = 1;
+
+
+-----------------------------------
+Query:	Get aggregate count of duplicate enrollment records (based on Canvas' canonical 'canvas_user_id', 'canvas_course_id' fields)
+	-- Note: This can be harmlessly caused by multiple role types or enrollments in multiple sections of same course
+-----------------------------------
+	SELECT
+		count(distinct `enrollment_id`) as cnt, `canvas_user_id`, `canvas_course_id` 
+	FROM `enrollments` 
+	GROUP BY `canvas_user_id`, `canvas_course_id` 
+	HAVING cnt > 1 
+	ORDER BY cnt DESC
+
+
+-----------------------------------
+Query:	Get aggregate count of duplicate courses
+-----------------------------------
+	SELECT count(course_id) as cnt, course_idstr 
+	FROM `courses` 
+	GROUP BY `course_idstr` 
+	ORDER BY cnt DESC
+
+
+-----------------------------------
+Query:	Organizations: Select * courses with "UNKNOWN" course_idstr label
+	-- Note: Useful for identifying improperly labeled "ORG-" or "TEST-" courses
+	-- Note: Standard naming convention: "ORG-Some-Name-Here-yyymmdd"
+-----------------------------------
+	SELECT * 
+	FROM `courses` 
+	WHERE `course_idstr` = 'UNKNOWN'
+	
+Solution:
+	Signup Sheets will only "pull" organizations starting with "ORG-..."
+	In GLOW, only Admins may create "organizations"
+		GLOW Standard Format:
+		Name: This is the name that will display within Signup Sheets
+		SIS ID: Use format: "ORG-Some-Name-Here-yyymmdd" (where yyymmdd is today's date, i.e. "ORG-Mens-Crew-20150717")
+			(The "ORG-" preface lets us easily find organizations later)
+			(The datestamp helps improve the odds that the SIS-ID will truly be unique)
+		Department: Williams Collage
+			Sub-Accounts
+				Organizations	(SIS_ID preface "ORG-")	- Signup Sheets pulls these courses
+				Sub Courses		(SIS_ID preface "")		- Signup Sheets ignores
+				Summer Courses	(SIS_ID preface "")		- Signup Sheets ignores
+				Test Courses	(SIS_ID preface "TEST-")- Signup Sheets pulls these courses
+		Term: Set as "Default Term" (otherwise it may get listed twice)
+
