@@ -279,7 +279,7 @@ $(document).ready(function () {
 				title: "Delete Repeating Openings? [on this sheet]",
 				message: '<form>' +
 				'<p><h4>' + $(this).parent().siblings('h4').html() + '</h4><strong>' + $(this).siblings('.opening-time-range').html() + '</strong>' + openingName + '</p>' +
-				'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;Deleting an opening will cancel signups for that opening.</p>' +
+				'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;Deleting an opening will cancel any associated signups. Notifications will be sent to those affected.</p>' +
 				'<div class="radio"><label for="delete-choice-0">' +
 				'<input type="radio" name="custom_user_value" id="delete-choice-0" value="0" checked="checked">' +
 				'<strong>Only this instance</strong> - <span class="small">Delete only this opening</span></label>' +
@@ -308,7 +308,8 @@ $(document).ready(function () {
 			// delete single opening (NOT part of a group/series)
 			var params = {
 				title: "Delete opening",
-				message: "Really delete this opening?<br /><br /><strong>" + $(this).siblings('.opening-time-range').html() + "</strong>" + openingName,
+				message: "<p>Really delete this opening?<br /><br /><strong>" + $(this).siblings('.opening-time-range').html() + "</strong>" + openingName + "</p>" +
+				'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;Deleting this opening will cancel any associated signups. Notifications will be sent to those affected.</p>',
 				label: "Delete opening",
 				class: "btn btn-danger",
 				url: "../ajax_actions/ajax_actions.php",

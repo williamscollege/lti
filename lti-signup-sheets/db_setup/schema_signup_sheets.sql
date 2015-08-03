@@ -16,6 +16,7 @@ FOR TESTING ONLY:
 	DROP TABLE `sus_openings`;
 	DROP TABLE `sus_signups`;
 	DROP TABLE `sus_access`;
+	DROP TABLE `sus_eventlogs`;
 	DROP TABLE `queued_messages`;
 
 	DELETE FROM `terms`;
@@ -27,6 +28,7 @@ FOR TESTING ONLY:
 	DELETE FROM `sus_openings`;
 	DELETE FROM `sus_signups`;
 	DELETE FROM `sus_access`;
+	DELETE FROM `sus_eventlogs`;
 	DELETE FROM `queued_messages`;
 
 	SELECT * FROM `terms`;
@@ -38,6 +40,7 @@ FOR TESTING ONLY:
 	SELECT * FROM `sus_openings`;
 	SELECT * FROM `sus_signups`;
 	SELECT * FROM `sus_access`;
+	SELECT * FROM `sus_eventlogs`;
 	SELECT * FROM `queued_messages`;
 */
 
@@ -245,6 +248,18 @@ CREATE TABLE IF NOT EXISTS `sus_access` (
 	INDEX `constraint_data` (`constraint_data`),
 	INDEX `broadness` (`broadness`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='which users can signup on which sheets';
+
+CREATE TABLE IF NOT EXISTS `sus_eventlogs` (
+	`eventlog_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`user_id` bigint(10) unsigned default NULL,
+	`event_type` VARCHAR(255) NULL,
+	`event_description` VARCHAR(2000) NULL,
+	`event_filepath` VARCHAR(1000) NULL,
+	`user_agent_string` VARCHAR(2000) NULL,
+	`event_datetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	INDEX `eventlog_id` (`eventlog_id`),
+	INDEX `user_id` (`user_id`)
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Event logs maintain an audit of user actions';
 
 # notes: a msg to 10 people will create 10 separate queued messages (to enable 1 user to delete their signup w/o effecting others)
 CREATE TABLE IF NOT EXISTS `queued_messages` (

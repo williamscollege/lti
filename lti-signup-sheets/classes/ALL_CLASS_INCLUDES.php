@@ -20,6 +20,7 @@
 	require_once(dirname(__FILE__) . '/sus_opening.class.php');
 	require_once(dirname(__FILE__) . '/sus_signup.class.php');
 	require_once(dirname(__FILE__) . '/sus_access.class.php');
+	require_once(dirname(__FILE__) . '/sus_eventlog.class.php');
 
 	require_once(dirname(__FILE__) . '/queued_message.class.php');
 
