@@ -68,6 +68,13 @@
 			exit;
 		}
 
+		// record this event (expected params: user_id_actor, user_id_owner, event_type, event_description)
+		$eventlog = SUS_EventLog::createNewEventLog($USER->user_id, "add-sheetgroup", $sheetgroup->sheetgroup_id, $DB); //
+		$eventlog->updateDb();
+		if (!$eventlog->matchesDb) {
+			$results["notes"] .= "Could not create event log for this action.<br />\n";
+		}
+
 		// output
 		$results['status']       = 'success';
 		$results['which_action'] = 'add-sheetgroup';
