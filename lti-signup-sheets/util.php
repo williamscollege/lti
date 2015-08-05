@@ -445,3 +445,21 @@
 		}
 		return 0;
 	}
+
+// --------------
+	// ***************************
+	// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+	//util_createEventLog();
+	// ***************************
+
+	// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+	function util_createEventLog($user_id, $flag_success, $event_action, $event_action_id, $event_details, $DB) {
+		// required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)
+		$eventlog = SUS_EventLog::createNewEventLog($user_id, $flag_success, $event_action, $event_action_id, $event_details, $DB);
+		$eventlog->updateDb();
+		if (!$eventlog->matchesDb) {
+			$results["notes"] = "Could not create event log for this action.<br />\n";
+			return json_encode($results);
+		}
+		return TRUE;
+	}

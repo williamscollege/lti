@@ -40,7 +40,7 @@ FOR TESTING ONLY:
 	SELECT * FROM `sus_openings`;
 	SELECT * FROM `sus_signups`;
 	SELECT * FROM `sus_access`;
-	SELECT * FROM `sus_eventlogs`;
+	SELECT * FROM `sus_eventlogs` ORDER BY eventlog_id DESC;
 	SELECT * FROM `queued_messages`;
 */
 
@@ -252,8 +252,10 @@ CREATE TABLE IF NOT EXISTS `sus_access` (
 CREATE TABLE IF NOT EXISTS `sus_eventlogs` (
 	`eventlog_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`user_id` bigint(10) unsigned default NULL,
-	`event_type` VARCHAR(255) NULL,
-	`event_description` VARCHAR(2000) NULL,
+	`flag_success` tinyint(1) unsigned default 1,
+	`event_action` VARCHAR(255) NULL,
+	`event_action_id` bigint(10) unsigned default NULL,
+	`event_details` VARCHAR(2000) NULL,
 	`event_filepath` VARCHAR(1000) NULL,
 	`user_agent_string` VARCHAR(2000) NULL,
 	`event_datetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
