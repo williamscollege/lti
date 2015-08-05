@@ -200,7 +200,7 @@
 													echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($signup['begin_datetime']), "m/d/Y") . '</h4>';
 													$daysOpenings = [];
 												}
-												array_unshift($daysOpenings, $signup);
+												array_push($daysOpenings, $signup);
 												$lastOpeningDate = $curOpeningDate;
 											}
 											// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)
@@ -286,7 +286,7 @@
 													echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($signup['begin_datetime']), "m/d/Y") . '</h4>';
 													$daysOpenings = [];
 												}
-												array_unshift($daysOpenings, $signup);
+												array_push($daysOpenings, $signup);
 												$lastOpeningDate = $curOpeningDate;
 											}
 											// render openings for the day (these are reverse sorted (i.e ascending) from the larger list through which we're stepping)

@@ -195,7 +195,7 @@
 													echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($opening->begin_datetime), "m/d/Y") . '</h4>';
 													$daysOpenings = [];
 												}
-												array_unshift($daysOpenings, $opening);
+												array_push($daysOpenings, $opening);
 
 												$lastOpeningDate = $curOpeningDate;
 											}

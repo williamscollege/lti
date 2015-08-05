@@ -68,11 +68,10 @@
 			exit;
 		}
 
-		// record this event (expected params: user_id_actor, user_id_owner, event_type, event_description)
-		$eventlog = SUS_EventLog::createNewEventLog($USER->user_id, "add-sheetgroup", $sheetgroup->sheetgroup_id, $DB); //
-		$eventlog->updateDb();
-		if (!$eventlog->matchesDb) {
+		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+		if (!util_createEventLog($USER->user_id, TRUE, $action, $sheetgroup->sheetgroup_id, print_r(json_encode($_REQUEST), TRUE), $DB)) {
 			$results["notes"] .= "Could not create event log for this action.<br />\n";
+			echo json_encode($results);
 		}
 
 		// output
@@ -109,6 +108,12 @@
 
 		$sg->updateDb();
 
+		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+		if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
+			$results["notes"] .= "Could not create event log for this action.<br />\n";
+			echo json_encode($results);
+		}
+
 		// output
 		$results['status']       = 'success';
 		$results['which_action'] = 'edit-sheetgroup';
@@ -128,6 +133,12 @@
 		// mark this object as deleted as well as any lower dependent items
 		$sg->cascadeDelete();
 
+		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+		if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
+			$results["notes"] .= "Could not create event log for this action.<br />\n";
+			echo json_encode($results);
+		}
+
 		// output
 		if ($sg->matchesDb) {
 			$results['status'] = 'success';
@@ -146,6 +157,12 @@
 
 		// mark this object as deleted as well as any lower dependent items
 		$s->cascadeDelete();
+
+		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+		if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
+			$results["notes"] .= "Could not create event log for this action.<br />\n";
+			echo json_encode($results);
+		}
 
 		// output
 		if ($s->matchesDb) {
@@ -170,6 +187,12 @@
 
 				// mark this object as deleted as well as any lower dependent items
 				$o->cascadeDelete();
+
+				// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+				if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
+					$results["notes"] .= "Could not create event log for this action.<br />\n";
+					echo json_encode($results);
+				}
 
 				// output
 				if ($o->matchesDb) {
@@ -213,6 +236,12 @@
 					array_push($updateIDs_ary, $opening->opening_id);
 				}
 
+				// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+				if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
+					$results["notes"] .= "Could not create event log for this action.<br />\n";
+					echo json_encode($results);
+				}
+
 				// output
 				$results['status']        = 'success';
 				$results['customData']    = $customData;
@@ -248,6 +277,12 @@
 				foreach ($o_all as $opening) {
 					$opening->cascadeDelete();
 					array_push($updateIDs_ary, $opening->opening_id);
+				}
+
+				// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+				if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
+					$results["notes"] .= "Could not create event log for this action.<br />\n";
+					echo json_encode($results);
 				}
 
 				// output
@@ -287,6 +322,12 @@
 					array_push($updateIDs_ary, $opening->opening_id);
 				}
 
+				// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+				if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
+					$results["notes"] .= "Could not create event log for this action.<br />\n";
+					echo json_encode($results);
+				}
+
 				// output
 				$results['status']        = 'success';
 				$results['customData']    = $customData;
@@ -311,6 +352,12 @@
 		// mark this object as deleted as well as any lower dependent items
 		$su->cascadeDelete();
 
+		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+		if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
+			$results["notes"] .= "Could not create event log for this action.<br />\n";
+			echo json_encode($results);
+		}
+
 		// output
 		if ($su->matchesDb) {
 			$results['status'] = 'success';
@@ -333,6 +380,12 @@
 		$s->flag_private_signups = $customData;
 		$s->updateDB();
 
+		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+		if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
+			$results["notes"] .= "Could not create event log for this action.<br />\n";
+			echo json_encode($results);
+		}
+
 		// output
 		if ($s->matchesDb) {
 			$results['status'] = 'success';
@@ -340,35 +393,36 @@
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-course-remove') {
-		doAccessRemove('bycourse', $primaryID, $customData, $results);
+		// note: passing of "$action, $USER->user_id" is only used in creating event log
+		doAccessRemove('bycourse', $primaryID, $customData, $results, $action, $USER->user_id);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-course-add') {
-		doAccessAdd('bycourse', $primaryID, $customData, $results);
+		doAccessAdd('bycourse', $primaryID, $customData, $results, $action, $USER->user_id);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-instructor-remove') {
-		doAccessRemove('byinstr', $primaryID, $customData, $results);
+		doAccessRemove('byinstr', $primaryID, $customData, $results, $action, $USER->user_id);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-instructor-add') {
-		doAccessAdd('byinstr', $primaryID, $customData, $results);
+		doAccessAdd('byinstr', $primaryID, $customData, $results, $action, $USER->user_id);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-role-remove') {
-		doAccessRemove('byrole', $primaryID, $customData, $results);
+		doAccessRemove('byrole', $primaryID, $customData, $results, $action, $USER->user_id);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-role-add') {
-		doAccessAdd('byrole', $primaryID, $customData, $results);
+		doAccessAdd('byrole', $primaryID, $customData, $results, $action, $USER->user_id);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-any-remove') {
-		doAccessRemove('byhasaccount', $primaryID, 'all', $results);
+		doAccessRemove('byhasaccount', $primaryID, 'all', $results, $action, $USER->user_id);
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-any-add') {
-		doAccessAdd('byhasaccount', $primaryID, 'all', $results);
+		doAccessAdd('byhasaccount', $primaryID, 'all', $results, $action, $USER->user_id);
 	}
 	//###############################################################
 	elseif (($action == 'editSheetAccess-access-by-user') || ($action == 'editSheetAccess-admin-by-user')) {
@@ -418,6 +472,8 @@
 		$results["notes"] = '';
 
 		// 4 do adds
+		$log_add_success = [];
+		$log_add_failure = [];
 		if (count($to_add) > 0) {
 			// iterate through usernames; verify that each username actually exists in database
 			foreach ($to_add as $username_to_add) {
@@ -428,26 +484,68 @@
 					if (!$access_record->matchesDb) {
 						$results["notes"] .= "could not save access for " . htmlentities($username_to_add, ENT_QUOTES, 'UTF-8') . "<br />\n";
 					}
+					// save for subsequent event log
+					array_push($log_add_success, $username_to_add);
 				}
 				else {
 					// username does not exist
 					$results["notes"] .= "invalid username: " . htmlentities($username_to_add, ENT_QUOTES, 'UTF-8') . "<br />\n";
+					// save for subsequent event log
+					array_push($log_add_failure, $username_to_add);
 				}
 			}
+
+			if (count($log_add_success) > 0) {
+				// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+				if (!util_createEventLog($USER->user_id, TRUE, ($action . " (add users: success)"), $primaryID, ("[users = " . implode(", ", $log_add_success) . "], " . print_r(json_encode($_REQUEST), TRUE)), $DB)) {
+					$results["notes"] .= "Could not create event log for this action.<br />\n";
+					echo json_encode($results);
+				}
+			}
+			if (count($log_add_failure) > 0) {
+				// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+				if (!util_createEventLog($USER->user_id, FALSE, ($action . " (add users: failure)"), $primaryID, ("[users = " . implode(", ", $log_add_failure) . "], " . print_r(json_encode($_REQUEST), TRUE)), $DB)) {
+					$results["notes"] .= "Could not create event log for this action.<br />\n";
+					echo json_encode($results);
+				}
+			}
+
 		}
 
 		// 5 do removes
+		$log_remove_success = [];
+		$log_remove_failure = [];
 		foreach ($to_remove as $username_to_remove) {
 			$access_record = SUS_Access::getOneFromDb(['type' => $access_type, 'sheet_id' => $primaryID, 'constraint_data' => $username_to_remove], $DB);
 			if (!$access_record->matchesDb) {
 				$results["notes"] .= "no existing access record found for " . htmlentities($username_to_remove, ENT_QUOTES, 'UTF-8') . "<br />\n";
+				// save for subsequent event log
+				array_push($log_remove_failure, $username_to_remove);
 				continue;
 			}
 			$access_record->doDelete();
+			// save for subsequent event log
+			array_push($log_remove_success, $username_to_remove);
 
 			$check_access_record = SUS_Access::getOneFromDb(['type' => $access_type, 'sheet_id' => $primaryID, 'constraint_data' => $username_to_remove], $DB);
 			if ($check_access_record->matchesDb) {
 				$results["notes"] .= "could not remove access for " . htmlentities($username_to_remove, ENT_QUOTES, 'UTF-8') . "<br />\n";
+				// save for subsequent event log
+				array_push($log_remove_failure, $username_to_remove);
+			}
+		}
+		if (count($log_remove_success) > 0) {
+			// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+			if (!util_createEventLog($USER->user_id, TRUE, ($action . " (remove users: success)"), $primaryID, ("[users = " . implode(", ", $log_remove_success) . "], " . print_r(json_encode($_REQUEST), TRUE)), $DB)) {
+				$results["notes"] .= "Could not create event log for this action.<br />\n";
+				echo json_encode($results);
+			}
+		}
+		if (count($log_remove_failure) > 0) {
+			// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+			if (!util_createEventLog($USER->user_id, FALSE, ($action . " (remove users: failure)"), $primaryID, ("[users = " . implode(", ", $log_remove_failure) . "], " . print_r(json_encode($_REQUEST), TRUE)), $DB)) {
+				$results["notes"] .= "Could not create event log for this action.<br />\n";
+				echo json_encode($results);
 			}
 		}
 
@@ -691,8 +789,8 @@
 		}
 
 		// count how many openings belong to this opening_group_id (an opening is "repeating" if it has > 1 opening per opening_group_id)
-		$countOpeningsInGroup_ary = [];
-		$countOpeningsInGroup = count(SUS_Opening::getAllFromDb(['opening_group_id' => $o->opening_group_id], $DB));
+		$countOpeningsInGroup_ary                       = [];
+		$countOpeningsInGroup                           = count(SUS_Opening::getAllFromDb(['opening_group_id' => $o->opening_group_id], $DB));
 		$countOpeningsInGroup_ary[$o->opening_group_id] = $countOpeningsInGroup;
 
 		$results['html_render_opening'] = $o->renderAsHtmlOpeningWithFullControls($countOpeningsInGroup_ary);
@@ -742,7 +840,7 @@
 		return ($type == 'byinstr') || ($type == 'bygradyear');
 	}
 
-	function doAccessAdd($type, $sheetId, $constraintInfo, &$results) {
+	function doAccessAdd($type, $sheetId, $constraintInfo, &$results, $action, $uid) {
 		global $DB;
 		$access_record = '';
 		if (constraintForAccessTypeIsById($type)) {
@@ -758,10 +856,17 @@
 			echo json_encode($results);
 			exit;
 		}
+
+		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+		if (!util_createEventLog($uid, TRUE, ($action . " (" . $type . ", " . $constraintInfo . ")"), $sheetId, print_r(json_encode($_REQUEST), TRUE), $DB)) {
+			$results["notes"] .= "Could not create event log for this action.<br />\n";
+			echo json_encode($results);
+		}
+
 		$results['status'] = 'success';
 	}
 
-	function doAccessRemove($type, $sheetId, $constraintInfo, &$results) {
+	function doAccessRemove($type, $sheetId, $constraintInfo, &$results, $action, $uid) {
 		global $DB;
 		$access_record = '';
 		if (constraintForAccessTypeIsById($type)) {
@@ -792,6 +897,12 @@
 			$results["notes"] = "could not remove that access";
 			echo json_encode($results);
 			exit;
+		}
+
+		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
+		if (!util_createEventLog($uid, TRUE, ($action . " (" . $type . ", " . $constraintInfo . ")"), $sheetId, print_r(json_encode($_REQUEST), TRUE), $DB)) {
+			$results["notes"] .= "Could not create event log for this action.<br />\n";
+			echo json_encode($results);
 		}
 
 		$results['status'] = 'success';
