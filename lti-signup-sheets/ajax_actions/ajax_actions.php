@@ -56,23 +56,23 @@
 			// error: matching record already exists
 			$results["notes"] = "unable to create new group in database";
 			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $sg->sheetgroup_id, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 			exit;
 		}
 
 		$sheetgroup = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $sg->sheetgroup_id], $DB);
 
 		if (!$sheetgroup->matchesDb) {
-			// error: matching record already exists
+			// error: no matching record found
 			$results["notes"] = "unable to retrieve newly created group from database";
 			echo json_encode($results);
 			exit;
 		}
 
-		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-		if (!util_createEventLog($USER->user_id, TRUE, $action, $sheetgroup->sheetgroup_id, print_r(json_encode($_REQUEST), TRUE), $DB)) {
-			$results["notes"] .= "Could not create event log for this action.<br />\n";
-			echo json_encode($results);
-		}
+		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+		util_createEventLog($USER->user_id, TRUE, $action, $sheetgroup->sheetgroup_id, "", print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
 		$results['status']       = 'success';
@@ -98,6 +98,9 @@
 			// error: no matching record found
 			$results["notes"] = "no matching record found";
 			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 			exit;
 		}
 		$sg->name                       = $name;
@@ -108,11 +111,8 @@
 
 		$sg->updateDb();
 
-		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-		if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
-			$results["notes"] .= "Could not create event log for this action.<br />\n";
-			echo json_encode($results);
-		}
+		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "", print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
 		$results['status']       = 'success';
@@ -127,17 +127,17 @@
 			// error: no matching record found
 			$results["notes"] = "no matching record found";
 			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 			exit;
 		}
 
 		// mark this object as deleted as well as any lower dependent items
 		$sg->cascadeDelete();
 
-		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-		if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
-			$results["notes"] .= "Could not create event log for this action.<br />\n";
-			echo json_encode($results);
-		}
+		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "also: cascadeDelete subordinates", print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
 		if ($sg->matchesDb) {
@@ -152,17 +152,17 @@
 			// error: no matching record found
 			$results["notes"] = "no matching record found";
 			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 			exit;
 		}
 
 		// mark this object as deleted as well as any lower dependent items
 		$s->cascadeDelete();
 
-		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-		if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
-			$results["notes"] .= "Could not create event log for this action.<br />\n";
-			echo json_encode($results);
-		}
+		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "also: cascadeDelete subordinates", print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
 		if ($s->matchesDb) {
@@ -182,17 +182,17 @@
 					// error: no matching record found
 					$results["notes"] = "no matching record found";
 					echo json_encode($results);
+
+					// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+					util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 					exit;
 				}
 
 				// mark this object as deleted as well as any lower dependent items
 				$o->cascadeDelete();
 
-				// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-				if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
-					$results["notes"] .= "Could not create event log for this action.<br />\n";
-					echo json_encode($results);
-				}
+				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "also: cascadeDelete subordinates", print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
 				if ($o->matchesDb) {
@@ -210,6 +210,9 @@
 					// error: no matching record found
 					$results["notes"] = "no matching record found";
 					echo json_encode($results);
+
+					// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+					util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 					exit;
 				}
 
@@ -236,11 +239,8 @@
 					array_push($updateIDs_ary, $opening->opening_id);
 				}
 
-				// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-				if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
-					$results["notes"] .= "Could not create event log for this action.<br />\n";
-					echo json_encode($results);
-				}
+				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "also: cascadeDelete subordinates", print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
 				$results['status']        = 'success';
@@ -256,6 +256,9 @@
 					// error: no matching record found
 					$results["notes"] = "no matching record found";
 					echo json_encode($results);
+
+					// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+					util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 					exit;
 				}
 
@@ -279,11 +282,8 @@
 					array_push($updateIDs_ary, $opening->opening_id);
 				}
 
-				// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-				if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
-					$results["notes"] .= "Could not create event log for this action.<br />\n";
-					echo json_encode($results);
-				}
+				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "also: cascadeDelete subordinates", print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
 				$results['status']        = 'success';
@@ -299,6 +299,9 @@
 					// error: no matching record found
 					$results["notes"] = "no matching record found";
 					echo json_encode($results);
+
+					// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+					util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 					exit;
 				}
 
@@ -322,11 +325,8 @@
 					array_push($updateIDs_ary, $opening->opening_id);
 				}
 
-				// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-				if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
-					$results["notes"] .= "Could not create event log for this action.<br />\n";
-					echo json_encode($results);
-				}
+				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "also: cascadeDelete subordinates", print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
 				$results['status']        = 'success';
@@ -346,17 +346,17 @@
 			// error: no matching record found
 			$results["notes"] = "no matching record found";
 			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 			exit;
 		}
 
 		// mark this object as deleted as well as any lower dependent items
 		$su->cascadeDelete();
 
-		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-		if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
-			$results["notes"] .= "Could not create event log for this action.<br />\n";
-			echo json_encode($results);
-		}
+		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "also: cascadeDelete subordinates", print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
 		if ($su->matchesDb) {
@@ -373,6 +373,9 @@
 			// error: no matching record found
 			$results["notes"] = "no matching record found";
 			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 			exit;
 		}
 
@@ -380,11 +383,8 @@
 		$s->flag_private_signups = $customData;
 		$s->updateDB();
 
-		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-		if (!util_createEventLog($USER->user_id, TRUE, $action, $primaryID, print_r(json_encode($_REQUEST), TRUE), $DB)) {
-			$results["notes"] .= "Could not create event log for this action.<br />\n";
-			echo json_encode($results);
-		}
+		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "", print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
 		if ($s->matchesDb) {
@@ -393,7 +393,7 @@
 	}
 	//###############################################################
 	elseif ($action == 'editSheetAccess-access-by-course-remove') {
-		// note: passing of "$action, $USER->user_id" is only used in creating event log
+		// note: passing of "$action" and  "$USER->user_id" is only used for event log
 		doAccessRemove('bycourse', $primaryID, $customData, $results, $action, $USER->user_id);
 	}
 	//###############################################################
@@ -496,18 +496,12 @@
 			}
 
 			if (count($log_add_success) > 0) {
-				// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-				if (!util_createEventLog($USER->user_id, TRUE, ($action . " (add users: success)"), $primaryID, ("[users = " . implode(", ", $log_add_success) . "], " . print_r(json_encode($_REQUEST), TRUE)), $DB)) {
-					$results["notes"] .= "Could not create event log for this action.<br />\n";
-					echo json_encode($results);
-				}
+				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "successfully added users: " . implode(", ", $log_add_success), print_r(json_encode($_REQUEST), TRUE), $DB);
 			}
 			if (count($log_add_failure) > 0) {
-				// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-				if (!util_createEventLog($USER->user_id, FALSE, ($action . " (add users: failure)"), $primaryID, ("[users = " . implode(", ", $log_add_failure) . "], " . print_r(json_encode($_REQUEST), TRUE)), $DB)) {
-					$results["notes"] .= "Could not create event log for this action.<br />\n";
-					echo json_encode($results);
-				}
+				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+				util_createEventLog($USER->user_id, FALSE, $action, $primaryID, "failed to add users: " . implode(", ", $log_add_failure), print_r(json_encode($_REQUEST), TRUE), $DB);
 			}
 
 		}
@@ -535,18 +529,12 @@
 			}
 		}
 		if (count($log_remove_success) > 0) {
-			// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-			if (!util_createEventLog($USER->user_id, TRUE, ($action . " (remove users: success)"), $primaryID, ("[users = " . implode(", ", $log_remove_success) . "], " . print_r(json_encode($_REQUEST), TRUE)), $DB)) {
-				$results["notes"] .= "Could not create event log for this action.<br />\n";
-				echo json_encode($results);
-			}
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "successfully removed users: " . implode(", ", $log_remove_success), print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 		if (count($log_remove_failure) > 0) {
-			// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-			if (!util_createEventLog($USER->user_id, FALSE, ($action . " (remove users: failure)"), $primaryID, ("[users = " . implode(", ", $log_remove_failure) . "], " . print_r(json_encode($_REQUEST), TRUE)), $DB)) {
-				$results["notes"] .= "Could not create event log for this action.<br />\n";
-				echo json_encode($results);
-			}
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, "failed to remove users: " . implode(", ", $log_remove_failure), print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 
 		// 6 note results
@@ -565,6 +553,9 @@
 			// error: no matching record found
 			$results["notes"] = "that opening does not exist";
 			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 			exit;
 		}
 
@@ -573,6 +564,9 @@
 			// error: user may not signup on this sheet group or sheet
 			$results["notes"] = "you are already at your limit for signups on this sheet";
 			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 			exit;
 		}
 
@@ -598,8 +592,14 @@
 				// update record failed
 				$results["notes"] = "database error: could not update signup";
 				echo json_encode($results);
+
+				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+				util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 				exit;
 			}
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "edited record", print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 		else {
 			// create new record
@@ -614,8 +614,13 @@
 				// create record failed
 				$results["notes"] = "database error: could not save signup";
 				echo json_encode($results);
+
+				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+				util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 				exit;
 			}
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "created record", print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 
 		// must get sheet object to enable render fxn
@@ -640,6 +645,9 @@
 			// error: no matching record found
 			$results["notes"] = "that opening does not exist";
 			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 			exit;
 		}
 
@@ -657,8 +665,13 @@
 				// update record failed
 				$results["notes"] = "database error: could not update signup";
 				echo json_encode($results);
+
+				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+				util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 				exit;
 			}
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "", print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 
 		// must get sheet object to enable render fxn
@@ -680,6 +693,9 @@
 			// error: no matching record found
 			$results["notes"] = "that username does not exist";
 			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 			exit;
 		}
 
@@ -701,8 +717,13 @@
 				// update record failed
 				$results["notes"] = "database error: could not update signup";
 				echo json_encode($results);
+
+				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+				util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 				exit;
 			}
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "", print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 		else {
 			// create new record
@@ -718,6 +739,9 @@
 				// create record failed
 				$results["notes"] = "database error: could not save signup";
 				echo json_encode($results);
+
+				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+				util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 				exit;
 			}
 
@@ -746,6 +770,8 @@
 					prep_for_QueuedMessage($DB, $u->user_id, $u->email, $subject, $body, $su->opening_id, $subject, $body, $opening->opening_id, $sheet->sheet_id);
 				}
 			}
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "successfully queued message(s)", print_r(json_encode($_REQUEST), TRUE), $DB);
 
 			// TODO - Possibly move this to be a class function (and combine with others, if possible)
 			function prep_for_QueuedMessage($DB, $usersArray, $subject, $body, $openingID = 0, $sheetID = 0) {
@@ -757,6 +783,9 @@
 					// create record failed
 					$results['notes'] = "database error: could not create queued message for signup";
 					echo json_encode($results);
+
+					// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+					util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 					exit;
 				}
 			}
@@ -785,6 +814,9 @@
 			// error: no matching record found
 			$results["notes"] = "that opening does not exist";
 			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 			exit;
 		}
 
@@ -825,6 +857,9 @@
 
 		}
 
+		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "", print_r(json_encode($_REQUEST), TRUE), $DB);
+
 		// output
 		$results['status']       = 'success';
 		$results['which_action'] = 'fetch-signups-for-opening-id';
@@ -857,11 +892,8 @@
 			exit;
 		}
 
-		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-		if (!util_createEventLog($uid, TRUE, ($action . " (" . $type . ", " . $constraintInfo . ")"), $sheetId, print_r(json_encode($_REQUEST), TRUE), $DB)) {
-			$results["notes"] .= "Could not create event log for this action.<br />\n";
-			echo json_encode($results);
-		}
+		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+		util_createEventLog($uid, TRUE, $action, $sheetId, ($type . ", " . $constraintInfo), print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		$results['status'] = 'success';
 	}
@@ -899,11 +931,8 @@
 			exit;
 		}
 
-		// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-		if (!util_createEventLog($uid, TRUE, ($action . " (" . $type . ", " . $constraintInfo . ")"), $sheetId, print_r(json_encode($_REQUEST), TRUE), $DB)) {
-			$results["notes"] .= "Could not create event log for this action.<br />\n";
-			echo json_encode($results);
-		}
+		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+		util_createEventLog($uid, TRUE, $action, $sheetId, ($type . ", " . $constraintInfo), print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		$results['status'] = 'success';
 	}

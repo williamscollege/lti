@@ -446,20 +446,23 @@
 		return 0;
 	}
 
-// --------------
-	// ***************************
-	// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-	//util_createEventLog();
-	// ***************************
-
-	// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)]
-	function util_createEventLog($user_id, $flag_success, $event_action, $event_action_id, $event_details, $DB) {
-		// required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_details(varchar)
-		$eventlog = SUS_EventLog::createNewEventLog($user_id, $flag_success, $event_action, $event_action_id, $event_details, $DB);
+	// create event log [required params: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+	function util_createEventLog($user_id = 0, $flag_success = FALSE, $event_action = "", $event_action_id = 0, $event_note = "", $event_dataset = "", $DB) {
+		$eventlog = SUS_EventLog::createNewEventLog($user_id, $flag_success, $event_action, $event_action_id, $event_note, $event_dataset, $DB);
 		$eventlog->updateDb();
 		if (!$eventlog->matchesDb) {
-			$results["notes"] = "Could not create event log for this action.<br />\n";
-			return json_encode($results);
+			$evtlog_error = new SUS_EventLog([
+				'DB'                  => $DB
+				, 'user_id'           => $user_id
+				, 'flag_success'      => $flag_success
+				, 'event_action'      => $event_action
+				, 'event_action_id'   => $event_action_id
+				, 'event_note'        => "Could not create event log for this action." . substr($event_note, 0, 1990)    // truncate to avoid exceeding db field limit
+				, 'event_dataset'     => substr($event_dataset, 0, 1990)                // truncate to avoid exceeding db field limit
+				, 'event_filepath'    => substr($_SERVER["REQUEST_URI"], 0, 990)        // truncate to avoid exceeding db field limit
+				, 'user_agent_string' => substr($_SERVER["HTTP_USER_AGENT"], 0, 990)    // truncate to avoid exceeding db field limit
+			]);
+			$evtlog_error->updateDb();
 		}
 		return TRUE;
 	}
