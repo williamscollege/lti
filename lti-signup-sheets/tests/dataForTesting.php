@@ -301,6 +301,24 @@
 		}
 	}
 
+	function createTestData_SUS_EventLog($dbConn) {
+		// 1000 series ids
+		# SUS_EventLog: 'eventlog_id', 'user_id', 'flag_success', 'event_action', 'event_action_id', 'event_note', 'event_dataset', 'event_filepath', 'user_agent_string', 'event_datetime'
+		$addTestSql  = "INSERT INTO " . SUS_EventLog::$dbTable . " VALUES
+			(1001, 101, 1, 'add-sheetgroup', 501, 'small note', 'ajax_Action = add-sheetgroup', '/GITHUB/lti/lti-signup-sheets/ajax_actions/ajax_actions.php', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0', TIMESTAMPADD(hour,4,NOW())),
+			(1002, 101, 1, 'edit-sheetgroup', 501, 'more helpful note', 'ajax_Action = edit-sheetgroup', '/GITHUB/lti/lti-signup-sheets/ajax_actions/ajax_actions.php', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0', TIMESTAMPADD(hour,6,NOW()))
+
+    ";
+		$addTestStmt = $dbConn->prepare($addTestSql);
+		$addTestStmt->execute();
+		if ($addTestStmt->errorInfo()[0] != '0000') {
+			echo "<pre>error adding test SUS_EventLog data to the DB\n";
+			print_r($addTestStmt->errorInfo());
+			debug_print_backtrace();
+			exit;
+		}
+	}
+
 	function makeAuthedTestUserAdmin($dbConn) {
 		$u1                       = User::getOneFromDb(['username' => TESTINGUSER], $dbConn);
 		$u1->flag_is_system_admin = TRUE;
@@ -319,6 +337,7 @@
 		createTestData_SUS_Openings($dbConn);
 		createTestData_SUS_Signups($dbConn);
 		createTestData_SUS_Access($dbConn);
+		createTestData_SUS_EventLog($dbConn);
 	}
 
 	//--------------------------------------------------------------------------------------------------------------
@@ -372,6 +391,10 @@
 		_removeTestDataFromTable($dbConn, SUS_Access::$dbTable);
 	}
 
+	function removeTestData_SUS_EventLog($dbConn) {
+		_removeTestDataFromTable($dbConn, SUS_EventLog::$dbTable);
+	}
+
 	function removeTestData_EXAMPLE($dbConn) {
 		_removeTestDataFromTable($dbConn, Metadata_Structure::$dbTable);
 	}
@@ -388,4 +411,5 @@
 		removeTestData_SUS_Openings($dbConn);
 		removeTestData_SUS_Signups($dbConn);
 		removeTestData_SUS_Access($dbConn);
+		removeTestData_SUS_EventLog($dbConn);
 	}
