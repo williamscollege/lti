@@ -33,6 +33,7 @@
 			$this->addFile('app_infrastructure_tests/TestOfSUS_Opening.class.php');
 			$this->addFile('app_infrastructure_tests/TestOfSUS_Signup.class.php');
 			$this->addFile('app_infrastructure_tests/TestOfSUS_Access.class.php');
+			$this->addFile('app_infrastructure_tests/TestOfSUS_EventLog.class.php');
 
 			$this->addFile('app_infrastructure_tests/TestOfUtil.php');
 
