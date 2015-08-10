@@ -65,10 +65,18 @@
 					require_once(dirname(__FILE__) . '/../foot.php');
 					exit;
 				}
+
+				// save for subsequent event log
+				$evt_action = "sheets_edit_one";
+				$evt_note = "successfully edited sheet";
 			}
 			else {
 				// create new sheet
 				$s = SUS_Sheet::createNewSheet($USER->user_id, $DB);
+
+				// save for subsequent event log
+				$evt_action = "createNewSheet";
+				$evt_note = "successfully created sheet";
 			}
 
 			// util_prePrintR($s); // debugging
@@ -106,9 +114,16 @@
 					// error
 					util_displayMessage('error', 'Failed to update sheet.');
 					require_once(dirname(__FILE__) . '/../foot.php');
+
+					// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+					$evt_action = "sheets_edit_one";
+					$evt_note = "failed to edit sheet";
+					util_createEventLog($USER->user_id, FALSE, $evt_action, $s->sheet_id, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 					exit;
 				}
 
+				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+				util_createEventLog($USER->user_id, TRUE, $evt_action, $s->sheet_id, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 				?>
 				<script>
 					$(document).ready(function () {

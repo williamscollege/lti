@@ -137,7 +137,8 @@
 		$sg->cascadeDelete();
 
 		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "also: cascadeDelete subordinates", print_r(json_encode($_REQUEST), TRUE), $DB);
+		$evt_note = "also: cascadeDelete subordinates";
+		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
 		if ($sg->matchesDb) {
@@ -162,7 +163,8 @@
 		$s->cascadeDelete();
 
 		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "also: cascadeDelete subordinates", print_r(json_encode($_REQUEST), TRUE), $DB);
+		$evt_note = "also: cascadeDelete subordinates";
+		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
 		if ($s->matchesDb) {
@@ -192,7 +194,8 @@
 				$o->cascadeDelete();
 
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "also: cascadeDelete subordinates", print_r(json_encode($_REQUEST), TRUE), $DB);
+				$evt_note = "also: cascadeDelete subordinates";
+				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
 				if ($o->matchesDb) {
@@ -240,7 +243,8 @@
 				}
 
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "also: cascadeDelete subordinates", print_r(json_encode($_REQUEST), TRUE), $DB);
+				$evt_note = "also: cascadeDelete subordinates";
+				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
 				$results['status']        = 'success';
@@ -283,7 +287,8 @@
 				}
 
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "also: cascadeDelete subordinates", print_r(json_encode($_REQUEST), TRUE), $DB);
+				$evt_note = "also: cascadeDelete subordinates";
+				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
 				$results['status']        = 'success';
@@ -326,7 +331,8 @@
 				}
 
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "also: cascadeDelete subordinates", print_r(json_encode($_REQUEST), TRUE), $DB);
+				$evt_note = "also: cascadeDelete subordinates";
+				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
 				$results['status']        = 'success';
@@ -356,7 +362,8 @@
 		$su->cascadeDelete();
 
 		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "also: cascadeDelete subordinates", print_r(json_encode($_REQUEST), TRUE), $DB);
+		$evt_note = "also: cascadeDelete subordinates";
+		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
 		if ($su->matchesDb) {
@@ -497,11 +504,13 @@
 
 			if (count($log_add_success) > 0) {
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "successfully added users: " . implode(", ", $log_add_success), print_r(json_encode($_REQUEST), TRUE), $DB);
+				$evt_note = "successfully added users: " . implode(", ", $log_add_success);
+				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 			}
 			if (count($log_add_failure) > 0) {
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-				util_createEventLog($USER->user_id, FALSE, $action, $primaryID, "failed to add users: " . implode(", ", $log_add_failure), print_r(json_encode($_REQUEST), TRUE), $DB);
+				$evt_note = "failed to add users: " . implode(", ", $log_add_failure);
+				util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 			}
 
 		}
@@ -530,11 +539,13 @@
 		}
 		if (count($log_remove_success) > 0) {
 			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "successfully removed users: " . implode(", ", $log_remove_success), print_r(json_encode($_REQUEST), TRUE), $DB);
+			$evt_note = "successfully removed users: " . implode(", ", $log_remove_success);
+			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 		if (count($log_remove_failure) > 0) {
 			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, "failed to remove users: " . implode(", ", $log_remove_failure), print_r(json_encode($_REQUEST), TRUE), $DB);
+			$evt_note = "failed to remove users: " . implode(", ", $log_remove_failure);
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 
 		// 6 note results
@@ -599,7 +610,8 @@
 			}
 
 			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "edited record", print_r(json_encode($_REQUEST), TRUE), $DB);
+			$evt_note = "edited record";
+			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 		else {
 			// create new record
@@ -620,7 +632,8 @@
 				exit;
 			}
 			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "created record", print_r(json_encode($_REQUEST), TRUE), $DB);
+			$evt_note = "created record";
+			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 
 		// must get sheet object to enable render fxn
@@ -771,7 +784,8 @@
 				}
 			}
 			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "successfully queued message(s)", print_r(json_encode($_REQUEST), TRUE), $DB);
+			$evt_note = "successfully queued message(s)";
+			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 			// TODO - Possibly move this to be a class function (and combine with others, if possible)
 			function prep_for_QueuedMessage($DB, $usersArray, $subject, $body, $openingID = 0, $sheetID = 0) {
@@ -858,7 +872,7 @@
 		}
 
 		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "", print_r(json_encode($_REQUEST), TRUE), $DB);
+		// IGNORE LOGGING ON FETCHES... util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "", print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
 		$results['status']       = 'success';
@@ -893,7 +907,8 @@
 		}
 
 		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-		util_createEventLog($uid, TRUE, $action, $sheetId, ($type . ", " . $constraintInfo), print_r(json_encode($_REQUEST), TRUE), $DB);
+		$evt_note = ($type . ", " . $constraintInfo);
+		util_createEventLog($uid, TRUE, $action, $sheetId, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		$results['status'] = 'success';
 	}
@@ -932,7 +947,8 @@
 		}
 
 		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-		util_createEventLog($uid, TRUE, $action, $sheetId, ($type . ", " . $constraintInfo), print_r(json_encode($_REQUEST), TRUE), $DB);
+		$evt_note = ($type . ", " . $constraintInfo);
+		util_createEventLog($uid, TRUE, $action, $sheetId, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		$results['status'] = 'success';
 	}
