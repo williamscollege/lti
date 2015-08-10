@@ -610,7 +610,7 @@
 			}
 
 			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-			$evt_note = "edited record";
+			$evt_note = "successfully updated existing signup";
 			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 		else {
@@ -632,7 +632,7 @@
 				exit;
 			}
 			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-			$evt_note = "created record";
+			$evt_note = "successfully created new signup";
 			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 
@@ -683,8 +683,10 @@
 				util_createEventLog($USER->user_id, FALSE, $action, $primaryID, $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
 				exit;
 			}
+
 			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
-			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "", print_r(json_encode($_REQUEST), TRUE), $DB);
+			$evt_note = "successfully cancelled signup";
+			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 
 		// must get sheet object to enable render fxn
