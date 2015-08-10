@@ -77,7 +77,7 @@
 		$USER->cacheSheetgroups();
 		// util_prePrintR($USER->sheetgroups);
 
-		// if the user lacks an active default sheet group, create one
+		// if the user lacks any active sheetgroups, create a new one
 		if (!$USER->sheetgroups) // create group since none exists
 		{
 			// create an object for the insert_record function
@@ -90,8 +90,16 @@
 				// error: default sheet group failed to auto-create properly
 				util_displayMessage('error', 'Default sheet group failed to auto-create properly.');
 				require_once(dirname(__FILE__) . '/../foot.php');
+
+				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+				$evt_note = "failed to create missing default sheetgroup for user";
+				util_createEventLog($USER->user_id, FALSE, "createNewSheetgroupForUser", $sg->sheetgroup_id, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 				exit;
 			}
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+			$evt_note = "created missing default sheetgroup for user";
+			util_createEventLog($USER->user_id, TRUE, "createNewSheetgroupForUser", $sg->sheetgroup_id, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 			// fetch sheetgroups (use efficient cache function)
 			$USER->cacheSheetgroups();

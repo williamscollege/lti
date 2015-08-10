@@ -129,7 +129,7 @@
 				}
 			}
 			elseif ($openingRepeatRate == 3) {
-				for ($baseDom = 1; $baseDom < 35; $baseDom++) {
+				for ($baseDom = 1; $baseDom < 32; $baseDom++) {
 					if ($_REQUEST["repeat_dom_$baseDom"]) {
 						// create array of repeating month days
 						array_push($validation_for_repetition, $baseDom);
@@ -154,6 +154,7 @@
 		// loop through days from begin date to end date
 		$currentOpeningDate = clone $repeatBeginDate;
 
+		$log_add_success = [];
 		while ($currentOpeningDate <= $repeatEndDate) {
 			// validation algorithm for each of the repeat radio choices
 			// if current day is 'valid', then create openings on that day
@@ -162,6 +163,7 @@
 				(($openingRepeatRate == 3) && (in_array($currentOpeningDate->format('j'), $validation_for_repetition)))
 			) {
 				$baseOpeningDateTime = DateTime::createFromFormat('Y-m-d g:i a', $currentOpeningDate->format('Y-m-d') . " $openingBeginTimeHour:$openingBeginTimeMinute $openingBeginTime_AMPM");
+
 				// iterate for number of openings, creating a new one at each step
 				for ($i = 0; $i < $openingNumOpenings; $i++) {
 					// Are we creating a NEW opening or editing an preexisting opening?
@@ -211,10 +213,19 @@
 							// save the opening
 							$newOpening->updateDb();
 
+							// save for subsequent event log
+							$evt_action = "createNewOpening";
+							$evt_action_id = $newOpening->sheet_id;
+							$evt_note = "successfully added openings: ";
+							array_push($log_add_success, $newOpening->opening_id);
+
 							if (!$opening_group_id) {
 								$opening_group_id             = $newOpening->opening_id;
 								$newOpening->opening_group_id = $opening_group_id;
 								$newOpening->updateDb();
+
+								// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+								util_createEventLog($USER->user_id, TRUE, "set initial opening_group_id", $newOpening->sheet_id, "set opening_group_id = " . $newOpening->opening_group_id, print_r(json_encode($_REQUEST), TRUE), $DB);
 							}
 						}
 					}
@@ -228,6 +239,12 @@
 							// error: matching record does not exist
 							util_displayMessage('error', 'Error: No matching Opening record found. Attempt to edit opening record failed.');
 							require_once(dirname(__FILE__) . '/../foot.php');
+
+							// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+							$evt_action = "editOpening";
+							$evt_action_id = $openingID;
+							$evt_note = "Error: No matching Opening record found. Attempt to edit opening record failed";
+							util_createEventLog($USER->user_id, FALSE, $evt_action, $evt_action_id, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 							exit;
 						}
 
@@ -271,6 +288,12 @@
 
 							// save the opening
 							$editOpening->updateDb();
+
+							// save for subsequent event log
+							$evt_action = "editOpening";
+							$evt_action_id = $editOpening->sheet_id;
+							$evt_note = "successfully edited opening: ";
+							array_push($log_add_success, $editOpening->opening_id);
 						}
 					}
 				}
@@ -279,6 +302,14 @@
 			// iterator: reset date
 			$currentOpeningDate->modify('+1 day');
 		}
+
+		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+		$evt_note .= implode(", ", $log_add_success);
+		// only for debugging a possible bug that i cannot replicate...
+		//	if(!$evt_action) {$evt_action = "dud1";}
+		//	if(!$evt_action_id) {$evt_action = "dud2";}
+		//	if(!$evt_note) {$evt_action = "dud3";} else{$evt_note .= implode(", ", $log_add_success);}
+		util_createEventLog($USER->user_id, TRUE, $evt_action, $evt_action_id, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// package the conflicts into a urlencoded string for display on resultant page
 		if ($conflicts_ary) {
