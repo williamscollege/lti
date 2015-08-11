@@ -224,7 +224,7 @@
 								$newOpening->opening_group_id = $opening_group_id;
 								$newOpening->updateDb();
 
-								// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+								// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
 								util_createEventLog($USER->user_id, TRUE, "set initial opening_group_id", $newOpening->sheet_id, "set opening_group_id = " . $newOpening->opening_group_id, print_r(json_encode($_REQUEST), TRUE), $DB);
 							}
 						}
@@ -240,7 +240,7 @@
 							util_displayMessage('error', 'Error: No matching Opening record found. Attempt to edit opening record failed.');
 							require_once(dirname(__FILE__) . '/../foot.php');
 
-							// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+							// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
 							$evt_action = "editOpening";
 							$evt_action_id = $openingID;
 							$evt_note = "Error: No matching Opening record found. Attempt to edit opening record failed";
@@ -303,7 +303,7 @@
 			$currentOpeningDate->modify('+1 day');
 		}
 
-		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_note(varchar), event_dataset(varchar)]
+		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
 		$evt_note .= implode(", ", $log_add_success);
 		// only for debugging a possible bug that i cannot replicate...
 		//	if(!$evt_action) {$evt_action = "dud1";}
