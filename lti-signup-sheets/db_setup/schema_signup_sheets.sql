@@ -255,6 +255,7 @@ CREATE TABLE IF NOT EXISTS `sus_eventlogs` (
 	`flag_success` tinyint(1) unsigned default 1,
 	`event_action` VARCHAR(255) NULL,
 	`event_action_id` bigint(10) unsigned default NULL,
+	`event_action_target_type` VARCHAR(255) NULL,
 	`event_note` VARCHAR(2000) NULL,
 	`event_dataset` VARCHAR(2000) NULL,
 	`event_filepath` VARCHAR(1000) NULL,

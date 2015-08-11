@@ -9,6 +9,7 @@
 	# This page processes a launch request from an LTI tool consumer
 
 	require_once(dirname(__FILE__) . '/lib.php');
+	require_once(dirname(__FILE__) . '/util.php');
 
 	// Session Maintenance: Cancel any existing session
 	session_name(LTI_SESSION_NAME);
@@ -33,6 +34,11 @@
 
 			// Check the user has an appropriate role
 			if ($this->user->isLearner() || $this->user->isStaff()) {
+	
+				// Session Maintenance: Clear all existing session data
+				util_wipeSession();
+				// Session Maintenance: Update the current session id with a newly generated one
+				session_regenerate_id(TRUE);
 	
 				// Store values from Tool Consumer (Instructure Canvas) as SESSION to persist them for use in this application
 				// These SESSION values are used in lib.php and throughout the application
