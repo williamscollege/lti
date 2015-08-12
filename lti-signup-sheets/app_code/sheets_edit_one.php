@@ -68,7 +68,7 @@
 
 				// save for subsequent event log
 				$evt_action = "sheets_edit_one";
-				$evt_note = "successfully edited sheet";
+				$evt_note   = "successfully edited sheet";
 			}
 			else {
 				// create new sheet
@@ -76,7 +76,7 @@
 
 				// save for subsequent event log
 				$evt_action = "createNewSheet";
-				$evt_note = "successfully created sheet";
+				$evt_note   = "successfully created sheet";
 			}
 
 			// util_prePrintR($s); // debugging
@@ -117,13 +117,13 @@
 
 					// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
 					$evt_action = "sheets_edit_one";
-					$evt_note = "failed to edit sheet";
-					util_createEventLog($USER->user_id, FALSE, $evt_action, $s->sheet_id, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
+					$evt_note   = "failed to edit sheet";
+					util_createEventLog($USER->user_id, FALSE, $evt_action, $s->sheet_id, "sheet_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 					exit;
 				}
 
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-				util_createEventLog($USER->user_id, TRUE, $evt_action, $s->sheet_id, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
+				util_createEventLog($USER->user_id, TRUE, $evt_action, $s->sheet_id, "sheet_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 				?>
 				<script>
 					$(document).ready(function () {
@@ -644,9 +644,9 @@
 													// util_prePrintR($countOpeningsPerGroup_ary);
 
 													$flagFutureOpeningSignup = FALSE;
-													$lastOpeningDate = '';
-													$daysOpenings    = [];
-													$todayYmd        = explode(' ', util_currentDateTimeString())[0];
+													$lastOpeningDate         = '';
+													$daysOpenings            = [];
+													$todayYmd                = explode(' ', util_currentDateTimeString())[0];
 
 													foreach ($s->openings as $opening) {
 														$curOpeningDate = explode(' ', $opening->begin_datetime)[0];
@@ -662,11 +662,11 @@
 															$relative_time_class = 'in-the-past toggle_opening_history';
 															//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
 															if ($curOpeningDate == $todayYmd) {
-																$relative_time_class = 'in-the-present';
+																$relative_time_class     = 'in-the-present';
 																$flagFutureOpeningSignup = FALSE;
 															}
 															elseif ($curOpeningDate > $todayYmd) {
-																$relative_time_class = 'in-the-future';
+																$relative_time_class     = 'in-the-future';
 																$flagFutureOpeningSignup = FALSE;
 															}
 															echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($opening->begin_datetime), "m/d/Y") . '</h4>';

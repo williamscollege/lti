@@ -35,7 +35,7 @@
 				$base_sheet_link .= " (" . htmlentities($person->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($person->last_name, ENT_QUOTES, 'UTF-8');
 
 				// if exists: show sheet's description
-				if ($sheet['s_description']){
+				if ($sheet['s_description']) {
 					$base_sheet_link .= ": <span class=\"text-muted\">&quot;" . htmlentities($sheet['s_description'], ENT_QUOTES, 'UTF-8') . "&quot;</span>";
 				}
 				// end visual parenthesis

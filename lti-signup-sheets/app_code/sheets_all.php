@@ -93,13 +93,13 @@
 
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
 				$evt_note = "failed to create missing default sheetgroup for user";
-				util_createEventLog($USER->user_id, FALSE, "createNewSheetgroupForUser", $sg->sheetgroup_id, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
+				util_createEventLog($USER->user_id, FALSE, "createNewSheetgroupForUser", $sg->sheetgroup_id, "sheetgroup_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 				exit;
 			}
 
 			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
 			$evt_note = "created missing default sheetgroup for user";
-			util_createEventLog($USER->user_id, TRUE, "createNewSheetgroupForUser", $sg->sheetgroup_id, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
+			util_createEventLog($USER->user_id, TRUE, "createNewSheetgroupForUser", $sg->sheetgroup_id, "sheetgroup_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 			// fetch sheetgroups (use efficient cache function)
 			$USER->cacheSheetgroups();

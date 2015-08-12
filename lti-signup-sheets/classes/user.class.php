@@ -490,7 +490,7 @@
 				JOIN (
 					SELECT DISTINCT
 						a.sheet_id" .
-						($includeAccessRecords ? '
+				($includeAccessRecords ? '
 						,a.access_id AS access_id
 						,a.created_at AS created_at
 						,a.updated_at AS updated_at
