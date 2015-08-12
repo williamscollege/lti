@@ -34,7 +34,7 @@
 
 		//-------------------------------------------------------------------------------------
 
-		public static function factory($db, $user_id, $target, $summary, $body, $opening_id = 0, $sheet_id = 0, $type = 'email' ) {
+		public static function factory($db, $user_id, $target, $summary, $body, $opening_id = 0, $sheet_id = 0, $type = 'email') {
 			$qm = new QueuedMessage(['DB' => $db
 				, 'user_id'               => $user_id
 				, 'sheet_id'              => $sheet_id

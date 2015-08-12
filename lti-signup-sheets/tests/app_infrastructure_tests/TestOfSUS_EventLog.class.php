@@ -18,6 +18,7 @@
 			$this->assertTrue(in_array('flag_success', SUS_EventLog::$fields));
 			$this->assertTrue(in_array('event_action', SUS_EventLog::$fields));
 			$this->assertTrue(in_array('event_action_id', SUS_EventLog::$fields));
+			$this->assertTrue(in_array('event_action_target_type', SUS_EventLog::$fields));
 			$this->assertTrue(in_array('event_note', SUS_EventLog::$fields));
 			$this->assertTrue(in_array('event_dataset', SUS_EventLog::$fields));
 			$this->assertTrue(in_array('event_filepath', SUS_EventLog::$fields));
@@ -31,9 +32,9 @@
 			$e1 = SUS_EventLog::getOneFromDb(['eventlog_id' => 1001], $this->DB);
 			$e2 = SUS_EventLog::getOneFromDb(['eventlog_id' => 1002], $this->DB);
 
-//			$this->assertEqual(SUS_EventLog::cmp($e1, $e2), -1);
-//			$this->assertEqual(SUS_EventLog::cmp($e1, $e1), 1);
-//			$this->assertEqual(SUS_EventLog::cmp($e2, $e1), -1);
+			//			$this->assertEqual(SUS_EventLog::cmp($e1, $e2), -1);
+			//			$this->assertEqual(SUS_EventLog::cmp($e1, $e1), 1);
+			//			$this->assertEqual(SUS_EventLog::cmp($e2, $e1), -1);
 		}
 
 

@@ -214,9 +214,9 @@
 							$newOpening->updateDb();
 
 							// save for subsequent event log
-							$evt_action = "createNewOpening";
+							$evt_action    = "createNewOpening";
 							$evt_action_id = $newOpening->sheet_id;
-							$evt_note = "successfully added openings: ";
+							$evt_note      = "successfully added openings: ";
 							array_push($log_add_success, $newOpening->opening_id);
 
 							if (!$opening_group_id) {
@@ -225,7 +225,7 @@
 								$newOpening->updateDb();
 
 								// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-								util_createEventLog($USER->user_id, TRUE, "set initial opening_group_id", $newOpening->sheet_id, "set opening_group_id = " . $newOpening->opening_group_id, print_r(json_encode($_REQUEST), TRUE), $DB);
+								util_createEventLog($USER->user_id, TRUE, "set initial opening_group_id", $newOpening->sheet_id, "sheet_id", "set opening_group_id = " . $newOpening->opening_group_id, print_r(json_encode($_REQUEST), TRUE), $DB);
 							}
 						}
 					}
@@ -241,10 +241,10 @@
 							require_once(dirname(__FILE__) . '/../foot.php');
 
 							// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-							$evt_action = "editOpening";
+							$evt_action    = "editOpening";
 							$evt_action_id = $openingID;
-							$evt_note = "Error: No matching Opening record found. Attempt to edit opening record failed";
-							util_createEventLog($USER->user_id, FALSE, $evt_action, $evt_action_id, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
+							$evt_note      = "Error: No matching Opening record found. Attempt to edit opening record failed";
+							util_createEventLog($USER->user_id, FALSE, $evt_action, $evt_action_id, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 							exit;
 						}
 
@@ -290,9 +290,9 @@
 							$editOpening->updateDb();
 
 							// save for subsequent event log
-							$evt_action = "editOpening";
+							$evt_action    = "editOpening";
 							$evt_action_id = $editOpening->sheet_id;
-							$evt_note = "successfully edited opening: ";
+							$evt_note      = "successfully edited opening: ";
 							array_push($log_add_success, $editOpening->opening_id);
 						}
 					}
@@ -309,7 +309,7 @@
 		//	if(!$evt_action) {$evt_action = "dud1";}
 		//	if(!$evt_action_id) {$evt_action = "dud2";}
 		//	if(!$evt_note) {$evt_action = "dud3";} else{$evt_note .= implode(", ", $log_add_success);}
-		util_createEventLog($USER->user_id, TRUE, $evt_action, $evt_action_id, $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
+		util_createEventLog($USER->user_id, TRUE, $evt_action, $evt_action_id, "sheet_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// package the conflicts into a urlencoded string for display on resultant page
 		if ($conflicts_ary) {

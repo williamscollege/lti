@@ -259,9 +259,9 @@
 											echo '<div id="container-others-signups">' . "\n";
 
 											$flagFutureOnMySheets = FALSE;
-											$lastOpeningDate = '';
-											$daysOpenings    = [];
-											$todayYmd        = explode(' ', util_currentDateTimeString())[0];
+											$lastOpeningDate      = '';
+											$daysOpenings         = [];
+											$todayYmd             = explode(' ', util_currentDateTimeString())[0];
 											foreach ($USER->signups_on_my_sheets as $signup) {
 												$curOpeningDate = explode(' ', $signup['begin_datetime'])[0];
 												if ($curOpeningDate != $lastOpeningDate) {
@@ -276,11 +276,11 @@
 													$relative_time_class = 'in-the-past toggle_opening_history';
 													//util_prePrintR('$curOpeningDate : $todayYmd = '.$curOpeningDate .':'. $todayYmd);
 													if ($curOpeningDate == $todayYmd) {
-														$relative_time_class = 'in-the-present';
+														$relative_time_class  = 'in-the-present';
 														$flagFutureOnMySheets = TRUE; // set boolean flag
 													}
 													elseif ($curOpeningDate > $todayYmd) {
-														$relative_time_class = 'in-the-future';
+														$relative_time_class  = 'in-the-future';
 														$flagFutureOnMySheets = TRUE; // set boolean flag
 													}
 													echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($signup['begin_datetime']), "m/d/Y") . '</h4>';

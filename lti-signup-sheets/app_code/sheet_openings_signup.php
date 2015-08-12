@@ -164,9 +164,9 @@
 										<?php
 											$s->cacheOpenings();
 											$flagFutureOpeningSignup = FALSE;
-											$lastOpeningDate = '';
-											$daysOpenings    = [];
-											$todayYmd        = explode(' ', util_currentDateTimeString())[0];
+											$lastOpeningDate         = '';
+											$daysOpenings            = [];
+											$todayYmd                = explode(' ', util_currentDateTimeString())[0];
 
 											foreach ($s->openings as $opening) {
 												$curOpeningDate = explode(' ', $opening->begin_datetime)[0];
@@ -185,11 +185,11 @@
 													// determine: past/present/future
 													$relative_time_class = 'in-the-past toggle_opening_history';
 													if ($curOpeningDate == $todayYmd) {
-														$relative_time_class = 'in-the-present';
+														$relative_time_class     = 'in-the-present';
 														$flagFutureOpeningSignup = TRUE; // set boolean flag
 													}
 													elseif ($curOpeningDate > $todayYmd) {
-														$relative_time_class = 'in-the-future';
+														$relative_time_class     = 'in-the-future';
 														$flagFutureOpeningSignup = TRUE; // set boolean flag
 													}
 													echo '<div class="opening-list-for-date ' . $relative_time_class . '" data-for-date="' . $curOpeningDate . '"><h4>' . date_format(new DateTime($opening->begin_datetime), "m/d/Y") . '</h4>';

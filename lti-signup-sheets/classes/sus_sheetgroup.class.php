@@ -28,7 +28,7 @@
 		// static factory function to populate new object with desired base values
 		public static function createNewSheetgroupForUser($user_id, $name, $description, $dbConnection) {
 			// determine if the user lacks an active default sheet group
-			$sg_all    = SUS_Sheetgroup::getAllFromDb(['owner_user_id' => $user_id], $dbConnection);
+			$sg_all          = SUS_Sheetgroup::getAllFromDb(['owner_user_id' => $user_id], $dbConnection);
 			$flag_is_default = 0;
 			if (count($sg_all) <= 0) {
 				// this will be user's first active sheetgroup

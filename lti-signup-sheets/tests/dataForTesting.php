@@ -303,10 +303,10 @@
 
 	function createTestData_SUS_EventLog($dbConn) {
 		// 1000 series ids
-		# SUS_EventLog: 'eventlog_id', 'user_id', 'flag_success', 'event_action', 'event_action_id', 'event_note', 'event_dataset', 'event_filepath', 'user_agent_string', 'event_datetime'
+		# SUS_EventLog: 'eventlog_id', 'user_id', 'flag_success', 'event_action', 'event_action_id', 'event_action_target_type', 'event_note', 'event_dataset', 'event_filepath', 'user_agent_string', 'event_datetime'
 		$addTestSql  = "INSERT INTO " . SUS_EventLog::$dbTable . " VALUES
-			(1001, 101, 1, 'add-sheetgroup', 501, 'small note', 'ajax_Action = add-sheetgroup', '/GITHUB/lti/lti-signup-sheets/ajax_actions/ajax_actions.php', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0', TIMESTAMPADD(hour,4,NOW())),
-			(1002, 101, 1, 'edit-sheetgroup', 501, 'more helpful note', 'ajax_Action = edit-sheetgroup', '/GITHUB/lti/lti-signup-sheets/ajax_actions/ajax_actions.php', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0', TIMESTAMPADD(hour,6,NOW()))
+			(1001, 101, 1, 'add-sheetgroup', 501, 'sheetgroup_id', 'small note', 'ajax_Action = add-sheetgroup', '/GITHUB/lti/lti-signup-sheets/ajax_actions/ajax_actions.php', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0', TIMESTAMPADD(hour,4,NOW())),
+			(1002, 101, 1, 'edit-sheetgroup', 501, 'sheetgroup_id', 'more helpful note', 'ajax_Action = edit-sheetgroup', '/GITHUB/lti/lti-signup-sheets/ajax_actions/ajax_actions.php', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0', TIMESTAMPADD(hour,6,NOW()))
 
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);

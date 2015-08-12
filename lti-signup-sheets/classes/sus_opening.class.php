@@ -167,8 +167,8 @@
 
 			// show text message if opening belongs to a group (opening_group_id)
 			// echo "opening_group_id=". $this->opening_group_id . ",cnt=" . $openings_per_group_ary[$this->opening_group_id] . "<br />";
-			$repeating_event     = "";
-			$count_openings = 1; // set default value (opening is repeating if it has > 1 opening in group)
+			$repeating_event = "";
+			$count_openings  = 1; // set default value (opening is repeating if it has > 1 opening in group)
 			if (isset($openings_per_group_ary[$this->opening_group_id])) {
 				$count_openings = $openings_per_group_ary[$this->opening_group_id];
 				if ($openings_per_group_ary[$this->opening_group_id] > 1) {
