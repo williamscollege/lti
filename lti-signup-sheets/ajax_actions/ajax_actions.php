@@ -120,6 +120,32 @@
 		$results['html_output']  = '';
 	}
 	//###############################################################
+	elseif ($action == 'copy-sheet') {
+		$s = SUS_Sheet::getOneFromDb(['sheet_id' => $primaryID], $DB);
+
+		if (!$s->matchesDb) {
+			// error: no matching record found
+			$results["notes"] = "no matching record found";
+			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, "sheet_id", $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
+			exit;
+		}
+
+		// copy this sheet (create a duplicate sheet with identical sheet info and sheet access, but without any openings or signups)
+		//$s->copySheet();
+
+		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
+		$evt_note = "create a duplicate sheet without any openings or signups";
+		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "sheet_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
+
+		// output
+		if ($s->matchesDb) {
+			$results['status'] = 'success';
+		}
+	}
+	//###############################################################
 	elseif ($action == 'delete-sheetgroup') {
 		$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $primaryID], $DB);
 
@@ -137,7 +163,7 @@
 		$sg->cascadeDelete();
 
 		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-		$evt_note = "cascade delete subordinates";
+		$evt_note = "cascade delete any subordinates";
 		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "sheetgroup_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
@@ -163,7 +189,7 @@
 		$s->cascadeDelete();
 
 		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-		$evt_note = "cascade delete subordinates";
+		$evt_note = "cascade delete any subordinates";
 		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "sheet_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
@@ -194,7 +220,7 @@
 				$o->cascadeDelete();
 
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-				$evt_note = "delete only this opening: " . $primaryID . "; cascade delete subordinates";
+				$evt_note = "delete only this opening: " . $primaryID . "; cascade delete any subordinates";
 				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
@@ -243,7 +269,7 @@
 				}
 
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-				$evt_note = "delete all openings for this single day: " . implode(", ", $updateIDs_ary) . "; cascade delete subordinates";
+				$evt_note = "delete all openings for this single day: " . implode(", ", $updateIDs_ary) . "; cascade delete any subordinates";
 				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
@@ -287,7 +313,7 @@
 				}
 
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-				$evt_note = "delete this and all future openings in this series: " . implode(", ", $updateIDs_ary) . "; cascade delete subordinates";
+				$evt_note = "delete this and all future openings in this series: " . implode(", ", $updateIDs_ary) . "; cascade delete any subordinates";
 				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
@@ -331,7 +357,7 @@
 				}
 
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-				$evt_note = "delete this and all past and future openings in this series: " . implode(", ", $updateIDs_ary) . "; cascade delete subordinates";
+				$evt_note = "delete this and all past and future openings in this series: " . implode(", ", $updateIDs_ary) . "; cascade delete any subordinates";
 				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
@@ -362,7 +388,7 @@
 		$su->cascadeDelete();
 
 		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-		$evt_note = "cascade delete subordinates";
+		$evt_note = "cascade delete any subordinates";
 		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "signup_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
