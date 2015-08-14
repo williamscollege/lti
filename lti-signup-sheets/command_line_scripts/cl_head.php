@@ -5,7 +5,7 @@
 		exit;
 	}
 
-	
+
 	require_once(dirname(__FILE__) . '/../institution.cfg.php');
 	require_once(dirname(__FILE__) . '/../lang.cfg.php');
 	require_once(dirname(__FILE__) . '/../classes/ALL_CLASS_INCLUDES.php');

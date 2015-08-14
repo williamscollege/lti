@@ -160,7 +160,7 @@
 		// 500 series ids
 		# SUS_Sheetgroup: 'sheetgroup_id', 'created_at', 'updated_at', 'flag_delete', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheetgroup::$dbTable . " VALUES
-			(501, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 501', 'Something to organize my math sheets', 8, 2),
+			(501, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 501', 'Something to organize my math sheets', 8, 6),
 			(502, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 502', 'Something to organize my english sheets', 4, 2),
 			(503, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 503', 'Something to organize my spanish sheets', 6, 3),
 			(504, NOW(), NOW(), 0, 102, 0, 'Sheetgroup 504', 'Help me keep track of so many sheets', 1, 1),
@@ -188,7 +188,7 @@
 		# 'flag_alert_owner_imminent', 'flag_alert_admin_change', 'flag_alert_admin_signup', 'flag_alert_admin_imminent', 'flag_private_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheet::$dbTable . " VALUES
 			(601, NOW(), NOW(), 0, 101, 501, 'Sheet 601 is about Dunlap tennis ball production', 'Sheet 601, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 0, 0, 0, 0),
-			(602, NOW(), NOW(), 0, 101, 501, 'Sheet 602', 'Sheet 602, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 2, 3, 0, 0, 0, 0, 0, 0, 0),
+			(602, NOW(), NOW(), 0, 101, 501, 'Sheet 602', 'Sheet 602, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), -1, -1, 1, 1, 1, 1, 1, 1, 0),
 			(603, NOW(), NOW(), 0, 101, 501, 'Sheet 603', 'Sheet 603, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 4, 6, 1, 0, 0, 0, 0, 0, 0),
 			(604, NOW(), NOW(), 0, 101, 502, 'Sheet 604', 'Sheet 604, Sheetgroup 502', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 1, 0, 0, 0, 0, 0),
 			(605, NOW(), NOW(), 0, 101, 503, 'Sheet 605', 'Sheet 605, Sheetgroup 503', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 1, 0, 0, 0, 0),

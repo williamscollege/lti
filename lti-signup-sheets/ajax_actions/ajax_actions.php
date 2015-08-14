@@ -637,7 +637,43 @@
 		}
 
 		// must get sheet object to enable render fxn
-		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
+		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id,], $DB);
+
+		#------------------------------------------------#
+		# BEGIN: now queue the message
+		#------------------------------------------------#
+		// create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
+		$sheet->cacheStructuredData(0, $primaryID, $su->signup_id);
+		// util_prePrintR($sheet->structured_data);
+
+		$subject = 'Glow SUS - ' . $USER->first_name . ' ' . $USER->last_name . ' signed up for ' . $sheet->name;
+		$body    = "Signup Confirmation: " . $USER->first_name . ' ' . $USER->last_name . '\nOpening: ' . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
+
+		// 1) send to: user who signed up
+		$signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
+		create_and_send_QueuedMessage($DB, $signup_user->user_id, $signup_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
+
+		// 2) send to: sheet owner
+		if ($sheet->flag_alert_owner_signup) {
+			$owner_user = User::getOneFromDb(['username' => $sheet->structured_data->s_owner_user_id], $DB);
+			create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
+		}
+
+		// 3) send to: sheet managers (admins)
+		if (isset($sheet->structured_data->access_controls->adminbyuser)) {
+			foreach ($sheet->structured_data->access_controls->adminbyuser as $access_data) {
+				// Queue messages for: Email admins on signup or cancel
+				if ($access_data->a_type == 'adminbyuser') {
+					if ($sheet->flag_alert_admin_signup) {
+						$admin_user = User::getOneFromDb(['username' => $access_data->a_constraint_data], $DB);
+						create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
+					}
+				}
+			}
+		}
+		#------------------------------------------------#
+		# END: now queue the message
+		#------------------------------------------------#
 
 		// output
 		$results['status']                    = 'success';
