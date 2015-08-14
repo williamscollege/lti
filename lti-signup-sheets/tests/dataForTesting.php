@@ -215,7 +215,7 @@
 		$addTestSql  = "INSERT INTO " . SUS_Opening::$dbTable . " VALUES
 			(701, NOW(), NOW(), 0, 601, 1, 'Opening 701', 'Opening 701, Sheet 601, Sheetgroup 501', 8 , TIMESTAMPADD(hour,4,NOW()),  TIMESTAMPADD(hour,5,NOW()), 'opening location at CET 256', 'opening admin comment'),
 			(702, NOW(), NOW(), 0, 601, 2, 'Opening 702', 'Opening 702, Sheet 601, Sheetgroup 501', 2 , TIMESTAMPADD(hour,-96,NOW()),  TIMESTAMPADD(hour,-93,NOW()), 'CET MakerSpace', 'no comment'),
-			(703, NOW(), NOW(), 0, 602, 3, 'Opening 703', 'Opening 703, Sheet 602, Sheetgroup 501', 2 , TIMESTAMPADD(hour,128,NOW()),  TIMESTAMPADD(hour,129,NOW()), '', 'no comment'),
+			(703, NOW(), NOW(), 0, 602, 3, 'Opening 703', 'Opening 703, Sheet 602, Sheetgroup 501', 7 , TIMESTAMPADD(hour,128,NOW()),  TIMESTAMPADD(hour,129,NOW()), '', 'no comment'),
 			(704, NOW(), NOW(), 0, 602, 4, 'Opening 704', 'Opening 704, Sheet 602, Sheetgroup 501', 2 , TIMESTAMPADD(hour,1,NOW()),  TIMESTAMPADD(hour,2,NOW()), '', ''),
 			(705, NOW(), NOW(), 0, 603, 5, 'Opening 705', 'Opening 705, Sheet 603, Sheetgroup 501', 4 , TIMESTAMPADD(hour,22,NOW()),  TIMESTAMPADD(hour,23,NOW()), '', ''),
 			(706, NOW(), NOW(), 0, 604, 6, 'Opening 706', 'Opening 706, Sheet 604, Sheetgroup 502', 1 , NOW(),  TIMESTAMPADD(hour,1,NOW()), 'Faculty House', ''),
