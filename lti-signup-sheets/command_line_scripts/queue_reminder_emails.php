@@ -1,7 +1,6 @@
 <?php
 
 	# TODO - need to REFACTOR this file to enable Cron jobs to send reminders once daily (this is a system state based cron job, not an event driven job)
-	exit;
 
 	require_once('cl_head.php');
 
