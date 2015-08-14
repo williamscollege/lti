@@ -365,6 +365,47 @@
 		$evt_note = "cascade delete subordinates";
 		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "signup_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
+		$o = SUS_Opening::getOneFromDb(['opening_id' => $su->opening_id,], $DB);
+
+		#------------------------------------------------#
+		# BEGIN: now queue the message
+		#------------------------------------------------#
+		// sheet object also needed for render fxn
+		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id,], $DB);
+
+		// create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
+		$sheet->cacheStructuredData(0, $su->opening_id, $su->signup_id);
+		// util_prePrintR($sheet->structured_data);
+
+		$subject = 'Glow Signup Sheets - ' . $USER->first_name . ' ' . $USER->last_name . ' cancelled on ' . $sheet->name;
+		$body    = "Signup Cancelled: " . $USER->first_name . ' ' . $USER->last_name . '\nOpening: ' . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
+
+		// 1) send to: user who signed up
+		$signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
+		create_and_send_QueuedMessage($DB, $signup_user->user_id, $signup_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
+
+		// 2) send to: sheet owner
+		if ($sheet->flag_alert_owner_signup) {
+			$owner_user = User::getOneFromDb(['username' => $sheet->structured_data->s_owner_user_id], $DB);
+			create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
+		}
+
+		// 3) send to: sheet managers (specifically named, if any)
+		if (isset($sheet->structured_data->access_controls->adminbyuser)) {
+			foreach ($sheet->structured_data->access_controls->adminbyuser as $access_data) {
+				// Queue messages for: Email admins on signup or cancel
+				if ($access_data->a_type == 'adminbyuser') {
+					if ($sheet->flag_alert_admin_signup) {
+						$admin_user = User::getOneFromDb(['username' => $access_data->a_constraint_data], $DB);
+						create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
+					}
+				}
+			}
+		}
+		#------------------------------------------------#
+		# END: now queue the message
+		#------------------------------------------------#
+
 		// output
 		if ($su->matchesDb) {
 			$results['status'] = 'success';
@@ -636,17 +677,17 @@
 			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 
-		// must get sheet object to enable render fxn
-		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id,], $DB);
-
 		#------------------------------------------------#
 		# BEGIN: now queue the message
 		#------------------------------------------------#
+		// sheet object also needed for render fxn
+		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id,], $DB);
+
 		// create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
 		$sheet->cacheStructuredData(0, $primaryID, $su->signup_id);
 		// util_prePrintR($sheet->structured_data);
 
-		$subject = 'Glow SUS - ' . $USER->first_name . ' ' . $USER->last_name . ' signed up for ' . $sheet->name;
+		$subject = 'Glow Signup Sheets - ' . $USER->first_name . ' ' . $USER->last_name . ' signed up for ' . $sheet->name;
 		$body    = "Signup Confirmation: " . $USER->first_name . ' ' . $USER->last_name . '\nOpening: ' . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
 
 		// 1) send to: user who signed up
@@ -659,7 +700,7 @@
 			create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
 		}
 
-		// 3) send to: sheet managers (admins)
+		// 3) send to: sheet managers (specifically named, if any)
 		if (isset($sheet->structured_data->access_controls->adminbyuser)) {
 			foreach ($sheet->structured_data->access_controls->adminbyuser as $access_data) {
 				// Queue messages for: Email admins on signup or cancel
@@ -725,8 +766,44 @@
 			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 
-		// must get sheet object to enable render fxn
-		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
+		#------------------------------------------------#
+		# BEGIN: now queue the message
+		#------------------------------------------------#
+		// sheet object also needed for render fxn
+		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id,], $DB);
+
+		// create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
+		$sheet->cacheStructuredData(0, $su->opening_id, $su->signup_id);
+		// util_prePrintR($sheet->structured_data);
+
+		$subject = 'Glow Signup Sheets - ' . $USER->first_name . ' ' . $USER->last_name . ' cancelled on ' . $sheet->name;
+		$body    = "Signup Cancelled: " . $USER->first_name . ' ' . $USER->last_name . '\nOpening: ' . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
+
+		// 1) send to: user who signed up
+		$signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
+		create_and_send_QueuedMessage($DB, $signup_user->user_id, $signup_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
+
+		// 2) send to: sheet owner
+		if ($sheet->flag_alert_owner_signup) {
+			$owner_user = User::getOneFromDb(['username' => $sheet->structured_data->s_owner_user_id], $DB);
+			create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
+		}
+
+		// 3) send to: sheet managers (specifically named, if any)
+		if (isset($sheet->structured_data->access_controls->adminbyuser)) {
+			foreach ($sheet->structured_data->access_controls->adminbyuser as $access_data) {
+				// Queue messages for: Email admins on signup or cancel
+				if ($access_data->a_type == 'adminbyuser') {
+					if ($sheet->flag_alert_admin_signup) {
+						$admin_user = User::getOneFromDb(['username' => $access_data->a_constraint_data], $DB);
+						create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
+					}
+				}
+			}
+		}
+		#------------------------------------------------#
+		# END: now queue the message
+		#------------------------------------------------#
 
 		// output
 		$results['status']                    = 'success';
@@ -798,52 +875,43 @@
 			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
 			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", "created signup", print_r(json_encode($_REQUEST), TRUE), $DB);
 
+			$o = SUS_Opening::getOneFromDb(['opening_id' => $su->opening_id,], $DB);
+
 			#------------------------------------------------#
-			// TODO - ADD_OR_COMPLETE_QUEUED_MESSAGE
 			# BEGIN: now queue the message
 			#------------------------------------------------#
-			/*
-			// TODO - MUST ADD SHEET ID TO DATA-ATTRIBUTES AND PASS IT HERE; AND replace this hardcoded values
-			$s = SUS_Sheet::getOneFromDb(['sheet_id' => 601,], $DB);
-			// cacheStructuredData($datetime=0, $opening_id=0, $signup_id=0);
-			$s->cacheStructuredData(0, 0, 813);
-			util_prePrintR($s->structured_data);
+			// sheet object also needed for render fxn
+			$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id,], $DB);
 
-			$subject = 'Glow SUS - ' . $u->first_name . ' ' . $u->last_name . ' signed up for ' . $sheet->name;
-			$body    = "Signup Confirmation: " . $u->first_name . ' ' . $u->last_name . '\nOpening: ' . date_format(new DateTime($opening->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
+			// create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
+			$sheet->cacheStructuredData(0, $su->opening_id, $su->signup_id);
+			// util_prePrintR($sheet->structured_data);
 
-			foreach ($s->structured_data as $obj) {
-				// Queue messages for:
-				// Email owner on signup or cancel
-				// Email owner on upcoming signup
-				// Email admins on signup or cancel
-				// Email admins on upcoming signup
-				// TODO - Need to implement proper array values here
-				if ($obj->$sheet->flag_alert_owner_signup || $obj->$sheet->flag_alert_owner_imminent || $obj->$sheet->flag_alert_admin_signup || $obj->$sheet->flag_alert_admin_imminent) {
-					prep_for_QueuedMessage($DB, $u->user_id, $u->email, $subject, $body, $su->opening_id, $subject, $body, $opening->opening_id, $sheet->sheet_id);
+			$subject = 'Glow Signup Sheets - ' . $USER->first_name . ' ' . $USER->last_name . ' cancelled on ' . $sheet->name;
+			$body    = "Signup Cancelled: " . $USER->first_name . ' ' . $USER->last_name . '\nOpening: ' . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
+
+			// 1) send to: user who signed up
+			$signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
+			create_and_send_QueuedMessage($DB, $signup_user->user_id, $signup_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
+
+			// 2) send to: sheet owner
+			if ($sheet->flag_alert_owner_signup) {
+				$owner_user = User::getOneFromDb(['username' => $sheet->structured_data->s_owner_user_id], $DB);
+				create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
+			}
+
+			// 3) send to: sheet managers (specifically named, if any)
+			if (isset($sheet->structured_data->access_controls->adminbyuser)) {
+				foreach ($sheet->structured_data->access_controls->adminbyuser as $access_data) {
+					// Queue messages for: Email admins on signup or cancel
+					if ($access_data->a_type == 'adminbyuser') {
+						if ($sheet->flag_alert_admin_signup) {
+							$admin_user = User::getOneFromDb(['username' => $access_data->a_constraint_data], $DB);
+							create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
+						}
+					}
 				}
 			}
-			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-			$evt_note = "successfully queued message(s)";
-			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
-
-			// TODO - Possibly move this to be a class function (and combine with others, if possible)
-			function prep_for_QueuedMessage($DB, $usersArray, $subject, $body, $openingID = 0, $sheetID = 0) {
-				// QueuedMessage::factory($db, $user_id, $target, $summary, $body, $opening_id = 0, $sheet_id = 0, $type = 'email' )
-				$qm = QueuedMessage::factory($DB, $usersArray["userID"], $usersArray["email"], $subject, $body, $openingID, $sheetID);
-				$qm->updateDb();
-
-				if (!$qm->matchesDb) {
-					// create record failed
-					$results['notes'] = "database error: could not create queued message for signup";
-					echo json_encode($results);
-
-					// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-					util_createEventLog($USER->user_id, FALSE, $action, $primaryID, "opening_id", $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
-					exit;
-				}
-			}
-			*/
 			#------------------------------------------------#
 			# END: now queue the message
 			#------------------------------------------------#
