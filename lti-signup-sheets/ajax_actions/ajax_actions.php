@@ -377,16 +377,20 @@
 		$sheet->cacheStructuredData(0, $su->opening_id, $su->signup_id);
 		// util_prePrintR($sheet->structured_data);
 
-		$subject = 'Glow Signup Sheets - ' . $USER->first_name . ' ' . $USER->last_name . ' cancelled on ' . $sheet->name;
-		$body    = "Signup Cancelled: " . $USER->first_name . ' ' . $USER->last_name . '\nOpening: ' . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
+		// fetch: user who signed-up/cancelled
+		$signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
 
+		$subject = 'Glow Signup Sheets - ' . $USER->first_name . ' ' . $USER->last_name . ' cancelled ' . $signup_user->first_name . ' ' . $signup_user->last_name . ' on ' . $sheet->name;
+		$body    = "Signup Cancelled: " . $signup_user->first_name . ' ' . $signup_user->last_name . "\nCancelled by: " . $USER->first_name . ' ' . $USER->last_name . '\nOpening: ' . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
+
+		// echo json_encode($subject); exit; // # Return JSON array
 		// 1) send to: user who signed-up/cancelled
-		// $signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
 		// create_and_send_QueuedMessage($DB, $signup_user->user_id, $signup_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
 
 		// 2) send to: sheet owner
 		if ($sheet->flag_alert_owner_signup) {
 			$owner_user = User::getOneFromDb(['username' => $sheet->structured_data->s_owner_user_id], $DB);
+			// QueuedMessage::factory($db, $user_id, $target, $summary, $body, $opening_id = 0, $sheet_id = 0, $type = 'email' )
 			create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
 		}
 
@@ -890,11 +894,13 @@
 			$sheet->cacheStructuredData(0, $su->opening_id, $su->signup_id);
 			// util_prePrintR($sheet->structured_data);
 
-			$subject = 'Glow Signup Sheets - ' . $USER->first_name . ' ' . $USER->last_name . ' signed up for ' . $sheet->name;
-			$body    = "Signup Confirmation: " . $USER->first_name . ' ' . $USER->last_name . '\nOpening: ' . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
+			// fetch: user who signed-up/cancelled
+			$signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
+
+			$subject = 'Glow Signup Sheets - ' . $USER->first_name . ' ' . $USER->last_name . ' signed up ' . $signup_user->first_name . ' ' . $signup_user->last_name . ' on ' . $sheet->name;
+			$body    = "Signup Confirmation: " . $signup_user->first_name . ' ' . $signup_user->last_name . "\nAdded by: " . $USER->first_name . ' ' . $USER->last_name . '\nOpening: ' . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
 
 			// 1) send to: user who signed-up/cancelled
-			// $signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
 			// create_and_send_QueuedMessage($DB, $signup_user->user_id, $signup_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
 
 			// 2) send to: sheet owner

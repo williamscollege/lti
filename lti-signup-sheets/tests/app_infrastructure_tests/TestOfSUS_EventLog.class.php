@@ -11,7 +11,7 @@
 		}
 
 		function testSUS_EventLogAtributesExist() {
-			$this->assertEqual(count(SUS_EventLog::$fields), 10);
+			$this->assertEqual(count(SUS_EventLog::$fields), 11);
 
 			$this->assertTrue(in_array('eventlog_id', SUS_EventLog::$fields));
 			$this->assertTrue(in_array('user_id', SUS_EventLog::$fields));

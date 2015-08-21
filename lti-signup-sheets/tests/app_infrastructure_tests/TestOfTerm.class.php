@@ -56,7 +56,8 @@
 		}
 
 		function testTermRetrievedFromDb() {
-			$t = new Term(['term_id' => 50, 'DB' => $this->DB]);
+			//$t = new Term(['term_id' => 50, 'DB' => $this->DB]);
+			$t = new Term(['term_id' => 50, 'canvas_term_id' => 0, 'DB' => $this->DB]);
 			$this->assertNull($t->term_idstr);
 
 			$t->term_idstr = '23F';

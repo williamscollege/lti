@@ -34,9 +34,9 @@
 			$o1 = SUS_Opening::getOneFromDb(['opening_id' => 701], $this->DB);
 			$o2 = SUS_Opening::getOneFromDb(['opening_id' => 702], $this->DB);
 
-			$this->assertEqual(SUS_Opening::cmp($o1, $o2), -1);
+			$this->assertEqual(SUS_Opening::cmp($o1, $o2), 1);
 			$this->assertEqual(SUS_Opening::cmp($o1, $o1), 0);
-			$this->assertEqual(SUS_Opening::cmp($o2, $o1), 1);
+			$this->assertEqual(SUS_Opening::cmp($o2, $o1), -1);
 		}
 
 

@@ -59,7 +59,8 @@
 		//// DB interaction tests
 
 		function testUserDBInsert() {
-			$u = new User(['user_id' => 50, 'username' => 'falb1', 'first_name' => 'Fred', 'last_name' => 'Albertson', 'DB' => $this->DB]);
+			//$u = new User(['user_id' => 50, 'username' => 'falb1', 'first_name' => 'Fred', 'last_name' => 'Albertson', 'DB' => $this->DB]);
+			$u = new User(['user_id' => 50, 'canvas_user_id' => 0, 'sis_user_id' => 0, 'username' => 'falb1', 'DB' => $this->DB]);
 
 			$u->updateDb();
 
@@ -149,9 +150,9 @@
 
 			$this->assertEqual(3, count($u1->signups_all));
 			// note hash notation (instead of object property)
-			$this->assertEqual(705, $u1->signups_all[0]['opening_id']);
+			$this->assertEqual(704, $u1->signups_all[0]['opening_id']);
 			$this->assertEqual(701, $u1->signups_all[1]['opening_id']);
-			$this->assertEqual(704, $u1->signups_all[2]['opening_id']);
+			$this->assertEqual(705, $u1->signups_all[2]['opening_id']);
 		}
 
 		function testCacheSignupsOnMySheets() {
@@ -161,8 +162,8 @@
 
 			// count # of openings
 			$this->assertEqual(5, count($u1->signups_on_my_sheets));
-			$this->assertEqual(703, $u1->signups_on_my_sheets[0]['opening_id']);
-			$this->assertEqual(705, $u1->signups_on_my_sheets[1]['opening_id']);
+			$this->assertEqual(702, $u1->signups_on_my_sheets[0]['opening_id']);
+			$this->assertEqual(704, $u1->signups_on_my_sheets[1]['opening_id']);
 			$this->assertEqual(701, $u1->signups_on_my_sheets[2]['opening_id']);
 
 			// count # of signups in one opening
@@ -180,7 +181,7 @@
 
 			$u1->cacheMyAvailableSheetOpenings();
 
-			$this->assertEqual(1, count($u1->sheet_openings_all));
+			$this->assertEqual(2, count($u1->sheet_openings_all));
 			$this->assertEqual(601, $u1->sheet_openings_all[0]['s_id']);
 		}
 
