@@ -375,7 +375,8 @@
 
 		// create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
 		$sheet->cacheStructuredData(0, $su->opening_id, $su->signup_id);
-		// util_prePrintR($sheet->structured_data);
+// TODO - DEBUGGING HERE
+// util_prePrintR($sheet->structured_data); // echo json_encode($sheet->structured_data);
 
 		// fetch: user who signed-up/cancelled
 		$signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
