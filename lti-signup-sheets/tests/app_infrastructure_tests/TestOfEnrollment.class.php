@@ -46,7 +46,7 @@
 		//// DB interaction tests
 
 		function testEnrollmentDBInsert() {
-			$e = new Enrollment(['enrollment_id' => 50, 'canvas_user_id' => 200, 'course_idstr' => '25F-ROCK-101-01', 'course_role_name' => 'teacher', 'section_idstr' => '25F-ROCK-101-01', 'DB' => $this->DB]);
+			$e = new Enrollment(['enrollment_id' => 50, 'canvas_user_id' => 200, 'canvas_course_id' => 0, 'course_idstr' => '25F-ROCK-101-01', 'course_role_name' => 'teacher', 'section_idstr' => '25F-ROCK-101-01', 'DB' => $this->DB]);
 
 			$e->updateDb();
 

@@ -100,10 +100,10 @@
 
 			// test expected results
 			$this->assertEqual(2, count($s->openings));
-			$this->assertEqual(4, count($s->openings[0]->signups));
-			$this->assertEqual(2, count($s->openings[1]->signups));
-			$this->assertEqual(701, $s->openings[0]->opening_id);
-			$this->assertEqual(813, $s->openings[0]->signups[0]->signup_id);
+			$this->assertEqual(2, count($s->openings[0]->signups));
+			$this->assertEqual(4, count($s->openings[1]->signups));
+			$this->assertEqual(702, $s->openings[0]->opening_id);
+			$this->assertEqual(809, $s->openings[0]->signups[0]->signup_id);
 
 			// were items correctly marked as deleted?
 			$this->assertEqual(1, $s->flag_delete); // sheet

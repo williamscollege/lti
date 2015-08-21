@@ -307,12 +307,28 @@
 		$addTestSql  = "INSERT INTO " . SUS_EventLog::$dbTable . " VALUES
 			(1001, 101, 1, 'add-sheetgroup', 501, 'sheetgroup_id', 'small note', 'ajax_Action = add-sheetgroup', '/GITHUB/lti/lti-signup-sheets/ajax_actions/ajax_actions.php', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0', TIMESTAMPADD(hour,4,NOW())),
 			(1002, 101, 1, 'edit-sheetgroup', 501, 'sheetgroup_id', 'more helpful note', 'ajax_Action = edit-sheetgroup', '/GITHUB/lti/lti-signup-sheets/ajax_actions/ajax_actions.php', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0', TIMESTAMPADD(hour,6,NOW()))
-
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
 		if ($addTestStmt->errorInfo()[0] != '0000') {
 			echo "<pre>error adding test SUS_EventLog data to the DB\n";
+			print_r($addTestStmt->errorInfo());
+			debug_print_backtrace();
+			exit;
+		}
+	}
+
+	function createTestData_QueuedMessage($dbConn) {
+		// 1100 series ids
+		# QueuedMessage: 'queued_message_id', 'user_id', 'sheet_id', 'opening_id', 'delivery_type', 'flag_is_delivered', 'target', 'summary', 'body', 'action_datetime', 'action_status', 'action_notes', 'flag_delete'
+		$addTestSql  = "INSERT INTO " . QueuedMessage::$dbTable . " VALUES
+			(1101, 101, 602, 703, 'email', 0, 'jbond@institution.edu', 'Glow Signup Sheets - James Bond signed up for Sheet 602', 'Signup Confirmation: James Bond Opening: 08/25/2015 10:01 PM On Sheet: Sheet 602.', TIMESTAMPADD(hour,4,NOW()), 'CREATED', 'CREATED: at (test data follows) 2015-08-20 14:01:56', 0),
+			(1102, 101, 602, 703, 'email', 0, 'jbond@institution.edu', 'Glow Signup Sheets - James Bond cancelled on Sheet 602', 'Signup Cancelled: James Bond Opening: 08/25/2015 10:01 PM On Sheet: Sheet 602.', TIMESTAMPADD(hour,4,NOW()), 'CREATED', 'CREATED: at (test data follows) 2015-08-20 14:01:56', 0)
+   		 ";
+		$addTestStmt = $dbConn->prepare($addTestSql);
+		$addTestStmt->execute();
+		if ($addTestStmt->errorInfo()[0] != '0000') {
+			echo "<pre>error adding test QueuedMessage data to the DB\n";
 			print_r($addTestStmt->errorInfo());
 			debug_print_backtrace();
 			exit;
@@ -338,6 +354,7 @@
 		createTestData_SUS_Signups($dbConn);
 		createTestData_SUS_Access($dbConn);
 		createTestData_SUS_EventLog($dbConn);
+		createTestData_QueuedMessage($dbConn);
 	}
 
 	//--------------------------------------------------------------------------------------------------------------
@@ -395,6 +412,10 @@
 		_removeTestDataFromTable($dbConn, SUS_EventLog::$dbTable);
 	}
 
+	function removeTestData_QueuedMessage($dbConn) {
+		_removeTestDataFromTable($dbConn, QueuedMessage::$dbTable);
+	}
+
 	function removeTestData_EXAMPLE($dbConn) {
 		_removeTestDataFromTable($dbConn, Metadata_Structure::$dbTable);
 	}
@@ -412,4 +433,5 @@
 		removeTestData_SUS_Signups($dbConn);
 		removeTestData_SUS_Access($dbConn);
 		removeTestData_SUS_EventLog($dbConn);
+		removeTestData_QueuedMessage($dbConn);
 	}
