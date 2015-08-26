@@ -279,7 +279,7 @@ $(document).ready(function () {
 				title: "Delete Repeating Openings?",
 				message: '<form>' +
 				'<p><h4>' + $(this).parent().siblings('h4').html() + '</h4><strong>' + $(this).siblings('.opening-time-range').html() + '</strong>' + openingName + '</p>' +
-				'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;Deleting an opening will cancel any associated signups.<br />Notifications will be sent to all cancelled signups.</p>' +
+				'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;Deleting an opening will cancel any associated signups.<br />An alert will be sent to the owner of each cancelled signup.</p>' +
 				'<div class="radio"><label for="delete-choice-0">' +
 				'<input type="radio" name="custom_user_value" id="delete-choice-0" value="0" checked="checked">' +
 				'<strong>Only this instance</strong> - <span class="small">Delete only this opening</span></label>' +
@@ -309,7 +309,7 @@ $(document).ready(function () {
 			var params = {
 				title: "Delete opening",
 				message: "<p>Really delete this opening?<br /><br /><strong>" + $(this).siblings('.opening-time-range').html() + "</strong>" + openingName + "</p>" +
-				'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;Deleting this opening will cancel any associated signups. Notifications will be sent to all cancelled signups.</p>',
+				'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;Deleting this opening will cancel any associated signups. An alert will be sent to the owner of each cancelled signup.</p>',
 				label: "Delete opening",
 				class: "btn btn-danger",
 				url: "../ajax_actions/ajax_actions.php",
@@ -353,7 +353,7 @@ $(document).ready(function () {
 		var params = {
 			title: "Delete Signup",
 			message: "<p>Really delete this signup for <strong>&quot;" + $(this).attr('data-for-signup-name') + "&quot;</strong>?" + '</p>' +
-			'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;A notification will be sent to this user.</p>',
+			'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;An alert will be sent to this user.</p>',
 			label: "Delete Signup",
 			class: "btn btn-danger",
 			url: "../ajax_actions/ajax_actions.php",
