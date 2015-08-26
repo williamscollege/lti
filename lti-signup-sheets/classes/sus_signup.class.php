@@ -52,9 +52,34 @@
 		/* public functions */
 
 		// mark this object as deleted as well as any lower dependent items
-		public function cascadeDelete() {
+		public function cascadeDelete($usr_object) {
 			// mark signup as deleted (at this time, deleting a single opening has no dependencies worth pursuing)
 			$this->doDelete();
+
+			#------------------------------------------------#
+			# BEGIN: now queue the message
+			#------------------------------------------------#
+			// notifications are created only for changes to future events
+			$o = SUS_Opening::getOneFromDb(['opening_id' => $this->opening_id, 'flag_delete' => [0, 1]], $this->dbConnection); // special condition: fetch the record, even if it is deleted
+			if ($o->begin_datetime >= util_currentDateTimeString_asMySQL()) {
+
+				// fetch sheet
+				$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id, 'flag_delete' => [0, 1]], $this->dbConnection); // special condition: fetch the record, even if it is deleted
+
+				// fetch: user associated with the signup
+				$signup_user = User::getOneFromDb(['user_id' => $this->signup_user_id], $this->dbConnection);
+
+				$subject = 'Glow Signup Sheets - ' . $usr_object->first_name . ' ' . $usr_object->last_name . ' cancelled your signup on ' . $sheet->name;
+				$body    = "Hi " . $signup_user->first_name . ",\n\n" . $usr_object->first_name . ' ' . $usr_object->last_name . " cancelled your signup for:\n\nOpening: " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . '\n\nOn Sheet: ' . $sheet->name . '.';
+
+				// send to: user whose signup was changed by owner or manager
+				if ($usr_object->user_id != $this->signup_user_id) {
+					create_and_send_QueuedMessage($this->dbConnection, $signup_user->user_id, $signup_user->email, $subject, $body, $this->opening_id, $sheet->sheet_id);
+				}
+			}
+			#------------------------------------------------#
+			# END: now queue the message
+			#------------------------------------------------#
 		}
 
 		public function renderAsHtmlSignupWithFullControls($userDisplayFullname, $userDisplayUsername) {

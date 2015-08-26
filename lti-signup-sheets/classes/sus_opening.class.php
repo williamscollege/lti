@@ -83,7 +83,7 @@
 		}
 
 		// mark this object as deleted as well as any lower dependent items
-		public function cascadeDelete() {
+		public function cascadeDelete($usr_object) {
 			// mark opening as deleted
 			$this->doDelete();
 
@@ -92,7 +92,7 @@
 
 			// mark signups as deleted
 			foreach ($this->signups as $signup) {
-				$signup->cascadeDelete();
+				$signup->cascadeDelete($usr_object);
 			}
 		}
 
