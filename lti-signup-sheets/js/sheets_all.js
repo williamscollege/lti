@@ -11,7 +11,7 @@ $(document).ready(function () {
 		var params = {
 			title: "Delete Sheet",
 			message: '<p>Really delete this sheet?<br /><br /><strong>&quot;' + $(this).prev().attr('data-for-sheet-name') + '&quot;</strong></p>' +
-			'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;Deleting this sheet will also delete any associated openings and cancel any signups. Notifications will be sent to all cancelled signups.</p>',
+			'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;Deleting this sheet will also delete any associated openings and cancel any signups. An alert will be sent to the owner of each cancelled signup.</p>',
 			label: "Delete Sheet",
 			class: "btn btn-danger",
 			url: "../ajax_actions/ajax_actions.php",
@@ -27,7 +27,7 @@ $(document).ready(function () {
 		var params = {
 			title: "Delete Group",
 			message: '<p>Really delete this group?<br /><br /><strong>&quot;' + $(this).prev().attr('data-for-sheetgroup-name') + '&quot;</strong></p>' +
-			'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;Deleting this group will also delete any sheets in this group, delete any associated openings and cancel any signups. Notifications will be sent to all cancelled signups.</p>',
+			'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;Deleting this group will also delete any sheets in this group, delete any associated openings and cancel any signups. An alert will be sent to the owner of each cancelled signup.</p>',
 			label: "Delete Group",
 			class: "btn btn-danger",
 			url: "../ajax_actions/ajax_actions.php",

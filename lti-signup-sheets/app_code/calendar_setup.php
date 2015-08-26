@@ -825,7 +825,7 @@
 										</div>
 										<h4 class="pull-left" id="signupHeader">Signups</h4>
 
-										<p class="small" style="clear: both;">Manager may override max signup limit<br />A notification will be sent to anyone you signup</p>
+										<p class="small" style="clear: both;">Manager may override max signup limit<br />An alert will be sent to anyone you signup</p>
 										<a href="#" id="link_show_signup_controls" title="Show signup controls">Sign someone up</a>
 
 										<div id="signupControls">
