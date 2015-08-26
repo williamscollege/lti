@@ -74,7 +74,7 @@
 		}
 
 		// mark this object as deleted as well as any lower dependent items
-		public function cascadeDelete() {
+		public function cascadeDelete($usr_object) {
 			// mark sheetgroup as deleted
 			$this->doDelete();
 
@@ -83,7 +83,7 @@
 
 			// mark sheets as deleted
 			foreach ($this->sheets as $sheet) {
-				$sheet->cascadeDelete();
+				$sheet->cascadeDelete($usr_object);
 			}
 		}
 

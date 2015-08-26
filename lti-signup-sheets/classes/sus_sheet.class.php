@@ -97,7 +97,7 @@
 		}
 
 		// mark this object as deleted as well as any lower dependent items
-		public function cascadeDelete() {
+		public function cascadeDelete($usr_object) {
 			// mark sheet as deleted
 			$this->doDelete();
 
@@ -106,7 +106,7 @@
 
 			// mark openings as deleted
 			foreach ($this->openings as $opening) {
-				$opening->cascadeDelete();
+				$opening->cascadeDelete($usr_object);
 			}
 		}
 
@@ -431,14 +431,14 @@
 					$prior_opening_id         = $obj["o_id"];
 				}
 				if ($obj["su_id"]) {
-					$user                                                  = (object)(array(
+					$user                                                    = (object)(array(
 						'u_id'         => $obj["u_id"],
 						'u_username'   => $obj["u_username"],
 						'u_email'      => $obj["u_email"],
 						'u_first_name' => $obj["u_first_name"],
 						'u_last_name'  => $obj["u_last_name"]
 					));
-					$su                                                    = (object)(array(
+					$su                                                      = (object)(array(
 						'su_id'             => $obj["su_id"],
 						'su_created_at'     => $obj["su_created_at"],
 						'su_updated_at'     => $obj["su_updated_at"],
@@ -448,7 +448,7 @@
 						'su_admin_comment'  => $obj["su_admin_comment"],
 						'user'              => $user
 					));
-					$opening->signups[]                                    = $su;
+					$opening->signups[]                                      = $su;
 					$opening->signups_by_id["{$obj["su_id"]}"]               = $su;
 					$opening->signups_by_user["{$obj["su_signup_user_id"]}"] = $su;
 				}
@@ -537,25 +537,23 @@
 				}
 				$ret[$access["a_type"]][] = $access;
 				if ($access["a_constraint_data"]) {
+					$ret['data_or_ids_of_' . $access["a_type"]][]                    = $access["a_constraint_data"];
+					$ret['keyed_' . $access["a_type"]][$access["a_constraint_data"]] = $access["a_id"];
+				}
+				else {
 					if ($access["a_constraint_data"]) {
 						$ret['data_or_ids_of_' . $access["a_type"]][]                    = $access["a_constraint_data"];
 						$ret['keyed_' . $access["a_type"]][$access["a_constraint_data"]] = $access["a_id"];
 					}
-					else {
-						if ($access["a_constraint_data"]) {
-							$ret['data_or_ids_of_' . $access["a_type"]][]                    = $access["a_constraint_data"];
-							$ret['keyed_' . $access["a_type"]][$access["a_constraint_data"]] = $access["a_id"];
-						}
-					}
 				}
-				if ($debug) {
-					echo "ret is:\n";
-					util_prePrintR($ret);
-					exit;
-				}
-
-				return $ret;
 			}
+			if ($debug) {
+				echo "ret is:\n";
+				util_prePrintR($ret);
+				exit;
+			}
+
+			return $ret;
 		}
 
 		// ***************************
