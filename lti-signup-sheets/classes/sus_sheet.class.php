@@ -97,7 +97,7 @@
 		}
 
 		// mark this object as deleted as well as any lower dependent items
-		public function cascadeDelete() {
+		public function cascadeDelete($usr_object) {
 			// mark sheet as deleted
 			$this->doDelete();
 
@@ -106,7 +106,7 @@
 
 			// mark openings as deleted
 			foreach ($this->openings as $opening) {
-				$opening->cascadeDelete();
+				$opening->cascadeDelete($usr_object);
 			}
 		}
 
@@ -206,12 +206,9 @@
 		// Begin: Structured Data
 		// ***************************
 
-		# takes: a sheet id and an optional time value (i.e. a full datetime
-		# value, as returned from time() or mktime()), an optional
-		# opening_id, and an optional signup id
-		# returns: a structured data object for that sheet. At the top level
-		# is the sheet info as an object. In addition to the basic sheet data,
-		# it has
+		# takes: a sheet id and an optional time value (i.e. a full datetime value, as returned from time() or mktime()), an optional opening_id, and an optional signup id
+		# returns: a structured data object for that sheet. At the top level is the sheet info as an object.
+		# In addition to the basic sheet data, it has
 		# group : a signup sheet group object
 		# access_controls : an complex structure of access objects (from getAccessPermissions($sheet_id))
 		# openings, a time-ordered array of opening objects.
@@ -230,7 +227,7 @@
 		}
 
 		// load explicitly calls the DB (generally called indirectly from related cache fxn)
-		public function loadStructuredData($datetime = 0, $opening_id = 0, $signup_id = 0, $debug = 1) {
+		public function loadStructuredData($datetime = 0, $opening_id = 0, $signup_id = 0, $debug = 0) {
 			$this->structured_data = [];
 
 			// constants
@@ -270,7 +267,6 @@
 				,s.flag_private_signups AS s_flag_private_signups
 			";
 
-			// TODO - update/eliminate conversions and usage of UNIXTIME's throughout fxn??.
 			$OPENING_FIELDS = "
 				o.opening_id AS o_id
 				,o.created_at AS o_created_at
@@ -285,12 +281,6 @@
 				,o.begin_datetime AS o_begin_datetime
 				,o.end_datetime AS o_end_datetime
 				,o.end_datetime - o.begin_datetime AS o_dur_seconds
-				,FROM_UNIXTIME(o.begin_datetime,'%Y%m%d') AS o_dateymd
-				,FROM_UNIXTIME(o.begin_datetime,'%Y-%m-%d') AS o_date_y_m_d
-				,FROM_UNIXTIME(o.begin_datetime,'%l:%i %p') AS o_begin_time_h_m_p
-				,FROM_UNIXTIME(o.end_datetime,'%l:%i %p') AS o_end_time_h_m_p
-				,FROM_UNIXTIME(o.begin_datetime,'%k:%i') AS o_begin_time_h24_m
-				,FROM_UNIXTIME(o.end_datetime,'%k:%i') AS o_end_time_h24_m
 				,o.location AS o_location
 				,o.admin_comment AS o_admin_comment
 			";
@@ -329,11 +319,12 @@
 				WHERE s.flag_delete != 1
 					AND s.sheet_id = $this->sheet_id
 			" .
+				// TODO - update/eliminate conversions and usage of UNIXTIME's throughout fxn??
 				($datetime ? " AND FROM_UNIXTIME(o.begin_datetime,'%Y%m%d')= FROM_UNIXTIME($datetime,'%Y%m%d')\n" : '') .
-				($opening_id ? " AND o.opening_id=$opening_id\n" : '') .
-				($signup_id ? " AND su.signup_id=$signup_id\n" : '') .
+				($opening_id ? " AND o.opening_id = $opening_id\n" : '') .
+				($signup_id ? " AND su.signup_id = $signup_id\n" : '') .
 				"	ORDER BY
-					o.begin_datetime,u.last_name,u.username,su.created_at
+					o.begin_datetime, u.last_name, u.username, su.created_at
 			";
 
 			if ($debug) {
@@ -348,20 +339,15 @@
 			 * @param string $sql       the SQL select query to execute. The first column of this SELECT statement
 			 *                          must be a unique value (usually the 'id' field), as it will be used as the key of the
 			 *                          returned array.
-			 * [dkc: obsolete param] @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
-			 * [dkc: obsolete param] @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
 			 * @return mixed an array of objects, or false if no records were found or an error occurred.
 			 */
-			// $sql = "SELECT * FROM ".SUS_Sheetgroup::$dbTable;
-			// $sql  = "SELECT * FROM sus_sheetgroups INNER JOIN sus_sheets ON sus_sheetgroups.sheetgroup_id = sus_sheets.sheetgroup_id INNER JOIN sus_openings ON sus_openings.sheet_id = sus_sheets.sheet_id INNER JOIN sus_signups ON sus_signups.opening_id = sus_openings.opening_id WHERE sus_sheetgroups.sheetgroup_id = " . htmlentities($s->sheetgroup_id, ENT_QUOTES, 'UTF-8') . " AND  sus_signups.signup_user_id = " . htmlentities($USER->user_id, ENT_QUOTES, 'UTF-8');
-			$stmt = $this->prepare($sql);
+			$stmt = $this->dbConnection->prepare($sql);
 			$stmt->execute();
-			$all_rec_objs = sus_recordset_to_array($stmt->fetchAll(PDO::FETCH_ASSOC)); // TODO - still necessary to convert record set to an array?
+			$all_rec_objs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 			if ($debug) {
-				echo "all_rec_objs:\n";
+				// echo "s_id = " . $all_rec_objs[0]["s_id"] . "\n";
 				util_prePrintR($all_rec_objs);
-				exit;
 			}
 
 			if (!$all_rec_objs) {
@@ -369,49 +355,49 @@
 			}
 
 			$sheet_data = (object)(array(
-				's_id'                        => $all_rec_objs[0]->s_id,
-				's_created_at'                => $all_rec_objs[0]->s_created_at,
-				's_updated_at'                => $all_rec_objs[0]->s_updated_at,
-				's_flag_delete'               => $all_rec_objs[0]->s_flag_delete,
-				's_owner_user_id'             => $all_rec_objs[0]->s_owner_user_id,
-				's_sheetgroup_id'             => $all_rec_objs[0]->s_sheetgroup_id,
-				's_name'                      => $all_rec_objs[0]->s_name,
-				's_description'               => $all_rec_objs[0]->s_description,
-				's_type'                      => $all_rec_objs[0]->s_type,
-				's_begin_date'                => $all_rec_objs[0]->s_begin_date,
-				's_end_date'                  => $all_rec_objs[0]->s_end_date,
-				's_max_total_user_signups'    => $all_rec_objs[0]->s_max_total_user_signups,
-				's_max_pending_user_signups'  => $all_rec_objs[0]->s_max_pending_user_signups,
-				's_flag_alert_owner_change'   => $all_rec_objs[0]->s_flag_alert_owner_change,
-				's_flag_alert_owner_signup'   => $all_rec_objs[0]->s_flag_alert_owner_signup,
-				's_flag_alert_owner_imminent' => $all_rec_objs[0]->s_flag_alert_owner_imminent,
-				's_flag_alert_admin_change'   => $all_rec_objs[0]->s_flag_alert_admin_change,
-				's_flag_alert_admin_signup'   => $all_rec_objs[0]->s_flag_alert_admin_signup,
-				's_flag_alert_admin_imminent' => $all_rec_objs[0]->s_flag_alert_admin_imminent,
-				's_flag_private_signups'      => $all_rec_objs[0]->s_flag_private_signups
+				's_id'                        => $all_rec_objs[0]["s_id"],
+				's_created_at'                => $all_rec_objs[0]["s_created_at"],
+				's_updated_at'                => $all_rec_objs[0]["s_updated_at"],
+				's_flag_delete'               => $all_rec_objs[0]["s_flag_delete"],
+				's_owner_user_id'             => $all_rec_objs[0]["s_owner_user_id"],
+				's_sheetgroup_id'             => $all_rec_objs[0]["s_sheetgroup_id"],
+				's_name'                      => $all_rec_objs[0]["s_name"],
+				's_description'               => $all_rec_objs[0]["s_description"],
+				's_type'                      => $all_rec_objs[0]["s_type"],
+				's_begin_date'                => $all_rec_objs[0]["s_begin_date"],
+				's_end_date'                  => $all_rec_objs[0]["s_end_date"],
+				's_max_total_user_signups'    => $all_rec_objs[0]["s_max_total_user_signups"],
+				's_max_pending_user_signups'  => $all_rec_objs[0]["s_max_pending_user_signups"],
+				's_flag_alert_owner_change'   => $all_rec_objs[0]["s_flag_alert_owner_change"],
+				's_flag_alert_owner_signup'   => $all_rec_objs[0]["s_flag_alert_owner_signup"],
+				's_flag_alert_owner_imminent' => $all_rec_objs[0]["s_flag_alert_owner_imminent"],
+				's_flag_alert_admin_change'   => $all_rec_objs[0]["s_flag_alert_admin_change"],
+				's_flag_alert_admin_signup'   => $all_rec_objs[0]["s_flag_alert_admin_signup"],
+				's_flag_alert_admin_imminent' => $all_rec_objs[0]["s_flag_alert_admin_imminent"],
+				's_flag_private_signups'      => $all_rec_objs[0]["s_flag_private_signups"]
 			));
 
 			$sheet_data->group = (object)(array(
-				'sg_id'                         => $all_rec_objs[0]->sg_id,
-				'sg_created_at'                 => $all_rec_objs[0]->sg_created_at,
-				'sg_updated_at'                 => $all_rec_objs[0]->sg_updated_at,
-				'sg_flag_delete'                => $all_rec_objs[0]->sg_flag_delete,
-				'sg_owner_user_id'              => $all_rec_objs[0]->sg_owner_user_id,
-				'sg_flag_is_default'            => $all_rec_objs[0]->sg_flag_is_default,
-				'sg_name'                       => $all_rec_objs[0]->sg_name,
-				'sg_description'                => $all_rec_objs[0]->sg_description,
-				'sg_max_g_total_user_signups'   => $all_rec_objs[0]->sg_max_g_total_user_signups,
-				'sg_max_g_pending_user_signups' => $all_rec_objs[0]->sg_max_g_pending_user_signups
+				'sg_id'                         => $all_rec_objs[0]["sg_id"],
+				'sg_created_at'                 => $all_rec_objs[0]["sg_created_at"],
+				'sg_updated_at'                 => $all_rec_objs[0]["sg_updated_at"],
+				'sg_flag_delete'                => $all_rec_objs[0]["sg_flag_delete"],
+				'sg_owner_user_id'              => $all_rec_objs[0]["sg_owner_user_id"],
+				'sg_flag_is_default'            => $all_rec_objs[0]["sg_flag_is_default"],
+				'sg_name'                       => $all_rec_objs[0]["sg_name"],
+				'sg_description'                => $all_rec_objs[0]["sg_description"],
+				'sg_max_g_total_user_signups'   => $all_rec_objs[0]["sg_max_g_total_user_signups"],
+				'sg_max_g_pending_user_signups' => $all_rec_objs[0]["sg_max_g_pending_user_signups"]
 			));
 
-			$sheet_data->access_controls = getAccessPermissions($this->sheet_id);
+			$sheet_data->access_controls = $this->getAccessPermissions($this->sheet_id);
 
 			$sheet_data->openings = array();
 			$opening              = array();
 
 			$prior_opening_id = '';
 			foreach ($all_rec_objs as $obj) {
-				if ($prior_opening_id != $obj->o_id) {
+				if ($prior_opening_id != $obj["o_id"]) {
 					// close out accumulation
 					if ($prior_opening_id) {
 						$opening->o_num_signups = count($opening->signups);
@@ -420,57 +406,51 @@
 
 					// set up for next bunch
 					$opening = (object)(array(
-						'o_id'               => $obj->o_id,
-						'o_created_at'       => $obj->o_created_at,
-						'o_updated_at'       => $obj->o_updated_at,
-						'o_flag_delete'      => $obj->o_flag_delete,
-						'o_sheet_id'         => $obj->o_sheet_id,
-						'o_opening_group_id' => $obj->o_opening_group_id,
-						'o_name'             => $obj->o_name,
-						'o_description'      => $obj->o_description,
-						'o_max_signups'      => $obj->o_max_signups,
-						'o_admin_comment'    => $obj->o_admin_comment,
-						'o_begin_datetime'   => $obj->o_begin_datetime,
-						'o_end_datetime'     => $obj->o_end_datetime,
-						'o_dur_seconds'      => $obj->o_dur_seconds,
-						'o_dateymd'          => $obj->o_dateymd,
-						'o_date_y_m_d'       => $obj->o_date_y_m_d,
-						'o_begin_time_h_m_p' => $obj->o_begin_time_h_m_p,
-						'o_end_time_h_m_p'   => $obj->o_end_time_h_m_p,
-						'o_begin_time_h24_m' => $obj->o_begin_time_h24_m,
-						'o_end_time_h24_m'   => $obj->o_end_time_h24_m,
-						'o_location'         => $obj->o_location,
-						'o_admin_comment'    => $obj->o_admin_comment
+						'o_id'               => $obj["o_id"],
+						'o_created_at'       => $obj["o_created_at"],
+						'o_updated_at'       => $obj["o_updated_at"],
+						'o_flag_delete'      => $obj["o_flag_delete"],
+						'o_sheet_id'         => $obj["o_sheet_id"],
+						'o_opening_group_id' => $obj["o_opening_group_id"],
+						'o_name'             => $obj["o_name"],
+						'o_description'      => $obj["o_description"],
+						'o_max_signups'      => $obj["o_max_signups"],
+						'o_admin_comment'    => $obj["o_admin_comment"],
+						'o_begin_datetime'   => $obj["o_begin_datetime"],
+						'o_end_datetime'     => $obj["o_end_datetime"],
+						'o_dur_seconds'      => $obj["o_dur_seconds"],
+						'o_location'         => $obj["o_location"],
+						'o_admin_comment'    => $obj["o_admin_comment"]
 					));
-					#            signups : a time-of-signup ordered array of signups
-					#            signups_by_id : an assoc array of signups keyed by signup ID
-					#            signups_by_user : an assoc array of signups keyed by ID of signed up user
+					# signups : a time-of-signup ordered array of signups
+					# signups_by_id : an assoc array of signups keyed by signup ID
+					# signups_by_user : an assoc array of signups keyed by ID of signed up user
 					$opening->signups         = array();
 					$opening->signups_by_id   = array();
 					$opening->signups_by_user = array();
-					$prior_opening_id         = $obj->o_id;
+					$prior_opening_id         = $obj["o_id"];
 				}
-				if ($obj->su_id) {
-					$user                                                  = (object)(array(
-						'usr_id'         => $obj->usr_id,
-						'usr_username'   => $obj->usr_username,
-						'usr_email'      => $obj->usr_email,
-						'usr_first_name' => $obj->usr_first_name,
-						'usr_last_name'  => $obj->usr_last_name
+				if ($obj["su_id"]) {
+					$user                                                    = (object)(array(
+						'u_id'         => $obj["u_id"],
+						'u_username'   => $obj["u_username"],
+						'u_email'      => $obj["u_email"],
+						'u_first_name' => $obj["u_first_name"],
+						'u_last_name'  => $obj["u_last_name"]
 					));
-					$su                                                    = (object)(array(
-						'su_id'             => $obj->su_id,
-						'su_created_at'     => $obj->su_created_at,
-						'su_updated_at'     => $obj->su_updated_at,
-						'su_flag_delete'    => $obj->su_flag_delete,
-						'su_opening_id'     => $obj->su_opening_id,
-						'su_signup_user_id' => $obj->su_signup_user_id,
-						'su_admin_comment'  => $obj->su_admin_comment,
+					$su                                                      = (object)(array(
+						'su_id'             => $obj["su_id"],
+						'su_created_at'     => $obj["su_created_at"],
+						'su_updated_at'     => $obj["su_updated_at"],
+						'su_flag_delete'    => $obj["su_flag_delete"],
+						'su_opening_id'     => $obj["su_opening_id"],
+						'su_signup_user_id' => $obj["su_signup_user_id"],
+						'su_admin_comment'  => $obj["su_admin_comment"],
 						'user'              => $user
 					));
-					$opening->signups[]                                    = $su;
-					$opening->signups_by_id["{$obj->su_id}"]               = $su;
-					$opening->signups_by_user["{$obj->su_signup_user_id}"] = $su;
+					$opening->signups[]                                      = $su;
+					$opening->signups_by_id["{$obj["su_id"]}"]               = $su;
+					$opening->signups_by_user["{$obj["su_signup_user_id"]}"] = $su;
 				}
 			}
 			// don't forget to add that last accumulated info!
@@ -499,7 +479,7 @@
 		//  of access object ids keyed by constraint data or constraint id for the
 		//  keyed_ keys.
 
-		public function getAccessPermissions($sheet_id, $access_type = '', $debug = 1) {
+		public function getAccessPermissions($sheet_id, $access_type = '', $debug = 0) {
 			$ACCESS_FIELDS = "
 				ac.access_id AS a_id
 				,ac.created_at AS a_created_at
@@ -535,18 +515,14 @@
 			 * @param string $sql       the SQL select query to execute. The first column of this SELECT statement
 			 *                          must be a unique value (usually the 'id' field), as it will be used as the key of the
 			 *                          returned array.
-			 * [dkc: obsolete param] @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
-			 * [dkc: obsolete param] @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
 			 * @return mixed an array of objects, or false if no records were found or an error occurred.
 			 */
-			// $sql = "SELECT * FROM ".SUS_Sheetgroup::$dbTable;
-			// $sql  = "SELECT * FROM sus_sheetgroups INNER JOIN sus_sheets ON sus_sheetgroups.sheetgroup_id = sus_sheets.sheetgroup_id INNER JOIN sus_openings ON sus_openings.sheet_id = sus_sheets.sheet_id INNER JOIN sus_signups ON sus_signups.opening_id = sus_openings.opening_id WHERE sus_sheetgroups.sheetgroup_id = " . htmlentities($s->sheetgroup_id, ENT_QUOTES, 'UTF-8') . " AND  sus_signups.signup_user_id = " . htmlentities($USER->user_id, ENT_QUOTES, 'UTF-8');
-			$stmt = $this->prepare($sql);
+			$stmt = $this->dbConnection->prepare($sql);
 			$stmt->execute();
-			$access_objs = sus_recordset_to_array($stmt->fetchAll(PDO::FETCH_ASSOC)); // TODO - still necessary to convert record set to an array?
+			$access_objs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 			if ($debug) {
-				echo "access_objs is:\n";
+				echo "\naccess_objs is:\n";
 				util_prePrintR($access_objs);
 				exit;
 			}
@@ -554,20 +530,20 @@
 			// convert to approp hierarchical array structure
 			$ret = array();
 			foreach ($access_objs as $access) {
-				if (!isset($ret[$access->a_type])) {
-					$ret[$access->a_type]                     = array();
-					$ret['data_or_ids_of_' . $access->a_type] = array();
-					$ret['keyed_' . $access->a_type]          = array();
+				if (!isset($ret[$access["a_type"]])) {
+					$ret[$access["a_type"]]                     = array();
+					$ret['data_or_ids_of_' . $access["a_type"]] = array();
+					$ret['keyed_' . $access["a_type"]]          = array();
 				}
-				$ret[$access->a_type][] = $access;
-				if ($access->a_constraint_id) {
-					$ret['data_or_ids_of_' . $access->a_type][]                = $access->a_constraint_id;
-					$ret['keyed_' . $access->a_type][$access->a_constraint_id] = $access->a_id;
+				$ret[$access["a_type"]][] = $access;
+				if ($access["a_constraint_data"]) {
+					$ret['data_or_ids_of_' . $access["a_type"]][]                    = $access["a_constraint_data"];
+					$ret['keyed_' . $access["a_type"]][$access["a_constraint_data"]] = $access["a_id"];
 				}
 				else {
-					if ($access->a_constraint_data) {
-						$ret['data_or_ids_of_' . $access->a_type][]                  = $access->a_constraint_data;
-						$ret['keyed_' . $access->a_type][$access->a_constraint_data] = $access->a_id;
+					if ($access["a_constraint_data"]) {
+						$ret['data_or_ids_of_' . $access["a_type"]][]                    = $access["a_constraint_data"];
+						$ret['keyed_' . $access["a_type"]][$access["a_constraint_data"]] = $access["a_id"];
 					}
 				}
 			}
@@ -580,47 +556,8 @@
 			return $ret;
 		}
 
-
-		////////////////////////////////////////////////////////////////////////////////////////
-		/// REPLACED FUNCTION
-		/// this replacement function would normally be in /lib/dmlib.ph, except
-		/// those functions DON'T WORK! Or at least, not the way they should.
-		////////////////////////////////////////////////////////////////////////////////////////
-
-		/**
-		 * This is a utility function that converts a record set to an array. The original version converted it
-		 * to an associative array, keyed by the first column of the query. However, what I really need is an
-		 * actual array, with ordinal keys, and one element per record returned. Stupid moodle.
-		 *
-		 * NOTE: this relies on a mysql back end, I've taken out all the oracle related hacks
-		 *
-		 * @param object an ADODB RecordSet object.
-		 * @return mixed mixed an array of objects, or false if an error occurred or the RecordSet was empty.
-		 */
-		public function sus_recordset_to_array($rs) {
-
-			if ($rs && !rs_EOF($rs)) {
-				$objects = array();
-				if ($records = $rs->GetRows()) {
-					foreach ($records as $record) {
-						$objects[] = (object)$record;
-					}
-					return $objects;
-				}
-				else {
-					return FALSE;
-				}
-			}
-			else {
-				return FALSE;
-			}
-		}
-
-		////////////////////////////////////////////////////////////////////////////////////////
-
 		// ***************************
 		// End: Structured Data
 		// ***************************
-
 
 	}

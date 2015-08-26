@@ -48,7 +48,7 @@
 		//// DB interaction tests
 
 		function testCourseDBInsert() {
-			$c = new Course(['course_id' => 50, 'course_idstr' => '25F-DIAMOND-101-01', 'short_name' => '25F-DIAMOND-101-01 - Best Friend', 'long_name' => '25F-DIAMOND-101-01 - Best Friend', 'account_idstr' => 'courses', 'term_idstr' => '25F', 'DB' => $this->DB]);
+			$c = new Course(['course_id' => 50, 'course_idstr' => '25F-DIAMOND-101-01', 'short_name' => '25F-DIAMOND-101-01 - Best Friend', 'long_name' => '25F-DIAMOND-101-01 - Best Friend', 'account_idstr' => 'courses', 'term_idstr' => '25F', 'canvas_course_id' => '0', 'DB' => $this->DB]);
 
 			$c->updateDb();
 

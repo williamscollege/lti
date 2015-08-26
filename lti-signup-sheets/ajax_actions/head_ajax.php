@@ -38,7 +38,6 @@
 		exit;
 	}
 
-
 	#------------------------------------------------#
 	# Set default return value
 	#------------------------------------------------#
@@ -47,3 +46,28 @@
 		'note'        => 'unknown reason',
 		'html_output' => ''
 	];
+
+
+	function create_and_send_QueuedMessage($DB, $userid, $user_email, $subject, $body, $openingID = 0, $sheetID = 0) {
+		// QueuedMessage::factory($db, $user_id, $target, $summary, $body, $opening_id = 0, $sheet_id = 0, $type = 'email' )
+		$qm = QueuedMessage::factory($DB, $userid, $user_email, $subject, $body, $openingID, $sheetID);
+		$qm->updateDb();
+
+		if (!$qm->matchesDb) {
+			// create record failed
+			$results['notes'] = "database error: could not create queued message for signup";
+			error_log("QueuedMessage failed to insert db record (email subject: $subject)");
+			echo json_encode($results);
+			exit;
+		}
+		if (array_key_exists('SERVER_NAME', $_SERVER)) {
+			// do not attempt delivery on local workstation
+			if (!$_SERVER['SERVER_NAME'] == 'localhost') {
+				if (!$qm->attemptDelivery()) {
+					// write to errorlog if fails
+					error_log("attemptDelivery failed for QueuedMessage (email subject: $subject)");
+				}
+			}
+		}
+
+	}
