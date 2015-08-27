@@ -109,8 +109,22 @@ function helper_Remove_DOM_Elements(openingID) {
 }
 
 function updateDOM(action_ary, ret, data) {
-	// console.dir(action_ary);
-	if (action_ary.ajax_action == 'delete-sheetgroup') {
+	//console.dir(action_ary);
+	//console.log(ret);
+	if (action_ary.ajax_action == 'copy-sheet') {
+		if (ret) {
+			// show status
+			susUtil_setTransientAlert('success', 'Saved');
+			// console.log(data["url_redirect"]);
+			// redirect: go edit this newly copied sheet
+			location.href = data["url_redirect"];
+		}
+		else {
+			// error message
+			susUtil_setTransientAlert('error', 'Failed: No action taken: ' + data.notes);
+		}
+	}
+	else if (action_ary.ajax_action == 'delete-sheetgroup') {
 		if (ret) {
 			// show status
 			susUtil_setTransientAlert('success', 'Saved');

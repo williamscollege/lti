@@ -134,15 +134,47 @@
 		}
 
 		// copy this sheet (create a duplicate sheet with identical sheet info and sheet access, but without any openings or signups)
-		//$s->copySheet();
+		$sheet_copy = SUS_Sheet::createNewSheet($s->owner_user_id, $DB);
+
+		$sheet_copy->flag_delete               = $s->flag_delete;
+		$sheet_copy->owner_user_id             = $s->owner_user_id;
+		$sheet_copy->sheetgroup_id             = $s->sheetgroup_id;
+		$sheet_copy->name                      = "Copy of " . $s->name;
+		$sheet_copy->description               = $s->description;
+		$sheet_copy->type                      = $s->type;
+		$sheet_copy->begin_date                = $s->begin_date;
+		$sheet_copy->end_date                  = $s->end_date;
+		$sheet_copy->max_total_user_signups    = $s->max_total_user_signups;
+		$sheet_copy->max_pending_user_signups  = $s->max_pending_user_signups;
+		$sheet_copy->flag_alert_owner_change   = $s->flag_alert_owner_change;
+		$sheet_copy->flag_alert_owner_signup   = $s->flag_alert_owner_signup;
+		$sheet_copy->flag_alert_owner_imminent = $s->flag_alert_owner_imminent;
+		$sheet_copy->flag_alert_admin_change   = $s->flag_alert_admin_change;
+		$sheet_copy->flag_alert_admin_signup   = $s->flag_alert_admin_signup;
+		$sheet_copy->flag_alert_admin_imminent = $s->flag_alert_admin_imminent;
+		$sheet_copy->flag_private_signups      = $s->flag_private_signups;
+
+		$sheet_copy->updateDb();
+
+		if (!$sheet_copy->matchesDb) {
+			// error: no matching record found
+			$results["notes"] = "copy-sheet: no matching record found";
+			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, "sheet_id", $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
+			exit;
+		}
 
 		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
 		$evt_note = "create a duplicate sheet without any openings or signups";
-		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "sheet_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
+		util_createEventLog($USER->user_id, TRUE, $action, $sheet_copy->sheet_id, "sheet_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
-		if ($s->matchesDb) {
-			$results['status'] = 'success';
+		if ($sheet_copy->matchesDb) {
+			$results['status']       = 'success';
+			$results['which_action'] = 'copy-sheet';
+			$results['url_redirect']  = APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . $sheet_copy->sheet_id;
 		}
 	}
 	//###############################################################
