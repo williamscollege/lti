@@ -18,8 +18,9 @@
 			background: rgba(0, 0, 0, 0) url(https://platform.twitter.com/widgets/images/btn.27237bab4db188ca749164efd38861b0.png) -20px 6px no-repeat;
 			background-position: -20px 11px !important;
 		}
+
 		.btn-twitter:hover {
-			background-position:  -20px -18px !important;
+			background-position: -20px -18px !important;
 		}
 	</style>
 </head>
@@ -33,7 +34,15 @@
 		<a class="btn btn-inverse" href="https://github.com/Serhioromano/bootstrap-calendar">Fork on GitHub</a>
 		<a class="btn" href="index-bs3.html">Use bootstrap 3</a>
 		<a href="https://twitter.com/serhioromano" class="btn btn-twitter" data-show-count="false" data-size="large">Follow @serhioromano</a>
-		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+		<script>!function (d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+			if (!d.getElementById(id)) {
+				js = d.createElement(s);
+				js.id = id;
+				js.src = p + '://platform.twitter.com/widgets.js';
+				fjs.parentNode.insertBefore(js, fjs);
+			}
+		}(document, 'script', 'twitter-wjs');
 		</script>
 	</div>
 
@@ -159,8 +168,10 @@
 
 	<script type="text/javascript">
 		var disqus_shortname = 'bootstrapcalendar'; // required: replace example with your forum shortname
-		(function() {
-			var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		(function () {
+			var dsq = document.createElement('script');
+			dsq.type = 'text/javascript';
+			dsq.async = true;
 			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
 			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 		})();

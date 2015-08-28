@@ -6,7 +6,7 @@ h1 { font-size: large }
 #banner { padding: 15px; background-color: #06b; color: white; font-size: large; border-bottom: 1px solid #ccc;
     background: url(../images/bg.gif) repeat-x; text-align: center }
 #banner a { color: white; }
-	
+
 p { margin: 10px 0; }
 
 li { margin-left: 10px; }

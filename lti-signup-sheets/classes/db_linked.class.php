@@ -44,8 +44,11 @@
 		$o2->refreshFromDb();
 
 	NOTE: for either single-load approach, if the data has no matching record then the matchesDb attribute of the object will be false - check that attribute in your code before relying on the object! Also, if there is more than one matching row then only the first one found will be used (and remember that the ordering coming from the DB is arbitrary)!
-		<<EXAMPLE HERE OF CHECKING matchesDB attribute>>
-
+		EXAMPLE OF CHECKING matchesDB attribute
+		if (!$o->matchesDb) {
+			// error: no matching record found
+			// do something...
+		}
 
 	The object has a method updateDb which persists the object data in the DB. If there's already a record for the object, then that record is updated. If there is NOT a record, then a new one is inserted.
 
@@ -454,6 +457,9 @@
 			}
 
 			$this->flag_delete = TRUE;
+			if (isset($this->fieldValues["updated_at"])) {
+				$this->updated_at = util_currentDateTimeString_asMySQL();
+			}
 			$this->updateDb();
 
 			if ($debug) {

@@ -41,7 +41,7 @@ FOR TESTING ONLY:
 	SELECT * FROM `sus_signups`;
 	SELECT * FROM `sus_access`;
 	SELECT * FROM `sus_eventlogs` ORDER BY eventlog_id DESC;
-	SELECT * FROM `queued_messages`;
+	SELECT * FROM `queued_messages` ORDER BY queued_message_id DESC;
 */
 
 # ----------------------------

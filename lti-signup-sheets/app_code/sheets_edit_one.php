@@ -275,7 +275,7 @@
 											<label for="textSheetDescription" class="control-label">Description</label>
 
 											<div class="">
-												<textarea id="textSheetDescription" name="textSheetDescription" class="form-control input-sm" placeholder="Instructions for this signup sheet" rows="2"><?php echo $s ? htmlentities($s->description, ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
+												<textarea id="textSheetDescription" name="textSheetDescription" class="form-control input-sm" placeholder="Instructions for this signup sheet" rows="1"><?php echo $s ? htmlentities($s->description, ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
 											</div>
 										</div>
 
@@ -329,24 +329,29 @@
 										</div>
 
 										<div class="form-group">
-											<strong>Notifications</strong><br />
+											<strong>Event Actions</strong><br />
 
 											<div class="checkbox small col-sm-12">
 												<label>
 													<input type="checkbox" id="checkAlertOwnerSignup" name="checkAlertOwnerSignup"<?php echo ($s && $s->flag_alert_owner_signup) ? ' checked="checked"' : ''; ?>>
-													Email <strong>owner</strong> on signup or cancel
-												</label><br />
-												<label>
-													<input type="checkbox" id="checkAlertOwnerImminent" name="checkAlertOwnerImminent"<?php echo ($s && $s->flag_alert_owner_imminent) ? ' checked="checked"' : ''; ?>>
-													Email <strong>owner</strong> on upcoming signup
+													Alert <strong>owner</strong> on each signup or cancel
 												</label><br />
 												<label>
 													<input type="checkbox" id="checkAlertAdminSignup" name="checkAlertAdminSignup"<?php echo ($s && $s->flag_alert_admin_signup) ? ' checked="checked"' : ''; ?>>
-													Email <strong>admins</strong> on signup or cancel
+													Alert <strong>admins</strong> on each signup or cancel
+												</label><br />
+											</div>
+
+											<strong>Daily Reminders</strong><br />
+
+											<div class="checkbox small col-sm-12">
+												<label>
+													<input type="checkbox" id="checkAlertOwnerImminent" name="checkAlertOwnerImminent"<?php echo ($s && $s->flag_alert_owner_imminent) ? ' checked="checked"' : ''; ?>>
+													Alert <strong>owner</strong> if signups exist in next 2 days
 												</label><br />
 												<label>
 													<input type="checkbox" id="checkAlertAdminImminent" name="checkAlertAdminImminent"<?php echo ($s && $s->flag_alert_admin_imminent) ? ' checked="checked"' : ''; ?>>
-													Email <strong>admins</strong> on upcoming signup
+													Alert <strong>admins</strong> if signups exist in next 2 days
 												</label>
 											</div>
 										</div>
@@ -543,7 +548,7 @@
 
 												<!-- Admin management-->
 												<div class="form-group text-danger">
-													<strong>Who can <u>manage</u> this sheet?</strong><br />
+													<strong>Admins: Who can <u>manage</u> this sheet?</strong><br />
 
 													<div class="wms_indent_tiny">
 														<!-- List: These People -->

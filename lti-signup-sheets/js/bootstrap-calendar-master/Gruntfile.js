@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
 	// Project configuration.
 	grunt.initConfig({
@@ -32,8 +32,8 @@ module.exports = function(grunt) {
 		uglify: {
 			options: {
 				banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-					'<%= grunt.template.today("yyyy-mm-dd") %> - ' +
-					'https://github.com/Serhioromano/bootstrap-calendar */\n'
+				'<%= grunt.template.today("yyyy-mm-dd") %> - ' +
+				'https://github.com/Serhioromano/bootstrap-calendar */\n'
 			},
 			build: {
 				src: 'js/calendar.js',

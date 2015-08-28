@@ -1,7 +1,10 @@
 {
   "name": "serhioromano/bootstrap-calendar",
   "description": "Bootstrap full view calendar.",
-  "keywords": ["bootstrap", "calendar"],
+  "keywords": [
+    "bootstrap",
+    "calendar"
+  ],
   "homepage": "http://bootstrap-calendar.azurewebsites.net/",
   "authors": [
     {

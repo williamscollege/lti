@@ -2,11 +2,9 @@
 	require_once(dirname(__FILE__) . '/../classes/auth_base.class.php');
 	// require_once(dirname(__FILE__) . '/../classes/auth_LDAP.class.php'); // intentionally removed
 	require_once(dirname(__FILE__) . '/../classes/ALL_CLASS_INCLUDES.php');
-
 	/*
 	 * This file contains a series of methods for creating known test data in a target database
 	*/
-
 	/* Example format:
 	function createTestData_XXXX($dbConn) {
 		// 1100 series ids
@@ -25,8 +23,6 @@
 	}
 	*/
 	$ACTIONS = array();
-
-
 	function createTestData_Terms($dbConn) {
 		// 1-20 series ids
 		# term: 'term_id', 'canvas_term_id', 'term_idstr', 'name', 'start_date', 'end_date', 'flag_delete'
@@ -160,7 +156,7 @@
 		// 500 series ids
 		# SUS_Sheetgroup: 'sheetgroup_id', 'created_at', 'updated_at', 'flag_delete', 'owner_user_id', 'flag_is_default', 'name', 'description', 'max_g_total_user_signups', 'max_g_pending_user_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheetgroup::$dbTable . " VALUES
-			(501, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 501', 'Something to organize my math sheets', 8, 2),
+			(501, NOW(), NOW(), 0, 101, 1, 'Sheetgroup 501', 'Something to organize my math sheets', 8, 6),
 			(502, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 502', 'Something to organize my english sheets', 4, 2),
 			(503, NOW(), NOW(), 0, 101, 0, 'Sheetgroup 503', 'Something to organize my spanish sheets', 6, 3),
 			(504, NOW(), NOW(), 0, 102, 0, 'Sheetgroup 504', 'Help me keep track of so many sheets', 1, 1),
@@ -188,7 +184,7 @@
 		# 'flag_alert_owner_imminent', 'flag_alert_admin_change', 'flag_alert_admin_signup', 'flag_alert_admin_imminent', 'flag_private_signups'
 		$addTestSql  = "INSERT INTO " . SUS_Sheet::$dbTable . " VALUES
 			(601, NOW(), NOW(), 0, 101, 501, 'Sheet 601 is about Dunlap tennis ball production', 'Sheet 601, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 0, 0, 0, 0, 0),
-			(602, NOW(), NOW(), 0, 101, 501, 'Sheet 602', 'Sheet 602, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 2, 3, 0, 0, 0, 0, 0, 0, 0),
+			(602, NOW(), NOW(), 0, 101, 501, 'Sheet 602', 'Sheet 602, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), -1, -1, 1, 1, 1, 1, 1, 1, 0),
 			(603, NOW(), NOW(), 0, 101, 501, 'Sheet 603', 'Sheet 603, Sheetgroup 501', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 4, 6, 1, 0, 0, 0, 0, 0, 0),
 			(604, NOW(), NOW(), 0, 101, 502, 'Sheet 604', 'Sheet 604, Sheetgroup 502', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 1, 0, 0, 0, 0, 0),
 			(605, NOW(), NOW(), 0, 101, 503, 'Sheet 605', 'Sheet 605, Sheetgroup 503', 'timeblocks', NOW(), TIMESTAMPADD(month,1,NOW()), 1, -1, 0, 0, 1, 0, 0, 0, 0),
@@ -215,7 +211,7 @@
 		$addTestSql  = "INSERT INTO " . SUS_Opening::$dbTable . " VALUES
 			(701, NOW(), NOW(), 0, 601, 1, 'Opening 701', 'Opening 701, Sheet 601, Sheetgroup 501', 8 , TIMESTAMPADD(hour,4,NOW()),  TIMESTAMPADD(hour,5,NOW()), 'opening location at CET 256', 'opening admin comment'),
 			(702, NOW(), NOW(), 0, 601, 2, 'Opening 702', 'Opening 702, Sheet 601, Sheetgroup 501', 2 , TIMESTAMPADD(hour,-96,NOW()),  TIMESTAMPADD(hour,-93,NOW()), 'CET MakerSpace', 'no comment'),
-			(703, NOW(), NOW(), 0, 602, 3, 'Opening 703', 'Opening 703, Sheet 602, Sheetgroup 501', 2 , TIMESTAMPADD(hour,128,NOW()),  TIMESTAMPADD(hour,129,NOW()), '', 'no comment'),
+			(703, NOW(), NOW(), 0, 602, 3, 'Opening 703', 'Opening 703, Sheet 602, Sheetgroup 501', 7 , TIMESTAMPADD(hour,128,NOW()),  TIMESTAMPADD(hour,129,NOW()), '', 'no comment'),
 			(704, NOW(), NOW(), 0, 602, 4, 'Opening 704', 'Opening 704, Sheet 602, Sheetgroup 501', 2 , TIMESTAMPADD(hour,1,NOW()),  TIMESTAMPADD(hour,2,NOW()), '', ''),
 			(705, NOW(), NOW(), 0, 603, 5, 'Opening 705', 'Opening 705, Sheet 603, Sheetgroup 501', 4 , TIMESTAMPADD(hour,22,NOW()),  TIMESTAMPADD(hour,23,NOW()), '', ''),
 			(706, NOW(), NOW(), 0, 604, 6, 'Opening 706', 'Opening 706, Sheet 604, Sheetgroup 502', 1 , NOW(),  TIMESTAMPADD(hour,1,NOW()), 'Faculty House', ''),
@@ -307,12 +303,28 @@
 		$addTestSql  = "INSERT INTO " . SUS_EventLog::$dbTable . " VALUES
 			(1001, 101, 1, 'add-sheetgroup', 501, 'sheetgroup_id', 'small note', 'ajax_Action = add-sheetgroup', '/GITHUB/lti/lti-signup-sheets/ajax_actions/ajax_actions.php', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0', TIMESTAMPADD(hour,4,NOW())),
 			(1002, 101, 1, 'edit-sheetgroup', 501, 'sheetgroup_id', 'more helpful note', 'ajax_Action = edit-sheetgroup', '/GITHUB/lti/lti-signup-sheets/ajax_actions/ajax_actions.php', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0', TIMESTAMPADD(hour,6,NOW()))
-
     ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();
 		if ($addTestStmt->errorInfo()[0] != '0000') {
 			echo "<pre>error adding test SUS_EventLog data to the DB\n";
+			print_r($addTestStmt->errorInfo());
+			debug_print_backtrace();
+			exit;
+		}
+	}
+
+	function createTestData_QueuedMessage($dbConn) {
+		// 1100 series ids
+		# QueuedMessage: 'queued_message_id', 'user_id', 'sheet_id', 'opening_id', 'delivery_type', 'flag_is_delivered', 'target', 'summary', 'body', 'action_datetime', 'action_status', 'action_notes', 'flag_delete'
+		$addTestSql  = "INSERT INTO " . QueuedMessage::$dbTable . " VALUES
+			(1101, 101, 602, 703, 'email', 0, 'jbond@institution.edu', 'Glow Signup Sheets - James Bond signed up for Sheet 602', 'Signup Confirmation: James Bond Opening: 08/25/2015 10:01 PM On Sheet: Sheet 602.', TIMESTAMPADD(hour,4,NOW()), 'CREATED', 'CREATED: at (test data follows) 2015-08-20 14:01:56', 0),
+			(1102, 101, 602, 703, 'email', 0, 'jbond@institution.edu', 'Glow Signup Sheets - James Bond cancelled on Sheet 602', 'Signup Cancelled: James Bond Opening: 08/25/2015 10:01 PM On Sheet: Sheet 602.', TIMESTAMPADD(hour,4,NOW()), 'CREATED', 'CREATED: at (test data follows) 2015-08-20 14:01:56', 0)
+   		 ";
+		$addTestStmt = $dbConn->prepare($addTestSql);
+		$addTestStmt->execute();
+		if ($addTestStmt->errorInfo()[0] != '0000') {
+			echo "<pre>error adding test QueuedMessage data to the DB\n";
 			print_r($addTestStmt->errorInfo());
 			debug_print_backtrace();
 			exit;
@@ -326,7 +338,6 @@
 	}
 
 	//--------------------------------------------------------------------------------------------------------------
-
 	function createAllTestData($dbConn) {
 		createTestData_Terms($dbConn);
 		createTestData_Users($dbConn);
@@ -338,12 +349,12 @@
 		createTestData_SUS_Signups($dbConn);
 		createTestData_SUS_Access($dbConn);
 		createTestData_SUS_EventLog($dbConn);
+		createTestData_QueuedMessage($dbConn);
 	}
 
 	//--------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------
-
 	function _removeTestDataFromTable($dbConn, $tableName) {
 		# This preserves specific test data
 		$sql = "DELETE FROM $tableName";
@@ -395,12 +406,15 @@
 		_removeTestDataFromTable($dbConn, SUS_EventLog::$dbTable);
 	}
 
+	function removeTestData_QueuedMessage($dbConn) {
+		_removeTestDataFromTable($dbConn, QueuedMessage::$dbTable);
+	}
+
 	function removeTestData_EXAMPLE($dbConn) {
 		_removeTestDataFromTable($dbConn, Metadata_Structure::$dbTable);
 	}
 
 	//--------------------------------------------------------------------------------------------------------------
-
 	function removeAllTestData($dbConn) {
 		removeTestData_Terms($dbConn);
 		removeTestData_Users($dbConn);
@@ -412,4 +426,5 @@
 		removeTestData_SUS_Signups($dbConn);
 		removeTestData_SUS_Access($dbConn);
 		removeTestData_SUS_EventLog($dbConn);
+		removeTestData_QueuedMessage($dbConn);
 	}

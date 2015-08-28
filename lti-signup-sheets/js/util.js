@@ -115,8 +115,7 @@ function updateDOM(action_ary, ret, data) {
 		if (ret) {
 			// show status
 			susUtil_setTransientAlert('success', 'Saved');
-			// console.log(data["url_redirect"]);
-			// redirect: go edit this newly copied sheet
+			// redirect: to newly copied sheet
 			location.href = data["url_redirect"];
 		}
 		else {

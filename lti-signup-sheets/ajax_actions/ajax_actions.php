@@ -133,28 +133,7 @@
 			exit;
 		}
 
-		// copy this sheet (create a duplicate sheet with identical sheet info and sheet access, but without any openings or signups)
-		$sheet_copy = SUS_Sheet::createNewSheet($s->owner_user_id, $DB);
-
-		$sheet_copy->flag_delete               = $s->flag_delete;
-		$sheet_copy->owner_user_id             = $s->owner_user_id;
-		$sheet_copy->sheetgroup_id             = $s->sheetgroup_id;
-		$sheet_copy->name                      = "Copy of " . $s->name;
-		$sheet_copy->description               = $s->description;
-		$sheet_copy->type                      = $s->type;
-		$sheet_copy->begin_date                = $s->begin_date;
-		$sheet_copy->end_date                  = $s->end_date;
-		$sheet_copy->max_total_user_signups    = $s->max_total_user_signups;
-		$sheet_copy->max_pending_user_signups  = $s->max_pending_user_signups;
-		$sheet_copy->flag_alert_owner_change   = $s->flag_alert_owner_change;
-		$sheet_copy->flag_alert_owner_signup   = $s->flag_alert_owner_signup;
-		$sheet_copy->flag_alert_owner_imminent = $s->flag_alert_owner_imminent;
-		$sheet_copy->flag_alert_admin_change   = $s->flag_alert_admin_change;
-		$sheet_copy->flag_alert_admin_signup   = $s->flag_alert_admin_signup;
-		$sheet_copy->flag_alert_admin_imminent = $s->flag_alert_admin_imminent;
-		$sheet_copy->flag_private_signups      = $s->flag_private_signups;
-
-		$sheet_copy->updateDb();
+		$sheet_copy = $s->copySheet();
 
 		if (!$sheet_copy->matchesDb) {
 			// error: no matching record found
@@ -174,7 +153,7 @@
 		if ($sheet_copy->matchesDb) {
 			$results['status']       = 'success';
 			$results['which_action'] = 'copy-sheet';
-			$results['url_redirect']  = APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . $sheet_copy->sheet_id;
+			$results['url_redirect'] = APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . $sheet_copy->sheet_id;
 		}
 	}
 	//###############################################################
@@ -192,10 +171,10 @@
 		}
 
 		// mark this object as deleted as well as any lower dependent items
-		$sg->cascadeDelete();
+		$sg->cascadeDelete($USER);
 
 		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-		$evt_note = "cascade delete any subordinates";
+		$evt_note = "cascade delete subordinates";
 		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "sheetgroup_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
@@ -218,10 +197,10 @@
 		}
 
 		// mark this object as deleted as well as any lower dependent items
-		$s->cascadeDelete();
+		$s->cascadeDelete($USER);
 
 		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-		$evt_note = "cascade delete any subordinates";
+		$evt_note = "cascade delete subordinates";
 		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "sheet_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
@@ -249,10 +228,10 @@
 				}
 
 				// mark this object as deleted as well as any lower dependent items
-				$o->cascadeDelete();
+				$o->cascadeDelete($USER);
 
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-				$evt_note = "delete only this opening: " . $primaryID . "; cascade delete any subordinates";
+				$evt_note = "delete only this opening: " . $primaryID . "; cascade delete subordinates";
 				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
@@ -296,12 +275,12 @@
 
 				// mark each object as deleted as well as any lower dependent items
 				foreach ($o_all as $opening) {
-					$opening->cascadeDelete();
+					$opening->cascadeDelete($USER);
 					array_push($updateIDs_ary, $opening->opening_id);
 				}
 
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-				$evt_note = "delete all openings for this single day: " . implode(", ", $updateIDs_ary) . "; cascade delete any subordinates";
+				$evt_note = "delete all openings for this single day: " . implode(", ", $updateIDs_ary) . "; cascade delete subordinates";
 				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
@@ -340,12 +319,12 @@
 
 				// mark each object as deleted as well as any lower dependent items
 				foreach ($o_all as $opening) {
-					$opening->cascadeDelete();
+					$opening->cascadeDelete($USER);
 					array_push($updateIDs_ary, $opening->opening_id);
 				}
 
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-				$evt_note = "delete this and all future openings in this series: " . implode(", ", $updateIDs_ary) . "; cascade delete any subordinates";
+				$evt_note = "delete this and all future openings in this series: " . implode(", ", $updateIDs_ary) . "; cascade delete subordinates";
 				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
@@ -384,12 +363,12 @@
 
 				// mark each object as deleted as well as any lower dependent items
 				foreach ($o_all as $opening) {
-					$opening->cascadeDelete();
+					$opening->cascadeDelete($USER);
 					array_push($updateIDs_ary, $opening->opening_id);
 				}
 
 				// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-				$evt_note = "delete this and all past and future openings in this series: " . implode(", ", $updateIDs_ary) . "; cascade delete any subordinates";
+				$evt_note = "delete this and all past and future openings in this series: " . implode(", ", $updateIDs_ary) . "; cascade delete subordinates";
 				util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 
 				// output
@@ -417,11 +396,54 @@
 		}
 
 		// mark this object as deleted as well as any lower dependent items
-		$su->cascadeDelete();
+		$su->cascadeDelete($USER);
 
 		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-		$evt_note = "cascade delete any subordinates";
+		$evt_note = "cascade delete subordinates";
 		util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "signup_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
+
+		$o = SUS_Opening::getOneFromDb(['opening_id' => $su->opening_id], $DB);
+
+		#------------------------------------------------#
+		# BEGIN: now queue the message
+		#------------------------------------------------#
+		// notifications are created only for changes to future events
+		if ($o->begin_datetime >= util_currentDateTimeString_asMySQL()) {
+
+			// fetch sheet. create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
+			$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
+			$sheet->cacheStructuredData(0, $su->opening_id, $su->signup_id);
+
+			// fetch: user associated with the signup
+			$signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
+
+			$subject = 'Glow Signup Sheets - ' . $USER->first_name . ' ' . $USER->last_name . ' cancelled ' . $signup_user->first_name . ' ' . $signup_user->last_name . ' on ' . $sheet->name;
+			$body    = "Signup Cancelled: " . $signup_user->first_name . ' ' . $signup_user->last_name . "\nCancelled by: " . $USER->first_name . ' ' . $USER->last_name . '\nOpening: ' . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
+
+			// send to: sheet owner
+			if ($sheet->flag_alert_owner_signup) {
+				$owner_user = User::getOneFromDb(['username' => $sheet->structured_data->s_owner_user_id], $DB);
+				create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, ("Hi " . $owner_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+			}
+
+			// send to: sheet managers (specifically named, if any)
+			if (isset($sheet->structured_data->access_controls["adminbyuser"])) {
+				foreach ($sheet->structured_data->access_controls["adminbyuser"] as $access_data) {
+					if ($access_data["a_type"] == 'adminbyuser') {
+						if ($sheet->flag_alert_admin_signup) {
+							$admin_user = User::getOneFromDb(['username' => $access_data["a_constraint_data"]], $DB);
+							// send only to managers (not to sheet owner)
+							if ($sheet->owner_user_id != $admin_user->user_id) {
+								create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, ("Hi " . $admin_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+							}
+						}
+					}
+				}
+			}
+		}
+		#------------------------------------------------#
+		# END: now queue the message
+		#------------------------------------------------#
 
 		// output
 		if ($su->matchesDb) {
@@ -639,10 +661,10 @@
 			exit;
 		}
 
-		// check if submitted user already has a signup for this opening (specify: flag_delete = TRUE)
+		// check if submitted user already has a cancelled signup for this opening (specify: flag_delete = TRUE)
 		$su = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $USER->user_id, 'flag_delete' => TRUE], $DB);
 
-		// check if submitted user already has a signup for this opening
+		// check if submitted user already has an active signup for this opening
 		if (!$su->matchesDb) {
 			$su = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $USER->user_id], $DB);
 		}
@@ -694,8 +716,43 @@
 			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 
-		// must get sheet object to enable render fxn
-		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
+		#------------------------------------------------#
+		# BEGIN: now queue the message
+		#------------------------------------------------#
+		// notifications are created only for changes to future events
+		if ($o->begin_datetime >= util_currentDateTimeString_asMySQL()) {
+
+			// fetch sheet. create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
+			$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
+			$sheet->cacheStructuredData(0, $primaryID, $su->signup_id);
+
+			$subject = 'Glow Signup Sheets - ' . $USER->first_name . ' ' . $USER->last_name . ' signed up for ' . $sheet->name;
+			$body    = "Signup Confirmation: " . $USER->first_name . ' ' . $USER->last_name . '\nOpening: ' . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
+
+			// send to: sheet owner
+			if ($sheet->flag_alert_owner_signup) {
+				$owner_user = User::getOneFromDb(['username' => $sheet->structured_data->s_owner_user_id], $DB);
+				create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, ("Hi " . $owner_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+			}
+
+			// send to: sheet managers (specifically named, if any)
+			if (isset($sheet->structured_data->access_controls["adminbyuser"])) {
+				foreach ($sheet->structured_data->access_controls["adminbyuser"] as $access_data) {
+					if ($access_data["a_type"] == 'adminbyuser') {
+						if ($sheet->flag_alert_admin_signup) {
+							$admin_user = User::getOneFromDb(['username' => $access_data["a_constraint_data"]], $DB);
+							// send only to managers (not to sheet owner)
+							if ($sheet->owner_user_id != $admin_user->user_id) {
+								create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, ("Hi " . $admin_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+							}
+						}
+					}
+				}
+			}
+		}
+		#------------------------------------------------#
+		# END: now queue the message
+		#------------------------------------------------#
 
 		// output
 		$results['status']                    = 'success';
@@ -722,15 +779,9 @@
 			exit;
 		}
 
-		// delete signup record
 		if ($su->matchesDb) {
-			// update preexisting record
-			$su->flag_delete    = 1;
-			$su->updated_at     = util_currentDateTimeString_asMySQL();
-			$su->opening_id     = $primaryID;
-			$su->signup_user_id = $USER->user_id;
-
-			$su->updateDb();
+			// mark this object as deleted as well as any lower dependent items
+			$su->cascadeDelete($USER);
 
 			if (!$su->matchesDb) {
 				// update record failed
@@ -747,8 +798,43 @@
 			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
 		}
 
-		// must get sheet object to enable render fxn
-		$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
+		#------------------------------------------------#
+		# BEGIN: now queue the message
+		#------------------------------------------------#
+		// notifications are created only for changes to future events
+		if ($o->begin_datetime >= util_currentDateTimeString_asMySQL()) {
+
+			// fetch sheet. create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
+			$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
+			$sheet->cacheStructuredData(0, $su->opening_id, $su->signup_id);
+
+			$subject = 'Glow Signup Sheets - ' . $USER->first_name . ' ' . $USER->last_name . ' cancelled on ' . $sheet->name;
+			$body    = "Signup Cancelled: " . $USER->first_name . ' ' . $USER->last_name . '\nOpening: ' . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
+
+			// send to: sheet owner
+			if ($sheet->flag_alert_owner_signup) {
+				$owner_user = User::getOneFromDb(['username' => $sheet->structured_data->s_owner_user_id], $DB);
+				create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, ("Hi " . $owner_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+			}
+
+			// send to: sheet managers (specifically named, if any)
+			if (isset($sheet->structured_data->access_controls["adminbyuser"])) {
+				foreach ($sheet->structured_data->access_controls["adminbyuser"] as $access_data) {
+					if ($access_data["a_type"] == 'adminbyuser') {
+						if ($sheet->flag_alert_admin_signup) {
+							$admin_user = User::getOneFromDb(['username' => $access_data["a_constraint_data"]], $DB);
+							// send only to managers (not to sheet owner)
+							if ($sheet->owner_user_id != $admin_user->user_id) {
+								create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, ("Hi " . $admin_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+							}
+						}
+					}
+				}
+			}
+		}
+		#------------------------------------------------#
+		# END: now queue the message
+		#------------------------------------------------#
 
 		// output
 		$results['status']                    = 'success';
@@ -775,7 +861,6 @@
 		// check if submitted user already has a signup for this opening
 		$su = SUS_Signup::getOneFromDb(['opening_id' => $primaryID, 'signup_user_id' => $u->user_id], $DB);
 
-		// update or create signup record
 		if ($su->matchesDb) {
 			// update preexisting record
 			$su->flag_delete    = 0;
@@ -820,52 +905,50 @@
 			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
 			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", "created signup", print_r(json_encode($_REQUEST), TRUE), $DB);
 
+			$o = SUS_Opening::getOneFromDb(['opening_id' => $su->opening_id], $DB);
+
 			#------------------------------------------------#
-			// TODO - ADD_OR_COMPLETE_QUEUED_MESSAGE
 			# BEGIN: now queue the message
 			#------------------------------------------------#
-			/*
-			// TODO - MUST ADD SHEET ID TO DATA-ATTRIBUTES AND PASS IT HERE; AND replace this hardcoded values
-			$s = SUS_Sheet::getOneFromDb(['sheet_id' => 601,], $DB);
-			// cacheStructuredData($datetime=0, $opening_id=0, $signup_id=0);
-			$s->cacheStructuredData(0, 0, 813);
-			util_prePrintR($s->structured_data);
+			// notifications are created only for changes to future events
+			if ($o->begin_datetime >= util_currentDateTimeString_asMySQL()) {
 
-			$subject = 'Glow SUS - ' . $u->first_name . ' ' . $u->last_name . ' signed up for ' . $sheet->name;
-			$body    = "Signup Confirmation: " . $u->first_name . ' ' . $u->last_name . '\nOpening: ' . date_format(new DateTime($opening->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
+				// fetch sheet. create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
+				$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
+				$sheet->cacheStructuredData(0, $su->opening_id, $su->signup_id);
 
-			foreach ($s->structured_data as $obj) {
-				// Queue messages for:
-				// Email owner on signup or cancel
-				// Email owner on upcoming signup
-				// Email admins on signup or cancel
-				// Email admins on upcoming signup
-				// TODO - Need to implement proper array values here
-				if ($obj->$sheet->flag_alert_owner_signup || $obj->$sheet->flag_alert_owner_imminent || $obj->$sheet->flag_alert_admin_signup || $obj->$sheet->flag_alert_admin_imminent) {
-					prep_for_QueuedMessage($DB, $u->user_id, $u->email, $subject, $body, $su->opening_id, $subject, $body, $opening->opening_id, $sheet->sheet_id);
+				// fetch: user associated with the signup
+				$signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
+
+				$subject = 'Glow Signup Sheets - ' . $USER->first_name . ' ' . $USER->last_name . ' signed up ' . $signup_user->first_name . ' ' . $signup_user->last_name . ' on ' . $sheet->name;
+				$body    = "Signup Confirmation: " . $signup_user->first_name . ' ' . $signup_user->last_name . "\nAdded by: " . $USER->first_name . ' ' . $USER->last_name . '\nOpening: ' . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . '\nOn Sheet: ' . $sheet->name . '.';
+
+				// send to: user whose signup was changed by owner or manager
+				if ($USER->user_id != $signup_user->signup_user_id) {
+					create_and_send_QueuedMessage($DB, $signup_user->user_id, $signup_user->email, $subject, ("Hi " . $signup_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+				}
+
+				// send to: sheet owner
+				if ($sheet->flag_alert_owner_signup) {
+					$owner_user = User::getOneFromDb(['username' => $sheet->structured_data->s_owner_user_id], $DB);
+					create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, ("Hi " . $owner_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+				}
+
+				// send to: sheet managers (specifically named, if any)
+				if (isset($sheet->structured_data->access_controls["adminbyuser"])) {
+					foreach ($sheet->structured_data->access_controls["adminbyuser"] as $access_data) {
+						if ($access_data["a_type"] == 'adminbyuser') {
+							if ($sheet->flag_alert_admin_signup) {
+								$admin_user = User::getOneFromDb(['username' => $access_data["a_constraint_data"]], $DB);
+								// send only to managers (not to sheet owner)
+								if ($sheet->owner_user_id != $admin_user->user_id) {
+									create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, ("Hi " . $admin_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+								}
+							}
+						}
+					}
 				}
 			}
-			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-			$evt_note = "successfully queued message(s)";
-			util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
-
-			// TODO - Possibly move this to be a class function (and combine with others, if possible)
-			function prep_for_QueuedMessage($DB, $usersArray, $subject, $body, $openingID = 0, $sheetID = 0) {
-				// QueuedMessage::factory($db, $user_id, $target, $summary, $body, $opening_id = 0, $sheet_id = 0, $type = 'email' )
-				$qm = QueuedMessage::factory($DB, $usersArray["userID"], $usersArray["email"], $subject, $body, $openingID, $sheetID);
-				$qm->updateDb();
-
-				if (!$qm->matchesDb) {
-					// create record failed
-					$results['notes'] = "database error: could not create queued message for signup";
-					echo json_encode($results);
-
-					// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-					util_createEventLog($USER->user_id, FALSE, $action, $primaryID, "opening_id", $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
-					exit;
-				}
-			}
-			*/
 			#------------------------------------------------#
 			# END: now queue the message
 			#------------------------------------------------#
@@ -932,9 +1015,6 @@
 			}
 
 		}
-
-		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
-		// DO NOT LOG FETCHES! // util_createEventLog($USER->user_id, TRUE, $action, $primaryID, "opening_id", "", print_r(json_encode($_REQUEST), TRUE), $DB);
 
 		// output
 		$results['status']       = 'success';
