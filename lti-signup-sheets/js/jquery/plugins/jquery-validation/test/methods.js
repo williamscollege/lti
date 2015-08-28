@@ -37,7 +37,11 @@ test("url", function() {
 	ok( method( "ftp://bassistance.de/jquery/plugin.php?bla=blu" ), "Valid url" );
 	ok( method( "http://www.føtex.dk/" ), "Valid url, danish unicode characters" );
 	ok( method( "http://bösendorfer.de/" ), "Valid url, german unicode characters" );
-	ok( method( "http://192.168.8.5" ), "Valid IP Address" );
+	ok( method( "http://142.42.1.1" ), "Valid IP Address" );
+	ok( method( "http://pro.photography" ), "Valid long TLD" );
+	ok( method( "//code.jquery.com/jquery-1.11.3.min.js" ), "Valid protocol-relative url" );
+	ok( method( "//142.42.1.1" ), "Valid protocol-relative IP Address" );
+	ok(!method( "htp://code.jquery.com/jquery-1.11.3.min.js" ), "Invalid protocol" );
 	ok(!method( "http://192.168.8." ), "Invalid IP Address" );
 	ok(!method( "http://bassistance" ), "Invalid url" ); // valid
 	ok(!method( "http://bassistance." ), "Invalid url" ); // valid
@@ -75,6 +79,7 @@ test("email", function() {
 	ok( method( "name@domain" ), "Valid email" );
 	ok( method( "name.@domain.tld" ), "Valid email" );
 	ok( method( "name@website.a" ), "Valid email" );
+	ok( method( "name@pro.photography" ), "Valid email" );
 	ok(!method( "ole@føtex.dk"), "Invalid email" );
 	ok(!method( "jörn@bassistance.de"), "Invalid email" );
 	ok(!method( "name" ), "Invalid email" );
@@ -93,6 +98,7 @@ test("number", function() {
 	ok( method( "-123,000" ), "Valid number" );
 	ok( method( "123,000.00" ), "Valid number" );
 	ok( method( "-123,000.00" ), "Valid number" );
+	ok(!method( "-" ), "Invalid number" );
 	ok(!method( "123.000,00" ), "Invalid number" );
 	ok(!method( "123.0.0,0" ), "Invalid number" );
 	ok(!method( "x123" ), "Invalid number" );
@@ -185,10 +191,10 @@ test("required", function() {
 		e = $("#text1, #text1b, #hidden2, #select1, #select2");
 	ok( method.call( v, e[0].value, e[0]), "Valid text input" );
 	ok(!method.call( v, e[1].value, e[1]), "Invalid text input" );
-	ok(!method.call( v, e[1].value, e[2]), "Invalid text input" );
+	ok(!method.call( v, e[2].value, e[2]), "Invalid text input" );
 
-	ok(!method.call( v, e[2].value, e[3]), "Invalid select" );
-	ok( method.call( v, e[3].value, e[4]), "Valid select" );
+	ok(!method.call( v, e[3].value, e[3]), "Invalid select" );
+	ok( method.call( v, e[4].value, e[4]), "Valid select" );
 
 	e = $("#area1, #area2, #pw1, #pw2");
 	ok( method.call( v, e[0].value, e[0]), "Valid textarea" );
@@ -462,75 +468,6 @@ asyncTest("remote extensions", function() {
 	strictEqual( v.element(e), false, "invalid element, nothing entered yet" );
 	e.val("asdf");
 	strictEqual( v.element(e), true, "still invalid, because remote validation must block until it returns; dependency-mismatch considered as valid though" );
-});
-
-asyncTest("remote radio correct value sent", function() {
-	expect(1);
-	var e = $("#testForm10Radio2"),
-		v;
-
-	e.attr("checked", "checked");
-	v = $("#testForm10").validate({
-		rules: {
-			testForm10Radio: {
-				required: true,
-				remote: {
-					url: "echo.php",
-					dataType: "json",
-					success: function(data) {
-						equal( data.testForm10Radio, "2", " correct radio value sent" );
-						start();
-					}
-				}
-			}
-		}
-	});
-
-	v.element(e);
-});
-
-asyncTest("remote reset clear old value", function() {
-	expect(1);
-	var e = $("#username"),
-		v = $("#userForm").validate({
-			rules: {
-				username: {
-					required: true,
-					remote: {
-						url: "echo.php",
-						dataFilter: function(data) {
-							var json = JSON.parse(data);
-							if (json.username === "asdf") {
-								return "\"asdf is already taken\"";
-							}
-							return "\"" + true + "\"";
-						}
-					}
-				}
-			}
-		});
-
-	$(document).ajaxStop(function() {
-		var waitTimeout;
-
-		$(document).unbind("ajaxStop");
-
-		$(document).ajaxStop(function() {
-			clearTimeout(waitTimeout);
-			ok( true, "Remote request sent to server" );
-			start();
-		});
-
-		v.resetForm();
-		e.val("asdf");
-		waitTimeout = setTimeout(function() {
-			ok( false, "Remote server did not get request");
-			start();
-		}, 200);
-		v.element(e);
-	});
-	e.val("asdf");
-	v.element(e);
 });
 
 module("additional methods");
@@ -852,6 +789,7 @@ test("time", function() {
 	var method = methodTest("time");
 	ok( method( "00:00" ), "Valid time, lower bound" );
 	ok( method( "23:59" ), "Valid time, upper bound" );
+	ok( method( "3:59" ), "Valid time, single digit hour" );
 	ok(!method( "12" ), "Invalid time" );
 	ok(!method( "29:59" ), "Invalid time" );
 	ok(!method( "00:60" ), "Invalid time" );
@@ -992,6 +930,7 @@ test("creditcardtypes, mastercard", function() {
 	testCardTypeByNumber( "4111-1111-1111-1111", "VISA", false );
 });
 
+/*
 function fillFormWithValuesAndExpect(formSelector, inputValues, expected) {
 	var i, actual;
 
@@ -1072,6 +1011,7 @@ test("skip_or_fill_minimum preserve other rules", function() {
 	fillFormWithValuesAndExpect("#productInfo", [ 123, "widget", "", "Acme" ], true);
 	fillFormWithValuesAndExpect("#productInfo", [ 123, "widget", "red", "Acme" ], true);
 });
+*/
 
 test("zipcodeUS", function() {
 	var method = methodTest("zipcodeUS");
@@ -1267,6 +1207,19 @@ test("postalcodeBR", function() {
 	ok( method( "99999999"), "Valid BR Postal Code");
 	ok( method( "99.999-999"), "Valid BR Postal Code");
 	ok( !method( "99.999999"), "Invalid BR Postal Code");
+});
+
+test("cpfBR", function() {
+	var method = methodTest("cpfBR");
+	ok( method( "11144477735"), "Valid CPF Number");
+	ok( method( "263.946.533-30"), "Valid CPF Number");
+	ok( method( "325 861 044 47"), "Valid CPF Number");
+	ok( method( "859-684-732-40"), "Valid CPF Number");
+	ok( !method( "99999999999"), "Invalid CPF Number: dump data");
+	ok( !method( "1114447773"), "Invalid CPF Number: < 11 digits");
+	ok( !method( "111444777355"), "Invalid CPF Number: > 11 digits");
+	ok( !method( "11144477715"), "Invalid CPF Number: 1st check number failed");
+	ok( !method( "11144477737"), "Invalid CPF Number: 2nd check number failed");
 });
 
 })(jQuery);
