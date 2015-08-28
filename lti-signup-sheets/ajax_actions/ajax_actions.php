@@ -407,7 +407,7 @@
 		#------------------------------------------------#
 		# BEGIN: now queue the message
 		#------------------------------------------------#
-		// notifications are created only for changes to future events
+		// alert only for changes to future events
 		if ($o->begin_datetime >= util_currentDateTimeString_asMySQL()) {
 
 			// fetch sheet. create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
@@ -719,7 +719,7 @@
 		#------------------------------------------------#
 		# BEGIN: now queue the message
 		#------------------------------------------------#
-		// notifications are created only for changes to future events
+		// alert only for changes to future events
 		if ($o->begin_datetime >= util_currentDateTimeString_asMySQL()) {
 
 			// fetch sheet. create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
@@ -801,7 +801,7 @@
 		#------------------------------------------------#
 		# BEGIN: now queue the message
 		#------------------------------------------------#
-		// notifications are created only for changes to future events
+		// alert only for changes to future events
 		if ($o->begin_datetime >= util_currentDateTimeString_asMySQL()) {
 
 			// fetch sheet. create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
@@ -910,7 +910,7 @@
 			#------------------------------------------------#
 			# BEGIN: now queue the message
 			#------------------------------------------------#
-			// notifications are created only for changes to future events
+			// alert only for changes to future events
 			if ($o->begin_datetime >= util_currentDateTimeString_asMySQL()) {
 
 				// fetch sheet. create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
