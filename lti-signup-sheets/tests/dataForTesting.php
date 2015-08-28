@@ -2,11 +2,9 @@
 	require_once(dirname(__FILE__) . '/../classes/auth_base.class.php');
 	// require_once(dirname(__FILE__) . '/../classes/auth_LDAP.class.php'); // intentionally removed
 	require_once(dirname(__FILE__) . '/../classes/ALL_CLASS_INCLUDES.php');
-
 	/*
 	 * This file contains a series of methods for creating known test data in a target database
 	*/
-
 	/* Example format:
 	function createTestData_XXXX($dbConn) {
 		// 1100 series ids
@@ -25,8 +23,6 @@
 	}
 	*/
 	$ACTIONS = array();
-
-
 	function createTestData_Terms($dbConn) {
 		// 1-20 series ids
 		# term: 'term_id', 'canvas_term_id', 'term_idstr', 'name', 'start_date', 'end_date', 'flag_delete'
@@ -342,7 +338,6 @@
 	}
 
 	//--------------------------------------------------------------------------------------------------------------
-
 	function createAllTestData($dbConn) {
 		createTestData_Terms($dbConn);
 		createTestData_Users($dbConn);
@@ -360,7 +355,6 @@
 	//--------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------
-
 	function _removeTestDataFromTable($dbConn, $tableName) {
 		# This preserves specific test data
 		$sql = "DELETE FROM $tableName";
@@ -421,7 +415,6 @@
 	}
 
 	//--------------------------------------------------------------------------------------------------------------
-
 	function removeAllTestData($dbConn) {
 		removeTestData_Terms($dbConn);
 		removeTestData_Users($dbConn);

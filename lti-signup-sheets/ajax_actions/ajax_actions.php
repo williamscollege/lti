@@ -120,6 +120,43 @@
 		$results['html_output']  = '';
 	}
 	//###############################################################
+	elseif ($action == 'copy-sheet') {
+		$s = SUS_Sheet::getOneFromDb(['sheet_id' => $primaryID], $DB);
+
+		if (!$s->matchesDb) {
+			// error: no matching record found
+			$results["notes"] = "no matching record found";
+			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, "sheet_id", $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
+			exit;
+		}
+
+		$sheet_copy = $s->copySheet();
+
+		if (!$sheet_copy->matchesDb) {
+			// error: no matching record found
+			$results["notes"] = "copy-sheet: no matching record found";
+			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, "sheet_id", $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
+			exit;
+		}
+
+		// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
+		$evt_note = "create a duplicate sheet without any openings or signups";
+		util_createEventLog($USER->user_id, TRUE, $action, $sheet_copy->sheet_id, "sheet_id", $evt_note, print_r(json_encode($_REQUEST), TRUE), $DB);
+
+		// output
+		if ($sheet_copy->matchesDb) {
+			$results['status']       = 'success';
+			$results['which_action'] = 'copy-sheet';
+			$results['url_redirect'] = APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . $sheet_copy->sheet_id;
+		}
+	}
+	//###############################################################
 	elseif ($action == 'delete-sheetgroup') {
 		$sg = SUS_Sheetgroup::getOneFromDb(['sheetgroup_id' => $primaryID], $DB);
 
@@ -370,7 +407,7 @@
 		#------------------------------------------------#
 		# BEGIN: now queue the message
 		#------------------------------------------------#
-		// notifications are created only for changes to future events
+		// alert only for changes to future events
 		if ($o->begin_datetime >= util_currentDateTimeString_asMySQL()) {
 
 			// fetch sheet. create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
@@ -682,7 +719,7 @@
 		#------------------------------------------------#
 		# BEGIN: now queue the message
 		#------------------------------------------------#
-		// notifications are created only for changes to future events
+		// alert only for changes to future events
 		if ($o->begin_datetime >= util_currentDateTimeString_asMySQL()) {
 
 			// fetch sheet. create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
@@ -764,7 +801,7 @@
 		#------------------------------------------------#
 		# BEGIN: now queue the message
 		#------------------------------------------------#
-		// notifications are created only for changes to future events
+		// alert only for changes to future events
 		if ($o->begin_datetime >= util_currentDateTimeString_asMySQL()) {
 
 			// fetch sheet. create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]
@@ -873,7 +910,7 @@
 			#------------------------------------------------#
 			# BEGIN: now queue the message
 			#------------------------------------------------#
-			// notifications are created only for changes to future events
+			// alert only for changes to future events
 			if ($o->begin_datetime >= util_currentDateTimeString_asMySQL()) {
 
 				// fetch sheet. create structured_data. [optional: $datetime=0, optional: $opening_id=0, required: $signup_id=0]

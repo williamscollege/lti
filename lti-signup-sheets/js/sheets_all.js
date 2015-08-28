@@ -4,6 +4,23 @@ $(document).ready(function () {
 	// Listeners
 	// ***************************
 
+	// Copy sheet
+	$(document).on("click", ".sus-copy-sheet", function () {
+		GLOBAL_confirmHandlerData = $(this).attr('data-for-sheet-id');
+
+		var params = {
+			title: "Copy Sheet",
+			message: '<p>Really create a copy of this sheet?<br /><br /><strong>&quot;' + $(this).prev().attr('data-for-sheet-name') + '&quot;</strong></p>' +
+			'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;Copying this sheet will create a duplicate sheet with identical sheet info and sheet access, but without any openings or signups.</p>',
+			label: "Copy Sheet",
+			class: "btn btn-primary",
+			url: "../ajax_actions/ajax_actions.php",
+			ajax_action: "copy-sheet",
+			ajax_id: GLOBAL_confirmHandlerData
+		};
+		showConfirmBox(params);
+	});
+
 	// Delete sheet
 	$(document).on("click", ".sus-delete-sheet", function () {
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-sheet-id');

@@ -59,7 +59,7 @@
 			#------------------------------------------------#
 			# BEGIN: now queue the message
 			#------------------------------------------------#
-			// notifications are created only for changes to future events
+			// alert only for changes to future events
 			$o = SUS_Opening::getOneFromDb(['opening_id' => $this->opening_id, 'flag_delete' => [0, 1]], $this->dbConnection); // special condition: fetch the record, even if it is deleted
 			if ($o->begin_datetime >= util_currentDateTimeString_asMySQL()) {
 

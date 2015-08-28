@@ -5,7 +5,9 @@ Purpose: Format page minimally for use with the jquery-plugin "printarea"
 ==========================================*/
 
 @media print {
-	i{display: none !important;}
+	i {
+		display: none !important;
+	}
 }
 
 /*=======================================
@@ -62,10 +64,10 @@ div.wms_tiny_break {
 .wms_indent {
 	margin-left: 40px;
 }
+
 .wms_indent_tiny {
 	margin-left: 10px !important;
 }
-
 
 /*=======================================
 Purpose: Edit Opening - Signup someone to an opening
@@ -99,12 +101,11 @@ Purpose: Edit Opening - Signup someone to an opening
 	font-weight: bold;
 }
 
-
 /*=======================================
 Purpose: CSS overrides pre-existing max-height, removes scrollbar; otherwise, PrintArea jQuery plugin outputs to print only what is visible within visible boundary
 ==========================================*/
 
-.printareaPatch{
+.printareaPatch {
 	margin-top: 0px !important;
 	max-height: 100% !important;
 	overflow-y: hidden !important;
@@ -153,6 +154,7 @@ Purpose: Override Bootstrap Tabs Styling: add border to tab box
 .tab-container.wms_print_MySignups, .tab-container.wms_print_OnMySheets {
 	padding: 15px 0px 0px 0px;
 }
+
 UL#boxMySignupsHeader, UL#boxSignupsOnMySheetsHeader {
 	padding: 0px 11px;
 }
@@ -174,7 +176,7 @@ Purpose: Placement for extra buttons
 	white-space: nowrap;
 }
 
-#tabMySignups, #tabOthersSignups{
+#tabMySignups, #tabOthersSignups {
 	margin-top: -15px;
 }
 
@@ -349,7 +351,6 @@ span[data-cal-date] {
 	border: 1px solid #D1D1D1;
 }
 
-
 .wms-demo-delete {
 	white-space: nowrap;
 	background-color: transparent;
@@ -365,13 +366,13 @@ span[data-cal-date] {
 }
 
 /* close x for DOM overlay */
-#wms_demo_close_x{
+#wms_demo_close_x {
 	position: relative;
 	top: -12px;
 	right: -8px;
 }
 
-.wms-custom-datepicker{
+.wms-custom-datepicker {
 	background-color: #ffffff !important;
 	border: 1px solid #A9A9A9 !important;
 	width: 125px !important;
@@ -464,7 +465,6 @@ UL.nav.nav-tabs LI A {
 	padding-top: 15px;
 }
 
-
 /*=======================================*/
 /*Purpose: Legacy CSS to Extend/customize the CSS for jQuery 'validation.js' plugin
 /*=======================================*/
@@ -486,5 +486,6 @@ LABEL.error {
 .text-warning {
 	color: #E17823;
 }
+
 /*.wms-validation-fix{}*/
 

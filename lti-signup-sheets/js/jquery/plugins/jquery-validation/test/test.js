@@ -389,7 +389,7 @@ asyncTest("validation triggered on radio/checkbox when using keyboard", function
 		// assert all event handlers fired
 		equal(6, triggeredEvents);
 		start();
-	}, 50);
+	});
 });
 
 asyncTest("validation triggered on radio/checkbox when using mouseclick", function() {
@@ -420,7 +420,7 @@ asyncTest("validation triggered on radio/checkbox when using mouseclick", functi
 		// assert all event handlers fired
 		equal(2, triggeredEvents);
 		start();
-	}, 50);
+	});
 });
 
 test( "showErrors()", function() {
@@ -429,7 +429,7 @@ test( "showErrors()", function() {
 		v = $( "#testForm1" ).validate();
 
 	ok( errorLabel.is( ":hidden" ) );
-	equal( 0, $( "#lastname" ).next( ".error:not(input)" ).size() );
+	equal( 0, $( "#lastname" ).next( ".error:not(input)" ).length );
 	v.showErrors({ "firstname": "required", "lastname": "bla" });
 	equal( true, errorLabel.is( ":visible" ) );
 	equal( true, $( "#lastname" ).next( ".error:not(input)" ).is( ":visible" ) );
@@ -470,8 +470,8 @@ test( "showErrors() - external messages", function() {
 
 	$.validator.addMethod( "foo", function() { return false; });
 	$.validator.addMethod( "bar", function() { return false; });
-	equal( 0, $( "#testForm4 #f1" ).next( ".error:not(input)" ).size() );
-	equal( 0, $( "#testForm4 #f2" ).next( ".error:not(input)" ).size() );
+	equal( 0, $( "#testForm4 #f1" ).next( ".error:not(input)" ).length );
+	equal( 0, $( "#testForm4 #f2" ).next( ".error:not(input)" ).length );
 
 	form = $( "#testForm4" )[ 0 ];
 	v = $( form ).validate({
@@ -719,6 +719,21 @@ test( "focusInvalid()", function() {
 	v.focusInvalid();
 });
 
+test( "focusInvalid() after validate a custom set of inputs", function() {
+	var form = $( "#testForm1" ),
+		validator = form.validate(),
+		// It's important the order of Valid, Invalid, Valid so last active element it's a valid element before focus
+		inputs = $( "#firstname, #lastname, #something" );
+
+	$( "#firstname" ).val( "ok" );
+
+	ok( !inputs.valid(), "just one invalid");
+
+	validator.focusInvalid();
+
+	equal( form[ 0 ].ownerDocument.activeElement, $( "#lastname" )[0], "focused first element" );
+});
+
 test( "findLastActive()", function() {
 	expect( 3 );
 	var v = $( "#testForm1" ).validate(),
@@ -733,11 +748,18 @@ test( "findLastActive()", function() {
 	equal( v.lastActive, lastActive );
 });
 
+test("elementValue() finds radios/checkboxes only within the current form", function() {
+	expect(1);
+	var v = $("#userForm").validate(), foreignRadio = $("#radio2")[0];
+
+	ok( !v.elementValue(foreignRadio) );
+});
+
 test( "validating multiple checkboxes with 'required'", function() {
 	expect( 3 );
 	var checkboxes = $( "#form input[name=check3]" ).prop( "checked", false ),
 		v;
-	equal( checkboxes.size(), 5 );
+	equal( checkboxes.length, 5 );
 
 	v = $( "#form" ).validate({
 		rules: {
@@ -786,12 +808,6 @@ test( "dynamic form", function() {
 	$( "#agb" ).attr( "disabled", false );
 	v.form();
 	errors( 1 );
-	$( "#agb" ).attr( "readonly", true );
-	v.form();
-	errors( 0 );
-	$( "#agb" ).attr( "readonly", false );
-	v.form();
-	errors( 1 );
 });
 
 test( "idOrName()", function() {
@@ -810,10 +826,34 @@ test( "resetForm()", function() {
 	var v = $( "#testForm1" ).validate();
 	v.form();
 	errors( 2 );
+	ok( $( "#firstname" ).hasClass( "error" ) );
 	$( "#firstname" ).val( "hiy" );
 	v.resetForm();
 	errors( 0 );
+	ok( !$( "#firstname" ).hasClass( "error" ) );
 	equal( "", $( "#firstname" ).val(), "form plugin is included, therefor resetForm must also reset inputs, not only errors" );
+});
+
+test( "resetForm() clean styles when custom highlight function is used", function() {
+	var form = $( "#testForm1clean" ),
+		e = $( "#firstnamec" );
+	form.validate({
+		highlight: function( element ) {
+			$( element ).hide();
+		},
+		unhighlight: function( element ) {
+			$( element ).show();
+		},
+		ignore: "",
+		errorClass: "invalid",
+		rules: {
+			firstnamec: "required"
+		}
+	});
+	e.valid();
+	ok( !e.is( ":visible" ) );
+	form.validate().resetForm();
+	ok( e.is( ":visible" ) );
 });
 
 test( "message from title", function() {
@@ -934,12 +974,12 @@ test( "success option3", function() {
 		}),
 		labels;
 
-	equal( 0, $( "#testForm1 .error:not(input)" ).size() );
+	equal( 0, $( "#testForm1 .error:not(input)" ).length );
 	$( "#firstname" ).val( "hi" );
 	v.form();
 	labels = $( "#testForm1 .error:not(input)" );
 
-	equal( 3, labels.size() );
+	equal( 3, labels.length );
 	ok( labels.eq( 0 ).is( ".valid" ) );
 	ok( !labels.eq( 1 ).is( ".valid" ) );
 });
@@ -964,11 +1004,11 @@ test( "success isn't called for optional elements with no other rules", function
 			firstname: { required: false }
 		}
 	});
-	equal( 0, $( "#testForm1 .error:not(input)" ).size() );
+	equal( 0, $( "#testForm1 .error:not(input)" ).length );
 	v.form();
-	equal( 0, $( "#testForm1 .error:not(input)" ).size() );
+	equal( 0, $( "#testForm1 .error:not(input)" ).length );
 	$( "#firstname" ).valid();
-	equal( 0, $( "#testForm1 .error:not(input)" ).size() );
+	equal( 0, $( "#testForm1 .error:not(input)" ).length );
 });
 
 test( "success is called for optional elements with other rules", function() {
@@ -1023,11 +1063,11 @@ test( "all rules are evaluated even if one returns a dependency-mistmatch", func
 			}
 		}
 	});
-	equal( 0, $( "#testForm1 .error:not(input)" ).size() );
+	equal( 0, $( "#testForm1 .error:not(input)" ).length );
 	v.form();
-	equal( 0, $( "#testForm1 .error:not(input)" ).size() );
+	equal( 0, $( "#testForm1 .error:not(input)" ).length );
 	$( "#firstname" ).valid();
-	equal( 0, $( "#testForm1 .error:not(input)" ).size() );
+	equal( 0, $( "#testForm1 .error:not(input)" ).length );
 
 	delete $.validator.methods.custom1;
 	delete $.validator.messages.custom1;
@@ -1125,7 +1165,7 @@ test( "validate on blur", function() {
 		equal( v.size(), expected, message );
 	}
 	function labels( expected ) {
-		equal( v.errors().filter( ":visible" ).size(), expected );
+		equal( v.errors().filter( ":visible" ).length, expected );
 	}
 	function blur( target ) {
 		target.trigger( "blur" ).trigger( "focusout" );
@@ -1242,6 +1282,56 @@ test( "validate email on keyup and blur", function() {
 	e.val( "aa" );
 	e.trigger( "keyup" );
 	errors( 0 );
+});
+
+test( "don't revalidate the field when pressing special characters", function() {
+	function errors( expected, message ) {
+		equal( expected, v.size(), message );
+	}
+
+	function triggerEvent( element, keycode ) {
+		var event = $.Event( "keyup", { keyCode: keycode } );
+		element.trigger( event );
+	}
+
+	var e = $( "#firstname" ),
+		v = $( "#testForm1" ).validate(),
+		excludedKeys = {
+			"Shift": 16,
+			"Ctrl": 17,
+			"Alt": 18,
+			"Caps lock": 20,
+			"End": 35,
+			"Home": 36,
+			"Left arrow": 37,
+			"Up arrow": 38,
+			"Right arrow": 39,
+			"Down arrow": 40,
+			"Insert": 45,
+			"Num lock": 144,
+			"Alt GR": 225
+		};
+
+	// To make sure there is only one error, that one of #firtname field
+	$( "#firstname" ).val( "" );
+	$( "#lastname" ).val( "something" );
+	$( "#something" ).val( "something" );
+
+	// Validate the form
+	v.form();
+	errors( 1, "Validate manualy" );
+
+	// Check for special keys
+	e.val( "aaa" );
+	$.each( excludedKeys, function( key, keyCode ) {
+		triggerEvent( e, keyCode );
+		errors( 1, key + " key" );
+	});
+
+	// Normal keyup
+	e.val( "aaaaa" );
+	e.trigger( "keyup" );
+	errors( 0, "Normal keyup" );
 });
 
 test( "validate checkbox on click", function() {
@@ -1369,6 +1459,8 @@ test( "validate input with no type attribute, defaulting to text", function() {
 	errors( 0 );
 });
 
+module( "ignore hidden" );
+
 test( "ignore hidden elements", function() {
 	var form = $( "#userForm" ),
 		validate = form.validate({
@@ -1397,6 +1489,8 @@ test( "ignore hidden elements at start", function() {
 	$( "#userForm [name=username]" ).show();
 	ok( !validate.form(), "form should be invalid when required element is visible" );
 });
+
+module( "configuration with attributes " );
 
 test( "Specify error messages through data attributes", function() {
 	var form = $( "#dataMessages" ),
@@ -1549,12 +1643,25 @@ test( "Min and Max strings set by attributes less", function() {
 
 test( "Min and Max strings set by attributes valid", function() {
 	var form = $( "#ranges" ),
-		name = $( "#rangeTextValid" ),
+		range = $( "#rangeTextValid" ),
 		label;
 
 	form.validate();
 	form.get( 0 ).reset();
-	name.valid();
+	range.valid();
+
+	label = $( "#ranges .error:not(input)" );
+	equal( label.text(), "", "Correct error label" );
+});
+
+test( "Max set by data-rule, valid", function() {
+	var form = $( "#ranges" ),
+		range = $( "#rangeTextDataRuleValid" ),
+		label;
+
+	form.validate();
+	form.get( 0 ).reset();
+	range.valid();
 
 	label = $( "#ranges .error:not(input)" );
 	equal( label.text(), "", "Correct error label" );
@@ -1731,4 +1838,16 @@ test( "Validation triggered on radio and checkbox via click", function() {
 
 	// test if there is no error anymore
 	ok( form.find( "input.error" ).length === 0, "Form valid" );
+});
+
+test( "destroy()", function() {
+    expect( 2 );
+
+    var form = $( "#form" ),
+        validate = form.validate();
+
+    strictEqual( $( form ).data( "validator" ), validate );
+
+    validate.destroy();
+    strictEqual( $( form ).data( "validator" ), undefined );
 });

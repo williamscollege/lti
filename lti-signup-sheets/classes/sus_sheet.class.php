@@ -110,6 +110,42 @@
 			}
 		}
 
+		// copy this sheet (create a duplicate sheet with identical sheet info and sheet access, but without any openings or signups)
+		public function copySheet() {
+			$sheet_copy = SUS_Sheet::createNewSheet($this->owner_user_id, $this->dbConnection);
+
+			$sheet_copy->flag_delete               = $this->flag_delete;
+			$sheet_copy->owner_user_id             = $this->owner_user_id;
+			$sheet_copy->sheetgroup_id             = $this->sheetgroup_id;
+			$sheet_copy->name                      = "Copy of " . $this->name;
+			$sheet_copy->description               = $this->description;
+			$sheet_copy->type                      = $this->type;
+			$sheet_copy->begin_date                = $this->begin_date;
+			$sheet_copy->end_date                  = $this->end_date;
+			$sheet_copy->max_total_user_signups    = $this->max_total_user_signups;
+			$sheet_copy->max_pending_user_signups  = $this->max_pending_user_signups;
+			$sheet_copy->flag_alert_owner_change   = $this->flag_alert_owner_change;
+			$sheet_copy->flag_alert_owner_signup   = $this->flag_alert_owner_signup;
+			$sheet_copy->flag_alert_owner_imminent = $this->flag_alert_owner_imminent;
+			$sheet_copy->flag_alert_admin_change   = $this->flag_alert_admin_change;
+			$sheet_copy->flag_alert_admin_signup   = $this->flag_alert_admin_signup;
+			$sheet_copy->flag_alert_admin_imminent = $this->flag_alert_admin_imminent;
+			$sheet_copy->flag_private_signups      = $this->flag_private_signups;
+
+			$sheet_copy->updateDb();
+			$sheet_copy->copyAccess($this->sheet_id, $sheet_copy->sheet_id);
+
+			return $sheet_copy;
+		}
+
+		public function copyAccess($sheet_id_original, $sheet_id_copy) {
+			$sheet_access = SUS_Access::getAllFromDb(['sheet_id' => $sheet_id_original], $this->dbConnection);
+			foreach ($sheet_access as $a) {
+				$access_copy = SUS_Access::createNewAccess($a->type, $sheet_id_copy, $a->constraint_id, $a->constraint_data, $this->dbConnection);
+				$access_copy->updateDb();
+			}
+		}
+
 		// render as html the usage details concerning max and pending signup limits, and current counts of each
 		public function renderAsHtmlUsageDetails() {
 			// explicitly call the global session variable for use here

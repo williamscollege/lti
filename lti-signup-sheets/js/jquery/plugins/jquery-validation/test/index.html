@@ -21,7 +21,6 @@
 <body id="body">
 <h1 id="qunit-header">
 	<a href="http://jqueryvalidation.org/">jQuery Validation Plugin</a> Test Suite
-	<a href="?jquery=1.6.4">jQuery 1.6.4</a>
 	<a href="?jquery=1.7.2">jQuery 1.7.2</a>
 	<a href="?jquery=1.8.3">jQuery 1.8.3</a>
 	<a href="?jquery=1.9.1">jQuery 1.9.1</a>
@@ -177,6 +176,10 @@
 		<!-- test id/name containing brackets -->
 		<input name="testForm18[text]" id="testForm18[text]" required>
 	</form>
+	<form id="testForm19">
+	<!-- test id/name containing $ -->
+	<input name="testForm19$text" id="testForm19$text" required>
+	</form>
 	<form id="dataMessages">
 		<input name="dataMessagesName" id="dataMessagesName" class="required" data-msg-required="You must enter a value here">
 	</form>
@@ -199,7 +202,7 @@
 	</form>
 	<form id="form" action="formaction">
 		<input type="text" name="action" value="Test" id="text1">
-		<input type="text" name="text2" value="   " id="text1b">
+		<input type="text" name="text2" value="" id="text1b">
 		<input type="text" name="text2" value="T " id="text1c">
 		<input type="text" name="text2" value="T" id="text2">
 		<input type="text" name="text2" value="TestTestTest" id="text3">
@@ -319,6 +322,7 @@
 		<input id="rangeAbsentInvalidGreater" name="rangeAbsentInvalidGreater" min="50" max="200" value="1000">
 		<input id="rangeAbsentInvalidLess" name="rangeAbsentInvalidLess" min="200" max="1000" value="50">
 		<input type="text" id="rangeTextValid" name="rangeTextValid" min="50" max="1000" value="200">
+		<input type="text" id="rangeTextDataRuleValid" name="rangeTextValid" min="50" data-rule-max="1000.00" value="200">
 		<input id="rangeAbsentValid" name="rangeAbsentValid" min="50" max="1000" value="200">
 		<!-- ranges are like numbers in html5, except that browser is not required
 			 to demand an exact value.  User interface could be a slider.

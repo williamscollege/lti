@@ -103,7 +103,7 @@ window.calendar_languages['fi-FI'] = {
     //   For example:
     //   - From 1 January to 6 January: '01-01>06-01'
     //   - Easter and the day after Easter: 'easter>easter+1'
-    //   Limitations: currently the multi-day holydays can't cross an year. So, for example, you can't specify a range as '30-12>01-01'; as a workaround you can specify two distinct holidays (for instance '30-12>31-12' and '01-01'). 
+    //   Limitations: currently the multi-day holydays can't cross an year. So, for example, you can't specify a range as '30-12>01-01'; as a workaround you can specify two distinct holidays (for instance '30-12>31-12' and '01-01').
     holidays: {
     }
 };

@@ -117,12 +117,13 @@
 			echo "</th><th class=\"col-xs-1 text-nowrap\">";
 			// icon: edit
 			echo "<a href=\"#modalSheetgroup\" id=\"btn-edit-sheetgroup-id-" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" class=\"sus-edit-sheetgroup btn btn-xs btn-primary\" data-toggle=\"modal\" data-target=\"#modalSheetgroup\" data-for-sheetgroup-id=\"" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-name=\"" . htmlentities($sheetgroup->name, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-description=\"" . htmlentities($sheetgroup->description, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-max-total=\"" . htmlentities($sheetgroup->max_g_total_user_signups, ENT_QUOTES, 'UTF-8') . "\" data-for-sheetgroup-max-pending=\"" . htmlentities($sheetgroup->max_g_pending_user_signups, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit group\"><i class=\"glyphicon glyphicon-pencil\"></i></a>&nbsp;";
+			// icon: delete
 			if (!$sheetgroup->flag_is_default) {
-				// icon: delete
+				// delete (enabled)
 				echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheetgroup\" data-bb=\"alert_callback\" data-for-sheetgroup-id=\"" . htmlentities($sheetgroup->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete group and all sheets in it\"><i class=\"glyphicon glyphicon-remove\"></i> Group</a>&nbsp;";
 			}
 			else {
-				// icon: delete (disabled)
+				// delete (disabled)
 				echo "<a href=\"#\" class=\"btn btn-xs btn-default disabled\" disabled=\"disabled\" title=\"Cannot delete default group\"><i class=\"glyphicon glyphicon-minus-sign\"></i> <span class='small'>Default</span></a>&nbsp;";
 			}
 			echo "</th></tr>";
@@ -136,6 +137,8 @@
 				echo "</td><td class=\"col-xs-1 text-nowrap\">";
 				// icon: edit
 				echo "<a href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . htmlentities($sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" id=\"btn-edit-sheet-id-" . htmlentities($sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" class=\"sus-edit-sheet btn btn-xs btn-primary\" data-for-sheet-name=\"" . htmlentities($sheet->name, ENT_QUOTES, 'UTF-8') . "\"  title=\"Edit sheet\"><i class=\"glyphicon glyphicon-pencil\"></i></a>&nbsp;";
+				// icon: copy
+				echo "<a href=\"#\" class=\"btn btn-xs btn-primary sus-copy-sheet\" data-bb=\"alert_callback\" data-for-sheetgroup-id=\"" . htmlentities($sheet->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-sheet-id=\"" . htmlentities($sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Copy sheet\"><i class=\"glyphicon glyphicon-copy\"></i></a>&nbsp;";
 				// icon: delete
 				echo "<a href=\"#\" class=\"btn btn-xs btn-danger sus-delete-sheet\" data-bb=\"alert_callback\" data-for-sheetgroup-id=\"" . htmlentities($sheet->sheetgroup_id, ENT_QUOTES, 'UTF-8') . "\" data-for-sheet-id=\"" . htmlentities($sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Delete sheet\"><i class=\"glyphicon glyphicon-remove\"></i></a>&nbsp;";
 				echo "</td></tr>";

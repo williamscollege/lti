@@ -458,7 +458,7 @@
 
 			$this->flag_delete = TRUE;
 			if (isset($this->fieldValues["updated_at"])) {
-				$this->updated_at     = util_currentDateTimeString_asMySQL();
+				$this->updated_at = util_currentDateTimeString_asMySQL();
 			}
 			$this->updateDb();
 

@@ -1160,7 +1160,7 @@ if(!String.prototype.formatNum) {
 			});
 		});
 
-	
+
 
 		// Wait 400ms before updating the modal & attach the mouseenter&mouseleave(400ms is the time for the slider to fade out and slide up)
 		setTimeout(function() {
