@@ -175,7 +175,7 @@
 					var sheetDateBegin = new Date($("#inputSheetDateBegin").val());
 					var sheetDateEnd = new Date($("#inputSheetDateEnd").val());
 
-					//alert('calendarDateBegin=' + calendarDateBegin +  '\n' + 'sheetDateBegin = ' + sheetDateBegin);
+					//alert("calendarDateBegin=" + calendarDateBegin + "\n" + "sheetDateBegin = " + sheetDateBegin);
 					$("BUTTON[data-calendar-nav='prev']").prop("disabled", calendarDateBegin <= sheetDateBegin);
 					$("BUTTON[data-calendar-nav='next']").prop("disabled", sheetDateEnd <= calendarDateEnd);
 				}

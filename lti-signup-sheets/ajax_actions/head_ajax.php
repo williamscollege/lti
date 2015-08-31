@@ -62,7 +62,7 @@
 		}
 		if (array_key_exists('SERVER_NAME', $_SERVER)) {
 			// do not attempt delivery on local workstation
-			if (!$_SERVER['SERVER_NAME'] == 'localhost') {
+			if ($_SERVER['SERVER_NAME'] != 'localhost') {
 				if (!$qm->attemptDelivery()) {
 					// write to errorlog if fails
 					error_log("attemptDelivery failed for QueuedMessage (email subject: $subject)");

@@ -62,7 +62,7 @@
 
 		function testQueuedMessageDBInsertViaFactory() {
 			// QueuedMessage::factory($db, $user_id, $target, $summary, $body, $opening_id = 0, $sheet_id = 0, $type = 'email' )
-			$qm = QueuedMessage::factory($this->DB, 50, 'jbond@institution.edu', 'Glow Signup Sheets - James Bond cancelled on Sheet 602', 'Signup Cancelled: James Bond Opening: 08/25/2015 10:01 PM On Sheet: Sheet 602.', 703, 602);
+			$qm = QueuedMessage::factory($this->DB, 50, 'jbond@institution.edu', 'Glow Signup Sheets - James Bond cancelled on Sheet 602', 'Signup cancelled: James Bond Opening: 08/25/2015 10:01 PM On Sheet: Sheet 602.', 703, 602);
 			$qm->updateDb();
 
 			$qm->refreshFromDb();

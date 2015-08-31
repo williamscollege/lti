@@ -1,13 +1,13 @@
 <?php
 
-	# TODO - need to REFACTOR this file to enable Cron jobs to send reminders once daily (this is a system state based cron job, not an event driven job)
+	# Purpose: Command line script to enable Cron jobs to send reminders once daily (this is a system state based cron job, not an event driven job)
 
 	require_once('cl_head.php');
 
 	/*
-	 * this script queues emails to all users that have a reservation coming up in the next 2 days. only one email is sent to
-	 * a user. that email contains three sections: consumer reservations (normal), manager reservations (manager only), and
-	 * reservations on groups the user manages (manager only).
+	 * this script queues emails to all admins and managers that have signups coming up in the next 2 days.
+	 * only one email is sent to a user. that email contains three sections:
+	 * consumer reservations (normal), manager reservations (manager only), and reservations on groups the user manages (manager only).
 	 *
 	 * NOTE: since the look-ahead is 2 days and this runs 1/day, that means that people get 2 reminders about each reservation
 	 */
@@ -17,8 +17,7 @@
 	# TODO: consider grouping reservation data by schedule id in the email message - i.e. group together all items that were reserved together; currently the system put's each item on its own line with its own display of the time block
 
 	$cur_date           = date('Y-m-d');
-	$cur_date           = '2013-03-15';
-	$lookahead_interval = 42;
+	$lookahead_interval = 42; // on LIVE server, this value should be: 2
 
 	function getReservationTimeRangeInfo($rsv) {
 		$start_dt = new DateTime($rsv['time_block_start_datetime']);
