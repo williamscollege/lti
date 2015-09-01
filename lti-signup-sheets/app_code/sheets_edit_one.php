@@ -148,16 +148,38 @@
 
 
 		// ***************************
-		// fetch sheetgroups
+		// fetch all available sheets
 		// ***************************
-		$USER->cacheSheetgroups();
+		// fetch managed sheets
+		$USER->cacheManagedSheets();
 		// util_prePrintR($USER->managed_sheets);
+
+		// fetch sheetgroups
+		$USER->cacheSheetgroups();
 
 
 		// ***************************
 		// breadcrumbs: begin
 		// ***************************
 		$available_sheets = "<select id=\"breadcrumbs_select_list\" class=\"input-sm\">";
+
+		// iterate: managed sheets
+		if (isset($USER->managed_sheets) AND count($USER->managed_sheets) >= 1) {
+			// optgroup: display group of managed sheets
+			$available_sheets .= "<optgroup label=\"Sheets I manage that are owned by others...\">";
+			// now, iterate the managed sheets
+			foreach ($USER->managed_sheets as $managed_sheet) {
+				// option: list each sheet
+				$str_selected = ""; // is user editing this sheet?
+				if ($managed_sheet->sheet_id == $s->sheet_id) {
+					$str_selected = " selected=\"selected\" ";
+				}
+				// option: list each sheet
+				$available_sheets .= "<option value=\"" . $managed_sheet->sheet_id . "\"" . $str_selected . ">" . htmlentities($managed_sheet->name, ENT_QUOTES, 'UTF-8') . "</option>";
+			}
+			$available_sheets .= "</optgroup>";
+		}
+
 		// iterate: sheetgroups
 		foreach ($USER->sheetgroups as $sheetgroup) {
 			// optgroup: display sheetgroup
@@ -176,8 +198,7 @@
 						}
 					}
 				}
-				// is selected?
-				$str_selected = "";
+				$str_selected = ""; // is user editing this sheet?
 				if ($sheet->sheet_id == $s->sheet_id) {
 					$str_selected = " selected=\"selected\" ";
 				}
@@ -339,9 +360,11 @@
 												<label>
 													<input type="checkbox" id="checkAlertAdminSignup" name="checkAlertAdminSignup"<?php echo ($s && $s->flag_alert_admin_signup) ? ' checked="checked"' : ''; ?>>
 													Alert <strong>admins</strong> on each signup or cancel
-												</label><br />
+												</label>
 											</div>
+										</div>
 
+										<div class="form-group">
 											<strong>Daily Reminders</strong><br />
 
 											<div class="checkbox small col-sm-12">
