@@ -36,6 +36,14 @@
 		return $time_range_string;
 	}
 
+	function getPrettyInfo($udata, $opening) {
+		$pretty_info_string = (empty($opening['name'])) ? '' : "\nOpening: " . $opening['name'];
+		$pretty_info_string .= (empty($udata['sheets'][$opening['sheet_id']]['name'])) ? '' : "\nSheet: " . $udata['sheets'][$opening['sheet_id']]['name'];
+		$pretty_info_string .= (empty($opening['location'])) ? '' : "\nLocation: " . $opening['location'];
+
+		return $pretty_info_string;
+	}
+
 	# TODO: support command line arg for date start (default to today) and range (default to 2 days)
 
 	$cur_date           = date('Y-m-d');
@@ -43,6 +51,8 @@
 
 
 	# 1. Get all the upcoming signups (cur time to cur time + 48 hours); for each signup, get the opening, sheet, and signup's user info
+	# sort signups by opening.begin_datetime
+	// TODO - some fields are not needed. cleanup for smaller recordset
 	$signups_sql =
 		"SELECT
 			DISTINCT u.user_id, u.username, u.first_name, u.last_name, u.email
@@ -246,43 +256,103 @@
 
 
 	# 3. users: build and send the emails
-	/*
-	 * cycle through hash ids; build each email from that hash entry; sort signups by opening.begin_datetime; make the email; send it and sleep for a moment to avoid overwhelming the mail server
-	 */
+	# cycle through hash ids; build each email from that hash entry; make the email; send it and sleep for a moment to avoid overwhelming the mail server
+
 	$from    = 'signup_sheets-no-reply@' . INSTITUTION_DOMAIN;
 	$subject = "[Signup Sheets] $cur_date upcoming signups";
 	$headers = "From: $from";
 
 	foreach ($users_hash as $uid => $udata) {
 		$body = "Hi " . $udata['first_name'] . ",\n\nThis is a reminder about upcoming signups for the next $lookahead_interval days.";
+
 		# add signups (via their corresponding openings)
 		if (count($udata['openings']) > 0) {
-			$body .= "\n\nYou have signed up for:\n\n";
+			$is_plural = (count($udata['openings']) > 1) ? "s" : "";
+			$body .= "\n\nYou have signed up for " . count($udata['openings']) . " opening" . $is_plural . ":\n\n";
 			foreach ($udata['openings'] as $opening) {
 				$pretty_date_range = getPrettyDateRanges($opening);
-				$pretty_name     = (empty($opening['name'])) ? '' : "\nEvent name: " . $opening['name'] . ")";
-// TODO finish this
-//				$pretty_name     = (empty($udata['sheets'][$opening['sheet_id']])) ? '' : "\nEvent name: " . $opening['name'] . ")";
-				$pretty_location = (empty($opening['location'])) ? '' : " (" . $opening['location'] . ")";
+				$pretty_info       = getPrettyInfo($udata, $opening);
+				$body .= $pretty_date_range . $pretty_info . "\n\n";
+			}
+		}
 
-				$body .= $pretty_date_range . $pretty_name . $pretty_location . "\n";
+		// now queue the message
+		// TODO - presently not used: $headers
+		// QueuedMessage::factory($db, $user_id, $target, $summary, $body, $opening_id = 0, $sheet_id = 0, $type = 'email' )
+		$qm = QueuedMessage::factory($DB, $udata['user_id'], $udata['email'], $subject, $body, $opening['opening_id'], $opening['sheet_id']);
+		$qm->updateDb();
+
+		if (!$qm->matchesDb) {
+			// create record failed
+			$results['notes'] = "database error: could not create queued message for signup";
+			error_log("QueuedMessage failed to insert db record (email subject: $subject)");
+			echo json_encode($results);
+			exit;
+		}
+		echo $body . "<hr />\n"; // for testing - use above line for actually sending the email
+	}
+
+	echo "<br />-------------------------<br />\n"; // TODO remove this line
+	# 4. owners_and_admins: build and send the emails
+	# cycle through hash ids; build each email from that hash entry; make the email; send it and sleep for a moment to avoid overwhelming the mail server
+
+	$from    = 'signup_sheets-no-reply@' . INSTITUTION_DOMAIN;
+	$subject = "[Signup Sheets] $cur_date upcoming signups";
+	$headers = "From: $from";
+
+	foreach ($owners_and_admins_hash as $uid => $manager_data) {
+		// iterate through each manager (owner or admin)
+		$body = "Hi " . $manager_data['first_name'] . ",\n\nThis is a reminder about upcoming signups for the next $lookahead_interval days.";
+		$body .= "\n\nThe following people have signed up on sheets that you own or manage:\n\n";
+
+		foreach ($manager_data['sheets'] as $man_sheet => $m_sheet) {
+			// find signups for each sheet that this manager (owner or admin) wants to receive Daily Reminders
+
+			foreach ($users_hash as $uid => $udata) {
+				// iterate through entire users hash; add any signups (via their corresponding openings) that match this sheet
+
+				foreach ($udata['openings'] as $u_opening) {
+					// iterate through each opening (signup equivalent)
+					//echo "u_opening['sheet_id'] = " . $u_opening['sheet_id'] . ", m_sheet['sheet_id'] = " . $m_sheet['sheet_id'] . "<br/>";
+
+					if ($u_opening['sheet_id'] == $m_sheet['sheet_id']) {
+						// this user has an opening that matches the manager's sheet_id
+						//echo "sheet_id MATCHES!: u_opening['sheet_id'] = " . $u_opening['sheet_id'] . ", m_sheet['sheet_id'] = " . $m_sheet['sheet_id'] . "<br/>";
+
+						foreach ($udata['signups'] as $u_signup) {
+							// iterate through the user's signups to find the signup that matches the opening
+
+							// get the opening and signup values
+							if ($u_signup['opening_id'] == $u_opening['opening_id']) {
+								// found a signup match for this sheet
+								// TODO - maybe rebuild this as a new hash with output that can be organized by Sheet, and sorted by OPENING.BeginDate
+								// values to put in hash:
+								$pretty_date_range = getPrettyDateRanges($u_opening);
+								$pretty_info       = getPrettyInfo($udata, $u_opening);
+								$body .= $pretty_date_range . $pretty_info . "\n\n";
+							}
+						}
+
+					}
+				}
 			}
 		}
 		// now queue the message
-		// mail($udata['email'], $subject, $body, $headers);
-		// ORIGINAL CODE: $qm = QueuedMessage::factory($DB,$udata['email'],$subject,$body);
-		//		$qm = QueuedMessage::factory($DB, $udata['email'], $subject, $body, $USER->user_id, $sheet_id, $opening_id);
-		//		$qm->updateDb();
-		//    echo $body; // for testing - use above line for actually sending the email
-		echo $body . "<br /><br />";
+		// TODO - presently not used: $headers
+		// QueuedMessage::factory($db, $user_id, $target, $summary, $body, $opening_id = 0, $sheet_id = 0, $type = 'email' )
+		$qm = QueuedMessage::factory($DB, $udata['user_id'], $udata['email'], $subject, $body, $u_opening['opening_id'], $u_opening['sheet_id']);
+		$qm->updateDb();
+
+		if (!$qm->matchesDb) {
+			// create record failed
+			$results['notes'] = "database error: could not create queued message for signup";
+			error_log("QueuedMessage failed to insert db record (email subject: $subject)");
+			echo json_encode($results);
+			exit;
+		}
+		echo $body . "<hr />\n"; // for testing - use above line for actually sending the email
 	}
 
 	util_prePrintR($users_hash);
 	echo "<hr />";
 	util_prePrintR($owners_and_admins_hash);
-	exit;
-
-
-	# 4. owners_and_admins: build and send the emails
-
-
