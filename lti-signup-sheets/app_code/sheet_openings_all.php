@@ -44,7 +44,7 @@
 				// NOTE: the A) through G) leads on the keys are used to sort. The display trims the first 3 chars from the key.
 				switch ($sheet["a_type"]) {
 					case "byuser":
-						if (isset($other_based_sheets["A) I was specifically given access"])) {
+						if (isset($other_based_sheets["A) I was given access"])) {
 							$other_based_sheets["A) I was given access"] .= "<li>$base_sheet_link</li>";
 						}
 						else {
@@ -54,11 +54,15 @@
 					case "bycourse":
 						$course = Course::getAllFromDb(['course_idstr' => $sheet["a_constraint_data"]], $DB);
 
+						// util_prePrintR($sheet); // debugging
+						// util_prePrintR($course_based_sheets); // debugging
+						// echo "course_idstr = " . $course[0]->course_idstr . ", base_sheet_link = " . $base_sheet_link; // debugging
+
 						if (isset($course_based_sheets[$course[0]->course_idstr])) {
-							$course_based_sheets[$course[0]->short_name] .= "<li>$base_sheet_link</li>";
+							$course_based_sheets[$course[0]->course_idstr] .= "<li>$base_sheet_link</li>";
 						}
 						else {
-							$course_based_sheets[$course[0]->short_name] = "<li>$base_sheet_link</li>";
+							$course_based_sheets[$course[0]->course_idstr] = "<li>$base_sheet_link</li>";
 						}
 						break;
 					case "byinstr":
@@ -127,7 +131,7 @@
 				// begin table
 				echo "<table class=\"table table-condensed table-bordered table-hover col-sm-12\">";
 				echo "<tr class=\"\"><th class=\"col-sm-6 info\">Sheets available because I am enrolled in...</th></tr>";
-
+				// util_prePrintR($course_based_sheets); // debugging
 				foreach ($course_based_sheets as $course => $items) {
 					echo "<tr><td>";
 					echo "<p>" . htmlentities($course, ENT_QUOTES, 'UTF-8') . "</p>";

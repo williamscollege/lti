@@ -57,6 +57,7 @@
 </head>
 <body>
 <form name="frmCourseEmail" id="frmCourseEmail" role="form">
+	<input type="hidden" id="courseTitle" value="">
 	<!-- total col-md per row should = 12 -->
 	<div class="container">
 		<div class="row">
@@ -145,7 +146,7 @@
 					<div class="col-sm-8">
 						<!-- too many selected recipients will exceed Gmail's ability to dynamically create an email; workaround: manually open (compose) an email, then paste the entire address list in 'TO' field -->
 						<div id="displayCkBoxInstructions" class="hidden text-danger small">
-							<p><strong>List too long for "Compose Email"</strong></p>
+							<p><strong>Browser limit: List too long for "Compose Email"</strong></p>
 							How to proceed:<br />
 							<ol type="1">
 								<li>Click "Copy as Text" button</li>
@@ -224,7 +225,10 @@
 		</div>
 	</div>
 </form>
-
+<?php
+	// LOCAL TESTING ONLY! This should be remmed out for live site.
+	// $_SESSION['custom_canvas_course_id'] = 123456;
+?>
 <!-- jQuery -->
 <script>
 	$(document).ready(function () {
@@ -232,12 +236,77 @@
 		// set initial conditions: disable functionality of action buttons until after ajax has successfully completed
 		$("#actions_for_dynamic_content a.btn, #btn_compose_email, #btn_copy_as_text").addClass("disabled");
 
-		getEnrollments();
+		getEnrollments(); // note: call sections from within getEnrollments() to easily preserve access to dynamically created data in DOM
 
 		// use AJAX to get enrollments for this course via API call; append to DOM
 		function getEnrollments() {
 			$.ajax({
-				url: 'lti_ajax_get_data.php',
+				url: 'lti_ajax_get_enrollments.php',
+				type: 'GET',
+				data: {
+					ajaxVal_Course: <?php if (isset($_SESSION['custom_canvas_course_id'])){echo $_SESSION['custom_canvas_course_id'];}else{echo "0";} ?>
+				},
+				dataType: 'json',
+				success: function (data) {
+					if (data) {
+
+						// start: building table.html() to create checkboxes from returned json array
+						var populateCheckboxList = '<tbody>';
+
+						for (var key in data) {
+							// build checkbox list (exclude Canvas' undocumented and mostly-hidden hack that silently includes a "Test Student, type=StudentViewEnrollment" in every section to enable the standard "StudentView" for course participants)
+							if (data[key]["type"] != "StudentViewEnrollment") {
+								populateCheckboxList += '<tr><td><label for="' + data[key]["user_id"] + '"><input type="checkbox" name="email_ckbox" id="' + data[key]["user_id"] + '" value="' + data[key]["email"] + '" data-role="' + data[key]["role"] + '" data-section-ids="' + data[key]["section_id"] + '" />&nbsp;' + data[key]["full_name"] + '<span class="text-muted small"> (' + data[key]["email"] + ')</span></label></td></tr>';
+							}
+						}
+
+						populateCheckboxList += "</tbody>";
+						// end: building table.html()
+
+						// insert table contents into DOM
+						$("#tableEnrollments").html(populateCheckboxList);
+
+						// now get sections data
+						getSections();
+
+						/* Debugging
+						 var data_str = "data is:\n";
+						 for (var f in data) {
+						 data_str += f + "\n";
+						 data_str += f + " : " + data[f]["user_id"] + "\n";
+						 }
+						 data_str += "responseText : " + data['responseText'] + "\n";
+						 data_str += "status : " + data['status'] + "\n";
+						 data_str += "statusText : " + data['statusText'] + "\n";
+						 alert(data_str);
+						 */
+					}
+					else {
+						// graceful error message
+						$("#warning_ajax_failure").fadeIn("fast").removeClass("hide");
+
+						// change initial "fetching data" message
+						$("#messageFetchingData").text("Oops, please call OIT ITech.");
+
+						return false;
+					}
+				},
+				error: function (data) {
+					// graceful error message
+					$("#warning_ajax_failure").fadeIn("fast").removeClass("hide");
+
+					// change initial "fetching data" message
+					$("#messageFetchingData").text("Oops... please call OIT ITech.");
+
+					return false;
+				}
+			});
+		}
+
+		// use AJAX to get sections for this course via API call; append to DOM
+		function getSections() {
+			$.ajax({
+				url: 'lti_ajax_get_sections.php',
 				type: 'GET',
 				data: {
 					ajaxVal_Course: <?php if (isset($_SESSION['custom_canvas_course_id'])){echo $_SESSION['custom_canvas_course_id'];}else{echo "0";} ?>
@@ -251,50 +320,63 @@
 
 						function addDistinctSections(id, name) {
 							var found = arrSections.some(function (el) {
-								return el.section_id === id;
+								return el.id === id;
 							});
 							if (!found) {
-								arrSections.push({ section_id: id, section_name: name });
+								arrSections.push({id: id, name: name});
 							}
 						}
-
-						// start: building table.html() to create checkboxes from returned json array
-						var populateCheckboxList = '<tbody>';
 
 						for (var key in data) {
 							// build array of sections
-							addDistinctSections(data[key]["section_id"], data[key]["section_name"]);
-
-							// build checkbox list (exclude Canvas' undocumented and mostly-hidden hack that silently includes a "Test Student, type=StudentViewEnrollment" in every section to enable the standard "StudentView" for course participants)
-							if (data[key]["type"] != "StudentViewEnrollment") {
-								populateCheckboxList += '<tr><td><label for="' + data[key]["user_id"] + '"><input type="checkbox" name="email_ckbox" id="' + data[key]["user_id"] + '" value="' + data[key]["email"] + '" data-role="' + data[key]["role"] + '" data-section-id="' + data[key]["section_id"] + '" />&nbsp;' + data[key]["full_name"] + '<span class="text-muted small"> (' + data[key]["email"] + ')</span></label></td></tr>';
-							}
+							addDistinctSections(data[key]["id"], data[key]["name"]);
 						}
 
-						populateCheckboxList += "</tbody>";
-						// end: building table.html()
+						// sort sections, get smallest section_id value to set hidden "courseTitle" for subsequent email subject line
+						arrSections.sort(function(a, b) {
+							var valueA, valueB;
 
-						// insert table contents into DOM
-						$("#tableEnrollments").html(populateCheckboxList);
+							valueA = a['id']; // sort by this index
+							valueB = b['id'];
+							if (valueA < valueB) {
+								return -1;
+							}
+							else if (valueA > valueB) {
+								return 1;
+							}
+							return 0;
+						});
+						// console.dir(arrSections);
+						$("#courseTitle").val(arrSections[0]["name"]);
 
 						// dynamically create action buttons to enable selecting/deselecting each section (if > 1 sections exist)
 						if (arrSections.length > 1) {
 							var sectionButtons = "";
 							for (var key in arrSections) {
+								// get count of number of enrollments per each section
+								var sect_cnt = 0;
+
+								$("INPUT[data-section-ids]").each(function (index) {
+									var sect_ids = $(this).attr('data-section-ids')
+									// console.log( this.id + ": belongs to sections: " + sect_ids );
+									if (sect_ids.indexOf(arrSections[key]["id"]) != -1) {
+										sect_cnt += 1;
+									}
+								});
+
 								sectionButtons += '<div class="row form-group">' + "\n" +
-									'<div class="col-sm-1">' + "\n" +
-									'<a href="#" data-action-type="btn_add_section" data-btn-section-id="' + arrSections[key]["section_id"] + '" class="btn btn-success btn-xs" title="Select all from this section">' + "\n" +
-									'&nbsp;<i class="glyphicon glyphicon-plus"></i>&nbsp;</a>' + "\n" +
-									'</div>' + "\n" +
-									'<div class="col-sm-1">' + "\n" +
-									'<a href="#" data-action-type="btn_remove_section" data-btn-section-id="' + arrSections[key]["section_id"] + '" class="btn btn-danger btn-xs" title="Deselect all from this section">' + "\n" +
-									'&nbsp;<i class="glyphicon glyphicon-minus"></i>&nbsp;</a>' + "\n" +
-									'</div>' + "\n" +
-									'<div class="col-sm-10 small"><strong>Section: ' + arrSections[key]["section_name"] + '&nbsp;</strong><span class="text-muted small">(' + $("INPUT[data-section-id=" + arrSections[key]["section_id"] + "]").length + ')</span><span class="text-muted small">&nbsp;(ID #' + arrSections[key]["section_id"] + ')</span></div>' + "\n" +
-									'</div>' + "\n";
+								'<div class="col-sm-1">' + "\n" +
+								'<a href="#" data-action-type="btn_add_section" data-btn-section-id="' + arrSections[key]["id"] + '" class="btn btn-success btn-xs" title="Select all from this section">' + "\n" +
+								'&nbsp;<i class="glyphicon glyphicon-plus"></i>&nbsp;</a>' + "\n" +
+								'</div>' + "\n" +
+								'<div class="col-sm-1">' + "\n" +
+								'<a href="#" data-action-type="btn_remove_section" data-btn-section-id="' + arrSections[key]["id"] + '" class="btn btn-danger btn-xs" title="Deselect all from this section">' + "\n" +
+								'&nbsp;<i class="glyphicon glyphicon-minus"></i>&nbsp;</a>' + "\n" +
+								'</div>' + "\n" +
+								'<div class="col-sm-10 small"><strong>Section: ' + arrSections[key]["name"] + '&nbsp;</strong><span class="text-muted small">(' + sect_cnt + ')</span><span class="text-muted small">&nbsp;(ID #' + arrSections[key]["id"] + ')</span></div>' + "\n" +
+								'</div>' + "\n";
 							}
 							$("#dynamicallyCreatedSectionButtons").html(sectionButtons);
-
 						}
 
 						// hide initial "fetching data" message
@@ -304,7 +386,7 @@
 						$("#actions_for_dynamic_content a.btn, #btn_compose_email, #btn_copy_as_text").removeClass("disabled");
 
 						// provide static count of each category
-						$("#numEveryone").text(" (" + $("INPUT[name=email_ckbox]").length + ")");
+						$("#numEveryone").text(" (" + $("INPUT[name='email_ckbox']").length + ")");
 						$("#numStudents").text(" (" + $("INPUT[data-role=StudentEnrollment]").length + ")");
 						$("#numTas").text(" (" + $("INPUT[data-role=TaEnrollment]").length + ")");
 						$("#numTeachers").text(" (" + $("INPUT[data-role=TeacherEnrollment]").length + ")");
@@ -312,13 +394,12 @@
 						/* Debugging
 						 var data_str = "data is:\n";
 						 for (var f in data) {
-						 data_str += f + "\n";
-						 data_str += f + " : " + data[f]["user_id"] + "\n";
+						 data_str += f + " : " + data[f]["id"] + "\n";
 						 }
 						 data_str += "responseText : " + data['responseText'] + "\n";
 						 data_str += "status : " + data['status'] + "\n";
 						 data_str += "statusText : " + data['statusText'] + "\n";
-						 alert(data_str);
+						 console.log(data_str);
 						 */
 					}
 					else {

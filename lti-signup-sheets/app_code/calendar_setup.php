@@ -867,7 +867,6 @@
 
 						<div class="modal-footer">
 							<!-- TODO - notifications functionality will go here -->
-							&nbsp;TODO - notifications functionality will go here
 						</div>
 					</div>
 				</div>

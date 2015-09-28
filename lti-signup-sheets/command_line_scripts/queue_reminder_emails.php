@@ -50,8 +50,8 @@
 	$lookahead_interval = 42; // TODO - live value should be: 2
 
 
-	# 1. Get all the upcoming signups (cur time to cur time + 48 hours); for each signup, get the opening, sheet, and signup's user info
-	# sort signups by opening.begin_datetime
+	# 1. Get all the upcoming signups (cur time to cur time + 48 hours)
+	# for each signup, get the opening, sheet, and signup's user info; sort by sus_openings.begin_datetime
 	// TODO - some fields are not needed. cleanup for smaller recordset
 	$signups_sql =
 		"SELECT
@@ -84,7 +84,6 @@
 	$signups_stmt = $DB->prepare($signups_sql);
 	$signups_stmt->execute();
 	Db_Linked::checkStmtError($signups_stmt);
-
 
 	# 1.1. build up the users hash - cycle through the user signups data
 	/*
@@ -167,8 +166,8 @@
 		];
 	}
 
-
-	# 2. Get all the owners and admins who opted in to receive daily reminders of upcoming signups for their openings; for each user, get user info and sheet flags
+	# 2. Get all the owners and admins who selected to receive daily reminders of upcoming signups for their openings
+	# for each user, get user info and sheet flags
 	$owners_and_admins_sql =
 		"SELECT
 			DISTINCT u.user_id, u.username, u.first_name, u.last_name, u.email
@@ -206,7 +205,6 @@
 	$owners_and_admins_stmt->execute();
 	Db_Linked::checkStmtError($owners_and_admins_stmt);
 
-
 	# 2.1. build up the owners_admins info hash - cycle through the owners_admins data
 	/*
 	 * user_id :
@@ -229,7 +227,7 @@
 
 	$owners_and_admins_hash = [];
 	while ($row = $owners_and_admins_stmt->fetch(PDO::FETCH_ASSOC)) {
-		# initialize the owners_and_admins info data structure if need be
+		# add each distinct user to the owners_and_admins data structure
 		if (!array_key_exists($row['user_id'], $owners_and_admins_hash)) {
 			$owners_and_admins_hash[$row['user_id']] = [
 				'user_id'      => $row['user_id']
@@ -255,7 +253,7 @@
 	}
 
 
-	# 3. users: build and send the emails
+	# 3. build and send daily reminder emails for "users"
 	# cycle through hash ids; build each email from that hash entry; make the email; send it and sleep for a moment to avoid overwhelming the mail server
 
 	$from    = 'signup_sheets-no-reply@' . INSTITUTION_DOMAIN;
@@ -293,7 +291,65 @@
 	}
 
 	echo "<br />-------------------------<br />\n"; // TODO remove this line
-	# 4. owners_and_admins: build and send the emails
+
+
+	# 3.5 build new hash that better organizes signups from perspective of "owners_and_admins"
+	$sheets_hash   = [];
+	$openings_hash = []; // unnecessary?
+	$signups_hash  = []; // unnecessary?
+
+	// iterate through all users
+	foreach ($users_hash as $uid => $udata) {
+		// iterate through this user's sheets
+		foreach ($udata['sheets'] as $sh_id => $u_sheet) {
+			if (!array_key_exists($u_sheet['sheet_id'], $sheets_hash)) {
+				$sheets_hash[$u_sheet['sheet_id']] = [
+					'openings' => []
+				];
+			}
+		}
+		// iterate through this user's openings
+		foreach ($udata['openings'] as $op_id => $u_opening) {
+			if (!array_key_exists($u_opening['opening_id'], $sheets_hash[$u_opening['sheet_id']]['openings'])) {
+				$sheets_hash[$u_opening['sheet_id']]['openings'][$u_opening['opening_id']] = [
+					'opening_id'       => $u_opening['opening_id']
+					, 'begin_datetime' => $u_opening['begin_datetime']
+					, 'end_datetime'   => $u_opening['end_datetime']
+					, 'name'           => $u_opening['name']
+					, 'description'    => $u_opening['description']
+					, 'location'       => $u_opening['location']
+					, 'signups'        => []
+				];
+			}
+		}
+
+		// iterate through $sheets_hash and add this user's signups
+		foreach ($sheets_hash as $sh => $sheet_id) {
+			foreach ($sheet_id as $op => $opening_id) {
+				// add this user's signups to hash
+				//TODO - FINISH THIS!
+				foreach ($udata['signups'] as $si_id => $u_signup) {
+					if ($opening_id['opening_id'] == [$u_signup['opening_id']]) {
+						// add signup to this array element
+						$sheets_hash[$u_signup]['openings'][$opening_id]['signups'][$u_signup['signup_id']] = [
+							//$opening_id['openings']['signups'][$u_signup['signup_id']] = [
+							'signup_id'              => $u_signup['signup_id']
+							, 'signup_admin_comment' => $u_signup['admin_comment']
+							, 'signup_user_id'       => $u_signup['user_id']
+							, 'signup_username'      => $u_signup['username']
+							, 'signup_first_name'    => $u_signup['first_name']
+							, 'signup_last_name'     => $u_signup['last_name']
+						];
+					}
+				}
+			}
+		}
+	}
+
+	echo 'output: sheets_hash<br />';
+	util_prePrintR($sheets_hash);
+
+	# 4. build and send daily reminder emails for "owners_and_admins"
 	# cycle through hash ids; build each email from that hash entry; make the email; send it and sleep for a moment to avoid overwhelming the mail server
 
 	$from    = 'signup_sheets-no-reply@' . INSTITUTION_DOMAIN;
@@ -306,7 +362,7 @@
 		$body .= "\n\nThe following people have signed up on sheets that you own or manage:\n\n";
 
 		foreach ($manager_data['sheets'] as $man_sheet => $m_sheet) {
-			// find signups for each sheet that this manager (owner or admin) wants to receive Daily Reminders
+			// find signups for each sheet that this manager (owner or admin) has selected to receive Daily Reminders
 
 			foreach ($users_hash as $uid => $udata) {
 				// iterate through entire users hash; add any signups (via their corresponding openings) that match this sheet
