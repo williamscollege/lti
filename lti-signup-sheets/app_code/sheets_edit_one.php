@@ -73,6 +73,7 @@
 			else {
 				// create new sheet
 				$s = SUS_Sheet::createNewSheet($USER->user_id, $DB);
+				$s->owner_user_id            = $USER->user_id; // only set owner for brand new sheet (avoid overwritting the owner_user_id upon edit by another admin)
 
 				// save for subsequent event log
 				$evt_action = "createNewSheet";
@@ -86,7 +87,6 @@
 			 * plus an invalid format will only create an ugly error message w/o updating the DB. So, until it becomes necessary, this issue is tabled. */
 
 			$s->updated_at               = date("Y-m-d H:i:s");
-			$s->owner_user_id            = $USER->user_id;
 			$s->sheetgroup_id            = $_REQUEST["selectSheetgroupID"];
 			$s->name                     = $_REQUEST["inputSheetName"];
 			$s->description              = $_REQUEST["textSheetDescription"];

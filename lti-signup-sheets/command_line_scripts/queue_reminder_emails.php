@@ -13,6 +13,14 @@
 	 * NOTE: since the look-ahead is 2 days and this runs 1/day, that means that people get 2 reminders about each signup
 	 */
 
+
+	# TODO: support command line arg for date start (default to today) and range (default to 2 days)
+	# SET VARIABLES
+	$cur_date           = date('Y-m-d');
+	$lookahead_interval = 42; // TODO - live value should be: 2
+	$debug              = 1; // LIVE should be 0. Use 1 for testing.
+
+
 	function getPrettyDateRanges($opening) {
 		$start_dt = new DateTime($opening['begin_datetime']);
 		$end_dt   = new DateTime($opening['end_datetime']);
@@ -36,7 +44,7 @@
 		return $time_range_string;
 	}
 
-	function getPrettyInfo($udata, $opening) {
+	function getPrettyInfo_Users($udata, $opening) {
 		$pretty_info_string = (empty($opening['name'])) ? '' : "\nOpening: " . $opening['name'];
 		$pretty_info_string .= (empty($udata['sheets'][$opening['sheet_id']]['name'])) ? '' : "\nSheet: " . $udata['sheets'][$opening['sheet_id']]['name'];
 		$pretty_info_string .= (empty($opening['location'])) ? '' : "\nLocation: " . $opening['location'];
@@ -44,10 +52,25 @@
 		return $pretty_info_string;
 	}
 
-	# TODO: support command line arg for date start (default to today) and range (default to 2 days)
+	function getPrettyInfo_Managers($manager_sheet, $opening) {
+		$pretty_info_string = (empty($manager_sheet['name'])) ? '' : "\nSheet: " . $manager_sheet['name'];
+		$pretty_info_string .= (empty($opening['name'])) ? '' : "\nOpening: " . $opening['name'];
+		$pretty_info_string .= (empty($opening['location'])) ? '' : "\nLocation: " . $opening['location'];
+		$pretty_info_string .= "\nSignups: ";
 
-	$cur_date           = date('Y-m-d');
-	$lookahead_interval = 42; // TODO - live value should be: 2
+		return $pretty_info_string;
+	}
+
+	function cmp_date_sort($a, $b) {
+		$a = $a['begin_datetime'];
+		$b = $b['begin_datetime'];
+		// echo $a . "<br />" . $b . "<br />"; //debugging
+
+		if ($a == $b) {
+			return 0;
+		}
+		return ($a < $b) ? -1 : 1;
+	}
 
 
 	# 1. Get all the upcoming signups (cur time to cur time + 48 hours)
@@ -81,6 +104,10 @@
 		ORDER BY
 			signups.signup_user_id ASC,openings.begin_datetime ASC";
 
+	if ($debug) {
+		echo "signups_sql = " . $signups_sql . "\n<hr />\n";
+	}
+
 	$signups_stmt = $DB->prepare($signups_sql);
 	$signups_stmt->execute();
 	Db_Linked::checkStmtError($signups_stmt);
@@ -93,19 +120,6 @@
 	 *      first name
 	 *      last name
 	 *      email
-	 *      signups :
-	 *            signup_id
-	              opening_id
-	 *            signup_user_id
-	 *            admin_comment
-	 *      openings :
-	 *            opening_id
-	 *            sheet_id
-	 *            begin_datetime
-	 *            end_datetime
-	 *            name
-	 *            description
-	 *            location
 	 *      sheets :
 	 *            sheet_id
 	 *            owner_user_id
@@ -116,6 +130,19 @@
 	 *            end_date
 	 *            flag_alert_owner_imminent
 	 *            flag_alert_admin_imminent
+	 *      openings :
+	 *            opening_id
+	 *            sheet_id
+	 *            begin_datetime
+	 *            end_datetime
+	 *            name
+	 *            description
+	 *            location
+	 *      signups :
+	 *            signup_id
+	 *            opening_id
+	 *            signup_user_id
+	 *            admin_comment
 	 */
 
 	$users_hash = [];
@@ -128,18 +155,22 @@
 				, 'first_name' => $row['first_name']
 				, 'last_name'  => $row['last_name']
 				, 'email'      => $row['email']
-				, 'signups'    => []
-				, 'openings'   => []
 				, 'sheets'     => []
+				, 'openings'   => []
+				, 'signups'    => []
 			];
 		}
 
-		# append the signup data to the appropriate list in the user structure
-		$users_hash[$row['user_id']]['signups'][$row['signup_id']] = [
-			'signup_id'        => $row['signup_id']
-			, 'opening_id'     => $row['opening_id']
-			, 'signup_user_id' => $row['signup_user_id']
-			, 'admin_comment'  => $row['admin_comment']
+		# append the sheet data to the appropriate list in the user structure
+		$users_hash[$row['user_id']]['sheets'][$row['sheet_id']] = [
+			'sheet_id'                    => $row['sheet_id']
+			, 'owner_user_id'             => $row['owner_user_id']
+			, 'name'                      => $row['name']
+			, 'description'               => $row['description']
+			, 'begin_date'                => $row['begin_date']
+			, 'end_date'                  => $row['end_date']
+			, 'flag_alert_owner_imminent' => $row['flag_alert_owner_imminent']
+			, 'flag_alert_admin_imminent' => $row['flag_alert_admin_imminent']
 		];
 
 		# append the opening data to the appropriate list in the user structure
@@ -153,16 +184,12 @@
 			, 'location'       => $row['location']
 		];
 
-		# append the sheet data to the appropriate list in the user structure
-		$users_hash[$row['user_id']]['sheets'][$row['sheet_id']] = [
-			'sheet_id'                    => $row['sheet_id']
-			, 'owner_user_id'             => $row['owner_user_id']
-			, 'name'                      => $row['name']
-			, 'description'               => $row['description']
-			, 'begin_date'                => $row['begin_date']
-			, 'end_date'                  => $row['end_date']
-			, 'flag_alert_owner_imminent' => $row['flag_alert_owner_imminent']
-			, 'flag_alert_admin_imminent' => $row['flag_alert_admin_imminent']
+		# append the signup data to the appropriate list in the user structure
+		$users_hash[$row['user_id']]['signups'][$row['signup_id']] = [
+			'signup_id'        => $row['signup_id']
+			, 'opening_id'     => $row['opening_id']
+			, 'signup_user_id' => $row['signup_user_id']
+			, 'admin_comment'  => $row['admin_comment']
 		];
 	}
 
@@ -200,6 +227,10 @@
 			sheets.flag_delete = 0
 			AND u.flag_delete = 0
 			AND u.flag_is_banned = 0";
+
+	if ($debug) {
+		echo "owners_and_admins_sql = " . $owners_and_admins_sql . "\n<hr />\n";
+	}
 
 	$owners_and_admins_stmt = $DB->prepare($owners_and_admins_sql);
 	$owners_and_admins_stmt->execute();
@@ -260,16 +291,16 @@
 	$subject = "[Signup Sheets] $cur_date upcoming signups";
 	$headers = "From: $from";
 
-	foreach ($users_hash as $uid => $udata) {
+	foreach ($users_hash as $user_key => $udata) {
 		$body = "Hi " . $udata['first_name'] . ",\n\nThis is a reminder about upcoming signups for the next $lookahead_interval days.";
 
-		# add signups (via their corresponding openings)
+		# add signups (count of openings equals signups)
 		if (count($udata['openings']) > 0) {
 			$is_plural = (count($udata['openings']) > 1) ? "s" : "";
 			$body .= "\n\nYou have signed up for " . count($udata['openings']) . " opening" . $is_plural . ":\n\n";
 			foreach ($udata['openings'] as $opening) {
 				$pretty_date_range = getPrettyDateRanges($opening);
-				$pretty_info       = getPrettyInfo($udata, $opening);
+				$pretty_info       = getPrettyInfo_Users($udata, $opening);
 				$body .= $pretty_date_range . $pretty_info . "\n\n";
 			}
 		}
@@ -277,77 +308,77 @@
 		// now queue the message
 		// TODO - presently not used: $headers
 		// QueuedMessage::factory($db, $user_id, $target, $summary, $body, $opening_id = 0, $sheet_id = 0, $type = 'email' )
-		$qm = QueuedMessage::factory($DB, $udata['user_id'], $udata['email'], $subject, $body, $opening['opening_id'], $opening['sheet_id']);
+		$qm = QueuedMessage::factory($DB, $udata['user_id'], $udata['email'], $subject, $body, 0, 0);
 		$qm->updateDb();
 
 		if (!$qm->matchesDb) {
 			// create record failed
-			$results['notes'] = "database error: could not create queued message for signup";
+			$results['notes'] = "database error: could not create queued message for user daily reminder";
 			error_log("QueuedMessage failed to insert db record (email subject: $subject)");
 			echo json_encode($results);
 			exit;
 		}
-		echo $body . "<hr />\n"; // for testing - use above line for actually sending the email
+
+		if ($debug) {
+			echo $body . "\n<hr />\n";
+		}
 	}
 
-	echo "<br />-------------------------<br />\n"; // TODO remove this line
 
+	# 3.5 build a new reorganized hash that better organizes signups from sheet-based perspective of "owners_and_admins"
+	$reorganized_sheets_hash = [];
 
-	# 3.5 build new hash that better organizes signups from perspective of "owners_and_admins"
-	$sheets_hash   = [];
-	$openings_hash = []; // unnecessary?
-	$signups_hash  = []; // unnecessary?
+	// iterate through each user
+	foreach ($users_hash as $user_key => $udata) {
 
-	// iterate through all users
-	foreach ($users_hash as $uid => $udata) {
 		// iterate through this user's sheets
-		foreach ($udata['sheets'] as $sh_id => $u_sheet) {
-			if (!array_key_exists($u_sheet['sheet_id'], $sheets_hash)) {
-				$sheets_hash[$u_sheet['sheet_id']] = [
+		foreach ($udata['sheets'] as $udata_sheet_key => $udata_sheet) {
+			if (!array_key_exists($udata_sheet_key, $reorganized_sheets_hash)) {
+				$reorganized_sheets_hash[$udata_sheet['sheet_id']] = [
 					'openings' => []
 				];
 			}
 		}
+
 		// iterate through this user's openings
-		foreach ($udata['openings'] as $op_id => $u_opening) {
-			if (!array_key_exists($u_opening['opening_id'], $sheets_hash[$u_opening['sheet_id']]['openings'])) {
-				$sheets_hash[$u_opening['sheet_id']]['openings'][$u_opening['opening_id']] = [
-					'opening_id'       => $u_opening['opening_id']
-					, 'begin_datetime' => $u_opening['begin_datetime']
-					, 'end_datetime'   => $u_opening['end_datetime']
-					, 'name'           => $u_opening['name']
-					, 'description'    => $u_opening['description']
-					, 'location'       => $u_opening['location']
+		foreach ($udata['openings'] as $udata_opening_key => $udata_opening) {
+			if (!array_key_exists($udata_opening_key, $reorganized_sheets_hash[$udata_opening['sheet_id']]['openings'])) {
+				$reorganized_sheets_hash[$udata_opening['sheet_id']]['openings'][$udata_opening['opening_id']] = [
+					'opening_id'       => $udata_opening['opening_id']
+					, 'begin_datetime' => $udata_opening['begin_datetime']
+					, 'end_datetime'   => $udata_opening['end_datetime']
+					, 'name'           => $udata_opening['name']
+					, 'description'    => $udata_opening['description']
+					, 'location'       => $udata_opening['location']
 					, 'signups'        => []
 				];
 			}
 		}
 
-		// iterate through $sheets_hash and add this user's signups
-		foreach ($sheets_hash as $sh => $sheet_id) {
-			foreach ($sheet_id as $op => $opening_id) {
-				// add this user's signups to hash
-				//TODO - FINISH THIS!
-				foreach ($udata['signups'] as $si_id => $u_signup) {
-					if ($opening_id['opening_id'] == [$u_signup['opening_id']]) {
-						// add signup to this array element
-						$sheets_hash[$u_signup]['openings'][$opening_id]['signups'][$u_signup['signup_id']] = [
-							//$opening_id['openings']['signups'][$u_signup['signup_id']] = [
-							'signup_id'              => $u_signup['signup_id']
-							, 'signup_admin_comment' => $u_signup['admin_comment']
-							, 'signup_user_id'       => $u_signup['user_id']
-							, 'signup_username'      => $u_signup['username']
-							, 'signup_first_name'    => $u_signup['first_name']
-							, 'signup_last_name'     => $u_signup['last_name']
-						];
+		// iterate through 'sheets' of $reorganized_sheets_hash
+		foreach ($reorganized_sheets_hash as $reorganized_sheet_key => $reorganized_sheet) {
+			// iterate through 'openings' of $reorganized_sheets_hash
+			foreach ($reorganized_sheet['openings'] as $reorganized_opening_key => $reorganized_opening) {
+				// iterate through this user's 'signups'
+				foreach ($udata['signups'] as $udata_signup_key => $udata_signup) {
+					if ($udata_signup['opening_id'] == $reorganized_opening_key) {
+						// add this user's signup to this $reorganized_sheets_hash sheet array element
+						if (!array_key_exists($udata_signup_key, $reorganized_sheets_hash[$reorganized_sheet_key]['openings'][$reorganized_opening_key]['signups'])) {
+							$reorganized_sheets_hash[$reorganized_sheet_key]['openings'][$reorganized_opening_key]['signups'][$udata_signup['signup_id']] = [
+								'signup_id'              => $udata_signup['signup_id']
+								, 'signup_admin_comment' => $udata_signup['admin_comment']
+								, 'signup_user_id'       => $udata['user_id']
+								, 'signup_username'      => $udata['username']
+								, 'signup_first_name'    => $udata['first_name']
+								, 'signup_last_name'     => $udata['last_name']
+							];
+						}
 					}
 				}
 			}
 		}
 	}
 
-	echo 'output: sheets_hash<br />';
-	util_prePrintR($sheets_hash);
 
 	# 4. build and send daily reminder emails for "owners_and_admins"
 	# cycle through hash ids; build each email from that hash entry; make the email; send it and sleep for a moment to avoid overwhelming the mail server
@@ -356,59 +387,88 @@
 	$subject = "[Signup Sheets] $cur_date upcoming signups";
 	$headers = "From: $from";
 
-	foreach ($owners_and_admins_hash as $uid => $manager_data) {
-		// iterate through each manager (owner or admin)
-		$body = "Hi " . $manager_data['first_name'] . ",\n\nThis is a reminder about upcoming signups for the next $lookahead_interval days.";
-		$body .= "\n\nThe following people have signed up on sheets that you own or manage:\n\n";
+	// iterate through each manager (owner or admin)
+	foreach ($owners_and_admins_hash as $manager_key => $manager) {
+		$output_hash = []; // reset for each manager
+		$body        = "Hi " . $manager['first_name'] . ",\n\nThis is a reminder about upcoming signups for the next $lookahead_interval days.";
+		$body .= "\n\nThe following people have signed up on sheets that you own or manage:\n";
 
-		foreach ($manager_data['sheets'] as $man_sheet => $m_sheet) {
+		foreach ($manager['sheets'] as $manager_sheet_key => $manager_sheet) {
 			// find signups for each sheet that this manager (owner or admin) has selected to receive Daily Reminders
 
-			foreach ($users_hash as $uid => $udata) {
-				// iterate through entire users hash; add any signups (via their corresponding openings) that match this sheet
+			// iterate through 'sheets' of $reorganized_sheets_hash
+			foreach ($reorganized_sheets_hash as $reorganized_sheet_key => $reorganized_sheet) {
 
-				foreach ($udata['openings'] as $u_opening) {
-					// iterate through each opening (signup equivalent)
-					//echo "u_opening['sheet_id'] = " . $u_opening['sheet_id'] . ", m_sheet['sheet_id'] = " . $m_sheet['sheet_id'] . "<br/>";
+				// check: does this $reorganized_sheet match the current $reorganized_sheet?
+				if ($manager_sheet_key == $reorganized_sheet_key) {
 
-					if ($u_opening['sheet_id'] == $m_sheet['sheet_id']) {
-						// this user has an opening that matches the manager's sheet_id
-						//echo "sheet_id MATCHES!: u_opening['sheet_id'] = " . $u_opening['sheet_id'] . ", m_sheet['sheet_id'] = " . $m_sheet['sheet_id'] . "<br/>";
+					// check: should we notify this manager (owner or admin)?
+					if (($manager_key == $manager_sheet['owner_user_id'] && $manager_sheet['flag_alert_owner_imminent']) || ($manager_key != $manager_sheet['owner_user_id'] && $manager_sheet['flag_alert_admin_imminent'])) {
+						// continue: the owner wants to be notified, or the admin wants to be notified
 
-						foreach ($udata['signups'] as $u_signup) {
-							// iterate through the user's signups to find the signup that matches the opening
+						// append openings and signups
+						foreach ($reorganized_sheet['openings'] as $reorganized_opening_key => $reorganized_opening) {
+							// check: if signups > 0 then create header
+							if (count($reorganized_opening['signups']) > 0) {
+								// opening text here
+								$pretty_info                           = getPrettyInfo_Managers($manager_sheet, $reorganized_opening);
+								$pretty_date_range                     = getPrettyDateRanges($reorganized_opening);
+								$output_hash[$reorganized_opening_key] = [
+									'begin_datetime' => $reorganized_opening['begin_datetime'],
+									'message_text'   => "\n" . $pretty_date_range . $pretty_info . "\n",
+									'signups_text'   => ""
+								];
+							}
 
-							// get the opening and signup values
-							if ($u_signup['opening_id'] == $u_opening['opening_id']) {
-								// found a signup match for this sheet
-								// TODO - maybe rebuild this as a new hash with output that can be organized by Sheet, and sorted by OPENING.BeginDate
-								// values to put in hash:
-								$pretty_date_range = getPrettyDateRanges($u_opening);
-								$pretty_info       = getPrettyInfo($udata, $u_opening);
-								$body .= $pretty_date_range . $pretty_info . "\n\n";
+							foreach ($reorganized_opening['signups'] as $reorganized_signup_key => $reorganized_signup) {
+								// add each signup
+								$output_hash[$reorganized_opening_key]['signups_text'] .= "- " . $reorganized_signup['signup_first_name'] . " " . $reorganized_signup['signup_last_name'] . " (" . $reorganized_signup['signup_username'] . ")\n";
 							}
 						}
-
 					}
 				}
 			}
 		}
-		// now queue the message
-		// TODO - presently not used: $headers
-		// QueuedMessage::factory($db, $user_id, $target, $summary, $body, $opening_id = 0, $sheet_id = 0, $type = 'email' )
-		$qm = QueuedMessage::factory($DB, $udata['user_id'], $udata['email'], $subject, $body, $u_opening['opening_id'], $u_opening['sheet_id']);
-		$qm->updateDb();
+		// now queue the message (if signups > 0)
+		if (count($output_hash)) {
 
-		if (!$qm->matchesDb) {
-			// create record failed
-			$results['notes'] = "database error: could not create queued message for signup";
-			error_log("QueuedMessage failed to insert db record (email subject: $subject)");
-			echo json_encode($results);
-			exit;
+			if ($debug) {
+				echo "\n<hr />output_hash<br />\n";
+				util_prePrintR($output_hash);
+			}
+
+			// sort output by date_begin ASC
+			usort($output_hash, 'cmp_date_sort');
+
+			// construct a single string element, including previous greeting text, for the QueuedMessage argument
+			foreach ($output_hash as $opening) {
+				$body .= $opening['message_text'] . $opening['signups_text'];
+			}
+
+			// TODO - presently not used: $headers
+			// QueuedMessage::factory($db, $user_id, $target, $summary, $body, $opening_id = 0, $sheet_id = 0, $type = 'email' )
+			$qm = QueuedMessage::factory($DB, $manager['user_id'], $manager['email'], $subject, $body, 0, 0);
+			$qm->updateDb();
+
+			if (!$qm->matchesDb) {
+				// create record failed
+				$results['notes'] = "database error: could not create queued message for manager daily reminder";
+				error_log("QueuedMessage failed to insert db record (email subject: $subject)");
+				echo json_encode($results);
+				exit;
+			}
+
+			if ($debug) {
+				echo $body . "\n<hr />\n";
+			}
 		}
-		echo $body . "<hr />\n"; // for testing - use above line for actually sending the email
 	}
 
-	util_prePrintR($users_hash);
-	echo "<hr />";
-	util_prePrintR($owners_and_admins_hash);
+	if ($debug) {
+		echo "\n<hr />users_hash<br />\n";
+		util_prePrintR($users_hash);
+		echo "\n<hr />reorganized_sheets_hash<br />\n";
+		util_prePrintR($reorganized_sheets_hash);
+		echo "\n<hr />owners_and_admins_hash<br />\n";
+		util_prePrintR($owners_and_admins_hash);
+	}
