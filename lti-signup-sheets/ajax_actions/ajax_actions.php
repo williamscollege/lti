@@ -417,8 +417,11 @@
 			// fetch: user associated with the signup
 			$signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
 
-			$subject = "[Glow Signup Sheets] " . $USER->first_name . " " . $USER->last_name  . " cancelled " . $signup_user->first_name . " " . $signup_user->last_name . " on " . $sheet->name;
-			$body    = "Signup cancellation for: " . $signup_user->first_name . " " . $signup_user->last_name . "\nCancelled by: " . $USER->first_name . " " . $USER->last_name  . "\nOpening on: " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . "\nOn sheet: " . $sheet->name;
+			$subject = "[Glow Signup Sheets] Signup cancelled for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A");
+			$body    = "Signup cancelled for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . "\nLocation: " . $o->location . "\n- " . $signup_user->first_name . " " . $signup_user->last_name . " (" . $signup_user->username . ")\n";
+			if ($USER->username != $signup_user->username) {
+				$body	.= "\n(cancelled by: " . $USER->first_name . " " . $USER->last_name  . ")\n";
+			}
 
 			// send to: sheet owner
 			if ($sheet->flag_alert_owner_signup) {
@@ -726,8 +729,8 @@
 			$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
 			$sheet->cacheStructuredData(0, $primaryID, $su->signup_id);
 
-			$subject = "[Signup Sheets] " . $USER->first_name . " " . $USER->last_name  . " signed up for " . $sheet->name;
-			$body    = "Signup confirmation for: " . $USER->first_name . " " . $USER->last_name  . "\nOpening on: " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . "\nOn sheet: " . $sheet->name;
+			$subject = "[Glow Signup Sheets] Signup added for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A");
+			$body    = "Signup added for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . "\nLocation: " . $o->location . "\n- " . $USER->first_name . " " . $USER->last_name . " (" . $USER->username . ")\n";
 
 			// send to: sheet owner
 			if ($sheet->flag_alert_owner_signup) {
@@ -808,8 +811,8 @@
 			$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
 			$sheet->cacheStructuredData(0, $su->opening_id, $su->signup_id);
 
-			$subject = "[Signup Sheets] " . $USER->first_name . " " . $USER->last_name  . " cancelled on " . $sheet->name;
-			$body    = "Signup cancellation for: " . $USER->first_name . " " . $USER->last_name  . "\nOpening on: " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . "\nOn sheet: " . $sheet->name;
+			$subject = "[Glow Signup Sheets] Signup cancelled for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A");
+			$body    = "Signup cancelled for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . "\nLocation: " . $o->location . "\n- " . $USER->first_name . " " . $USER->last_name . " (" . $USER->username . ")\n";
 
 			// send to: sheet owner
 			if ($sheet->flag_alert_owner_signup) {
@@ -920,8 +923,11 @@
 				// fetch: user associated with the signup
 				$signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
 
-				$subject = "[Signup Sheets] " . $USER->first_name . " " . $USER->last_name  . " signed up " . $signup_user->first_name . " " . $signup_user->last_name . " on " . $sheet->name;
-				$body    = "Signup confirmation for: " . $signup_user->first_name . " " . $signup_user->last_name . "\nAdded by: " . $USER->first_name . " " . $USER->last_name  . "\nOpening on: " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . "\nOn sheet: " . $sheet->name;
+				$subject = "[Glow Signup Sheets] Signup added for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A");
+				$body    = "Signup added for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . "\nLocation: " . $o->location . "\n- " . $signup_user->first_name . " " . $signup_user->last_name . " (" . $signup_user->username . ")\n";
+				if ($USER->username != $signup_user->username) {
+					$body	.= "\n(added by: " . $USER->first_name . " " . $USER->last_name  . ")\n";
+				}
 
 				// send to: user whose signup was changed by owner or manager
 				if ($USER->user_id != $signup_user->signup_user_id) {

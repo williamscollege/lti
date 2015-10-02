@@ -318,8 +318,8 @@
 		// 1100 series ids
 		# QueuedMessage: 'queued_message_id', 'user_id', 'sheet_id', 'opening_id', 'delivery_type', 'flag_is_delivered', 'target', 'summary', 'body', 'action_datetime', 'action_status', 'action_notes', 'flag_delete'
 		$addTestSql  = "INSERT INTO " . QueuedMessage::$dbTable . " VALUES
-			(1101, 101, 602, 703, 'email', 0, 'jbond@institution.edu', 'Glow Signup Sheets - James Bond signed up for Sheet 602', 'Signup confirmation: James Bond Opening: 08/25/2015 10:01 PM On Sheet: Sheet 602.', TIMESTAMPADD(hour,4,NOW()), 'CREATED', 'CREATED: at (test data follows) 2015-08-20 14:01:56', 0),
-			(1102, 101, 602, 703, 'email', 0, 'jbond@institution.edu', 'Glow Signup Sheets - James Bond cancelled on Sheet 602', 'Signup cancelled: James Bond Opening: 08/25/2015 10:01 PM On Sheet: Sheet 602.', TIMESTAMPADD(hour,4,NOW()), 'CREATED', 'CREATED: at (test data follows) 2015-08-20 14:01:56', 0)
+			(1101, 101, 602, 703, 'email', 0, 'jbond@institution.edu', '[Glow Signup Sheets] Signup added for Sheet 602', 'Signup added for Sheet 602 at 08/25/2015 10:01 PM', TIMESTAMPADD(hour,4,NOW()), 'CREATED', 'CREATED: at (test data follows) 2015-08-20 14:01:56', 0),
+			(1102, 101, 602, 703, 'email', 0, 'jbond@institution.edu', '[Glow Signup Sheets] Signup cancelled for Sheet 602', 'Signup cancelled for Sheet 602 at 08/25/2015 10:01 PM', TIMESTAMPADD(hour,4,NOW()), 'CREATED', 'CREATED: at (test data follows) 2015-08-20 14:01:56', 0)
    		 ";
 		$addTestStmt = $dbConn->prepare($addTestSql);
 		$addTestStmt->execute();

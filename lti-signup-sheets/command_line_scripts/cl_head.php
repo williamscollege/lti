@@ -1,9 +1,9 @@
 <?php
 
+	// PREVENT DIRECT WEB HITS.
 	if (array_key_exists('SERVER_NAME', $_SERVER)) {
-//		echo 'no web access to this script';
-// TODO - REMOVE THIS COMMENT
-//		exit;
+		echo 'no web access to this script';
+		exit;
 	}
 
 

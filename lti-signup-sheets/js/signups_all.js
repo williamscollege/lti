@@ -10,7 +10,8 @@ $(document).ready(function () {
 		GLOBAL_confirmHandlerReference = $(this).attr('data-for-opening-id');
 		var params = {
 			title: "Delete Signup",
-			message: "Really delete <strong>" + $(this).attr('data-for-signup-name') + "'s</strong> signup for:<br /><strong>&quot;" + $(this).attr('data-for-sheet-name') + "&quot;</strong>?",
+			message: "<p>Really delete <strong>" + $(this).attr('data-for-signup-name') + "'s</strong> signup for:<br /><strong>&quot;" + $(this).attr('data-for-sheet-name') + "&quot;</strong>?</p>" +
+			'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;An alert will be sent to this user.</p>',
 			label: "Delete Signup",
 			class: "btn btn-danger",
 			url: "../ajax_actions/ajax_actions.php",

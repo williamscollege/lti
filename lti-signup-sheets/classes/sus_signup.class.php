@@ -69,8 +69,11 @@
 				// fetch: user associated with the signup
 				$signup_user = User::getOneFromDb(['user_id' => $this->signup_user_id], $this->dbConnection);
 
-				$subject = "[Signup Sheets] " . $usr_object->first_name . " " . $usr_object->last_name . " cancelled your signup on " . $sheet->name;
-				$body    = "Hi " . $signup_user->first_name . ",\n\n" . $usr_object->first_name . " " . $usr_object->last_name . " cancelled your signup for:\n\nOpening on: " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . "\nOn sheet: " . $sheet->name;
+				$subject = "[Glow Signup Sheets] Signup cancelled for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A");
+				$body    = "Signup cancelled for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . "\nLocation: " . $o->location . "\n- " . $signup_user->first_name . " " . $signup_user->last_name . " (" . $signup_user->username . ")\n";
+				if ($usr_object->username != $signup_user->username) {
+					$body	.= "\n(cancelled by: " . $usr_object->first_name . " " . $usr_object->last_name  . ")\n";
+				}
 
 				// send to: user whose signup was changed by owner or manager
 				if ($usr_object->user_id != $this->signup_user_id) {
