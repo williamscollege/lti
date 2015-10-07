@@ -12,6 +12,10 @@
 	 *
 	 * NOTE: since the look-ahead is 2 days and this runs 1/day, that means that people get 2 reminders about each signup
 	 * TODO: support command line arg for date start (default to today) and range (default to 2 days)
+	 * TODO: available, but currently unused fields include:
+	 * - admin_comment - for daily reminder emails to "owners_and_admins"
+	 * - sheets.type - to expand signup sheets to be able to also handle non-date based events
+	 * - sheets.description, openings.description
 	 */
 
 
@@ -24,11 +28,34 @@
 	$sendToMeOnly       = 0; // Live = 0, Testing = 1. all emails sent ONLY to hardcoded 'dwk2@williams.edu' (for brief live testing)
 
 
-	function getPrettyDateRanges($opening) {
+	function getFormattedDate($opening) {
+		$opening_dt           = new DateTime($opening['begin_datetime']);
+		$opening_dt_formatted = $opening_dt->format('m/d/Y');
+
+		return $opening_dt_formatted;
+	}
+
+	function getPrettyDate($opening, $cur_date) {
+		$opening_dt           = new DateTime($opening['begin_datetime']);
+		$opening_dt_formatted = $opening_dt->format('m/d/Y');
+
+		$cur_dt           = new DateTime($cur_date);
+		$cur_dt_formatted = $cur_dt->format('m/d/Y');
+
+		if ($opening_dt_formatted == $cur_dt_formatted) {
+			$opening_dt_formatted .= " - TODAY!";
+		}
+		$opening_dt_string = "\n\n----------\n" . $opening_dt_formatted . "\n----------\n";
+
+		return $opening_dt_string;
+	}
+
+	function getPrettyTime($opening) {
 		$start_dt = new DateTime($opening['begin_datetime']);
 		$end_dt   = new DateTime($opening['end_datetime']);
 
-		$time_range_string_pt1_base = $start_dt->format('m/d/Y, g:i');
+		//$time_range_string_pt1_base = $start_dt->format('m/d/Y, g:i'); // show date and time
+		$time_range_string_pt1_base = $start_dt->format('g:i'); // only show time
 		$time_range_string_pt1_ap   = '';
 		$time_range_string_pt2      = $end_dt->format('g:i A');
 		if (($start_dt->format('a') != $end_dt->format('a'))
@@ -42,24 +69,24 @@
 		elseif ($start_dt->format('m/d/Y') != $end_dt->format('m/d/Y')) {
 			$time_range_string_pt2 = $end_dt->format('m/d/Y, g:i A');
 		}
-		$time_range_string = $time_range_string_pt1_base . $time_range_string_pt1_ap . '-' . $time_range_string_pt2;
+		$time_range_string = "  " . $time_range_string_pt1_base . $time_range_string_pt1_ap . '-' . $time_range_string_pt2;
 
 		return $time_range_string;
 	}
 
 	function getPrettyInfo_Users($udata, $opening) {
 		// Opening name, else Sheet name
-		$pretty_info_string = (empty($opening['location'])) ? '' : ", at " . $opening['location'];
+		$pretty_info_string = empty($opening['location']) ? '' : ", at " . $opening['location'];
 		$pretty_info_string .= ", for ";
-		$pretty_info_string .= (empty($opening['name'])) ? $udata['sheets'][$opening['sheet_id']]['name'] : $opening['name'];
+		$pretty_info_string .= empty($opening['name']) ? $udata['sheets'][$opening['sheet_id']]['name'] : $opening['name'];
 
 		return $pretty_info_string;
 	}
 
 	function getPrettyInfo_Managers($manager_sheet, $opening) {
-		$pretty_info_string = (empty($opening['location'])) ? '' : ", at " . $opening['location'];
+		$pretty_info_string = empty($opening['location']) ? '' : ", at " . $opening['location'];
 		$pretty_info_string .= ", for ";
-		$pretty_info_string .= (empty($opening['name'])) ? $manager_sheet['name'] : $opening['name'];
+		$pretty_info_string .= empty($opening['name']) ? $manager_sheet['name'] : $opening['name'];
 
 		return $pretty_info_string;
 	}
@@ -78,13 +105,12 @@
 
 	# 1.0 Users: Get all upcoming signups (cur time to cur time + 48 hours)
 	#     For each signup, get the sheet, opening, and signup and user info of signup person; sort by sus_openings.begin_datetime ASC
-	// TODO - some fields are not needed. cleanup for smaller recordset
 	$signups_sql =
 		"SELECT
 			DISTINCT u.user_id, u.username, u.first_name, u.last_name, u.email
 			, signups.signup_id, signups.opening_id, signups.signup_user_id, signups.admin_comment
 			, openings.opening_id, openings.sheet_id, openings.begin_datetime, openings.end_datetime, openings.name, openings.description, openings.location
-			, sheets.sheet_id, sheets.owner_user_id, sheets.name, sheets.description, sheets.type, sheets.begin_date, sheets.end_date, sheets.flag_alert_owner_imminent, sheets.flag_alert_admin_imminent
+			, sheets.sheet_id, sheets.owner_user_id, sheets.name, sheets.description, sheets.type, sheets.flag_alert_owner_imminent, sheets.flag_alert_admin_imminent
 		FROM
 			sus_signups AS signups
 		INNER JOIN
@@ -130,8 +156,6 @@
 	 *            name
 	 *            description
 	 *            type
-	 *            begin_date
-	 *            end_date
 	 *            flag_alert_owner_imminent
 	 *            flag_alert_admin_imminent
 	 *      openings :
@@ -171,8 +195,6 @@
 			, 'owner_user_id'             => $row['owner_user_id']
 			, 'name'                      => $row['name']
 			, 'description'               => $row['description']
-			, 'begin_date'                => $row['begin_date']
-			, 'end_date'                  => $row['end_date']
 			, 'flag_alert_owner_imminent' => $row['flag_alert_owner_imminent']
 			, 'flag_alert_admin_imminent' => $row['flag_alert_admin_imminent']
 		];
@@ -206,16 +228,28 @@
 	$headers = "From: $from";
 
 	foreach ($users_hash as $user_key => $udata) {
+		$last_date = ""; // reset value
+
 		$body = "Hi " . $udata['first_name'] . ",";
 
 		# add signups (count of openings equals signups)
 		if (count($udata['openings']) > 0) {
 			$is_plural = (count($udata['openings']) > 1) ? "s" : "";
-			$body .= "\n\nThis is a reminder of your upcoming " . count($udata['openings']) . " signup" . $is_plural . ":\n";
+			$body .= "\n\nThis is a reminder of your upcoming signup" . $is_plural . ":";
 			foreach ($udata['openings'] as $opening) {
-				$pretty_date_range = getPrettyDateRanges($opening);
-				$pretty_info       = getPrettyInfo_Users($udata, $opening);
-				$body .= "\n" . $pretty_date_range . $pretty_info . "\n";
+
+				// determine if date header is needed
+				$cur_opening_date = getFormattedDate($opening);
+				if ($cur_opening_date != $last_date) {
+					// output distinct date
+					$body .= getPrettyDate($opening, $cur_date);
+					// reset value (for future comparisons)
+					$last_date = $cur_opening_date;
+				}
+				// output
+				$text_time = getPrettyTime($opening);
+				$text_info = getPrettyInfo_Users($udata, $opening);
+				$body .= "\n" . $text_time . $text_info . "\n";
 			}
 		}
 
@@ -234,11 +268,19 @@
 		if (!$qm->matchesDb) {
 			// create record failed
 			$results['notes'] = "database error: could not create queued message for USER daily reminder";
-			error_log("QueuedMessage failed to insert db record (email subject: $subject)");
+			error_log("QueuedMessage failed to insert USER daily reminder db record (email subject: $subject)");
 			echo json_encode($results);
 			exit;
 		}
-
+		if (array_key_exists('SERVER_NAME', $_SERVER)) {
+			// do not attempt delivery on local workstation
+			if ($_SERVER['SERVER_NAME'] != 'localhost') {
+				if (!$qm->attemptDelivery()) {
+					// write to errorlog if fails
+					error_log("attemptDelivery failed for QueuedMessage USER daily reminder (email subject: $subject)");
+				}
+			}
+		}
 		if ($debug) {
 			echo $body . "<hr />\n";
 		}
@@ -250,7 +292,7 @@
 	$owners_and_admins_sql =
 		"SELECT
 			DISTINCT u.user_id, u.username, u.first_name, u.last_name, u.email
-			, sheets.sheet_id, sheets.owner_user_id, sheets.name, sheets.description, sheets.type, sheets.begin_date, sheets.end_date, sheets.flag_alert_owner_imminent, sheets.flag_alert_admin_imminent
+			, sheets.sheet_id, sheets.owner_user_id, sheets.name, sheets.description, sheets.type, sheets.flag_alert_owner_imminent, sheets.flag_alert_admin_imminent
 		FROM
 			users as u
 		INNER JOIN
@@ -264,7 +306,7 @@
 		UNION
 		SELECT
 			DISTINCT u.user_id, u.username, u.first_name, u.last_name, u.email
-			, sheets.sheet_id, sheets.owner_user_id, sheets.name, sheets.description, sheets.type, sheets.begin_date, sheets.end_date, sheets.flag_alert_owner_imminent, sheets.flag_alert_admin_imminent
+			, sheets.sheet_id, sheets.owner_user_id, sheets.name, sheets.description, sheets.type, sheets.flag_alert_owner_imminent, sheets.flag_alert_admin_imminent
 		FROM
 			users as u
 		INNER JOIN
@@ -303,8 +345,6 @@
 	 *            name
 	 *            description
  	 *            type
-	 *            begin_date
-	 *            end_date
 	 *            flag_alert_owner_imminent
 	 *            flag_alert_admin_imminent
 	 */
@@ -329,8 +369,6 @@
 			, 'owner_user_id'             => $row['owner_user_id']
 			, 'name'                      => $row['name']
 			, 'description'               => $row['description']
-			, 'begin_date'                => $row['begin_date']
-			, 'end_date'                  => $row['end_date']
 			, 'flag_alert_owner_imminent' => $row['flag_alert_owner_imminent']
 			, 'flag_alert_admin_imminent' => $row['flag_alert_admin_imminent']
 		];
@@ -402,7 +440,7 @@
 	// iterate through each manager (owner or admin)
 	foreach ($owners_and_admins_hash as $manager_key => $manager) {
 		$output_openings_hash = []; // reset for each manager
-		$body                 = "Hi " . $manager['first_name'] . ",\n\nThis is a reminder of upcoming signups on sheets you own or manage:\n";
+		$body                 = "Hi " . $manager['first_name'] . ",\n\nThis is a reminder of upcoming signups on sheets you own or manage:";
 
 		// iterate through each of this manager's sheets
 		foreach ($manager['sheets'] as $manager_sheet_key => $manager_sheet) {
@@ -420,19 +458,20 @@
 						foreach ($reorganized_sheet['openings'] as $reorganized_opening_key => $reorganized_opening) {
 							// check: if signups > 0 then create header
 							if (count($reorganized_opening['signups']) > 0) {
-								$pretty_info       = getPrettyInfo_Managers($manager_sheet, $reorganized_opening);
-								$pretty_date_range = getPrettyDateRanges($reorganized_opening);
+
 								// create hash to later sort all openings by begin_datetime ASC
+								$text_info                                      = getPrettyInfo_Managers($manager_sheet, $reorganized_opening);
+								$text_time                                      = getPrettyTime($reorganized_opening);
 								$output_openings_hash[$reorganized_opening_key] = [
 									'begin_datetime' => $reorganized_opening['begin_datetime'],
-									'message_text'   => "\n" . $pretty_date_range . $pretty_info . "\n",
+									'message_text'   => "\n" . $text_time . $text_info . "\n",
 									'signups_text'   => ""
 								];
 							}
 
 							// append each signup
 							foreach ($reorganized_opening['signups'] as $reorganized_signup_key => $reorganized_signup) {
-								$output_openings_hash[$reorganized_opening_key]['signups_text'] .= "- " . $reorganized_signup['signup_first_name'] . " " . $reorganized_signup['signup_last_name'] . " (" . $reorganized_signup['signup_username'] . ")\n";
+								$output_openings_hash[$reorganized_opening_key]['signups_text'] .= "    - " . $reorganized_signup['signup_first_name'] . " " . $reorganized_signup['signup_last_name'] . " (" . $reorganized_signup['signup_username'] . ")\n";
 							}
 						}
 					}
@@ -451,8 +490,18 @@
 			// sort output (by begin_datetime ASC)
 			usort($output_openings_hash, 'cmp_date_sort');
 
+			$last_date = ""; // reset value
 			// construct a single string element, including initial greeting text, for the QueuedMessage argument
 			foreach ($output_openings_hash as $opening) {
+				// determine if date header is needed
+				$cur_opening_date = getFormattedDate($opening);
+				if ($cur_opening_date != $last_date) {
+					// output distinct date
+					$body .= getPrettyDate($opening, $cur_date);
+					// reset value (for future comparisons)
+					$last_date = $cur_opening_date;
+				}
+				// output
 				$body .= $opening['message_text'] . $opening['signups_text'];
 			}
 
@@ -471,11 +520,19 @@
 			if (!$qm->matchesDb) {
 				// create record failed
 				$results['notes'] = "database error: could not create queued message for MANAGER daily reminder";
-				error_log("QueuedMessage failed to insert db record (email subject: $subject)");
+				error_log("QueuedMessage failed to insert MANAGER daily reminder db record (email subject: $subject)");
 				echo json_encode($results);
 				exit;
 			}
-
+			if (array_key_exists('SERVER_NAME', $_SERVER)) {
+				// do not attempt delivery on local workstation
+				if ($_SERVER['SERVER_NAME'] != 'localhost') {
+					if (!$qm->attemptDelivery()) {
+						// write to errorlog if fails
+						error_log("attemptDelivery failed for QueuedMessage MANAGER daily reminder (email subject: $subject)");
+					}
+				}
+			}
 			if ($debug) {
 				echo $body . "<hr />\n";
 			}

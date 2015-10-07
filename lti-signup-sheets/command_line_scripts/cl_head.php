@@ -3,6 +3,7 @@
 	// PREVENT DIRECT WEB HITS.
 	if (array_key_exists('SERVER_NAME', $_SERVER)) {
 		echo 'no web access to this script';
+		// TODO - make sure next line is NOT commented!!!
 		exit;
 	}
 

@@ -417,16 +417,16 @@
 			// fetch: user associated with the signup
 			$signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
 
-			$subject = "[Glow Signup Sheets] Signup cancelled for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A");
-			$body    = "Signup cancelled for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . "\nLocation: " . $o->location . "\n- " . $signup_user->first_name . " " . $signup_user->last_name . " (" . $signup_user->username . ")\n";
+			$subject = "[Glow Signup Sheets] Signup cancelled for " . $sheet->name . " (" . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . ")";
+			$body    = $signup_user->first_name . " " . $signup_user->last_name . " (" . $signup_user->username . ") cancelled for " . $sheet->name . "\nDate: " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . (empty($o->location) ? '' : "\nLocation: " . $o->location);
 			if ($USER->username != $signup_user->username) {
-				$body	.= "\n(cancelled by: " . $USER->first_name . " " . $USER->last_name  . ")\n";
+				$body .= "\n(Cancelled by: " . $USER->first_name . " " . $USER->last_name . ")\n";
 			}
 
 			// send to: sheet owner
 			if ($sheet->flag_alert_owner_signup) {
 				$owner_user = User::getOneFromDb(['user_id' => $sheet->structured_data->s_owner_user_id], $DB);
-				create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, ("Hi " . $owner_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+				create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
 			}
 
 			// send to: sheet managers (specifically named, if any)
@@ -437,7 +437,7 @@
 							$admin_user = User::getOneFromDb(['username' => $access_data["a_constraint_data"]], $DB);
 							// send only to managers (not to sheet owner)
 							if ($sheet->owner_user_id != $admin_user->user_id) {
-								create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, ("Hi " . $admin_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+								create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
 							}
 						}
 					}
@@ -729,13 +729,13 @@
 			$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
 			$sheet->cacheStructuredData(0, $primaryID, $su->signup_id);
 
-			$subject = "[Glow Signup Sheets] Signup added for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A");
-			$body    = "Signup added for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . "\nLocation: " . $o->location . "\n- " . $USER->first_name . " " . $USER->last_name . " (" . $USER->username . ")\n";
+			$subject = "[Glow Signup Sheets] New signup for " . $sheet->name . " (" . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . ")";
+			$body    = $USER->first_name . " " . $USER->last_name . " (" . $USER->username . ") signed up for " . $sheet->name . "\nDate: " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . (empty($o->location) ? '' : "\nLocation: " . $o->location);
 
 			// send to: sheet owner
 			if ($sheet->flag_alert_owner_signup) {
 				$owner_user = User::getOneFromDb(['user_id' => $sheet->structured_data->s_owner_user_id], $DB);
-				create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, ("Hi " . $owner_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+				create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
 			}
 
 			// send to: sheet managers (specifically named, if any)
@@ -746,7 +746,7 @@
 							$admin_user = User::getOneFromDb(['username' => $access_data["a_constraint_data"]], $DB);
 							// send only to managers (not to sheet owner)
 							if ($sheet->owner_user_id != $admin_user->user_id) {
-								create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, ("Hi " . $admin_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+								create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
 							}
 						}
 					}
@@ -811,13 +811,13 @@
 			$sheet = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $DB);
 			$sheet->cacheStructuredData(0, $su->opening_id, $su->signup_id);
 
-			$subject = "[Glow Signup Sheets] Signup cancelled for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A");
-			$body    = "Signup cancelled for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . "\nLocation: " . $o->location . "\n- " . $USER->first_name . " " . $USER->last_name . " (" . $USER->username . ")\n";
+			$subject = "[Glow Signup Sheets] Signup cancelled for " . $sheet->name . " (" . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . ")";
+			$body    = $USER->first_name . " " . $USER->last_name . " (" . $USER->username . ") cancelled for " . $sheet->name . "\nDate: " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . (empty($o->location) ? '' : "\nLocation: " . $o->location);
 
 			// send to: sheet owner
 			if ($sheet->flag_alert_owner_signup) {
 				$owner_user = User::getOneFromDb(['user_id' => $sheet->structured_data->s_owner_user_id], $DB);
-				create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, ("Hi " . $owner_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+				create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
 			}
 
 			// send to: sheet managers (specifically named, if any)
@@ -828,7 +828,7 @@
 							$admin_user = User::getOneFromDb(['username' => $access_data["a_constraint_data"]], $DB);
 							// send only to managers (not to sheet owner)
 							if ($sheet->owner_user_id != $admin_user->user_id) {
-								create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, ("Hi " . $admin_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+								create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
 							}
 						}
 					}
@@ -923,21 +923,21 @@
 				// fetch: user associated with the signup
 				$signup_user = User::getOneFromDb(['user_id' => $su->signup_user_id], $DB);
 
-				$subject = "[Glow Signup Sheets] Signup added for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A");
-				$body    = "Signup added for " . $sheet->name . " at " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . "\nLocation: " . $o->location . "\n- " . $signup_user->first_name . " " . $signup_user->last_name . " (" . $signup_user->username . ")\n";
+				$subject = "[Glow Signup Sheets] New signup for " . $sheet->name . " (" . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . ")";
+				$body    = $signup_user->first_name . " " . $signup_user->last_name . " (" . $signup_user->username . ") signed up for " . $sheet->name . "\nDate: " . date_format(new DateTime($o->begin_datetime), "m/d/Y g:i A") . (empty($o->location) ? '' : "\nLocation: " . $o->location);
 				if ($USER->username != $signup_user->username) {
-					$body	.= "\n(added by: " . $USER->first_name . " " . $USER->last_name  . ")\n";
+					$body .= "\n(This signup added by: " . $USER->first_name . " " . $USER->last_name . ")\n";
 				}
 
 				// send to: user whose signup was changed by owner or manager
 				if ($USER->user_id != $signup_user->signup_user_id) {
-					create_and_send_QueuedMessage($DB, $signup_user->user_id, $signup_user->email, $subject, ("Hi " . $signup_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+					create_and_send_QueuedMessage($DB, $signup_user->user_id, $signup_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
 				}
 
 				// send to: sheet owner
 				if ($sheet->flag_alert_owner_signup) {
 					$owner_user = User::getOneFromDb(['user_id' => $sheet->structured_data->s_owner_user_id], $DB);
-					create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, ("Hi " . $owner_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+					create_and_send_QueuedMessage($DB, $owner_user->user_id, $owner_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
 				}
 
 				// send to: sheet managers (specifically named, if any)
@@ -948,7 +948,7 @@
 								$admin_user = User::getOneFromDb(['username' => $access_data["a_constraint_data"]], $DB);
 								// send only to managers (not to sheet owner)
 								if ($sheet->owner_user_id != $admin_user->user_id) {
-									create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, ("Hi " . $admin_user->first_name . ",\n\n" . $body), $su->opening_id, $sheet->sheet_id);
+									create_and_send_QueuedMessage($DB, $admin_user->user_id, $admin_user->email, $subject, $body, $su->opening_id, $sheet->sheet_id);
 								}
 							}
 						}
