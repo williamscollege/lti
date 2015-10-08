@@ -110,6 +110,11 @@ $(document).ready(function () {
 		$("#edit_OpeningLocation").val($(parentOfClickedLink).attr('data-location'));
 		$("#edit_OpeningAdminNotes").val($(parentOfClickedLink).attr('data-admin_comment'));
 
+		// TODO - set subject line of notifications section at bottom of page
+		// TODO - fetch data-sheetname or data-name, whichever is not empty
+		// TODO - create hidden sheetname field in main edit form... then ternary to get name else sheetname
+		$("#notifyParticipantsSubject").val("[Glow Signup Sheets] " + $(parentOfClickedLink).attr('data-name'));
+
 		// split date/time values
 		var datetimeBeginAry = $(parentOfClickedLink).attr('data-begin_datetime').split(' ');
 		var datetimeEndAry = $(parentOfClickedLink).attr('data-end_datetime').split(' ');

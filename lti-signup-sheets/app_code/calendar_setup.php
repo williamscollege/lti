@@ -824,7 +824,9 @@
 											</span>
 										</div>
 										<h4 class="pull-left" id="signupHeader">Signups</h4>
-										<p class="small" style="clear: both;">Manager may override max signup limit<br />An alert will be sent to anyone you signup</p>
+
+										<p class="small" style="clear: both;">Manager may override max signup limit<br />An alert will be sent to anyone you
+											signup</p>
 										<a href="#" id="link_show_signup_controls" title="Show signup controls">Sign someone up</a>
 
 										<div id="signupControls">
@@ -866,7 +868,32 @@
 						</div>
 
 						<div class="modal-footer">
-							<!-- TODO - notifications functionality will go here -->
+							<div class="row col-sm-12 small">
+								<div class="col-sm-12">
+									<div class="form-group form-group-sm">
+										<label class="col-sm-4 control-label">&nbsp;</label>
+
+										<div class="col-sm-8">
+											<h4 class="pull-left">Send email to all signed up for this opening</h4>
+										</div>
+									</div>
+									<div class="form-group form-group-sm">
+										<label for="notifyParticipantsSubject" class="col-sm-4 control-label">Subject</label>
+
+										<div class="col-sm-8">
+											<input type="text" id="notifyParticipantsSubject" name="notifyParticipantsSubject" class="form-control" maxlength="255" placeholder="Email Subject" value="" />
+										</div>
+									</div>
+									<div class="form-group form-group-sm">
+										<label for="notifyParticipantsMessage" class="col-sm-4 control-label">Message</label>
+
+										<div class="col-sm-8">
+											<textarea id="notifyParticipantsMessage" name="notifyParticipantsMessage" class="form-control" placeholder="Message" rows="1"></textarea>
+										</div>
+									</div>
+									<button type="button" id="notifyParticipantsButton" name="notifyParticipantsButton" class="btn btn-primary" data-loading-text="Sending...">Send</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
