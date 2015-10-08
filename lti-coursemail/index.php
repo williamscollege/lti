@@ -173,34 +173,31 @@
 				</div>
 
 				<div class="row form-group">
-					<div class="col-sm-6">
-						<p>
-							<a href="#" id="btn_compose_email" class="btn btn-primary form-control" title="Compose an email in your default email program" target="_blank">
-								<i id="icon_compose_email" class="glyphicon glyphicon-envelope"></i>&nbsp;Compose Email
-							</a>
-						</p>
+					<div class="col-sm-12">
+						<div class="col-sm-6">
+							<p>
+								<a href="#" id="btn_compose_email" class="btn btn-primary form-control" title="Compose an email in your default email program" target="_blank">
+									<i id="icon_compose_email" class="glyphicon glyphicon-envelope"></i>&nbsp;Compose Email
+								</a>
+							</p>
+						</div>
+						<div class="col-sm-6">
+							<!-- trigger for modal dialogue -->
+							<a href="#" id="btn_copy_as_text" class="btn btn-primary form-control" data-toggle="modal" data-target="#modalShowText" title="Alternate: Copy selected email addresses as text"><i class="glyphicon glyphicon-align-justify"></i>&nbsp;Copy
+								as Text</a>
+						</div>
+						<div class="col-sm-6">&nbsp;</div>
 					</div>
-					<div class="col-sm-6">&nbsp;</div>
 				</div>
 
-				<label class="text-primary small">Problem?</label>
+				<label class="small">Need Help?</label>
 
 				<p class="small text-muted">
-					You must set your default email client<br />
-					<a href="http://oit.williams.edu/files/2014/03/Set-Chrome-to-be-the-Default-Mail-Handler.pdf" title="Instructions: Set Chrome to be your default email client" target="_blank"><i class="glyphicon glyphicon-new-window"></i>&nbsp;Set
-						Chrome as default email client</a><br />
-					<a href="http://oit.williams.edu/itech/glow/how-can-i-email-my-class-using-course-email-tool/" title="Recipient Limit: Mac Mail/Outlook/Thunderbird: 99 (Chrome Gmail: 2,000)" target="_blank"><i class="glyphicon glyphicon-new-window"></i>&nbsp;Recipient
-						Limit: Mac Mail/Outlook/Thunderbird: 99 (Gmail: 2,000)</a><br /><br />
+					<a href="http://oit.williams.edu/files/2014/03/Set-Chrome-to-be-the-Default-Mail-Handler.pdf" title="Instructions: How to set Chrome to be your default email client" target="_blank"><i class="glyphicon glyphicon-new-window"></i>&nbsp;
+						Works best if you set Chrome as default email client</a><br />
+					<a href="http://oit.williams.edu/itech/glow/how-can-i-email-my-class-using-course-email-tool/" title="Recipient Limit: 99 for Mac Mail/Outlook/Thunderbird; 2,000 for Chrome Gmail" target="_blank"><i class="glyphicon glyphicon-new-window"></i>&nbsp;
+						Not sending? Maximum email addresses is 99 for Mac Mail, Outlook, Thunderbird (Chrome Gmail is 2,000)</a><br /><br />
 				</p>
-
-				<div class="row form-group">
-					<div class="col-sm-6">
-						<!-- trigger for modal dialogue -->
-						<a href="#" id="btn_copy_as_text" class="btn btn-primary form-control" data-toggle="modal" data-target="#modalShowText" title="Alternate: Copy selected email addresses as text"><i class="glyphicon glyphicon-align-justify"></i>&nbsp;Copy
-							as Text</a>
-					</div>
-					<div class="col-sm-6">&nbsp;</div>
-				</div>
 
 				<!-- modal dialogue: start -->
 				<div class="modal fade" id="modalShowText" tabindex="-1" role="dialog" aria-labelledby="modalShowTextLabel" aria-hidden="true">
@@ -333,7 +330,7 @@
 						}
 
 						// sort sections, get smallest section_id value to set hidden "courseTitle" for subsequent email subject line
-						arrSections.sort(function(a, b) {
+						arrSections.sort(function (a, b) {
 							var valueA, valueB;
 
 							valueA = a['id']; // sort by this index
