@@ -314,9 +314,6 @@
 											<label for="selectMaxTotalSignups" class="control-label">Maximum Signups</label>
 
 											<div class="form-inline small">
-												<div class="well well-sm"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i> Group
-													settings affect all sheets in this group. Sheet settings affect only that sheet.
-												</div>
 												Users can have
 												<select id="selectMaxTotalSignups" name="selectMaxTotalSignups" class="form-control input-sm">
 													<?php
@@ -571,7 +568,7 @@
 
 												<!-- Admin management-->
 												<div class="form-group text-danger">
-													<strong>Admins: Who can <u>manage</u> this sheet?</strong><br />
+													<strong>Admins: Who else can <u>manage</u> this sheet?</strong><br />
 
 													<div class="wms_indent_tiny">
 														<!-- List: These People -->
@@ -616,7 +613,7 @@
 				</div>
 				<!-- End: Basic Sheet Info / Sheet Access -->
 				<div class="col-sm-1">&nbsp;</div>
-				<!-- Begin: Calendar Openings / List Openings -->
+				<!-- Begin: Calendar View / List View -->
 				<?php
 					// for a new sheet: hide advanced settings
 					if (!$sheetIsNew) {
@@ -624,23 +621,20 @@
 						<div class="col-sm-6">
 							<div class="row">
 								<!-- show spinner icon (visual placeholder) until DOM content (hidden) has fully loaded -->
-								<span id="spinner_calendarTabs"><img height="39" width="36" src="../img/spinner.gif" />&nbsp;Calendar Openings</span>
-
+								<span id="spinner_calendarTabs"><img height="39" width="36" src="../img/spinner.gif" />&nbsp;Calendar View</span>
 								<div id="content_calendarTabs" class="tab-container hidden" role="tabpanel" data-example-id="set2">
 									<ul id="boxOpeningsHeader" class="nav nav-tabs" role="tablist">
 										<li role="presentation" class="active">
-											<a href="#tabOpeningsCalendar" role="tab" data-toggle="tab" aria-controls="tabOpeningsCalendar" aria-expanded="false">Calendar
-												Openings</a>
+											<a href="#tabOpeningsCalendarView" role="tab" data-toggle="tab" aria-controls="tabOpeningsCalendarView" aria-expanded="false">Calendar View</a>
 										</li>
 										<li role="presentation" class="">
-											<a href="#tabOpeningsList" role="tab" data-toggle="tab" aria-controls="tabOpeningsList" aria-expanded="false">List
-												Openings</a>
+											<a href="#tabOpeningsListView" role="tab" data-toggle="tab" aria-controls="tabOpeningsListView" aria-expanded="false">List View</a>
 										</li>
 									</ul>
 									<div id="boxOpeningsContent" class="tab-content">
 
-										<!-- Begin: Calendar Openings -->
-										<div role="tabpanel" id="tabOpeningsCalendar" class="tab-pane fade active in" aria-labelledby="tabOpeningsCalendar">
+										<!-- Begin: Calendar View -->
+										<div role="tabpanel" id="tabOpeningsCalendarView" class="tab-pane fade active in" aria-labelledby="tabOpeningsCalendarView">
 
 											<?php
 												renderCalendarWidget_EDIT($s->sheet_id);
@@ -648,10 +642,10 @@
 											?>
 
 										</div>
-										<!-- End: Calendar Openings -->
+										<!-- End: Calendar View -->
 
-										<!-- Begin: List Openings -->
-										<div role="tabpanel" id="tabOpeningsList" class="tab-pane fade PrintArea wms_print_EditOne" aria-labelledby="tabOpeningsList">
+										<!-- Begin: List View -->
+										<div role="tabpanel" id="tabOpeningsListView" class="tab-pane fade PrintArea wms_print_EditOne" aria-labelledby="tabOpeningsListView">
 											<div id="buttons_list_openings">
 												<!-- PrintArea: Print a specific div -->
 												<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_EditOne" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>
@@ -718,7 +712,7 @@
 
 											</div>
 										</div>
-										<!-- End: List Openings -->
+										<!-- End: List View -->
 									</div>
 								</div>
 							</div>
@@ -731,7 +725,7 @@
 					<?php
 					}
 				?>
-				<!-- End: Calendar Openings / List Openings -->
+				<!-- End: Calendar View / List View -->
 			</div>
 		</div> <!-- end: div.container -->
 

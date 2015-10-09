@@ -56,7 +56,7 @@
 		if (!$qm->matchesDb) {
 			// create record failed
 			$results['notes'] = "database error: could not create queued message for signup";
-			error_log("QueuedMessage failed to insert signup db record (email subject: $subject)");
+			error_log("QueuedMessage failed to insert db record: signup (email subject: $subject)");
 			echo json_encode($results);
 			exit;
 		}
@@ -65,7 +65,7 @@
 			if ($_SERVER['SERVER_NAME'] != 'localhost') {
 				if (!$qm->attemptDelivery()) {
 					// write to errorlog if fails
-					error_log("attemptDelivery failed for QueuedMessage signup (email subject: $subject)");
+					error_log("attemptDelivery failed for QueuedMessage: signup (email subject: $subject)");
 				}
 			}
 		}

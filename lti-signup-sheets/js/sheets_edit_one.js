@@ -299,18 +299,18 @@ $(document).ready(function () {
 	}
 
 	// Set initial condition: hide history
-	$("#tabOpeningsList .toggle_opening_history").hide();
+	$("#tabOpeningsListView .toggle_opening_history").hide();
 
 	// Display optional history
 	$('#link_for_history_openings').click(function () {
-		if ($("#tabOpeningsList .toggle_opening_history").hasClass('wmsToggle')) {
+		if ($("#tabOpeningsListView .toggle_opening_history").hasClass('wmsToggle')) {
 			// hide history
-			$("#tabOpeningsList .toggle_opening_history").removeClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
+			$("#tabOpeningsListView .toggle_opening_history").removeClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
 			$("#link_for_history_openings").text('show history');
 		}
 		else {
 			// show history
-			$("#tabOpeningsList .toggle_opening_history").addClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
+			$("#tabOpeningsListView .toggle_opening_history").addClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
 			$("#link_for_history_openings").text('hide history');
 		}
 	});

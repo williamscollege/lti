@@ -129,7 +129,7 @@
 
 		<img src="<?php echo APP_ROOT_PATH; ?>/img/help/09_10_11_antd_do_signup_process.png" alt="annotated screenshot series of hovering and clicked on minitimes" />
 
-		<p>By clicking the "List Openings" tab above the calendar you can switch to a list-style view of the openings.<br />
+		<p>By clicking the "List View" tab above the calendar you can switch to a list-style view of the openings.<br />
 			<img src="<?php echo APP_ROOT_PATH; ?>/img/help/12_antd_do_signup_list_view.png" alt="annotated screenshot of do signup page list view" />
 
 		<h2><a name="SignupSheets-MySignups"></a>My Signups</h2>

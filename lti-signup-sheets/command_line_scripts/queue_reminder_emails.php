@@ -268,7 +268,7 @@
 		if (!$qm->matchesDb) {
 			// create record failed
 			$results['notes'] = "database error: could not create queued message for USER daily reminder";
-			error_log("QueuedMessage failed to insert USER daily reminder db record (email subject: $subject)");
+			error_log("QueuedMessage failed to insert db record: USER daily reminder (email subject: $subject)");
 			echo json_encode($results);
 			exit;
 		}
@@ -277,7 +277,7 @@
 			if ($_SERVER['SERVER_NAME'] != 'localhost') {
 				if (!$qm->attemptDelivery()) {
 					// write to errorlog if fails
-					error_log("attemptDelivery failed for QueuedMessage USER daily reminder (email subject: $subject)");
+					error_log("attemptDelivery failed for QueuedMessage: USER daily reminder (email subject: $subject)");
 				}
 			}
 		}
@@ -520,7 +520,7 @@
 			if (!$qm->matchesDb) {
 				// create record failed
 				$results['notes'] = "database error: could not create queued message for MANAGER daily reminder";
-				error_log("QueuedMessage failed to insert MANAGER daily reminder db record (email subject: $subject)");
+				error_log("QueuedMessage failed to insert db record: MANAGER daily reminder (email subject: $subject)");
 				echo json_encode($results);
 				exit;
 			}
@@ -529,7 +529,7 @@
 				if ($_SERVER['SERVER_NAME'] != 'localhost') {
 					if (!$qm->attemptDelivery()) {
 						// write to errorlog if fails
-						error_log("attemptDelivery failed for QueuedMessage MANAGER daily reminder (email subject: $subject)");
+						error_log("attemptDelivery failed for QueuedMessage: MANAGER daily reminder (email subject: $subject)");
 					}
 				}
 			}

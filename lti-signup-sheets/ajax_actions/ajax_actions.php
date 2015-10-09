@@ -7,7 +7,7 @@
 	//		$results['which_action'] = $action;
 	//		$results['html_output']  = 'smiling now';
 	//		util_prePrintR($_REQUEST); exit;
-	//		echo json_encode($_REQUEST); exit; // # Return JSON array
+	//		echo json_encode($_REQUEST); exit; // # Return JSON array // debugging
 
 
 	#------------------------------------------------#
@@ -1002,7 +1002,7 @@
 			}
 		}
 		if (!$signupUserIdsAry) {
-			$results['status']       = 'success';
+			$results['status']       = 'success'; // this is not an error, rather there are just no signups yet
 			$results['which_action'] = 'fetch-signups-for-opening-id';
 			$results['html_output']  = '<li>no signups</li>';
 			echo json_encode($results);
@@ -1026,6 +1026,81 @@
 		$results['status']       = 'success';
 		$results['which_action'] = 'fetch-signups-for-opening-id';
 		$results['html_output']  = $signups_list;
+	}
+	//###############################################################
+	elseif ($action == 'send-email-to-participants-for-opening-id') {
+
+		// get all signups for this opening
+		$o = SUS_Opening::getOneFromDb(['opening_id' => $primaryID], $DB);
+
+		if (!$o->matchesDb) {
+			// error: no matching record found
+			$results["notes"] = "that opening does not exist";
+			echo json_encode($results);
+
+			// create event log. [requires: user_id(int), flag_success(bool), event_action(varchar), event_action_id(int), event_action_target_type(varchar), event_note(varchar), event_dataset(varchar)]
+			util_createEventLog($USER->user_id, FALSE, $action, $primaryID, "opening_id", $results["notes"], print_r(json_encode($_REQUEST), TRUE), $DB);
+			exit;
+		}
+
+		$o->cacheSignups();
+
+		// create hash of signup user_ids
+		$signupUserIdsAry = [];
+		foreach ($o->signups as $signup) {
+			if (!in_array($signup->signup_user_id, $signupUserIdsAry)) {
+				array_push($signupUserIdsAry, $signup->signup_user_id);
+			}
+		}
+		if (!$signupUserIdsAry) {
+			$results['status']       = 'error'; // this constitutes an error: do not allow sending emails if there are no participants signed up
+			$results['which_action'] = 'send-email-to-participants-for-opening-id';
+			$results["notes"]        = "no participants are signed up";
+			$results['html_output']  = '<strong class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i> Sent ZERO emails because there are no participants signed up.</strong>';
+			echo json_encode($results);
+			exit;
+		}
+
+		// fetch users
+		$users_info = User::getAllFromDb(['user_id' => $signupUserIdsAry], $DB);
+
+		$from    = $USER->email;
+		$subject = $customData['notifyParticipantsSubject'];
+		$body    = $customData['notifyParticipantsMessage'];
+		$headers = "From: $from";
+
+		foreach ($o->signups as $signup) {
+			foreach ($users_info as $user) {
+				if ($signup->signup_user_id == $user->user_id) {
+					// now queue the message (TODO - presently not used: $headers)
+					// QueuedMessage::factory($db, $user_id, $target, $summary, $body, $opening_id = 0, $sheet_id = 0, $type = 'email' )
+					$qm = QueuedMessage::factory($DB, $user->user_id, $user->email, $subject, $body, $o->opening_id, $o->sheet_id);
+					$qm->updateDb();
+
+					if (!$qm->matchesDb) {
+						// create record failed
+						$results['notes'] = "database error: could not create queued message for Send email to participants for opening";
+						error_log("QueuedMessage failed to insert db record: Send email to participants for opening (email subject: $subject)");
+						echo json_encode($results);
+						exit;
+					}
+					if (array_key_exists('SERVER_NAME', $_SERVER)) {
+						// do not attempt delivery on local workstation
+						if ($_SERVER['SERVER_NAME'] != 'localhost') {
+							if (!$qm->attemptDelivery()) {
+								// write to errorlog if fails
+								error_log("attemptDelivery failed for QueuedMessage: USER daily reminder (email subject: $subject)");
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// output
+		$results['status']       = 'success';
+		$results['which_action'] = 'send-email-to-participants-for-opening-id';
+		$results['html_output']  = '<strong class="text-success"><i class="glyphicon glyphicon-ok" style="font-size: 18px;"></i> Successfully sent ' . count($o->signups) . ' emails.</strong>';
 	}
 	//###############################################################
 

@@ -37,6 +37,30 @@ $(document).ready(function () {
 		setupModalForm_EditOpening(openingID, action);
 	});
 
+	// Send email to participants for opening
+	$(document).on('click', '#notifyParticipantsButton', function () {
+		// show button loading text (bootstrap)
+		$("#notifyParticipantsButton").button('loading');
+
+		GLOBAL_confirmHandlerData = $("#edit_OpeningID").val();
+		GLOBAL_confirmHandlerReference = {
+			notifyParticipantsSubject: $("#notifyParticipantsSubject").val(),
+			notifyParticipantsMessage: $("#notifyParticipantsMessage").val()
+		};
+		var params = {
+			title: "Send email to participants",
+			message: "<p>Really email participants?</p>" +
+			'<p class="text-danger"><i class="glyphicon glyphicon-exclamation-sign" style="font-size: 18px;"></i>&nbsp;An alert with your message will be sent individually to each participant.</p>',
+			label: "Send",
+			class: "btn btn-primary",
+			url: "../ajax_actions/ajax_actions.php",
+			ajax_action: "send-email-to-participants-for-opening-id",
+			ajax_id: GLOBAL_confirmHandlerData,
+			subject_message_json: GLOBAL_confirmHandlerReference
+		};
+		showConfirmBox(params);
+	});
+
 	// Sheet Opening: signup or cancel for this opening_id
 	$(document).on('click', '.sus-add-me-to-opening, .sus-delete-me-from-opening', function () {
 		var openingID = $(this).attr('data-opening-id');
@@ -110,10 +134,13 @@ $(document).ready(function () {
 		$("#edit_OpeningLocation").val($(parentOfClickedLink).attr('data-location'));
 		$("#edit_OpeningAdminNotes").val($(parentOfClickedLink).attr('data-admin_comment'));
 
-		// TODO - set subject line of notifications section at bottom of page
-		// TODO - fetch data-sheetname or data-name, whichever is not empty
-		// TODO - create hidden sheetname field in main edit form... then ternary to get name else sheetname
-		$("#notifyParticipantsSubject").val("[Glow Signup Sheets] " + $(parentOfClickedLink).attr('data-name'));
+		// set initial form values for: Send email to participants for opening (for subject: fetch opening name, else sheet name)
+		var nameOpeningOrSheet = ($(parentOfClickedLink).attr('data-name') ? $(parentOfClickedLink).attr('data-name') : $("#inputSheetName").val());
+		$("#notifyParticipantsSubject").val("[Glow Signup Sheets] " + nameOpeningOrSheet); // set subject value everytime
+		$("#notifyParticipantsMessage").val(""); // remove any prior text
+		$("#notifyParticipantsButton").show(); // ensure button is not hidden from prior actions
+		$("#notifyParticipantsButton").button('reset'); // ensure removal of any prior 'loading' text
+		$("#btnConfirmationText").html(""); // remove any prior text
 
 		// split date/time values
 		var datetimeBeginAry = $(parentOfClickedLink).attr('data-begin_datetime').split(' ');
@@ -249,8 +276,9 @@ $(document).ready(function () {
 	}
 
 	function resetSignupFields() {
-		$("#signupUsername").val('');
+		$("#signupUsername").val('').css('background-color','transparent');
 		$("#signupAdminNote").val('');
+		$("#btnEditOpeningAddSignup").button('reset');
 	}
 
 
@@ -502,6 +530,9 @@ $(document).ready(function () {
 	// Edit Opening: Signup someone to an opening
 	// ***************************
 	$("#btnEditOpeningAddSignup").click(function () {
+		// show button loading text (bootstrap)
+		$("#btnEditOpeningAddSignup").button('loading');
+
 		var doAction = 'edit-opening-add-signup-user';
 
 		var params = {
@@ -532,6 +563,10 @@ $(document).ready(function () {
 				else {
 					// error message
 					susUtil_setTransientAlert('error', 'Error saving: ' + data.notes);
+					// reset button
+					$("#btnEditOpeningAddSignup").button('reset');
+					// focus on bad username; select input field contents
+					$("#signupUsername").focus().css('background-color','yellow');
 				}
 			}
 			//, complete: function(req,textStatus) {

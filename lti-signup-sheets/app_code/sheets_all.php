@@ -51,24 +51,35 @@
 		// util_prePrintR($USER->managed_sheets);
 
 		// display managed sheets
+		$flagBeginTable = TRUE;
 		if (count($USER->managed_sheets) > 0) {
-			echo "<table class=\"table table-condensed table-bordered table-hover\">";
-			echo "<tr class=\"success\"><th class=\"col-xs-11\">Sheets I manage that are owned by others...</th>";
-			echo "<th class=\"col-xs-1 text-nowrap\">&nbsp;</th></tr>";
 			foreach ($USER->managed_sheets as $mgr_sheet) {
-				echo "<tr><td class=\"col-xs-11\">";
-				// title
-				echo htmlentities($mgr_sheet->name, ENT_QUOTES, 'UTF-8');
 				$owner = User::getOneFromDb(['user_id' => $mgr_sheet->owner_user_id], $DB);
-				echo " <small>(owned by " . htmlentities($owner->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($owner->last_name, ENT_QUOTES, 'UTF-8') . ")</small>";
-				echo "</td><td class=\"col-xs-1 text-nowrap\">";
-				// icon: edit
-				echo "<a class=\"btn btn-xs btn-primary\" href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . htmlentities($mgr_sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit sheet\"><i class=\"glyphicon glyphicon-pencil\"></i></a>&nbsp;";
-				// icon: delete (disabled)
-				echo "<a class=\"btn btn-xs btn-default disabled\" disabled=\"disabled\" title=\"Cannot delete\"><i class=\"glyphicon glyphicon-minus-sign\"></i></a>&nbsp;";
-				echo "</td></tr>";
+				// do not show sheets already owned by this user (i.e. do not show a sheet to which the owner also entered their own username in Sheet Access as admin)
+				if ($USER->username != $owner->username) {
+					if ($flagBeginTable) {
+						$flagBeginTable = FALSE; // reset flag
+						// begin table
+						echo "<table class=\"table table-condensed table-bordered table-hover\">";
+						echo "<tr class=\"success\"><th class=\"col-xs-11\">Sheets I manage that are owned by others...</th>";
+						echo "<th class=\"col-xs-1 text-nowrap\">&nbsp;</th></tr>";
+					}
+					echo "<tr><td class=\"col-xs-11\">";
+					// title
+					echo htmlentities($mgr_sheet->name, ENT_QUOTES, 'UTF-8');
+					echo " <small>(owned by " . htmlentities($owner->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($owner->last_name, ENT_QUOTES, 'UTF-8') . ")</small>";
+					echo "</td><td class=\"col-xs-1 text-nowrap\">";
+					// icon: edit
+					echo "<a class=\"btn btn-xs btn-primary\" href=\"" . APP_ROOT_PATH . "/app_code/sheets_edit_one.php?sheet=" . htmlentities($mgr_sheet->sheet_id, ENT_QUOTES, 'UTF-8') . "\" title=\"Edit sheet\"><i class=\"glyphicon glyphicon-pencil\"></i></a>&nbsp;";
+					// icon: delete (disabled)
+					echo "<a class=\"btn btn-xs btn-default disabled\" disabled=\"disabled\" title=\"Cannot delete\"><i class=\"glyphicon glyphicon-minus-sign\"></i></a>&nbsp;";
+					echo "</td></tr>";
+				}
 			}
-			echo "</table>\n";
+			if (!$flagBeginTable) {
+				// end table
+				echo "</table>\n";
+			}
 		}
 
 		// ***************************

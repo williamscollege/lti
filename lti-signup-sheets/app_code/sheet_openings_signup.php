@@ -112,7 +112,7 @@
 								</p>
 
 								<p>
-									To see all the openings for this sheet in a text-based list, click the "List Openings" tab above.
+									To see all the openings for this sheet in a text-based list, click the "List View" tab above.
 								</p>
 							</div>
 							<div id="display_opening_signup_details"></div>
@@ -120,27 +120,25 @@
 					</div>
 				</div>
 				<div class="col-sm-1">&nbsp;</div>
-				<!-- Calendar Openings / List Openings -->
+				<!-- Calendar View / List View -->
 				<div class="col-sm-6">
 					<div class="row">
 						<!-- show spinner icon (visual placeholder) until DOM content (hidden) has fully loaded -->
-						<span id="spinner_calendarTabs"><img height="39" width="36" src="../img/spinner.gif" />&nbsp;Calendar Openings</span>
+						<span id="spinner_calendarTabs"><img height="39" width="36" src="../img/spinner.gif" />&nbsp;Calendar View</span>
 
 						<div id="content_calendarTabs" class="tab-container hidden" role="tabpanel" data-example-id="set2">
 							<ul id="boxOpenings" class="nav nav-tabs" role="tablist">
 								<li role="presentation" class="active">
-									<a href="#tabOpeningsCalendar" role="tab" data-toggle="tab" aria-controls="tabOpeningsCalendar" aria-expanded="false">Calendar
-										Openings</a>
+									<a href="#tabOpeningsCalendarView" role="tab" data-toggle="tab" aria-controls="tabOpeningsCalendarView" aria-expanded="false">Calendar View</a>
 								</li>
 								<li role="presentation" class="">
-									<a href="#tabOpeningsList" role="tab" data-toggle="tab" aria-controls="tabOpeningsList" aria-expanded="false">List
-										Openings</a>
+									<a href="#tabOpeningsListView" role="tab" data-toggle="tab" aria-controls="tabOpeningsListView" aria-expanded="false">List View</a>
 								</li>
 							</ul>
 							<div id="boxOpeningsContent" class="tab-content">
 
-								<!-- Begin: Calendar Openings -->
-								<div role="tabpanel" class="tab-pane fade active in" id="tabOpeningsCalendar" aria-labelledby="tabOpeningsCalendar">
+								<!-- Begin: Calendar View -->
+								<div role="tabpanel" class="tab-pane fade active in" id="tabOpeningsCalendarView" aria-labelledby="tabOpeningsCalendarView">
 
 									<?php
 										renderCalendarWidget_DOSIGNUP();
@@ -148,10 +146,10 @@
 									?>
 
 								</div>
-								<!-- End: Calendar Openings -->
+								<!-- End: Calendar View -->
 
-								<!-- Begin: List Openings -->
-								<div role="tabpanel" id="tabOpeningsList" class="tab-pane fade PrintArea wms_print_OpeningSignup" aria-labelledby="tabOpeningsList">
+								<!-- Begin: List View -->
+								<div role="tabpanel" id="tabOpeningsListView" class="tab-pane fade PrintArea wms_print_OpeningSignup" aria-labelledby="tabOpeningsListView">
 									<div id="buttons_list_openings">
 										<!-- PrintArea: Print a specific div -->
 										<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_OpeningSignup" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>
@@ -216,7 +214,7 @@
 
 									</div>
 								</div>
-								<!-- End: List Openings -->
+								<!-- End: List View -->
 							</div>
 						</div>
 					</div>

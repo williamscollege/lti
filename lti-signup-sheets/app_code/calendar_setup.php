@@ -892,6 +892,7 @@
 										</div>
 									</div>
 									<button type="button" id="notifyParticipantsButton" name="notifyParticipantsButton" class="btn btn-primary" data-loading-text="Sending...">Send</button>
+									<span id="btnConfirmationText" class="text-success"></span>
 								</div>
 							</div>
 						</div>

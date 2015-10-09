@@ -35,7 +35,14 @@ $(document).ready(function () {
 
 // BootBox jQuery confirm box (helper function)
 function showConfirmBox(ary) {
-	// console.dir(ary);
+	// console.dir(ary); // debugging
+	if (ary['ajax_action'] == 'sus-delete-opening') {
+		var custom_data = $("input[name='custom_user_value']:checked").val();
+	}
+	else if (ary['ajax_action'] == 'send-email-to-participants-for-opening-id') {
+		var custom_data = ary['subject_message_json'];
+	}
+	// console.log("custom_data = "+custom_data);
 	bootbox.dialog({
 		title: ary['title'],
 		message: ary['message'],
@@ -53,7 +60,7 @@ function showConfirmBox(ary) {
 						data: {
 							'ajax_Action': ary['ajax_action'],
 							'ajax_Primary_ID': ary['ajax_id'],
-							'ajax_Custom_Data': $("input[name='custom_user_value']:checked").val() // custom value, currently only from ".sus-delete-opening" (calendar.js)
+							'ajax_Custom_Data': custom_data // see above for how this custom value is set
 						},
 						dataType: 'json',
 						error: function (data) {
@@ -96,21 +103,22 @@ function helper_Remove_DOM_Elements(openingID) {
 
 	if (countRemainingOpenings == 0) {
 		// this is the last opening on this date!
-		// remove the list container from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
+		// remove the list container from DOM for both: "Calendar View" overlay AND calendar "List View"
 		$('.list-opening-id-' + openingID).parent().parent(".calendar-cell-openings").remove();
-		$('#tabOpeningsList .list-opening-id-' + openingID).parent(".opening-list-for-date").remove();
+		$('#tabOpeningsListView .list-opening-id-' + openingID).parent(".opening-list-for-date").remove();
 	}
 	else {
 		// additional openings still exist on this date...
-		// remove single opening from DOM for both: "Calendar Openings" overlay AND calendar "List Openings"
+		// remove single opening from DOM for both: "Calendar View" overlay AND calendar "List View"
 		$('.list-opening-id-' + openingID).remove();
-		$('#tabOpeningsList .list-opening-id-' + openingID).remove();
+		$('#tabOpeningsListView .list-opening-id-' + openingID).remove();
 	}
 }
 
 function updateDOM(action_ary, ret, data) {
 	//console.dir(action_ary);
 	//console.log(ret);
+	//console.log(data);
 	if (action_ary.ajax_action == 'copy-sheet') {
 		if (ret) {
 			// show status
@@ -286,6 +294,22 @@ function updateDOM(action_ary, ret, data) {
 			susUtil_setTransientAlert('error', 'Failed: No action taken: ' + data.notes);
 		}
 	}
+	else if (action_ary.ajax_action == 'send-email-to-participants-for-opening-id') {
+		if (ret) {
+			// show status
+			susUtil_setTransientAlert('success', 'Sent');
+			// hide button, show confirmation text
+			$('#notifyParticipantsButton').hide();
+			$('#btnConfirmationText').html(data.html_output);
+		}
+		else {
+			// error message
+			susUtil_setTransientAlert('error', 'Failed: No action taken: ' + data.notes);
+			// hide button, show confirmation text
+			$('#notifyParticipantsButton').hide();
+			$('#btnConfirmationText').html(data.html_output);
+		}
+	}
 }
 
 function appRootPath() {
@@ -315,7 +339,7 @@ function susUtil_setTransientAlert(alertType, alertMessage) {
 	// pause for user to read the alert, then hide alert button
 	setTimeout(function () {
 		$('#page_alert_div').hide();
-	}, 5000);
+	}, 3000);
 }
 
 
