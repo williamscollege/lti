@@ -272,15 +272,18 @@
 			echo json_encode($results);
 			exit;
 		}
+
 		if (array_key_exists('SERVER_NAME', $_SERVER)) {
-			// do not attempt delivery on local workstation
-			if ($_SERVER['SERVER_NAME'] != 'localhost') {
-				if (!$qm->attemptDelivery()) {
-					// write to errorlog if fails
-					error_log("attemptDelivery failed for QueuedMessage: USER daily reminder (email subject: $subject)");
-				}
+			// do not send emails: either a web hit or hit via localhost development work
+			echo "did NOT send email to: " . $udata['email'] . " <br />\n";
+		}
+		else {
+			if (!$qm->attemptDelivery()) {
+				// write to errorlog if fails
+				error_log("attemptDelivery failed for QueuedMessage: USER daily reminder (email subject: $subject)");
 			}
 		}
+
 		if ($debug) {
 			echo $body . "<hr />\n";
 		}
@@ -524,15 +527,18 @@
 				echo json_encode($results);
 				exit;
 			}
+
 			if (array_key_exists('SERVER_NAME', $_SERVER)) {
-				// do not attempt delivery on local workstation
-				if ($_SERVER['SERVER_NAME'] != 'localhost') {
-					if (!$qm->attemptDelivery()) {
-						// write to errorlog if fails
-						error_log("attemptDelivery failed for QueuedMessage: MANAGER daily reminder (email subject: $subject)");
-					}
+				// do not send emails: either a web hit or hit via localhost development work
+				echo "did NOT send email to: " . $manager['email'] . " <br />\n";
+			}
+			else {
+				if (!$qm->attemptDelivery()) {
+					// write to errorlog if fails
+					error_log("attemptDelivery failed for QueuedMessage: MANAGER daily reminder (email subject: $subject)");
 				}
 			}
+
 			if ($debug) {
 				echo $body . "<hr />\n";
 			}
