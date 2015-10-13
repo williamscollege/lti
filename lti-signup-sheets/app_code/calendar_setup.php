@@ -628,14 +628,18 @@
 					<div class="modal-content">
 						<div class="modal-header bg-info">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 id="edit_OpeningLabel" class="modal-title">Edit opening</h4>
+							<h4 id="edit_OpeningLabel" class="modal-title">Edit opening &#124; Add signups &#124; Email participants</h4>
 						</div>
 						<div class="modal-body">
 							<!-- total col-sm per row should = 12 -->
-							<div class="container">
+							<div class="container-fluid">
 								<!-- BEGIN COLUMN ONE -->
-								<div class="row col-sm-5 small">
+								<div class="tab-container col-sm-6 small">
 									<div class="col-sm-12">
+										<h4 id="editOpeningHeader">Edit Opening</h4>
+
+										<p class="wms_tiny_break">&nbsp;</p>
+
 										<div class="form-group form-group-sm">
 											<label for="openingName" class="col-sm-3 control-label">Name</label>
 
@@ -813,8 +817,10 @@
 								</div>
 
 								<!-- BEGIN COLUMN TWO -->
-								<div class="row col-sm-5 small PrintArea wms_print_CalSetup">
-									<div class="col-sm-11">
+								<div class="tab-container col-sm-6 small PrintArea wms_print_CalSetup">
+									<div class="col-sm-12">
+										<h4 class="pull-left" id="signupHeader">Add Signups</h4>
+
 										<div class="pull-right signupSorters">
 											<!-- PrintArea: Print a specific div -->
 											<a href="#" class="wmsPrintArea" data-what-area-to-print="wms_print_CalSetup" title="Print only this section"><i class="glyphicon glyphicon-print"></i></a>
@@ -823,15 +829,13 @@
 												<a href="#" id="signup_sort_by_signup_order" title="Sort by signup order">Signup order</a>
 											</span>
 										</div>
-										<h4 class="pull-left" id="signupHeader">Signups</h4>
 
-										<p class="small" style="clear: both;">Manager may override max signup limit<br />An alert will be sent to anyone you
-											signup</p>
+										<p class="small" style="clear: both;">Manager may exceed max signup limit. An alert is sent to each new signup</p>
 										<a href="#" id="link_show_signup_controls" title="Show signup controls">Sign someone up</a>
 
 										<div id="signupControls">
 											<div class="form-group form-group-sm">
-												<label for="signupUsername" class="col-sm-3 control-label">Username</label>
+												<label for="signupUsername" class="col-sm-4 control-label">Username</label>
 
 												<div class="col-sm-8">
 													<input type="text" id="signupUsername" name="signupUsername" class="form-control" maxlength="255" placeholder="Williams username" value="" />
@@ -840,14 +844,14 @@
 												</div>
 											</div>
 											<div class="form-group form-group-sm">
-												<label for="openingLocation" class="col-sm-3 control-label">Private&nbsp;Note</label>
+												<label for="openingLocation" class="col-sm-4 control-label">Private&nbsp;Note</label>
 
 												<div class="col-sm-8">
 													<input type="text" id="signupAdminNote" name="signupAdminNote" class="form-control" maxlength="255" placeholder="Viewable by owner/manager" value="" />
 												</div>
 											</div>
 											<div class="form-group form-group-sm">
-												<label for="btnEditOpeningAddSignup" class="col-sm-3 control-label">&nbsp;</label>
+												<label for="btnEditOpeningAddSignup" class="col-sm-4 control-label">&nbsp;</label>
 
 												<div class="col-sm-8">
 													<a href="#" type="button" id="btnEditOpeningAddSignup" class="btn btn-primary" data-loading-text="Saving..." title="Save signup">Save</a>
@@ -868,32 +872,32 @@
 						</div>
 
 						<div class="modal-footer">
-							<div class="row col-sm-12 small">
-								<div class="col-sm-12">
-									<div class="form-group form-group-sm">
-										<label class="col-sm-4 control-label">&nbsp;</label>
+							<div class="col-sm-12">
+								<div class="form-group form-group-sm">
+									<label class="col-sm-4 control-label">&nbsp;</label>
 
-										<div class="col-sm-8">
-											<h4 class="pull-left">Send email to all signed up for this opening</h4>
-										</div>
+									<div class="col-sm-8">
+										<h4 class="pull-left">Send email to all signed up for this opening</h4>
 									</div>
-									<div class="form-group form-group-sm">
-										<label for="notifyParticipantsSubject" class="col-sm-4 control-label">Subject</label>
-
-										<div class="col-sm-8">
-											<input type="text" id="notifyParticipantsSubject" name="notifyParticipantsSubject" class="form-control" maxlength="255" placeholder="Email Subject" value="" />
-										</div>
-									</div>
-									<div class="form-group form-group-sm">
-										<label for="notifyParticipantsMessage" class="col-sm-4 control-label">Message</label>
-
-										<div class="col-sm-8">
-											<textarea id="notifyParticipantsMessage" name="notifyParticipantsMessage" class="form-control" placeholder="Message" rows="1"></textarea>
-										</div>
-									</div>
-									<button type="button" id="notifyParticipantsButton" name="notifyParticipantsButton" class="btn btn-primary" data-loading-text="Sending...">Send</button>
-									<span id="btnConfirmationText" class="text-success"></span>
 								</div>
+								<div class="form-group form-group-sm">
+									<label for="notifyParticipantsSubject" class="col-sm-4 control-label">Subject</label>
+
+									<div class="col-sm-8">
+										<input type="text" id="notifyParticipantsSubject" name="notifyParticipantsSubject" class="form-control" maxlength="255" placeholder="Email Subject" value="" />
+									</div>
+								</div>
+								<div class="form-group form-group-sm">
+									<label for="notifyParticipantsMessage" class="col-sm-4 control-label">Message</label>
+
+									<div class="col-sm-8">
+										<textarea id="notifyParticipantsMessage" name="notifyParticipantsMessage" class="form-control" placeholder="Message" rows="2"></textarea>
+									</div>
+								</div>
+								<button type="button" id="notifyParticipantsButton" name="notifyParticipantsButton" class="btn btn-primary" data-loading-text="Sending...">
+									Send
+								</button>
+								<span id="btnConfirmationText" class="text-success"></span>
 							</div>
 						</div>
 					</div>

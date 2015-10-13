@@ -72,8 +72,8 @@
 			}
 			else {
 				// create new sheet
-				$s = SUS_Sheet::createNewSheet($USER->user_id, $DB);
-				$s->owner_user_id            = $USER->user_id; // only set owner for brand new sheet (avoid overwritting the owner_user_id upon edit by another admin)
+				$s                = SUS_Sheet::createNewSheet($USER->user_id, $DB);
+				$s->owner_user_id = $USER->user_id; // only set owner for brand new sheet (avoid overwritting the owner_user_id upon edit by another admin)
 
 				// save for subsequent event log
 				$evt_action = "createNewSheet";
@@ -622,13 +622,16 @@
 							<div class="row">
 								<!-- show spinner icon (visual placeholder) until DOM content (hidden) has fully loaded -->
 								<span id="spinner_calendarTabs"><img height="39" width="36" src="../img/spinner.gif" />&nbsp;Calendar View</span>
+
 								<div id="content_calendarTabs" class="tab-container hidden" role="tabpanel" data-example-id="set2">
 									<ul id="boxOpeningsHeader" class="nav nav-tabs" role="tablist">
 										<li role="presentation" class="active">
-											<a href="#tabOpeningsCalendarView" role="tab" data-toggle="tab" aria-controls="tabOpeningsCalendarView" aria-expanded="false">Calendar View</a>
+											<a href="#tabOpeningsCalendarView" role="tab" data-toggle="tab" aria-controls="tabOpeningsCalendarView" aria-expanded="false">Calendar
+												View</a>
 										</li>
 										<li role="presentation" class="">
-											<a href="#tabOpeningsListView" role="tab" data-toggle="tab" aria-controls="tabOpeningsListView" aria-expanded="false">List View</a>
+											<a href="#tabOpeningsListView" role="tab" data-toggle="tab" aria-controls="tabOpeningsListView" aria-expanded="false">List
+												View</a>
 										</li>
 									</ul>
 									<div id="boxOpeningsContent" class="tab-content">

@@ -41,7 +41,7 @@ a.wms_white {
 }
 
 /*wms_tiny_break*/
-div.wms_tiny_break {
+div.wms_tiny_break, p.wms_tiny_break {
 	max-height: 5px !important;
 	/*background-color: red !important;*/
 }
@@ -164,14 +164,14 @@ Purpose: Placement for extra buttons
 ==========================================*/
 
 #buttons_list_openings {
-	margin: -44px 0px 29px 291px;
+	margin: -44px 0px 29px 256px;
 	white-space: nowrap;
 }
 
 #buttons_my_signups, #buttons_on_my_sheets {
 	position: relative;
 	top: -25px;
-	right: 8px;
+	right: 0px;
 	text-align: right;
 	white-space: nowrap;
 }
@@ -453,6 +453,8 @@ UL.wms-signups LI {
 	top: 60px;
 	right: 20px;
 	width: 400px;
+	border: solid 1px #333333;
+	opacity: 0.9;
 }
 
 /* remove dotted line around the clicked "A" element */

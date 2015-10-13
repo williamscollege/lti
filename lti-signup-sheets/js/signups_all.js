@@ -28,28 +28,29 @@ $(document).ready(function () {
 
 	// Display optional details
 	$("#link_for_details_my_signups").click(function () {
-		if ($("#tabMySignups .toggle_opening_details").hasClass('wmsToggle')) {
+		if ($("#link_for_details_my_signups").hasClass('wmsToggle')) {
 			// hide details
+			$("#link_for_details_my_signups").removeClass('wmsToggle').text('show details');
 			$("#tabMySignups .toggle_opening_details").removeClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
-			$("#link_for_details_my_signups").text('show details');
 		}
 		else {
 			// show details
+			$("#link_for_details_my_signups").addClass('wmsToggle').text('hide details');
 			$("#tabMySignups .toggle_opening_details").addClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
-			$("#link_for_details_my_signups").text('hide details');
 		}
+
 	});
 
 	$("#link_for_details_others_signups").click(function () {
-		if ($("#tabOthersSignups .toggle_opening_details").hasClass('wmsToggle')) {
+		if ($("#link_for_details_others_signups").hasClass('wmsToggle')) {
 			// hide details
+			$("#link_for_details_others_signups").removeClass('wmsToggle').text('show details');
 			$("#tabOthersSignups .toggle_opening_details").removeClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
-			$("#link_for_details_others_signups").text('show details');
 		}
 		else {
 			// show details
+			$("#link_for_details_others_signups").addClass('wmsToggle').text('hide details');
 			$("#tabOthersSignups .toggle_opening_details").addClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
-			$("#link_for_details_others_signups").text('hide details');
 		}
 	});
 
@@ -59,28 +60,28 @@ $(document).ready(function () {
 
 	// Display optional history
 	$('#link_for_history_my_signups').click(function () {
-		if ($("#tabMySignups .toggle_opening_history").hasClass('wmsToggle')) {
+		if ($("#link_for_history_my_signups").hasClass('wmsToggle')) {
 			// hide history
+			$("#link_for_history_my_signups").removeClass('wmsToggle').text('show history');
 			$("#tabMySignups .toggle_opening_history").removeClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
-			$("#link_for_history_my_signups").text('show history');
 		}
 		else {
 			// show history
+			$("#link_for_history_my_signups").addClass('wmsToggle').text('hide history');
 			$("#tabMySignups .toggle_opening_history").addClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
-			$("#link_for_history_my_signups").text('hide history');
 		}
 	});
 
 	$('#link_for_history_others_signups').click(function () {
-		if ($("#tabOthersSignups .toggle_opening_history").hasClass('wmsToggle')) {
+		if ($("#link_for_history_others_signups").hasClass('wmsToggle')) {
 			// hide history
+			$("#link_for_history_others_signups").removeClass('wmsToggle').text('show history');
 			$("#tabOthersSignups .toggle_opening_history").removeClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
-			$("#link_for_history_others_signups").text('show history');
 		}
 		else {
 			// show history
+			$("#link_for_history_others_signups").addClass('wmsToggle').text('hide history');
 			$("#tabOthersSignups .toggle_opening_history").addClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
-			$("#link_for_history_others_signups").text('hide history');
 		}
 	});
 

@@ -144,7 +144,7 @@
 							// display date signup created
 							foreach ($this->signups as $signup) {
 								if ($signup->signup_user_id == $u->user_id) {
-									$rendered .= ' <span class="small">(' . htmlentities($u->username, ENT_QUOTES, 'UTF-8') . ', ' . util_datetimeFormatted($signup->created_at) . ')</span> ';
+									$rendered .= ' <span class="small" title="(username, when signed up)">(' . htmlentities($u->username, ENT_QUOTES, 'UTF-8') . ', ' . util_datetimeFormatted($signup->created_at) . ')</span> ';
 								}
 							}
 							$rendered .= "</li>";

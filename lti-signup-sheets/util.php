@@ -186,8 +186,8 @@
 	 */
 	function util_datetimeFormatted($ts) {
 		$ts_info = util_processTimeString($ts);
-		// return $ts_info['YYYY'] . '/' . $ts_info['MM'] . '/' . $ts_info['DD'] . ' ' . $ts_info['hh'] . ':' . $ts_info['mi'];
-		return $ts_info['MM'] . '/' . $ts_info['DD'] . '/' . $ts_info['YYYY'] . ' ' . $ts_info['hh'] . ':' . $ts_info['mi'];
+		// return $ts_info['MM'] . '/' . $ts_info['DD'] . '/' . $ts_info['YYYY'] . ' ' . $ts_info['hh'] . ':' . $ts_info['mi'];
+		return $ts_info['MM'] . '/' . $ts_info['DD'] . '/' . $ts_info['YYYY'] . ' ' . $ts_info['hhap'] . ':' . $ts_info['mi'] . " " . $ts_info['ap'];
 	}
 
 	/**

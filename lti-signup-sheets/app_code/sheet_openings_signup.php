@@ -129,10 +129,12 @@
 						<div id="content_calendarTabs" class="tab-container hidden" role="tabpanel" data-example-id="set2">
 							<ul id="boxOpenings" class="nav nav-tabs" role="tablist">
 								<li role="presentation" class="active">
-									<a href="#tabOpeningsCalendarView" role="tab" data-toggle="tab" aria-controls="tabOpeningsCalendarView" aria-expanded="false">Calendar View</a>
+									<a href="#tabOpeningsCalendarView" role="tab" data-toggle="tab" aria-controls="tabOpeningsCalendarView" aria-expanded="false">Calendar
+										View</a>
 								</li>
 								<li role="presentation" class="">
-									<a href="#tabOpeningsListView" role="tab" data-toggle="tab" aria-controls="tabOpeningsListView" aria-expanded="false">List View</a>
+									<a href="#tabOpeningsListView" role="tab" data-toggle="tab" aria-controls="tabOpeningsListView" aria-expanded="false">List
+										View</a>
 								</li>
 							</ul>
 							<div id="boxOpeningsContent" class="tab-content">

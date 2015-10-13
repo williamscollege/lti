@@ -142,7 +142,7 @@ $(document).ready(function () {
 				},
 				dataType: 'json',
 				error: function (req, textStatus, err) {
-					susUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
+					susUtil_setTransientAlert('error', "Error making ajax request: " + err.toString());
 				},
 				success: function (data) {
 					// Cancel button: dismiss modal

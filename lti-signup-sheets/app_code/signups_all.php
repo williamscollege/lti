@@ -104,7 +104,7 @@
 				// begin: loop through signed up users
 				foreach ($signedupUsers as $u) {
 					$rendered .= "<li class=\"list-signups list-signup-id-" . htmlentities($u['signup_id'], ENT_QUOTES, 'UTF-8') . "\">" . htmlentities($u['full_name'], ENT_QUOTES, 'UTF-8');
-					$rendered .= "<span class=\"toggle_opening_details small\">&nbsp;(" . htmlentities($u['username'], ENT_QUOTES, 'UTF-8') . ", " . util_datetimeFormatted($u['signup_created_at']) . ")</span>";
+					$rendered .= "<span class=\"toggle_opening_details small\" title=\"(username, when signed up)\">&nbsp;(" . htmlentities($u['username'], ENT_QUOTES, 'UTF-8') . ", " . util_datetimeFormatted($u['signup_created_at']) . ")</span>";
 					$rendered .= "<span class=\"\">&nbsp;";
 					if (date_format(new DateTime($signup['begin_datetime']), "Y-m-d H:i") > util_currentDateTimeString()) {
 						// TODO - add functionality to link click through

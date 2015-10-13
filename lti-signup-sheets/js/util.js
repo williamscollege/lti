@@ -11,7 +11,9 @@ var GLOBAL_util_showConfirmBox = null; // hack to enable passing of JS values be
 // ***************************
 $(document).ready(function () {
 	// create container to hold ajax messages; hide #page_alert_div
-	$('#content_container').prepend('<div id="page_alert_div" class="alert alert-dismissible small" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span id="page_alert_message"></span></div>');
+	// note: dkc removed dismiss button from screen alerts to standardize user behaviour
+	// <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	$('#content_container').prepend('<div id="page_alert_div" class="alert alert-dismissible small" role="alert"><span id="page_alert_message"></span></div>');
 	$('#page_alert_div').hide();
 
 	// PrintArea: Print any specific div (the div is assigned a unique class called: "wms_print_XYZ"; eg, wms_print_CalSetup, wms_print_EditOne, wms_print_OpeningSignup)
@@ -52,7 +54,7 @@ function showConfirmBox(ary) {
 				className: ary['class'],
 				callback: function () {
 					// show status
-					susUtil_setTransientAlert('progress', 'Saving...');
+					susUtil_setTransientAlert('progress', 'Working...');
 					$.ajax({
 						type: 'GET',
 						url: ary['url'],
@@ -122,7 +124,7 @@ function updateDOM(action_ary, ret, data) {
 	if (action_ary.ajax_action == 'copy-sheet') {
 		if (ret) {
 			// show status
-			susUtil_setTransientAlert('success', 'Saved');
+			susUtil_setTransientAlert('success', 'Copied');
 			// redirect: to newly copied sheet
 			location.href = data["url_redirect"];
 		}
@@ -134,7 +136,7 @@ function updateDOM(action_ary, ret, data) {
 	else if (action_ary.ajax_action == 'delete-sheetgroup') {
 		if (ret) {
 			// show status
-			susUtil_setTransientAlert('success', 'Saved');
+			susUtil_setTransientAlert('success', 'Deleted');
 			// remove element
 			$('#btn-edit-sheetgroup-id-' + GLOBAL_confirmHandlerData).closest('TABLE').remove();
 		}
@@ -146,7 +148,7 @@ function updateDOM(action_ary, ret, data) {
 	else if (action_ary.ajax_action == 'delete-sheet') {
 		if (ret) {
 			// show status
-			susUtil_setTransientAlert('success', 'Saved');
+			susUtil_setTransientAlert('success', 'Deleted');
 			// remove element
 			$('#btn-edit-sheet-id-' + GLOBAL_confirmHandlerData).closest('TR').remove();
 		}
@@ -158,7 +160,7 @@ function updateDOM(action_ary, ret, data) {
 	else if (action_ary.ajax_action == 'delete-opening') {
 		if (ret) {
 			// show status
-			susUtil_setTransientAlert('success', 'Saved');
+			susUtil_setTransientAlert('success', 'Deleted');
 			switch (parseInt(data.customData)) {
 				case 0:
 					// delete only this opening
@@ -223,7 +225,7 @@ function updateDOM(action_ary, ret, data) {
 	else if (action_ary.ajax_action == 'delete-signup') {
 		if (ret) {
 			// show status
-			susUtil_setTransientAlert('success', 'Saved');
+			susUtil_setTransientAlert('success', 'Deleted');
 
 			// count remaining signups within this opening
 			var countMySignupsRemaining = $('#tabMySignups .list-signup-id-' + GLOBAL_confirmHandlerData).siblings(".list-signups").length;
@@ -285,7 +287,7 @@ function updateDOM(action_ary, ret, data) {
 	else if (action_ary.ajax_action == 'delete-signup-from-edit-opening-modal') {
 		if (ret) {
 			// show status
-			susUtil_setTransientAlert('success', 'Saved');
+			susUtil_setTransientAlert('success', 'Deleted');
 			// fetch count of remaining LI elements within this UL
 			GLOBAL_calendar_fetchSignupsforOpening(GLOBAL_confirmHandlerReference);
 		}

@@ -272,7 +272,7 @@ $(document).ready(function () {
 		//console.log('to remote url: '+remoteUrl);
 		//console.dir(params);
 		// show status
-		susUtil_setTransientAlert('progress', 'Saving...');
+		susUtil_setTransientAlert('progress', 'Working...');
 		$.ajax({
 			type: 'GET',
 			url: "../ajax_actions/ajax_actions.php",
@@ -280,7 +280,7 @@ $(document).ready(function () {
 			data: params,
 			dataType: 'json',
 			error: function (req, textStatus, err) {
-				susUtil_setTransientAlert('error', "error making ajax request: " + err.toString());
+				susUtil_setTransientAlert('error', "Error making ajax request: " + err.toString());
 			},
 			success: function (data) {
 				if (data.status == 'success') {
@@ -303,15 +303,15 @@ $(document).ready(function () {
 
 	// Display optional history
 	$('#link_for_history_openings').click(function () {
-		if ($("#tabOpeningsListView .toggle_opening_history").hasClass('wmsToggle')) {
+		if ($("#link_for_history_openings").hasClass('wmsToggle')) {
 			// hide history
+			$("#link_for_history_openings").removeClass('wmsToggle').text('show history');
 			$("#tabOpeningsListView .toggle_opening_history").removeClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
-			$("#link_for_history_openings").text('show history');
 		}
 		else {
 			// show history
+			$("#link_for_history_openings").addClass('wmsToggle').text('hide history');
 			$("#tabOpeningsListView .toggle_opening_history").addClass('wmsToggle').toggle("highlight", {color: '#D7F3FB'}, 300);
-			$("#link_for_history_openings").text('hide history');
 		}
 	});
 

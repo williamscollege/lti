@@ -1004,7 +1004,7 @@
 		if (!$signupUserIdsAry) {
 			$results['status']       = 'success'; // this is not an error, rather there are just no signups yet
 			$results['which_action'] = 'fetch-signups-for-opening-id';
-			$results['html_output']  = '<li>no signups</li>';
+			$results['html_output']  = '<li><em>Currently, there are no signups.</em></li>';
 			echo json_encode($results);
 			exit;
 		}
