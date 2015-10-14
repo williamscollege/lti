@@ -848,7 +848,7 @@
 	//###############################################################
 	elseif ($action == 'edit-opening-add-signup-user') {
 
-		// 1. Is username valid (against big table of Williams usernames)
+		// 1. Is username valid (check against db table of usernames)
 		$u = User::getOneFromDb(['username' => $name], $DB);
 
 		if (!$u->matchesDb) {

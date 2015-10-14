@@ -4,7 +4,8 @@
 	# copy this file to lang.cfg.php and replace the example values
 	# below with the ones appropriate for your institution
 
-	define('LANG_INSTITUTION_NAME', 'Your Institution');
+	define('LANG_INSTITUTION_NAME', 'Your Institution'); // ie ACME College
+	define('LANG_INSTITUTION_NAME_SHORT', 'Institution'); // ie ACME
 	define('LANG_AUTHOR_NAME', 'Your Name');
 	define('LANG_APP_NAME', 'Your Application');
 

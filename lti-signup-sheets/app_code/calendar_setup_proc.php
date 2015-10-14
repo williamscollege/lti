@@ -154,6 +154,9 @@
 		// loop through days from begin date to end date
 		$currentOpeningDate = clone $repeatBeginDate;
 
+		$evt_action    = "";
+		$evt_action_id = 0;
+		$evt_note      = "";
 		$log_add_success = [];
 		while ($currentOpeningDate <= $repeatEndDate) {
 			// validation algorithm for each of the repeat radio choices
@@ -184,7 +187,7 @@
 							if ($newOpeningDateTimeBegin_str_Ymd_his < $preexisting->end_datetime &&
 								$newOpeningDateTimeEnd_str_Ymd_his > $preexisting->begin_datetime
 							) {
-								$needle = "attempted [" . $newOpeningDateTimeBegin->format('m/d/Y H:i') . " - " . $newOpeningDateTimeEnd->format('m/d/Y H:i') . "] conflicts with preexisting [" . util_datetimeFormatted($preexisting->begin_datetime) . " - " . util_datetimeFormatted($preexisting->end_datetime) . "]";
+								$needle = "attempted [" . $newOpeningDateTimeBegin->format('m/d/Y h:i A') . " - " . $newOpeningDateTimeEnd->format('m/d/Y h:i A') . "] conflicts with preexisting [" . util_datetimeFormatted($preexisting->begin_datetime) . " - " . util_datetimeFormatted($preexisting->end_datetime) . "]";
 								if (!in_array($needle, $conflicts_ary)) {
 									array_push($conflicts_ary, $needle);
 								}
@@ -263,7 +266,7 @@
 								$editOpeningDateTimeEnd_str_Ymd_his > $preexisting->begin_datetime &&
 								$openingID != $preexisting->opening_id
 							) {
-								$needle = "attempted [" . $editOpeningDateTimeBegin->format('m/d/Y H:i') . " - " . $editOpeningDateTimeEnd->format('m/d/Y H:i') . "] conflicts with preexisting [" . util_datetimeFormatted($preexisting->begin_datetime) . " - " . util_datetimeFormatted($preexisting->end_datetime) . "]";
+								$needle = "attempted [" . $editOpeningDateTimeBegin->format('m/d/Y h:i A') . " - " . $editOpeningDateTimeEnd->format('m/d/Y h:i A') . "] conflicts with preexisting [" . util_datetimeFormatted($preexisting->begin_datetime) . " - " . util_datetimeFormatted($preexisting->end_datetime) . "]";
 								if (!in_array($needle, $conflicts_ary)) {
 									array_push($conflicts_ary, $needle);
 								}

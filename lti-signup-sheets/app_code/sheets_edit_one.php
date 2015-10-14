@@ -503,7 +503,7 @@
 
 													<!-- List: These People -->
 													<div class="wms_tiny_break"><br /></div>
-												<span class="small"><strong>And/or this list of Williams usernames</strong>
+												<span class="small"><strong>And/or this list of <?php echo LANG_INSTITUTION_NAME_SHORT; ?> usernames</strong>
 													<button type="button" class="btn btn-xs btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by spaces and/or commas (example: jdoe1, pvalley asmith2)">
 														<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
 												</span>
@@ -572,7 +572,7 @@
 
 													<div class="wms_indent_tiny">
 														<!-- List: These People -->
-														<span class="small"><strong>This list of Williams usernames</strong>
+														<span class="small"><strong>This list of <?php echo LANG_INSTITUTION_NAME_SHORT; ?> usernames</strong>
 															<button type="button" class="btn btn-xs btn-link" data-toggle="tooltip" data-placement="top" title="Separate usernames by spaces and/or commas (example: jdoe1, pvalley asmith2)">
 																<i class="glyphicon glyphicon-info-sign" style="font-size: 18px;"></i></button><br />
 														</span>

@@ -838,7 +838,7 @@
 												<label for="signupUsername" class="col-sm-4 control-label">Username</label>
 
 												<div class="col-sm-8">
-													<input type="text" id="signupUsername" name="signupUsername" class="form-control" maxlength="255" placeholder="Williams username" value="" />
+													<input type="text" id="signupUsername" name="signupUsername" class="form-control" maxlength="255" placeholder="<?php echo LANG_INSTITUTION_NAME_SHORT; ?> username" value="" />
 													<a href="https://www.williams.edu/people/" class="small" title="Find person's username" target="_blank">Find
 														person's username</a>
 												</div>
