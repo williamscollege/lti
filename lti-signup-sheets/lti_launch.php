@@ -37,8 +37,13 @@
 		function onLaunch() {
 			global $db;
 
+			// Check: ABORT with distinction if user is viewing this utilizing Canvas LMS 'Student View' tool
+			if ($this->user->fullname == 'Test Student') {
+				util_redirectToAppPage('error.php?err=107', 'info', 'msg_lti_abort_student_view');
+				exit;
+			}
 			// Check: if no lti user_id, then return FALSE
-			if ($this->user->getId()) {
+			elseif ($this->user->getId()) {
 				// Session Maintenance: Clear all existing session data
 				util_wipeSession();
 				// Session Maintenance: Update the current session id with a newly generated one

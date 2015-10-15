@@ -318,7 +318,7 @@
 		}
 
 		echo "<div class=\"alert alert-dismissible $alert_type\" role=\"alert\">";
-		echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>";
+		// echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>";
 		echo "<h4>$alert_title</h4>";
 		echo $msg_text;
 		echo "</div>";
