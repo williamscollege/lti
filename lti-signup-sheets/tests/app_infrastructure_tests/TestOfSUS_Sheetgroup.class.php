@@ -86,7 +86,11 @@
 			$this->assertTrue($sg->matchesDb);
 			$this->assertEqual(0, $sg->flag_delete);
 
-			$sg->cascadeDelete();
+			$usr = User::getOneFromDb(['user_id' => $sg->owner_user_id], $this->DB);
+			$this->assertTrue($usr->matchesDb);
+			$this->assertEqual(0, $usr->flag_delete);
+
+			$sg->cascadeDelete($usr);
 
 			// util_prePrintR($sg->sheets);
 

@@ -77,7 +77,7 @@
 
 				// send to: user whose signup was changed by owner or manager
 				if ($usr_object->user_id != $this->signup_user_id) {
-					create_and_send_QueuedMessage($this->dbConnection, $signup_user->user_id, $signup_user->email, $subject, $body, $this->opening_id, $sheet->sheet_id);
+					QueuedMessage::create_and_send_QueuedMessage($this->dbConnection, $signup_user->user_id, $signup_user->email, $subject, $body, $this->opening_id, $sheet->sheet_id);
 				}
 			}
 			#------------------------------------------------#

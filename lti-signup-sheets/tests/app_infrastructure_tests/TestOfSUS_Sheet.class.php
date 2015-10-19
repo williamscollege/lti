@@ -95,7 +95,11 @@
 			$this->assertTrue($s->matchesDb);
 			$this->assertEqual(0, $s->flag_delete);
 
-			$s->cascadeDelete();
+			$usr = User::getOneFromDb(['user_id' => $s->owner_user_id], $this->DB);
+			$this->assertTrue($usr->matchesDb);
+			$this->assertEqual(0, $usr->flag_delete);
+
+			$s->cascadeDelete($usr);
 			// util_prePrintR($s->openings);
 
 			// test expected results

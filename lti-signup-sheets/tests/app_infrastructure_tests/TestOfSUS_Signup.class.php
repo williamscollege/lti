@@ -43,7 +43,13 @@
 			$this->assertTrue($su->matchesDb);
 			$this->assertEqual(0, $su->flag_delete);
 
-			$su->cascadeDelete();
+			$o = SUS_Opening::getOneFromDb(['opening_id' => $su->opening_id], $this->DB);
+			$s = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $this->DB);
+			$usr = User::getOneFromDb(['user_id' => $s->owner_user_id], $this->DB);
+			$this->assertTrue($usr->matchesDb);
+			$this->assertEqual(0, $usr->flag_delete);
+
+			$su->cascadeDelete($usr);
 
 			// were items correctly marked as deleted?
 			$this->assertEqual(1, $su->flag_delete);

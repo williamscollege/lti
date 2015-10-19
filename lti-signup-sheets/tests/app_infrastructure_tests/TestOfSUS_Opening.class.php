@@ -69,7 +69,12 @@
 			$this->assertTrue($o->matchesDb);
 			$this->assertEqual(0, $o->flag_delete);
 
-			$o->cascadeDelete();
+			$s = SUS_Sheet::getOneFromDb(['sheet_id' => $o->sheet_id], $this->DB);
+			$usr = User::getOneFromDb(['user_id' => $s->owner_user_id], $this->DB);
+			$this->assertTrue($usr->matchesDb);
+			$this->assertEqual(0, $usr->flag_delete);
+
+			$o->cascadeDelete($usr);
 
 			// test expected results
 			$this->assertEqual(4, count($o->signups));
