@@ -1,8 +1,7 @@
 <?php
 
 	# ---------------------------
-	# copy this file to institution.cfg.php and replace the example values
-	# below with the ones appropriate for you institution
+	# configuration settings file (for the desired 'releases' subfolder)
 	# ---------------------------
 
 	# Application folder path

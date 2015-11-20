@@ -4,6 +4,7 @@ PROJECT:	LTI setup
 NOTES:		This LTI table can be setup just one time and can accommodate multiple LTI projects
 SOURCE:		http://projects.oscelot.org/gf/project/php-basic-lti/frs/
 
+FOR TESTING ONLY:
 	USE `lti_development`;
 
 	DROP TABLE `lti_consumer`;

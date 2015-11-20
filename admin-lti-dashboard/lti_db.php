@@ -21,7 +21,7 @@
 	# Return a connection to the database, return FALSE if an error occurs
 	function open_db() {
 		try {
-			$db = new PDO(LTI_DB_NAME, LTI_DB_USERNAME, LTI_DB_PASSWORD);
+			$db = new PDO(LTI_DB_PDO_STRING, LTI_DB_USERNAME, LTI_DB_PASSWORD);
 		}
 		catch (PDOException $e) {
 			$db                        = FALSE;
