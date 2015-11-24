@@ -12,7 +12,7 @@
 	# Project:		"Sync Canvas Users to Dashboard"
 	# Purpose:		Fetch all Canvas user accounts using paged curl calls
 	# Parent file:	sync_canvas_users_to_dashboard.php
-	# Notes:		Make API call to Instructure Canvas using Curl commands. This will consist of a single curl command.
+	# Notes:		Make API call to Instructure Canvas using Curl (GET) command
 	#------------------------------------------------#
 	function curlFetchUsers($pageNumber, $apiPathPrefix, $apiPathEndpoint) {
 		// Example of request showing API endpoint
@@ -46,7 +46,63 @@
 		return $array_output;
 	}
 
+
 	#------------------------------------------------#
+	# Project:		"Set Canvas Notification Preferences"
+	# Purpose:		Reset Canvas User "Notification Preferences" with custom values using curl PUT calls (do only once per user account)
+	# Parent file:	set_canvas_notification_preferences.php
+	# Notes:		Make API call to Instructure Canvas using Curl (PUT) command
+	#------------------------------------------------#
+	function curlSetUserNotificationPreferences($userID, $apiPathPrefix, $apiPathEndpoint) {
+		// Example of request showing API endpoint
+		// curl 'https://williams.test.instructure.com/api/v1/users/self/communication_channels/email/some_username@williams.edu/notification_preferences?as_user_id=1234567' \
+		// -X PUT \
+		// -F "notification_preferences[new_discussion_topic][frequency]=immediately" \
+		// -F "notification_preferences[new_discussion_entry][frequency]=immediately" \
+		// -H "Authorization: Bearer TOKEN"
+
+		// basic validation
+		integerCheck($userID);
+
+		// create curl resource
+		$ch = curl_init();
+
+		// include extra headers in POST or GET request; this is similar to the CURL -H command line switch
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(TOOL_CONSUMER_AUTH_TOKEN));
+
+		// create array of form elements
+		$formValues = array(
+				'notification_preferences[new_discussion_topic][frequency]' => 'immediately',
+				'notification_preferences[new_discussion_entry][frequency]' => 'immediately',
+		);
+
+		// set url
+		curl_setopt($ch, CURLOPT_URL, TOOL_CONSUMER_URL . $apiPathPrefix . $apiPathEndpoint . $userID);
+
+		// set form post to true
+		curl_setopt($ch, CURLOPT_POST, 1);
+
+		// post array containing multiple elements of form data
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $formValues);
+
+		// PUT requests are very simple, just make sure to specify a content-length header and set post fields as a string
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+
+		// return the transfer as a string
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+
+		// container for json output string
+		$curl_results = curl_exec($ch);
+
+		// convert the returned json data to array
+		$array_output = json_decode($curl_results, TRUE);
+
+		// close curl resource to free up system resources
+		curl_close($ch);
+
+		return $array_output;
+	}
+	# END - TEST AREA
 	# TODO break point old code below
 
 	#------------------------------------------------#
@@ -234,7 +290,7 @@
 	# Validation Check
 	#------------------------------------------------#
 	function integerCheck($posNum) {
-		if (!isset($posNum) || !is_integer($posNum) || $posNum <= 0) {
+		if (!isset($posNum) || intval($posNum) <= 0) {
 			echo "<br />Invalid Number! Program will DIE now.<br />";
 			exit;
 		}

@@ -28,7 +28,11 @@ canvas {
 	float: left;
 }
 
+.wms-after-circle table tr th{
+	/*background-color: #F9F9F9;*/
+	padding-right: 5px;
+}
+
 .circleIntegerValue {
 	display: none;
 }
-

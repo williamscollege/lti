@@ -1,8 +1,8 @@
 <?php
 	/***********************************************
-	 ** Project:    Sync Canvas Users to Dashboard
+	 ** Project:    Set Canvas Notification Preferences
 	 ** Author:     Williams College, OIT, David Keiser-Clark
-	 ** Purpose:    Regularly Sync Canvas Users (Amazon AWS) to Dashboard to create local database of users to make other operations more convenient
+	 ** Purpose:    Reset Canvas User "Notification Preferences" with custom values using curl PUT calls (do only once per user account)
 	 ** Requirements:
 	 **  - Requires admin token to make curl requests against Canvas LMS API
 	 **  - Must enable write-access to "logs/" folder
@@ -11,10 +11,8 @@
 	 **  - extend the typical "max_execution_time" to require as much time as the script requires (without timing out)
 	 **  - Run daily using cron job
 	 ** Current features:
-	 **  - fetch all Canvas user accounts using paged curl calls
-	 **  - fetch all local Dashboard users
-	 **  - compare Canvas to Dashboard and sync live users to local (insert, update, or skip)
-	 **  - compare Dashboard to Canvas and sync live users to local (remove only)
+	 **  - fetch all local Dashboard users where flag_is_set_notification_preference = 0 (these users have not yet had their notif prefs updated)
+	 **  - update Canvas user values using individual curl calls
 	 **  - show script start and end times to help document that this script is keeping within Canvas number of API requests/hour
 	 **  - report: Log Summary output to browser and written to text file
 	 ** Dependencies:
@@ -39,22 +37,22 @@
 	# IMPORTANT STEPS TO REMEMBER
 	#------------------------------------------------#
 	# Run PHP file: (1) daily from server via cron job, or (2) manually from browser as web application
-	# PHP File currently at: https://apps.williams.edu/admin-lti-dashboard/sync_canvas_users_to_dashboard.php
+	# PHP File currently at: https://apps.williams.edu/admin-lti-dashboard/set_canvas_notification_preferences.php
 
 	# Set and show debugging browser output (on=TRUE, off=FALSE)
-	$debug = FALSE;
+	$debug = TRUE;
 
 	#------------------------------------------------#
 	# Constants: Initialize counters
 	#------------------------------------------------#
-	$str_event_action        = "sync_canvas_users_to_dashboard";
+	$str_event_action        = "set_canvas_notification_preferences";
 	$arrayCanvasUsers        = [];
 	$arrayLocalUsers         = [];
 	$arrayRevisedLocalUsers  = [];
 	$boolValidPage           = TRUE;
 	$boolUserMatchExists     = FALSE;
 	$intCountCurlAPIRequests = 0;
-	$intCountPages           = 0; // CAREFUL! for debugging, set to 63. otherwise, set to 0 for live use
+	$intCountUserAccounts    = 0;
 	$intCountUsersCanvas     = 0;
 	$intCountUsersSkipped    = 0;
 	$intCountUsersUpdated    = 0;
@@ -74,47 +72,12 @@
 
 
 	#------------------------------------------------#
-	# Fetch all Canvas user accounts using paged curl calls
-	#------------------------------------------------#
-	if ($debug) {
-		// for testing, always set artificially high initial page count for fewer curl calls (total pages = approx 67)
-		$intCountPages = 65;
-	}
-	while ($boolValidPage) {
-		# increment counter
-		$intCountPages += 1;
-
-		# Fetch all "Account Users" (store in temporary array)
-		$arrayPagedResults = curlFetchUsers($intCountPages, $apiPathPrefix = "api/v1/accounts/98616/", $apiPathEndpoint = "users");
-
-		# increment counter
-		$intCountCurlAPIRequests += 1;
-
-		# Store all in permanent array
-		foreach ($arrayPagedResults as $usr) {
-			array_push($arrayCanvasUsers, $usr);
-
-			# increment counter
-			$intCountUsersCanvas += 1;
-		}
-
-		// paged results contain values; abort upon reaching the first empty results page (no more pages exist)
-		if (count($arrayPagedResults) == 0) {
-			$boolValidPage = FALSE;
-		}
-	}
-	if ($debug) {
-		util_prePrintR($arrayCanvasUsers);
-		echo "<hr/>";
-	}
-
-
-	#------------------------------------------------#
 	# SQL: fetch all local `dashboard_users`
-	# flag_delete: include all users (deleted or active)
+	# requirement: flag_is_set_notification_preference = 0 (not set)
+	# requirement: flag_delete = 0 (active)
 	#------------------------------------------------#
 	$queryLocalUsers = "
-		SELECT * FROM `dashboard_users`;
+		SELECT * FROM `dashboard_users` WHERE `flag_is_set_notification_preference` = FALSE AND `flag_delete` = FALSE;
 	";
 	$resultsLocalUsers = mysqli_query($connString, $queryLocalUsers) or
 	die(mysqli_error($connString));
@@ -130,56 +93,70 @@
 		echo "<hr/>";
 	}
 
-	foreach ($arrayCanvasUsers as $canvas_usr) {
+	if ($debug) {
+		// for testing, set a tiny max limiter for quick tests (total users = approx 6600)
+		$intCountUserAccounts = 3;
+	}
 
-		// reset boolean flag
-		$boolUserMatchExists = FALSE;
+	// iterate all Local Users, reset notification_preference for each Canvas User
+	foreach ($arrayLocalUsers as $local_usr) {
 
-		// set normalized values
-		// (new Canvas users are created with sis_user_id having a varchar value; for our local dashboard db purposes, force the varchar to an integer 0)
-		$canvas_u_id             = empty($canvas_usr["id"]) ? 0 : $canvas_usr["id"];
-		$canvas_u_name           = empty($canvas_usr["name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["name"]);
-		$canvas_u_sortable_name  = empty($canvas_usr["sortable_name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["sortable_name"]);
-		$canvas_u_short_name     = empty($canvas_usr["short_name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["short_name"]);
-		$canvas_u_sis_user_id    = (!is_numeric($canvas_usr["sis_user_id"]) | (empty($canvas_usr["sis_user_id"]))) ? 0 : $canvas_usr["sis_user_id"];
-		$canvas_u_integration_id = empty($canvas_usr["integration_id"]) ? 0 : $canvas_usr["integration_id"];
-		$canvas_u_sis_login_id   = empty($canvas_usr["sis_login_id"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["sis_login_id"]);
-		$canvas_u_sis_import_id  = empty($canvas_usr["sis_import_id"]) ? 0 : $canvas_usr["sis_import_id"];
-		$canvas_u_login_id       = empty($canvas_usr["login_id"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["login_id"]);
+		if ($debug) {
+			echo "local_usr[\"canvas_user_id\"]" . $local_usr["canvas_user_id"] . "<br />";
+			$intCountUserAccounts += 1;
+			if ($intCountUserAccounts == 3) {
+				echo "debugging note: script stopped at 3rd user.";
+				exit;
+				break;
+			}
+		}
 
-		// iterate all Local Users, looking for existence of specific Canvas User
-		foreach ($arrayLocalUsers as $local_usr) {
-			if ($local_usr["canvas_user_id"] == $canvas_u_id) {
+		#------------------------------------------------#
+		# Set Canvas "Notification Preferences" values for one "Account User" using curl call
+		#------------------------------------------------#
 
-				// reset boolean flag
-				$boolUserMatchExists = TRUE;
+		# Set Canvas "Notification Preferences" values for one "Account User" using curl call
+		$arrayCurlPutResult = curlSetUserNotificationPreferences($local_usr["canvas_user_id"], $apiPathPrefix = "api/v1/users/self/communication_channels/email/", $apiPathEndpoint = "notification_preferences?as_user_id=");
 
-				if ($debug) {
-					echo "local_usr[\"canvas_user_id\"]" . $local_usr["canvas_user_id"] . " MATCHES canvas_usr[\"id\"]: " . $canvas_u_id . "<br />";
-				}
+		# increment counter
+		$intCountCurlAPIRequests += 1;
 
-				// user already exists! now check if it needs updating (local user record matches live Canvas user record)
-				// and if local user was deleted previously but now matches Canvas user, then restore that local user
-				// compare like values (do not compare local varchar values with Canvas mysqli_real_escape_string values)
-				if (
-					$local_usr["canvas_user_id"] != $canvas_u_id
-					|| $local_usr["name"] != $canvas_usr["name"]
-					|| $local_usr["sortable_name"] != $canvas_usr["sortable_name"]
-					|| $local_usr["short_name"] != $canvas_usr["short_name"]
-					|| $local_usr["sis_user_id"] != $canvas_u_sis_user_id
-					// || $local_usr["integration_id"] != $canvas_u_integration_id // ignore if changes exist
-					|| $local_usr["sis_login_id"] != $canvas_usr["sis_login_id"]
-					// || $local_usr["sis_import_id"] != $canvas_u_sis_import_id // ignore if changes exist
-					|| $local_usr["username"] != $canvas_usr["login_id"]
-					|| $local_usr["flag_delete"] == 1
-				) {
-					#------------------------------------------------#
-					# UPDATE SQL Record
-					# new values exist: update Local User with newer Canvas User values
-					# explicitly set: `flag_delete` = FALSE
-					#------------------------------------------------#
+		# Store all in permanent array
+		foreach ($arrayCurlPutResult as $usr) {
+			array_push($arrayCanvasUsers, $usr);
 
-					$queryEditLocalUser = "
+			# increment counter
+			$intCountUsersCanvas += 1;
+		}
+
+
+		if ($debug) {
+			util_prePrintR($arrayCanvasUsers);
+			echo "<hr/>";
+		}
+
+		// user already exists! now check if it needs updating (local user record matches live Canvas user record)
+		// and if local user was deleted previously but now matches Canvas user, then restore that local user
+		// compare like values (do not compare local varchar values with Canvas mysqli_real_escape_string values)
+		if (
+			$local_usr["canvas_user_id"] != $canvas_u_id
+			|| $local_usr["name"] != $canvas_usr["name"]
+			|| $local_usr["sortable_name"] != $canvas_usr["sortable_name"]
+			|| $local_usr["short_name"] != $canvas_usr["short_name"]
+			|| $local_usr["sis_user_id"] != $canvas_u_sis_user_id
+			// || $local_usr["integration_id"] != $canvas_u_integration_id // ignore if changes exist
+			|| $local_usr["sis_login_id"] != $canvas_usr["sis_login_id"]
+			// || $local_usr["sis_import_id"] != $canvas_u_sis_import_id // ignore if changes exist
+			|| $local_usr["username"] != $canvas_usr["login_id"]
+			|| $local_usr["flag_delete"] == 1
+		) {
+			#------------------------------------------------#
+			# UPDATE SQL Record
+			# new values exist: update Local User with newer Canvas User values
+			# explicitly set: `flag_delete` = FALSE
+			#------------------------------------------------#
+
+			$queryEditLocalUser = "
 						UPDATE
 							`dashboard_users`
 						SET
@@ -198,34 +175,51 @@
 							dash_id				= " . $local_usr["dash_id"] . "
 					";
 
-					if ($debug) {
-						echo "<pre>queryEditLocalUser = " . $queryEditLocalUser . "</pre>";
-					}
-					else {
-						$resultsEditLocalUser = mysqli_query($connString, $queryEditLocalUser) or
-						die(mysqli_error($connString));
-					}
-
-					# increment counter
-					$intCountUsersUpdated += 1;
-
-					# Output to browser and txt file
-					echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Updated User (synced newer Canvas to local)<br />";
-					fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Updated User (synced newer Canvas to local)\n");
-				}
-				else {
-					# increment counter
-					$intCountUsersSkipped += 1;
-
-					# Output to browser and txt file
-					echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Skipped User (Canvas matches local)<br />";
-					fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Skipped User (Canvas matches local)\n");
-				}
-
-				// skip to next Canvas User
-				break;
+			if ($debug) {
+				echo "<pre>queryEditLocalUser = " . $queryEditLocalUser . "</pre>";
 			}
+			else {
+				$resultsEditLocalUser = mysqli_query($connString, $queryEditLocalUser) or
+				die(mysqli_error($connString));
+			}
+
+			# increment counter
+			$intCountUsersUpdated += 1;
+
+			# Output to browser and txt file
+			echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Updated User (synced newer Canvas to local)<br />";
+			fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Updated User (synced newer Canvas to local)\n");
 		}
+		else {
+			# increment counter
+			$intCountUsersSkipped += 1;
+
+			# Output to browser and txt file
+			echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Skipped User (Canvas matches local)<br />";
+			fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Skipped User (Canvas matches local)\n");
+		}
+
+		// skip to next Canvas User
+		//			break;
+		foreach ($arrayCanvasUsers as $canvas_usr) {
+
+			// reset boolean flag
+			$boolUserMatchExists = FALSE;
+
+			// set normalized values
+			// (new Canvas users are created with sis_user_id having a varchar value; for our local dashboard db purposes, force the varchar to an integer 0)
+			$canvas_u_id             = empty($canvas_usr["id"]) ? 0 : $canvas_usr["id"];
+			$canvas_u_name           = empty($canvas_usr["name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["name"]);
+			$canvas_u_sortable_name  = empty($canvas_usr["sortable_name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["sortable_name"]);
+			$canvas_u_short_name     = empty($canvas_usr["short_name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["short_name"]);
+			$canvas_u_sis_user_id    = (!is_numeric($canvas_usr["sis_user_id"]) | (empty($canvas_usr["sis_user_id"]))) ? 0 : $canvas_usr["sis_user_id"];
+			$canvas_u_integration_id = empty($canvas_usr["integration_id"]) ? 0 : $canvas_usr["integration_id"];
+			$canvas_u_sis_login_id   = empty($canvas_usr["sis_login_id"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["sis_login_id"]);
+			$canvas_u_sis_import_id  = empty($canvas_usr["sis_import_id"]) ? 0 : $canvas_usr["sis_import_id"];
+			$canvas_u_login_id       = empty($canvas_usr["login_id"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["login_id"]);
+
+		}
+
 		if (!$boolUserMatchExists) {
 			#------------------------------------------------#
 			# INSERT SQL Record

@@ -69,10 +69,18 @@ CREATE TABLE IF NOT EXISTS `dashboard_eventlogs` (
 	`event_datetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`event_log_filepath` VARCHAR(255) NULL,
 	`event_action_filepath` VARCHAR(255) NULL,
+	`num_items` INT NULL DEFAULT 0,
+	`num_changes` INT NULL DEFAULT 0,
+	`num_errors` INT NULL DEFAULT 0,
 	`event_dataset` VARCHAR(2000) NULL,
 	`flag_success` tinyint(1) unsigned NOT NULL default 0,
 	`flag_cron_job` tinyint(1) unsigned NOT NULL default 0,
 	INDEX `eventlog_id` (`eventlog_id`),
-	INDEX `event_action` (`event_action`)
+	INDEX `event_action` (`event_action`),
+	INDEX `event_datetime` (`event_datetime`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Event logs maintain an audit of site actions';
+
+-- Set Initial Data
+UPDATE `dashboard_users` SET `flag_is_set_notification_preference` = 1 WHERE canvas_user_id <= 6540605;
+
 
