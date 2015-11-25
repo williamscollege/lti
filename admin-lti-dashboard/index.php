@@ -42,6 +42,10 @@
 			, (SELECT `event_datetime` FROM `dashboard_eventlogs` WHERE `event_action` = 'sync_canvas_users_to_dashboard' ORDER BY `event_datetime` DESC LIMIT 1) AS log_sync_canvas_datetime
 			, (SELECT `num_items` FROM `dashboard_eventlogs` WHERE `event_action` = 'sync_canvas_users_to_dashboard' ORDER BY `event_datetime` DESC LIMIT 1) AS log_sync_canvas_num_items
 			, (SELECT `num_changes` FROM `dashboard_eventlogs` WHERE `event_action` = 'sync_canvas_users_to_dashboard' ORDER BY `event_datetime` DESC LIMIT 1) AS log_sync_canvas_num_changes
+			, (SELECT COUNT(*) FROM `dashboard_eventlogs` WHERE `event_action` = 'set_canvas_notification_preferences') AS cnt_logs_notif_pref_users
+			, (SELECT `event_datetime` FROM `dashboard_eventlogs` WHERE `event_action` = 'set_canvas_notification_preferences' ORDER BY `event_datetime` DESC LIMIT 1) AS log_notif_pref_datetime
+			, (SELECT `num_items` FROM `dashboard_eventlogs` WHERE `event_action` = 'set_canvas_notification_preferences' ORDER BY `event_datetime` DESC LIMIT 1) AS log_notif_pref_num_items
+			, (SELECT `num_changes` FROM `dashboard_eventlogs` WHERE `event_action` = 'set_canvas_notification_preferences' ORDER BY `event_datetime` DESC LIMIT 1) AS log_notif_pref_num_changes
 			, (SELECT `updated` FROM `lti_context` ORDER BY `updated` DESC LIMIT 1) AS lti_context_datetime
 	";
 	$resultsUserFieldCounts = mysqli_query($connString, $queryUserFieldCounts) or
@@ -74,11 +78,15 @@
 		$cnt_lti_consumer_enabled   = $rowCounts["cnt_lti_consumer_enabled"];
 		$cnt_lti_consumer_disabled  = $rowCounts["cnt_lti_consumer_disabled"];
 		$cnt_logs_sync_canvas_users = $rowCounts["cnt_logs_sync_canvas_users"];
+		$cnt_logs_notif_pref_users  = $rowCounts["cnt_logs_notif_pref_users"];
 
 		// avoid null values
 		$log_sync_canvas_datetime    = empty($rowCounts["log_sync_canvas_datetime"]) ? 'n/a' : $rowCounts["log_sync_canvas_datetime"];
 		$log_sync_canvas_num_items   = empty($rowCounts["log_sync_canvas_num_items"]) ? 0 : $rowCounts["log_sync_canvas_num_items"];
 		$log_sync_canvas_num_changes = empty($rowCounts["log_sync_canvas_num_changes"]) ? 0 : $rowCounts["log_sync_canvas_num_changes"];
+		$log_notif_pref_datetime     = empty($rowCounts["log_notif_pref_datetime"]) ? 'n/a' : $rowCounts["log_notif_pref_datetime"];
+		$log_notif_pref_num_items    = empty($rowCounts["log_notif_pref_num_items"]) ? 0 : $rowCounts["log_notif_pref_num_items"];
+		$log_notif_pref_num_changes  = empty($rowCounts["log_notif_pref_num_changes"]) ? 0 : $rowCounts["log_notif_pref_num_changes"];
 		$lti_context_datetime        = empty($rowCounts["lti_context_datetime"]) ? 'n/a' : $rowCounts["lti_context_datetime"];
 
 		// calculations (avoid division by zero or null values)
@@ -199,7 +207,7 @@
 						<tr>
 							<th class="small">Tools</th>
 							<td>
-								<small><a href="<?php echo APP_ROOT_PATH; ?>/abc.php" title="Run now">Run now</a>&nbsp;&#124;
+								<small><a href="<?php echo APP_ROOT_PATH; ?>/abc.php" title="Run now" target="_blank">Run now</a>&nbsp;&#124;
 									<a href="<?php echo APP_ROOT_PATH; ?>/view_logs.php?action=XYZ" title="View logs">View logs
 										(<?php #echo $cnt_logs_sync_canvas_users; ?>)</a></small>
 							<td>
@@ -240,7 +248,7 @@
 						<tr>
 							<th class="small">Tools</th>
 							<td>
-								<small><a href="<?php echo APP_ROOT_PATH; ?>/sync_canvas_users_to_dashboard.php" title="Run now">Run now</a>&nbsp;&#124;
+								<small><a href="<?php echo APP_ROOT_PATH; ?>/sync_canvas_users_to_dashboard.php" title="Run now" target="_blank">Run now</a>&nbsp;&#124;
 									<a href="<?php echo APP_ROOT_PATH; ?>/view_logs.php?action=sync_canvas_users_to_dashboard" title="View logs">View logs
 										(<?php echo $cnt_logs_sync_canvas_users; ?>)</a></small>
 							<td>
@@ -283,7 +291,7 @@
 						<tr>
 							<th class="small">Tools</th>
 							<td>
-								<small><a href="<?php echo APP_ROOT_PATH; ?>/abc.php" title="Run now">Run now</a>&nbsp;&#124;
+								<small><a href="<?php echo APP_ROOT_PATH; ?>/abc.php" title="Run now" target="_blank">Run now</a>&nbsp;&#124;
 									<a href="<?php echo APP_ROOT_PATH; ?>/view_logs.php?action=XYZ" title="View logs">View logs
 										(<?php #echo $cnt_logs_sync_canvas_users; ?>)</a></small>
 							<td>
@@ -311,11 +319,11 @@
 						</tr>
 						<tr>
 							<th class="small">Changes</th>
-							<td><code><?php #echo $log_sync_canvas_num_changes; ?></code></td>
+							<td><code><?php echo $log_notif_pref_num_changes; ?></code></td>
 						</tr>
 						<tr>
 							<th class="small">Last run</th>
-							<td><code><?php #echo $log_sync_canvas_datetime; ?></code></td>
+							<td><code><?php echo $log_notif_pref_datetime; ?></code></td>
 						</tr>
 						<tr>
 							<th class="small">Schedule</th>
@@ -324,9 +332,10 @@
 						<tr>
 							<th class="small">Tools</th>
 							<td>
-								<small><a href="<?php echo APP_ROOT_PATH; ?>/set_canvas_notification_preferences.php" title="Run now">Run now</a>&nbsp;&#124;
-									<a href="<?php echo APP_ROOT_PATH; ?>/view_logs.php?action=XYZ" title="View logs">View logs
-										(<?php #echo $cnt_logs_sync_canvas_users; ?>)</a></small>
+								<small><a href="<?php echo APP_ROOT_PATH; ?>/set_canvas_notification_preferences.php" title="Run now" target="_blank">Run
+										now</a>&nbsp;&#124;
+									<a href="<?php echo APP_ROOT_PATH; ?>/view_logs.php?action=set_canvas_notification_preferences" title="View logs">View logs
+										(<?php echo $cnt_logs_notif_pref_users; ?>)</a></small>
 							<td>
 						</tr>
 						</tbody>
@@ -365,7 +374,7 @@
 						<tr>
 							<th class="small">Tools</th>
 							<td>
-								<small><a href="<?php echo APP_ROOT_PATH; ?>/abc.php" title="Run now">Run now</a>&nbsp;&#124;
+								<small><a href="<?php echo APP_ROOT_PATH; ?>/abc.php" title="Run now" target="_blank">Run now</a>&nbsp;&#124;
 									<a href="<?php echo APP_ROOT_PATH; ?>/view_logs.php?action=XYZ" title="View logs">View logs
 										(<?php #echo $cnt_logs_sync_canvas_users; ?>)</a>&nbsp;&#124;
 									<a href="https://glow.williams.edu/courses/1549176" title="Glow: Faculty Funding Resources" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;Glow

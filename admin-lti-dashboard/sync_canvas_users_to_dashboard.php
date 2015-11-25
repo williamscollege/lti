@@ -47,11 +47,12 @@
 	#------------------------------------------------#
 	# Constants: Initialize counters
 	#------------------------------------------------#
+	$str_project_name        = "Sync Canvas Users to Dashboard";
 	$str_event_action        = "sync_canvas_users_to_dashboard";
 	$arrayCanvasUsers        = [];
 	$arrayLocalUsers         = [];
 	$arrayRevisedLocalUsers  = [];
-	$boolValidPage           = TRUE;
+	$boolValidResult         = TRUE;
 	$boolUserMatchExists     = FALSE;
 	$intCountCurlAPIRequests = 0;
 	$intCountPages           = 0; // CAREFUL! for debugging, set to 63. otherwise, set to 0 for live use
@@ -60,6 +61,7 @@
 	$intCountUsersUpdated    = 0;
 	$intCountUsersInserted   = 0;
 	$intCountUsersRemoved    = 0;
+	$intCountUsersErrors     = 0;
 
 	# Set timezone to keep php from complaining
 	date_default_timezone_set(DEFAULT_TIMEZONE);
@@ -80,7 +82,7 @@
 		// for testing, always set artificially high initial page count for fewer curl calls (total pages = approx 67)
 		$intCountPages = 65;
 	}
-	while ($boolValidPage) {
+	while ($boolValidResult) {
 		# increment counter
 		$intCountPages += 1;
 
@@ -100,7 +102,7 @@
 
 		// paged results contain values; abort upon reaching the first empty results page (no more pages exist)
 		if (count($arrayPagedResults) == 0) {
-			$boolValidPage = FALSE;
+			$boolValidResult = FALSE;
 		}
 	}
 	if ($debug) {
@@ -371,7 +373,7 @@
 	array_push($finalReport, "Count: Users Skipped in Dashboard: " . $intCountUsersSkipped);
 	array_push($finalReport, "Count: Users Removed in Dashboard: " . $intCountUsersRemoved);
 	array_push($finalReport, "Archived file: " . $str_log_file_path);
-	array_push($finalReport, "Project: Sync Canvas Users to Dashboard");
+	array_push($finalReport, "Project: " . $str_project_name);
 
 	# Stringify for browser, output to txt file
 	$firstTimeFlag     = TRUE;
@@ -436,6 +438,7 @@
 						, `event_action_filepath`
 						, `num_items`
 						, `num_changes`
+						, `num_errors`
 						, `event_dataset`
 						, `flag_success`
 						, `flag_cron_job`
@@ -448,6 +451,7 @@
 						, '" . mysqli_real_escape_string($connString, $str_action_file_path) . "'
 						, " . count($arrayCanvasUsers) . "
 						, " . ($intCountUsersUpdated + $intCountUsersInserted + $intCountUsersRemoved) . "
+						, " . ($intCountUsersErrors) . "
 						, '" . mysqli_real_escape_string($connString, $str_event_dataset) . "'
 						, $flag_success
 						, $flag_is_cron_job

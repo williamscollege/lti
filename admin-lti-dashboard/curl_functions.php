@@ -53,9 +53,9 @@
 	# Parent file:	set_canvas_notification_preferences.php
 	# Notes:		Make API call to Instructure Canvas using Curl (PUT) command
 	#------------------------------------------------#
-	function curlSetUserNotificationPreferences($userID, $apiPathPrefix, $apiPathEndpoint) {
+	function curlSetUserNotificationPreferences($userID, $username, $apiPathPrefix, $apiPathEndpoint) {
 		// Example of request showing API endpoint
-		// curl 'https://williams.test.instructure.com/api/v1/users/self/communication_channels/email/some_username@williams.edu/notification_preferences?as_user_id=1234567' \
+		// curl 'https://williams.test.instructure.com/api/v1/users/self/communication_channels/email/username@williams.edu/notification_preferences?as_user_id=1234567' \
 		// -X PUT \
 		// -F "notification_preferences[new_discussion_topic][frequency]=immediately" \
 		// -F "notification_preferences[new_discussion_entry][frequency]=immediately" \
@@ -72,12 +72,12 @@
 
 		// create array of form elements
 		$formValues = array(
-				'notification_preferences[new_discussion_topic][frequency]' => 'immediately',
-				'notification_preferences[new_discussion_entry][frequency]' => 'immediately',
+			'notification_preferences[new_discussion_topic][frequency]' => 'immediately',
+			'notification_preferences[new_discussion_entry][frequency]' => 'immediately',
 		);
 
 		// set url
-		curl_setopt($ch, CURLOPT_URL, TOOL_CONSUMER_URL . $apiPathPrefix . $apiPathEndpoint . $userID);
+		curl_setopt($ch, CURLOPT_URL, TOOL_CONSUMER_URL . $apiPathPrefix . $username . "@williams.edu" . $apiPathEndpoint . $userID);
 
 		// set form post to true
 		curl_setopt($ch, CURLOPT_POST, 1);
@@ -102,7 +102,8 @@
 
 		return $array_output;
 	}
-	# END - TEST AREA
+
+
 	# TODO break point old code below
 
 	#------------------------------------------------#
