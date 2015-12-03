@@ -61,6 +61,7 @@
 
 		function numOfPercentage(_angle, _color) {
 			// if percentage is zero, do not add 1
+			// console.log(_angle);
 			if (_angle == 0) {
 				var angle = Math.floor(_angle * 100) + 0;
 			}
@@ -87,11 +88,11 @@
 				drawOuterArc(angle, opts.color);
 				//alert(angle,opts.color);
 				numOfPercentage(angle, opts.color);
-				angle += 0.01; // draw by increments of...
+				angle += 0.01; // draw by increments of... (DKC modification, original: 0.01)
 				if (angle > endAngle) {
 					clearInterval(loop);
 				}
-			}, 1000 / 120); // draw speed
+			}, 1000 / 120); // draw speed (DKC modification,original: 1000 / 120)
 		}
 
 		draw();

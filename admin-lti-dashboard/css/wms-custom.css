@@ -2,6 +2,10 @@
 Custom CSS: Global CSS Tweaks that are NOT an extension / modification of the bootstrap framework
 ==========================================*/
 
+.wmsPurple {
+	color: #543192;
+}
+
 .wmsBoxFull {
 	border: 1px solid #5C6266;
 	margin: 0 5px 25px 5px;

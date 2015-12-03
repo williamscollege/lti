@@ -7,12 +7,18 @@ FOR TESTING ONLY:
 
 	DROP TABLE `dashboard_users`;
 	DROP TABLE `dashboard_eventlogs`;
+	DROP TABLE `dashboard_sis_imports_raw`;
+	DROP TABLE `dashboard_sis_imports_parsed`;
 
 	DELETE FROM `dashboard_users`;
 	DELETE FROM `dashboard_eventlogs`;
+	DELETE FROM `dashboard_sis_imports_raw`;
+	DELETE FROM `dashboard_sis_imports_parsed`;
 
 	SELECT * FROM `dashboard_users`;
 	SELECT * FROM `dashboard_eventlogs`;
+	SELECT * FROM `dashboard_sis_imports_raw`;
+	SELECT * FROM `dashboard_sis_imports_parsed`;
 */
 
 # ----------------------------
@@ -44,8 +50,8 @@ CREATE TABLE IF NOT EXISTS `dashboard_users` (
 	`created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` TIMESTAMP NULL,
 	`flag_is_set_avatar_image` tinyint(1) unsigned NOT NULL default 0,
-	`flag_is_set_notification_preference` tinyint(1) unsigned NOT NULL default 0,
-	`flag_delete` tinyint(1) unsigned NOT NULL default 0,
+	`flag_is_set_notification_preference` tinyint(1) unsigned NOT NULL DEFAULT 0,
+	`flag_delete` tinyint(1) unsigned NOT NULL DEFAULT 0,
 	INDEX `canvas_user_id` (`canvas_user_id`),
 	INDEX `name` (`name`),
 	INDEX `sortable_name` (`sortable_name`),
@@ -65,20 +71,87 @@ CREATE TABLE IF NOT EXISTS `dashboard_users` (
 
 CREATE TABLE IF NOT EXISTS `dashboard_eventlogs` (
 	`eventlog_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`event_action` VARCHAR(255) NULL,
+	`event_action` VARCHAR(255) DEFAULT NULL,
 	`event_datetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`event_log_filepath` VARCHAR(255) NULL,
-	`event_action_filepath` VARCHAR(255) NULL,
+	`event_log_filepath` VARCHAR(255) DEFAULT NULL,
+	`event_action_filepath` VARCHAR(255) DEFAULT NULL,
 	`num_items` INT NULL DEFAULT 0,
 	`num_changes` INT NULL DEFAULT 0,
 	`num_errors` INT NULL DEFAULT 0,
-	`event_dataset` VARCHAR(2000) NULL,
-	`flag_success` tinyint(1) unsigned NOT NULL default 0,
-	`flag_cron_job` tinyint(1) unsigned NOT NULL default 0,
+	`event_dataset_brief` varchar(255) DEFAULT NULL,
+	`event_dataset_full` varchar(2000) DEFAULT NULL,
+	`flag_success` tinyint(1) unsigned NOT NULL DEFAULT 0,
+	`flag_cron_job` tinyint(1) unsigned NOT NULL DEFAULT 0,
 	INDEX `eventlog_id` (`eventlog_id`),
 	INDEX `event_action` (`event_action`),
 	INDEX `event_datetime` (`event_datetime`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Event logs maintain an audit of site actions';
+
+CREATE TABLE IF NOT EXISTS `dashboard_sis_imports_raw` (
+	`raw_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`sis_import_id` INT NOT NULL DEFAULT 0,
+	`sis_data_preparation` VARCHAR(2000) NULL DEFAULT '',
+	`sis_curl_command` VARCHAR(1000) NULL DEFAULT '',
+	`sis_return_code` VARCHAR(1000) NULL DEFAULT '',
+	`sis_import_status` VARCHAR(3500) NULL DEFAULT '',
+	`begin_date` TIMESTAMP NULL,
+	`end_date` TIMESTAMP NULL,
+	INDEX `sis_import_id` (`sis_import_id`),
+	INDEX `begin_date` (`begin_date`),
+	INDEX `end_date` (`end_date`)
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Log curl call and import results with Instructure Canvas LMS';
+/* dashboard_sis_imports_raw table logs curl call and import results with Instructure Canvas LMS */
+
+CREATE TABLE IF NOT EXISTS `dashboard_sis_imports_parsed` (
+	`parsed_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`created_at` TIMESTAMP NULL,
+	`ended_at` TIMESTAMP NULL,
+	`updated_at` TIMESTAMP NULL,
+	`progress` INT NOT NULL DEFAULT 0,
+	`id` INT NOT NULL DEFAULT 0,
+	`workflow_state` VARCHAR(100) NULL DEFAULT '',
+	`data_import_type` VARCHAR(100) NULL DEFAULT '',
+	`data_supplied_batches_0` VARCHAR(100) NULL DEFAULT '',
+	`data_supplied_batches_1` VARCHAR(100) NULL DEFAULT '',
+	`data_supplied_batches_2` VARCHAR(100) NULL DEFAULT '',
+	`data_supplied_batches_3` VARCHAR(100) NULL DEFAULT '',
+	`data_supplied_batches_4` VARCHAR(100) NULL DEFAULT '',
+	`data_counts_accounts` INT NOT NULL DEFAULT 0,
+	`data_counts_terms` INT NOT NULL DEFAULT 0,
+	`data_counts_abstract_courses` INT NOT NULL DEFAULT 0,
+	`data_counts_courses` INT NOT NULL DEFAULT 0,
+	`data_counts_sections` INT NOT NULL DEFAULT 0,
+	`data_counts_xlists` INT NOT NULL DEFAULT 0,
+	`data_counts_users` INT NOT NULL DEFAULT 0,
+	`data_counts_enrollments` INT NOT NULL DEFAULT 0,
+	`data_counts_groups` INT NOT NULL DEFAULT 0,
+	`data_counts_group_memberships` INT NOT NULL DEFAULT 0,
+	`data_counts_grade_publishing_results` INT NOT NULL DEFAULT 0,
+	`batch_mode` VARCHAR(100) NULL DEFAULT '',
+	`batch_mode_term_id` INT NOT NULL DEFAULT 0,
+	`override_sis_stickiness` VARCHAR(100) NULL DEFAULT '',
+	`add_sis_stickiness` VARCHAR(100) NULL DEFAULT '',
+	`clear_sis_stickiness` VARCHAR(100) NULL DEFAULT '',
+	`diffing_data_set_identifier` VARCHAR(100) NULL DEFAULT '',
+	`diffed_against_import_id` VARCHAR(100) NULL DEFAULT '',
+	`processing_warnings_0_0` VARCHAR(1500) NULL DEFAULT '',
+	`processing_warnings_0_1` VARCHAR(1500) NULL DEFAULT '',
+	`processing_warnings_1_0` VARCHAR(1500) NULL DEFAULT '',
+	`processing_warnings_1_1` VARCHAR(1500) NULL DEFAULT '',
+	INDEX `created_at` (`created_at`),
+	INDEX `ended_at` (`ended_at`),
+	INDEX `updated_at` (`updated_at`),
+	INDEX `progress` (`progress`),
+	INDEX `id` (`id`),
+	INDEX `workflow_state` (`workflow_state`),
+	INDEX `data_counts_terms` (`data_counts_terms`),
+	INDEX `data_counts_courses` (`data_counts_courses`),
+	INDEX `data_counts_sections` (`data_counts_sections`),
+	INDEX `data_counts_xlists` (`data_counts_xlists`),
+	INDEX `data_counts_users` (`data_counts_users`),
+	INDEX `data_counts_enrollments` (`data_counts_enrollments`)
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Log sanitized import results from curl call with Instructure Canvas LMS';
+/* dashboard_sis_imports_parsed table logs sanitized import results from curl call with Instructure Canvas LMS */
 
 -- Set Initial Data
 UPDATE `dashboard_users` SET `flag_is_set_notification_preference` = 1 WHERE canvas_user_id <= 6540605;

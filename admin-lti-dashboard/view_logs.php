@@ -59,21 +59,21 @@
 <div class="container">
 	<div class="row">
 		<div class="page-header">
-			<h1>
-				<?php echo LANG_INSTITUTION_NAME_SHORT . " Glow: " . LTI_APP_NAME; ?>
-				<small><br />View Logs: &quot;<?php echo $_REQUEST["action"]; ?>&quot;</small>
-			</h1>
-			<div id="breadCrumbs"><?php require_once(dirname(__FILE__) . '/include/breadcrumbs.php'); ?></div>
+			<h1><?php echo LTI_APP_NAME . ": Glow"; ?></h1>
+			<h5><?php echo LANG_INSTITUTION_NAME; ?>: View log records</h5>
+
+			<div id="breadCrumbs" class="small"><?php require_once(dirname(__FILE__) . '/include/breadcrumbs.php'); ?></div>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-12 col-sm-12">
-			<h3>Log Summary (descending)</h3><br />
+			<h3>Log Summary: &quot;<?php echo $_REQUEST["action"]; ?>&quot;</h3><br />
 
 			<?php
 				while ($row = mysqli_fetch_assoc($resultsFetchLogs)) {
 					echo "<p class=\"small\">";
-					echo $row["event_dataset"];
+					echo $row["event_dataset_full"];
+					echo "Changes: " . $row["event_dataset_brief"] . "<br />";
 					echo "<a href=\"" . APP_ROOT_PATH . "/" . $row["event_log_filepath"] . "\" title=\"View complete log file\" target=\"_blank\"><span class=\"glyphicon glyphicon-new-window\" aria-hidden=\"true\"></span>&nbsp;View complete log file</a>";
 					echo "</p><br />";
 				}

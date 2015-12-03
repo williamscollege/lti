@@ -149,7 +149,7 @@
 					<?php echo LANG_INSTITUTION_NAME . ": " . LTI_APP_NAME; ?>
 					<small><br />Manage LTI tool consumers</small>
 				</h1>
-				<div id="breadCrumbs"><?php require_once(dirname(__FILE__) . '/include/breadcrumbs.php'); ?></div>
+				<div id="breadCrumbs" class="small"><?php require_once(dirname(__FILE__) . '/include/breadcrumbs.php'); ?></div>
 			</div>
 
 			<?php

@@ -220,8 +220,9 @@
 					$intCountUsersSkipped += 1;
 
 					# Output to browser and txt file
-					echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Skipped User (Canvas matches local)<br />";
-					fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Skipped User (Canvas matches local)\n");
+					// decided to omit skipped output, as there is no need to fill log files daily with 500kb of skipped user info
+					// echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Skipped User (Canvas matches local)<br />";
+					// fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Skipped User (Canvas matches local)\n");
 				}
 
 				// skip to next Canvas User
@@ -376,8 +377,8 @@
 	array_push($finalReport, "Project: " . $str_project_name);
 
 	# Stringify for browser, output to txt file
-	$firstTimeFlag     = TRUE;
-	$str_event_dataset = "";
+	$firstTimeFlag          = TRUE;
+	$str_event_dataset_full = "";
 	foreach ($finalReport as $obj) {
 		if ($firstTimeFlag) {
 			# formatting (first iteration)
@@ -385,11 +386,11 @@
 			fwrite($myLogFile, "\n\n------------------------------\nLOG SUMMARY\n\n");
 
 			# formatting: first row of db entry will be bolded for later web use
-			$str_event_dataset .= "<strong>" . $obj . "</strong><br />";
+			$str_event_dataset_full .= "<strong>" . $obj . "</strong><br />";
 			fwrite($myLogFile, $obj . "\n");
 		}
 		else {
-			$str_event_dataset .= $obj . "<br />";
+			$str_event_dataset_full .= $obj . "<br />";
 			fwrite($myLogFile, $obj . "\n");
 		}
 
@@ -401,7 +402,7 @@
 	fwrite($myLogFile, "\n------------------------------\n\n");
 
 	# Output for browser
-	echo $str_event_dataset;
+	echo $str_event_dataset_full;
 
 	# Close log file
 	fclose($myLogFile);
@@ -423,6 +424,8 @@
 		$flag_is_cron_job     = 1; // TRUE
 	}
 
+	$str_event_dataset_brief = $intCountUsersInserted . " inserts, " . $intCountUsersUpdated . " updates, " . $intCountUsersRemoved . " deletes";
+
 	$flag_success = 0; // FALSE
 	if ($intCountUsersCanvas > 0) {
 		$flag_success = 1; // TRUE
@@ -439,7 +442,8 @@
 						, `num_items`
 						, `num_changes`
 						, `num_errors`
-						, `event_dataset`
+						, `event_dataset_brief`
+						, `event_dataset_full`
 						, `flag_success`
 						, `flag_cron_job`
 					)
@@ -452,7 +456,8 @@
 						, " . count($arrayCanvasUsers) . "
 						, " . ($intCountUsersUpdated + $intCountUsersInserted + $intCountUsersRemoved) . "
 						, " . ($intCountUsersErrors) . "
-						, '" . mysqli_real_escape_string($connString, $str_event_dataset) . "'
+						, '" . mysqli_real_escape_string($connString, $str_event_dataset_brief) . "'
+						, '" . mysqli_real_escape_string($connString, $str_event_dataset_full) . "'
 						, $flag_success
 						, $flag_is_cron_job
 					)

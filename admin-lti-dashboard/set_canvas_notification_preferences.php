@@ -204,7 +204,7 @@
 
 	# Stringify for browser, output to txt file
 	$firstTimeFlag     = TRUE;
-	$str_event_dataset = "";
+	$str_event_dataset_full = "";
 	foreach ($finalReport as $obj) {
 		if ($firstTimeFlag) {
 			# formatting (first iteration)
@@ -212,11 +212,11 @@
 			fwrite($myLogFile, "\n\n------------------------------\nLOG SUMMARY\n\n");
 
 			# formatting: first row of db entry will be bolded for later web use
-			$str_event_dataset .= "<strong>" . $obj . "</strong><br />";
+			$str_event_dataset_full .= "<strong>" . $obj . "</strong><br />";
 			fwrite($myLogFile, $obj . "\n");
 		}
 		else {
-			$str_event_dataset .= $obj . "<br />";
+			$str_event_dataset_full .= $obj . "<br />";
 			fwrite($myLogFile, $obj . "\n");
 		}
 
@@ -228,7 +228,7 @@
 	fwrite($myLogFile, "\n------------------------------\n\n");
 
 	# Output for browser
-	echo $str_event_dataset;
+	echo $str_event_dataset_full;
 
 	# Close log file
 	fclose($myLogFile);
@@ -250,6 +250,8 @@
 		$flag_is_cron_job     = 1; // TRUE
 	}
 
+	$str_event_dataset_brief = $intCountUsersCanvas . " users: " . $intCountUsersUpdated . " updates, " .  $intCountUsersSkipped . " skips";
+
 	// $flag_success = 0; // FALSE
 	$flag_success = 1; // TRUE
 
@@ -264,7 +266,8 @@
 						, `num_items`
 						, `num_changes`
 						, `num_errors`
-						, `event_dataset`
+						, `event_dataset_brief`
+						, `event_dataset_full`
 						, `flag_success`
 						, `flag_cron_job`
 					)
@@ -277,7 +280,8 @@
 						, " . ($intCountUsersCanvas) . "
 						, " . ($intCountUsersUpdated) . "
 						, " . ($intCountUsersSkipped) . "
-						, '" . mysqli_real_escape_string($connString, $str_event_dataset) . "'
+						, '" . mysqli_real_escape_string($connString, $str_event_dataset_brief) . "'
+						, '" . mysqli_real_escape_string($connString, $str_event_dataset_full) . "'
 						, $flag_success
 						, $flag_is_cron_job
 					)

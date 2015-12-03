@@ -41,11 +41,10 @@
 			, (SELECT COUNT(*) FROM `dashboard_eventlogs` WHERE `event_action` = 'sync_canvas_users_to_dashboard') AS cnt_logs_sync_canvas_users
 			, (SELECT `event_datetime` FROM `dashboard_eventlogs` WHERE `event_action` = 'sync_canvas_users_to_dashboard' ORDER BY `event_datetime` DESC LIMIT 1) AS log_sync_canvas_datetime
 			, (SELECT `num_items` FROM `dashboard_eventlogs` WHERE `event_action` = 'sync_canvas_users_to_dashboard' ORDER BY `event_datetime` DESC LIMIT 1) AS log_sync_canvas_num_items
-			, (SELECT `num_changes` FROM `dashboard_eventlogs` WHERE `event_action` = 'sync_canvas_users_to_dashboard' ORDER BY `event_datetime` DESC LIMIT 1) AS log_sync_canvas_num_changes
+			, (SELECT `event_dataset_brief` FROM `dashboard_eventlogs` WHERE `event_action` = 'sync_canvas_users_to_dashboard' ORDER BY `event_datetime` DESC LIMIT 1) AS log_sync_canvas_dataset_brief
 			, (SELECT COUNT(*) FROM `dashboard_eventlogs` WHERE `event_action` = 'set_canvas_notification_preferences') AS cnt_logs_notif_pref_users
 			, (SELECT `event_datetime` FROM `dashboard_eventlogs` WHERE `event_action` = 'set_canvas_notification_preferences' ORDER BY `event_datetime` DESC LIMIT 1) AS log_notif_pref_datetime
-			, (SELECT `num_items` FROM `dashboard_eventlogs` WHERE `event_action` = 'set_canvas_notification_preferences' ORDER BY `event_datetime` DESC LIMIT 1) AS log_notif_pref_num_items
-			, (SELECT `num_changes` FROM `dashboard_eventlogs` WHERE `event_action` = 'set_canvas_notification_preferences' ORDER BY `event_datetime` DESC LIMIT 1) AS log_notif_pref_num_changes
+			, (SELECT `event_dataset_brief` FROM `dashboard_eventlogs` WHERE `event_action` = 'set_canvas_notification_preferences' ORDER BY `event_datetime` DESC LIMIT 1) AS log_notif_pref_dataset_brief
 			, (SELECT `updated` FROM `lti_context` ORDER BY `updated` DESC LIMIT 1) AS lti_context_datetime
 	";
 	$resultsUserFieldCounts = mysqli_query($connString, $queryUserFieldCounts) or
@@ -81,13 +80,13 @@
 		$cnt_logs_notif_pref_users  = $rowCounts["cnt_logs_notif_pref_users"];
 
 		// avoid null values
-		$log_sync_canvas_datetime    = empty($rowCounts["log_sync_canvas_datetime"]) ? 'n/a' : $rowCounts["log_sync_canvas_datetime"];
-		$log_sync_canvas_num_items   = empty($rowCounts["log_sync_canvas_num_items"]) ? 0 : $rowCounts["log_sync_canvas_num_items"];
-		$log_sync_canvas_num_changes = empty($rowCounts["log_sync_canvas_num_changes"]) ? 0 : $rowCounts["log_sync_canvas_num_changes"];
-		$log_notif_pref_datetime     = empty($rowCounts["log_notif_pref_datetime"]) ? 'n/a' : $rowCounts["log_notif_pref_datetime"];
-		$log_notif_pref_num_items    = empty($rowCounts["log_notif_pref_num_items"]) ? 0 : $rowCounts["log_notif_pref_num_items"];
-		$log_notif_pref_num_changes  = empty($rowCounts["log_notif_pref_num_changes"]) ? 0 : $rowCounts["log_notif_pref_num_changes"];
-		$lti_context_datetime        = empty($rowCounts["lti_context_datetime"]) ? 'n/a' : $rowCounts["lti_context_datetime"];
+		$log_sync_canvas_datetime      = empty($rowCounts["log_sync_canvas_datetime"]) ? 'n/a' : $rowCounts["log_sync_canvas_datetime"];
+		$log_sync_canvas_num_items     = empty($rowCounts["log_sync_canvas_num_items"]) ? 0 : $rowCounts["log_sync_canvas_num_items"];
+		$log_sync_canvas_dataset_brief = empty($rowCounts["log_sync_canvas_dataset_brief"]) ? 0 : $rowCounts["log_sync_canvas_dataset_brief"];
+		$log_notif_pref_datetime       = empty($rowCounts["log_notif_pref_datetime"]) ? 'n/a' : $rowCounts["log_notif_pref_datetime"];
+		$log_notif_pref_num_items      = empty($rowCounts["log_notif_pref_num_items"]) ? 0 : $rowCounts["log_notif_pref_num_items"];
+		$log_notif_pref_dataset_brief  = empty($rowCounts["log_notif_pref_dataset_brief"]) ? 0 : $rowCounts["log_notif_pref_dataset_brief"];
+		$lti_context_datetime          = empty($rowCounts["lti_context_datetime"]) ? 'n/a' : $rowCounts["lti_context_datetime"];
 
 		// calculations (avoid division by zero or null values)
 		$percentSyncCanvasUsers   = ($cnt_dashboard_users == 0) ? 0 : round($cnt_dashboard_users / $cnt_dashboard_users * 100, PHP_ROUND_HALF_UP);
@@ -122,12 +121,27 @@
 <div class="container">
 	<div class="row">
 		<div class="page-header">
-			<h1>
-				<?php echo LANG_INSTITUTION_NAME_SHORT . " Glow: " . LTI_APP_NAME; ?>
-				<small><br />Dashboard of processes that update Canvas LMS</small>
-			</h1>
-			<div id="breadCrumbs"><?php require_once(dirname(__FILE__) . '/include/breadcrumbs.php'); ?></div>
+			<h1><?php echo LTI_APP_NAME . ": Glow"; ?></span></h1>
+			<h5><?php echo LANG_INSTITUTION_NAME; ?>: Dashboard of critical systems that update our LMS</h5>
+
+			<div id="breadCrumbs" class="small"><?php require_once(dirname(__FILE__) . '/include/breadcrumbs.php'); ?></div>
 		</div>
+	</div>
+	<div class="well well-sm">
+		<p class="small">
+			This dashboard steadily monitors critical systems that support and customize our Glow LMS (learning management system). Errors are sent
+			immediately to relevant staff, providing an early opportunity to inspect and correct systems. Each time a component of SIS updating fails, we learn
+			something and attempt to improve our monitoring tools, tune our troubleshooting routines, and add failsafes.
+			Currently, these tools include:
+		</p>
+		<ol class="small">
+			<li>Hourly monitoring of the automated jobs that import SIS data (student information systems) from PeopleSoft to Instructure</li>
+			<li>Daily batch jobs that provide a custom default environment to all Glow users (profile images, notification preferences, special courses
+				auto-enrollments)
+			</li>
+			<li>Point of source for managing LTI (learning tools interoperability) permissions for integrated Glow applications (Signup Sheets, Course Email)
+			</li>
+		</ol>
 	</div>
 	<div class="row">
 		<div class="col-md-4 col-sm-4">
@@ -194,7 +208,7 @@
 						</tr>
 						<tr>
 							<th class="small">Changes</th>
-							<td><code><?php #echo $log_sync_canvas_num_changes; ?></code></td>
+							<td><code><?php #echo $log_sync_canvas_dataset_brief; ?></code></td>
 						</tr>
 						<tr>
 							<th class="small">Last run</th>
@@ -235,7 +249,7 @@
 						</tr>
 						<tr>
 							<th class="small">Changes</th>
-							<td><code><?php echo $log_sync_canvas_num_changes; ?></code></td>
+							<td><code><?php echo $log_sync_canvas_dataset_brief; ?></code></td>
 						</tr>
 						<tr>
 							<th class="small">Last run</th>
@@ -278,7 +292,7 @@
 						</tr>
 						<tr>
 							<th class="small">Changes</th>
-							<td><code><?php #echo $log_sync_canvas_num_changes; ?></code></td>
+							<td><code><?php #echo $log_sync_canvas_dataset_brief; ?></code></td>
 						</tr>
 						<tr>
 							<th class="small">Last run</th>
@@ -312,14 +326,14 @@
 					<table class="table-hover">
 						<tbody>
 						<tr>
-							<th class="small">Count</th>
+							<th class="small">Total</th>
 							<td><code><?php echo number_format($cnt_notif_pref_exist) . " / " . number_format($log_sync_canvas_num_items); ?></code>
-								<small>(users: set custom notif pref's)</small>
+								<small>(set custom user notif pref's)</small>
 							</td>
 						</tr>
 						<tr>
 							<th class="small">Changes</th>
-							<td><code><?php echo $log_notif_pref_num_changes; ?></code></td>
+							<td><code><?php echo $log_notif_pref_dataset_brief; ?></code></td>
 						</tr>
 						<tr>
 							<th class="small">Last run</th>
@@ -361,7 +375,7 @@
 						</tr>
 						<tr>
 							<th class="small">Changes</th>
-							<td><code><?php #echo $log_sync_canvas_num_changes; ?></code></td>
+							<td><code><?php #echo $log_sync_canvas_dataset_brief; ?></code></td>
 						</tr>
 						<tr>
 							<th class="small">Last run</th>
