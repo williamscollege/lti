@@ -121,7 +121,7 @@
 <div class="container">
 	<div class="row">
 		<div class="page-header">
-			<h1><?php echo LTI_APP_NAME . ": Glow"; ?></span></h1>
+			<h1><?php echo LTI_APP_NAME; ?></h1>
 			<h5><?php echo LANG_INSTITUTION_NAME; ?>: Dashboard of critical systems that update our LMS</h5>
 
 			<div id="breadCrumbs" class="small"><?php require_once(dirname(__FILE__) . '/include/breadcrumbs.php'); ?></div>
@@ -169,7 +169,7 @@
 							</td>
 						</tr>
 						<tr>
-							<th class="small">Last run</th>
+							<th class="small">Checked</th>
 							<td><code><?php echo $lti_context_datetime; ?></code></td>
 						</tr>
 						<tr>
@@ -181,7 +181,7 @@
 						<tr>
 							<th class="small">Tools</th>
 							<td>
-								<small><a href="<?php echo APP_ROOT_PATH; ?>/lti_manage_tool_consumers.php" title="Manage LTI Tool Consumers (CRUD)">Manage LTI
+								<small><a href="<?php echo APP_ROOT_PATH; ?>/app_code/lti_manage_tool_consumers.php" title="Manage LTI Tool Consumers (CRUD)">Manage LTI
 										Tool Consumers (CRUD)</a></small>
 							<td>
 						</tr>
@@ -192,7 +192,7 @@
 		</div>
 		<div class="col-md-4 col-sm-4">
 			<div class="wmsBoxFull col-md-12 col-sm-12">
-				<h3>SIS Uploads (success rate)</h3>
+				<h3>Verify Integrity of SIS Uploads</h3>
 
 				<div class="circleGraphic2 col-md-9 col-sm-9">
 					<span class="circleIntegerValue"><?php #echo  $percentXYZ; ?>0</span>
@@ -203,7 +203,7 @@
 						<tr>
 							<th class="small">Count</th>
 							<td><code><?php #echo number_format($cnt_dashboard_users) . " / " . number_format($log_sync_canvas_num_items); ?></code>
-								<small>(SIS uploads success ratio)</small>
+								<small>(Williams SIS data to Canvas)</small>
 							</td>
 						</tr>
 						<tr>
@@ -221,8 +221,8 @@
 						<tr>
 							<th class="small">Tools</th>
 							<td>
-								<small><a href="<?php echo APP_ROOT_PATH; ?>/abc.php" title="Run now" target="_blank">Run now</a>&nbsp;&#124;
-									<a href="<?php echo APP_ROOT_PATH; ?>/view_logs.php?action=XYZ" title="View logs">View logs
+								<small><a href="<?php echo APP_ROOT_PATH; ?>/app_code/abc.php" title="Run now" target="_blank">Run now</a>&nbsp;&#124;
+									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/view_logs.php?action=XYZ" title="View logs">View logs
 										(<?php #echo $cnt_logs_sync_canvas_users; ?>)</a></small>
 							<td>
 						</tr>
@@ -262,8 +262,8 @@
 						<tr>
 							<th class="small">Tools</th>
 							<td>
-								<small><a href="<?php echo APP_ROOT_PATH; ?>/sync_canvas_users_to_dashboard.php" title="Run now" target="_blank">Run now</a>&nbsp;&#124;
-									<a href="<?php echo APP_ROOT_PATH; ?>/view_logs.php?action=sync_canvas_users_to_dashboard" title="View logs">View logs
+								<small><a href="<?php echo APP_ROOT_PATH; ?>/app_code/sync_canvas_users_to_dashboard.php" title="Run now" target="_blank">Run now</a>&nbsp;&#124;
+									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/view_logs.php?action=sync_canvas_users_to_dashboard" title="View logs">View logs
 										(<?php echo $cnt_logs_sync_canvas_users; ?>)</a></small>
 							<td>
 						</tr>
@@ -305,8 +305,8 @@
 						<tr>
 							<th class="small">Tools</th>
 							<td>
-								<small><a href="<?php echo APP_ROOT_PATH; ?>/abc.php" title="Run now" target="_blank">Run now</a>&nbsp;&#124;
-									<a href="<?php echo APP_ROOT_PATH; ?>/view_logs.php?action=XYZ" title="View logs">View logs
+								<small><a href="<?php echo APP_ROOT_PATH; ?>/app_code/abc.php" title="Run now" target="_blank">Run now</a>&nbsp;&#124;
+									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/view_logs.php?action=XYZ" title="View logs">View logs
 										(<?php #echo $cnt_logs_sync_canvas_users; ?>)</a></small>
 							<td>
 						</tr>
@@ -346,9 +346,9 @@
 						<tr>
 							<th class="small">Tools</th>
 							<td>
-								<small><a href="<?php echo APP_ROOT_PATH; ?>/set_canvas_notification_preferences.php" title="Run now" target="_blank">Run
+								<small><a href="<?php echo APP_ROOT_PATH; ?>/app_code/set_canvas_notification_preferences.php" title="Run now" target="_blank">Run
 										now</a>&nbsp;&#124;
-									<a href="<?php echo APP_ROOT_PATH; ?>/view_logs.php?action=set_canvas_notification_preferences" title="View logs">View logs
+									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/view_logs.php?action=set_canvas_notification_preferences" title="View logs">View logs
 										(<?php echo $cnt_logs_notif_pref_users; ?>)</a></small>
 							<td>
 						</tr>
@@ -388,8 +388,8 @@
 						<tr>
 							<th class="small">Tools</th>
 							<td>
-								<small><a href="<?php echo APP_ROOT_PATH; ?>/abc.php" title="Run now" target="_blank">Run now</a>&nbsp;&#124;
-									<a href="<?php echo APP_ROOT_PATH; ?>/view_logs.php?action=XYZ" title="View logs">View logs
+								<small><a href="<?php echo APP_ROOT_PATH; ?>/app_code/abc.php" title="Run now" target="_blank">Run now</a>&nbsp;&#124;
+									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/view_logs.php?action=XYZ" title="View logs">View logs
 										(<?php #echo $cnt_logs_sync_canvas_users; ?>)</a>&nbsp;&#124;
 									<a href="https://glow.williams.edu/courses/1549176" title="Glow: Faculty Funding Resources" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;Glow
 										Course</a></small>

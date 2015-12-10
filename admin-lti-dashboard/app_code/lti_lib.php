@@ -12,7 +12,7 @@
 	# This page provides general functions to support the application.
 
 
-	require_once(dirname(__FILE__) . '/institution.cfg.php');
+	require_once(dirname(__FILE__) . '/../institution.cfg.php');
 	require_once(dirname(__FILE__) . '/lti_db.php');
 
 

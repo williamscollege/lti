@@ -11,9 +11,9 @@
 	 **  - Enable PHP modules: PDO, curl, mbyte, dom
 	 ***********************************************/
 
-	require_once(dirname(__FILE__) . '/institution.cfg.php');
-	require_once(dirname(__FILE__) . '/include/connDB.php');
-	require_once(dirname(__FILE__) . '/util.php');
+	require_once(dirname(__FILE__) . '/../institution.cfg.php');
+	require_once(dirname(__FILE__) . '/../include/connDB.php');
+	require_once(dirname(__FILE__) . '/../util.php');
 
 
 	#------------------------------------------------#
@@ -59,10 +59,10 @@
 <div class="container">
 	<div class="row">
 		<div class="page-header">
-			<h1><?php echo LTI_APP_NAME . ": Glow"; ?></h1>
+			<h1><?php echo LTI_APP_NAME; ?></h1>
 			<h5><?php echo LANG_INSTITUTION_NAME; ?>: View log records</h5>
 
-			<div id="breadCrumbs" class="small"><?php require_once(dirname(__FILE__) . '/include/breadcrumbs.php'); ?></div>
+			<div id="breadCrumbs" class="small"><?php require_once(dirname(__FILE__) . '/../include/breadcrumbs.php'); ?></div>
 		</div>
 	</div>
 	<div class="row">
@@ -74,7 +74,7 @@
 					echo "<p class=\"small\">";
 					echo $row["event_dataset_full"];
 					echo "Changes: " . $row["event_dataset_brief"] . "<br />";
-					echo "<a href=\"" . APP_ROOT_PATH . "/" . $row["event_log_filepath"] . "\" title=\"View complete log file\" target=\"_blank\"><span class=\"glyphicon glyphicon-new-window\" aria-hidden=\"true\"></span>&nbsp;View complete log file</a>";
+					echo "<a href=\"" . APP_ROOT_PATH . $row["event_log_filepath"] . "\" title=\"View complete log file\" target=\"_blank\"><span class=\"glyphicon glyphicon-new-window\" aria-hidden=\"true\"></span>&nbsp;View complete log file</a>";
 					echo "</p><br />";
 				}
 			?>
@@ -83,7 +83,7 @@
 	<div class="row">
 	</div> <!-- /.row -->
 
-	<?php require_once(dirname(__FILE__) . '/include/foot.php'); ?>
+	<?php require_once(dirname(__FILE__) . '/../include/foot.php'); ?>
 </div> <!-- /.container -->
 </body>
 </html>

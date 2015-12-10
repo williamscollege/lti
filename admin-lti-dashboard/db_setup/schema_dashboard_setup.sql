@@ -89,16 +89,15 @@ CREATE TABLE IF NOT EXISTS `dashboard_eventlogs` (
 
 CREATE TABLE IF NOT EXISTS `dashboard_sis_imports_raw` (
 	`raw_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`sis_import_id` INT NOT NULL DEFAULT 0,
-	`sis_data_preparation` VARCHAR(2000) NULL DEFAULT '',
-	`sis_curl_command` VARCHAR(1000) NULL DEFAULT '',
-	`sis_return_code` VARCHAR(1000) NULL DEFAULT '',
-	`sis_import_status` VARCHAR(3500) NULL DEFAULT '',
-	`begin_date` TIMESTAMP NULL,
-	`end_date` TIMESTAMP NULL,
-	INDEX `sis_import_id` (`sis_import_id`),
-	INDEX `begin_date` (`begin_date`),
-	INDEX `end_date` (`end_date`)
+	`created_at` TIMESTAMP NULL,
+	`ended_at` TIMESTAMP NULL,
+	`file_prep_status` VARCHAR(2500) NULL DEFAULT '',
+	`curl_raw_return_code` VARCHAR(1000) NULL DEFAULT '',
+	`curl_parsed_import_id` INT NOT NULL DEFAULT 0,
+	`curl_raw_import_status` VARCHAR(4000) NULL DEFAULT '',
+	INDEX `curl_parsed_import_id` (`curl_parsed_import_id`),
+	INDEX `created_at` (`created_at`),
+	INDEX `ended_at` (`ended_at`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Log curl call and import results with Instructure Canvas LMS';
 /* dashboard_sis_imports_raw table logs curl call and import results with Instructure Canvas LMS */
 

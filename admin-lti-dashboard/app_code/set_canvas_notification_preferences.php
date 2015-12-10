@@ -28,17 +28,17 @@
 		ob_start();
 	}
 
-	require_once(dirname(__FILE__) . '/institution.cfg.php');
-	require_once(dirname(__FILE__) . '/include/connDB.php');
+	require_once(dirname(__FILE__) . '/../institution.cfg.php');
+	require_once(dirname(__FILE__) . '/../include/connDB.php');
+	require_once(dirname(__FILE__) . '/../util.php');
 	require_once(dirname(__FILE__) . '/curl_functions.php');
-	require_once(dirname(__FILE__) . '/util.php');
 
 
 	#------------------------------------------------#
 	# IMPORTANT STEPS TO REMEMBER
 	#------------------------------------------------#
 	# Run PHP file: (1) daily from server via cron job, or (2) manually from browser as web application
-	# PHP File currently at: https://apps.williams.edu/admin-lti-dashboard/set_canvas_notification_preferences.php
+	# PHP File currently at: https://apps.williams.edu/admin-lti-dashboard/app_code/set_canvas_notification_preferences.php
 
 	# Set and show debugging browser output (on=TRUE, off=FALSE)
 	$debug = FALSE;
@@ -64,8 +64,8 @@
 	$beginDateTimePretty = date('Y-m-d H:i:s');
 
 	# Create new archival log file
-	$str_log_file_path = "logs/" . date("Ymd-His") . "-log-report.txt";
-	$myLogFile = fopen($str_log_file_path, "w") or die("Unable to open file!");
+	$str_log_file_path = "/logs/" . date("Ymd-His") . "-log-report.txt";
+	$myLogFile = fopen(".." . $str_log_file_path, "w") or die("Unable to open file!");
 
 
 	#------------------------------------------------#
@@ -203,7 +203,7 @@
 	array_push($finalReport, "Project: " . $str_project_name);
 
 	# Stringify for browser, output to txt file
-	$firstTimeFlag     = TRUE;
+	$firstTimeFlag          = TRUE;
 	$str_event_dataset_full = "";
 	foreach ($finalReport as $obj) {
 		if ($firstTimeFlag) {
@@ -250,7 +250,7 @@
 		$flag_is_cron_job     = 1; // TRUE
 	}
 
-	$str_event_dataset_brief = $intCountUsersCanvas . " users: " . $intCountUsersUpdated . " updates, " .  $intCountUsersSkipped . " skips";
+	$str_event_dataset_brief = $intCountUsersCanvas . " users: " . $intCountUsersUpdated . " updates, " . $intCountUsersSkipped . " skips";
 
 	// $flag_success = 0; // FALSE
 	$flag_success = 1; // TRUE

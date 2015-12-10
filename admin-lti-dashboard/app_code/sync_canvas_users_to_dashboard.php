@@ -29,11 +29,10 @@
 		ob_start();
 	}
 
-	require_once(dirname(__FILE__) . '/institution.cfg.php');
-	require_once(dirname(__FILE__) . '/include/connDB.php');
+	require_once(dirname(__FILE__) . '/../institution.cfg.php');
+	require_once(dirname(__FILE__) . '/../include/connDB.php');
+	require_once(dirname(__FILE__) . '/../util.php');
 	require_once(dirname(__FILE__) . '/curl_functions.php');
-	require_once(dirname(__FILE__) . '/util.php');
-
 
 	#------------------------------------------------#
 	# IMPORTANT STEPS TO REMEMBER
@@ -71,9 +70,8 @@
 	$beginDateTimePretty = date('Y-m-d H:i:s');
 
 	# Create new archival log file
-	$str_log_file_path = "logs/" . date("Ymd-His") . "-log-report.txt";
-	$myLogFile = fopen($str_log_file_path, "w") or die("Unable to open file!");
-
+	$str_log_file_path = "/logs/" . date("Ymd-His") . "-log-report.txt";
+	$myLogFile = fopen(".." . $str_log_file_path, "w") or die("Unable to open file!");
 
 	#------------------------------------------------#
 	# Fetch all Canvas user accounts using paged curl calls

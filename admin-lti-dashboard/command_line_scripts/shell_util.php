@@ -1,6 +1,6 @@
 <?php
 	/***********************************************
-	 ** Project:    "Dashboard for Automating Canvas Maintenance"
+	 ** Project:    Monitor SIS Uploads: Tracking Williams SIS data to Canvas
 	 ** Author:     Williams College, OIT, David Keiser-Clark
 	 ***********************************************/
 
@@ -60,4 +60,13 @@
 
 	function util_dateTimeObject_asMySQL($dt) {
 		return $dt->format('Y-m-d H:i:s');
+	}
+
+	function util_convert_UTC_string_to_date_object($utc) {
+		$dt = new DateTime($utc);
+		$tz = new DateTimeZone('America/New_York');
+		$dt->setTimezone($tz);
+
+		return util_dateTimeObject_asMySQL($dt);
+		//return $dt->format('Y-m-d H:i:s');
 	}

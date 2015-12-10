@@ -11,11 +11,11 @@
 
 	# This page provides a function to verify that database connection exists
 
-	require_once(dirname(__FILE__) . '/institution.cfg.php');
-	require_once(dirname(__FILE__) . '/' . LTI_FOLDER . 'LTI_Tool_Provider.php');
+	require_once(dirname(__FILE__) . '/../institution.cfg.php');
+	require_once(dirname(__FILE__) . '/../' . LTI_FOLDER . 'LTI_Tool_Provider.php');
 
 	# Modification needed for local development work
-	# require_once(dirname(__FILE__) . '\\' . LTI_FOLDER . '\LTI_Tool_Provider.php');
+	# require_once(dirname(__FILE__) . '\..\' . LTI_FOLDER . '\LTI_Tool_Provider.php');
 
 
 	# Return a connection to the database, return FALSE if an error occurs

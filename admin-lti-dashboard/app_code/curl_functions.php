@@ -5,13 +5,13 @@
 	 ***********************************************/
 
 
-	require_once(dirname(__FILE__) . '/util.php');
+	require_once(dirname(__FILE__) . '/../util.php');
 
 
 	#------------------------------------------------#
 	# Project:		"Sync Canvas Users to Dashboard"
 	# Purpose:		Fetch all Canvas user accounts using paged curl calls
-	# Parent file:	sync_canvas_users_to_dashboard.php
+	# Parent file:	/app_code/sync_canvas_users_to_dashboard.php
 	# Notes:		Make API call to Instructure Canvas using Curl (GET) command
 	#------------------------------------------------#
 	function curlFetchUsers($pageNumber, $apiPathPrefix, $apiPathEndpoint) {
@@ -50,7 +50,7 @@
 	#------------------------------------------------#
 	# Project:		"Set Canvas Notification Preferences"
 	# Purpose:		Reset Canvas User "Notification Preferences" with custom values using curl PUT calls (do only once per user account)
-	# Parent file:	set_canvas_notification_preferences.php
+	# Parent file:	/app_code/set_canvas_notification_preferences.php
 	# Notes:		Make API call to Instructure Canvas using Curl (PUT) command
 	#------------------------------------------------#
 	function curlSetUserNotificationPreferences($userID, $username, $apiPathPrefix, $apiPathEndpoint) {

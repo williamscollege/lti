@@ -6,22 +6,25 @@
 	$arrayPathBits = explode("/", $pathFull);
 
 	// display contents of array
-	$homePath    = "";
-	$filePath    = "";
+	$homePath = "";
+	//	$filePath    = "";
 	$cntItem     = 0;
 	$cntPathBits = count($arrayPathBits);
 
 	foreach ($arrayPathBits as $thisBit) {
 		$cntItem += 1;
 		if ($cntItem < $cntPathBits) {
-			$homePath = $homePath . '/' . $thisBit;
+			//$homePath = $homePath . '/' . $thisBit;
+			$homePath = APP_FOLDER;
 		}
-		else {
-			$filePath = $homePath . '/' . $thisBit;
-		}
+		//		else {
+		//			$filePath = $homePath . '/' . $thisBit;
+		//		}
 	};
+
 	// display home path root
 	echo "<a href=\"$homePath\" title=\"Home\">Home</a>";
+
 	// display destination path
 	echo " &#x25BA; <code>$thisBit</code>";
 	// echo " &#x25BA; <a href=\"$filePath\" title=\"$filePath\">$thisBit</a>";

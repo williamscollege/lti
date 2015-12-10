@@ -91,7 +91,7 @@
 				else {
 					$_SESSION['error_message'] = 'Unable to save the consumer; please check the data and try again.';
 				}
-				header('Location: ./');
+				header('Location: ' . APP_ROOT_PATH . '/app_code/lti_manage_tool_consumers.php');
 				exit;
 			}
 
@@ -106,7 +106,7 @@
 				else {
 					$_SESSION['error_message'] = 'Unable to delete the consumer; please try again.';
 				}
-				header('Location: ./');
+				header('Location: ' . APP_ROOT_PATH . '/app_code/lti_manage_tool_consumers.php');
 				exit;
 
 			}
@@ -145,11 +145,10 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="page-header">
-				<h1>
-					<?php echo LANG_INSTITUTION_NAME . ": " . LTI_APP_NAME; ?>
-					<small><br />Manage LTI tool consumers</small>
-				</h1>
-				<div id="breadCrumbs" class="small"><?php require_once(dirname(__FILE__) . '/include/breadcrumbs.php'); ?></div>
+				<h1><?php echo LTI_APP_NAME; ?></h1>
+				<h5><?php echo LANG_INSTITUTION_NAME; ?>: Manage LTI tool consumers</h5>
+
+				<div id="breadCrumbs" class="small"><?php require_once(dirname(__FILE__) . '/../include/breadcrumbs.php'); ?></div>
 			</div>
 
 			<?php
@@ -184,7 +183,7 @@
 							<th>Version</th>
 							<th>Available?</th>
 							<th>Protected?</th>
-							<th>Last access</th>
+							<th title="dd-mm-yyyy">Last access</th>
 							<th>Options</th>
 						</tr>
 						</thead>
@@ -222,7 +221,7 @@
 								?>
 								<tr class="<?php echo $display_status; ?>">
 									<td>
-										<img src="img/institution-logo-16.png" alt="<?php echo LANG_INSTITUTION_NAME; ?>" title="<?php echo LANG_INSTITUTION_NAME; ?>" />&nbsp;<?php echo $consumer->name; ?>
+										<img src="<?php echo APP_ROOT_PATH; ?>/img/institution-logo-16.png" alt="<?php echo LANG_INSTITUTION_NAME; ?>" title="<?php echo LANG_INSTITUTION_NAME; ?>" />&nbsp;<?php echo $consumer->name; ?>
 									</td>
 									<td><?php echo $consumer->getKey(); ?></td>
 									<td><span title="<?php echo $consumer->consumer_guid; ?>"><?php echo $consumer->consumer_version; ?></span></td>
@@ -232,18 +231,18 @@
 									<td>
 										<i class="glyphicon glyphicon-<?php echo $protected; ?>" title="<?php echo $protected_alt; ?>"></i>
 									</td>
-									<td><?php echo $last; ?></td>
+									<td title="dd-mm-yyyy"><?php echo $last; ?></td>
 									<td>
-										<a href="./?key=<?php echo $trkey; ?>#edit" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-pencil"></i>&nbsp;Edit</a>&nbsp;&nbsp;
-										<a href="./?do=delete&amp;key=<?php echo $trkey; ?>" class="btn btn-xs btn-danger" onclick="return confirm('Delete consumer; are you sure?');"><i class="glyphicon glyphicon-remove"></i>&nbsp;Delete</a>
+										<a href="<?php echo APP_ROOT_PATH; ?>/app_code/lti_manage_tool_consumers.php?key=<?php echo $trkey; ?>#edit" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-pencil"></i>&nbsp;Edit</a>&nbsp;&nbsp;
+										<a href="<?php echo APP_ROOT_PATH; ?>/app_code/lti_manage_tool_consumers.php?do=delete&amp;key=<?php echo $trkey; ?>" class="btn btn-xs btn-danger" onclick="return confirm('Delete consumer; are you sure?');"><i class="glyphicon glyphicon-remove"></i>&nbsp;Delete</a>
 									</td>
 								</tr>
-							<?php
+								<?php
 							}
 						?>
 						</tbody>
 					</table>
-				<?php
+					<?php
 				}
 
 				// Display form for adding/editing a tool consumer
@@ -285,7 +284,7 @@
 			?>
 			<h2><br /><a name="edit"></a><?php echo $mode; ?> consumer</h2>
 
-			<form method="post" action="./" role="form" class="form-horizontal">
+			<form method="post" action="<?php echo APP_ROOT_PATH; ?>/app_code/lti_manage_tool_consumers.php" role="form" class="form-horizontal">
 				<input type="hidden" name="do" value="add" />
 				<input type="hidden" name="<?php echo $key2; ?>" value="<?php echo $key; ?>" />
 
@@ -350,7 +349,7 @@
 							<input type="submit" id="btn_submit" name="btn_submit" class="btn btn-primary" value="<?php echo $mode; ?> consumer" />
 							<?php
 								if (isset($update_consumer->created)) {
-									echo "&nbsp;<input type=\"reset\" value=\"Cancel\" class=\"btn btn-link\" onclick=\"location.href='./';\" />";
+									echo "&nbsp;<input type=\"reset\" value=\"Cancel\" class=\"btn btn-link\" onclick=\"location.href='" . APP_ROOT_PATH . "/app_code/lti_manage_tool_consumers.php'\" />";
 								}
 							?>
 						</p>
@@ -366,7 +365,7 @@
 		<!-- /.col -->
 	</div>
 	<!-- /.row -->
-	<?php require_once(dirname(__FILE__) . '/include/foot.php'); ?>
+	<?php require_once(dirname(__FILE__) . '/../include/foot.php'); ?>
 </div>
 <!-- /.container -->
 </body>
