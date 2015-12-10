@@ -63,10 +63,14 @@
 	}
 
 	function util_convert_UTC_string_to_date_object($utc) {
-		$dt = new DateTime($utc);
-		$tz = new DateTimeZone('America/New_York');
-		$dt->setTimezone($tz);
+		// echo "utc=" . $utc;
 
+		// create DateTime object and explicitly set timezone as UTC to match expected UTC string value
+		$dt = new DateTime($utc, new DateTimeZone('UTC'));
+
+		// convert DateTimeZone to our local time; this will change UTC value to local time value
+		$dt->setTimeZone(new DateTimeZone("America/New_York"));
+
+		//util_prePrintR($dt); exit;
 		return util_dateTimeObject_asMySQL($dt);
-		//return $dt->format('Y-m-d H:i:s');
 	}

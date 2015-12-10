@@ -82,9 +82,8 @@
 	if ($debug) {
 		// UTC time = "2015-12-08T20:55:05Z"; // 3:55 pm or 15:55
 		// converted time = 2015-12-08 15:55:05
-		// echo "int_pos_begin_created_at:" . $int_pos_begin_created_at . "<br />";
 		// echo "str_fragment:" . $str_fragment . "<br />";
-		// echo "int_pos_end_created_at:" . $int_pos_end_created_at . "<br />";
+		// echo "int_pos_begin_created_at:" . $int_pos_begin_created_at . ", int_pos_end_created_at:" . $int_pos_end_created_at . "<br />";
 		echo "parsed_created_at:<br />" . $parsed_created_at . "<hr />";
 	}
 
@@ -94,10 +93,8 @@
 	$int_pos_end_id   = stripos($str_fragment, ","); // find: needle
 	$parsed_import_id = substr($log_last_return_code, $int_pos_begin_id, $int_pos_end_id);
 	if ($debug) {
-		// expected format of value: 9126653
-		// echo "int_pos_begin_id:" . $int_pos_begin_id . "<br />";
 		// echo "str_fragment:" . $str_fragment . "<br />";
-		// echo "pos_id_end:" . $int_pos_end_id . "<br />";
+		// echo "int_pos_begin_id:" . $int_pos_begin_id . ", pos_id_end:" . $int_pos_end_id . "<br />"; // ie 9126653
 		echo "parsed_import_id:<br />" . $parsed_import_id . "<hr />";
 	}
 
@@ -135,45 +132,7 @@
 		die(mysqli_error($connString));
 	}
 
-
-/*
-FINAL
-{
-"created_at":"2015-12-07T14:55:04Z",
-"started_at":"2015-12-07T14:55:05Z",
-"ended_at":"2015-12-07T15:05:29Z",
-"updated_at":"2015-12-07T15:05:29Z",
-"progress":100,
-"id":9137693,
-"workflow_state":"imported_with_messages",
-"data":{"import_type":"instructure_csv",
-"supplied_batches":["term",
-"course",
-"section",
-"user",
-"enrollment"],
-"counts":{"accounts":0,
-"terms":19,
-"abstract_courses":0,
-"courses":1534,
-"sections":1534,
-"xlists":0,
-"users":4372,
-"enrollments":12883,
-"groups":0,
-"group_memberships":0,
-"grade_publishing_results":0}},
-"batch_mode":null,
-"batch_mode_term_id":null,
-"override_sis_stickiness":null,
-"add_sis_stickiness":null,
-"clear_sis_stickiness":null,
-"diffing_data_set_identifier":null,
-"diffed_against_import_id":null,
-"processing_warnings":[["users_20151207-095501.csv", "user 1683415 has already claimed 1117865's requested login information, skipping"], ["enrollments_20151207-095501.csv", "User 1130947 didn't exist for user enrollment"]]
-}
-
-notes:
+	/* notes:
 	//if ($debug) {
 		// array: get known file (from filepath) into an array using optional flags parameters
 		// $trimmed_lines = file($file_name, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -184,8 +143,4 @@ notes:
 		//}
 		//echo "<hr />";
 	//}
-
-* */
-
-
-
+	*/

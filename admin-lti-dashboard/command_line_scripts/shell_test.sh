@@ -14,12 +14,13 @@
 
 
 
-$ECHO "shell begin first php script"
+$ECHO "shell begin first php script:"
+$ECHO ""
 php record_status_stage_1.php
-$ECHO "shell end first php script"
+$ECHO "shell end first php script."
 
-$ECHO "shell begin second php script"
+$ECHO "shell begin second php script:"
 php record_status_stage_2.php
-$ECHO "shell end second php script"
+$ECHO "shell end second php script."
 
-$ECHO  "shell is all done"
+$ECHO "shell is all done."
