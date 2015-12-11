@@ -25,16 +25,199 @@
 	# IMPORTANT STEPS TO REMEMBER
 	#------------------------------------------------#
 	# Set and show debugging browser output (on=TRUE, off=FALSE)
-	$debug = TRUE;
+	$debug = FALSE;
 
-	echo "still in development. exiting now.";
+
+	# //////////////////////////////////////////////////
+	# BEGIN-TEST
+
+	// fetch commandline argument passed from shell script
+	// $curl_response = $argv[1];
+
+	// debugging only
+	$curl_response = '{"created_at":"2015-12-07T18:55:05Z","started_at":"2015-12-07T18:55:16Z","ended_at":"2015-12-07T19:09:32Z","updated_at":"2015-12-07T19:09:32Z","progress":100,"id":9138772,"workflow_state":"imported_with_messages","data":{"import_type":"instructure_csv","supplied_batches":["term","course","section","user","enrollment"],"counts":{"accounts":0,"terms":19,"abstract_courses":0,"courses":1534,"sections":1534,"xlists":0,"users":4372,"enrollments":12884,"groups":0,"group_memberships":0,"grade_publishing_results":0}},"batch_mode":null,"batch_mode_term_id":null,"override_sis_stickiness":null,"add_sis_stickiness":null,"clear_sis_stickiness":null,"diffing_data_set_identifier":null,"diffed_against_import_id":null,"processing_warnings":[["users_20151207-135501.csv","user 1683415 has already claimed 1117865\'s requested login information, skipping"],["enrollments_20151207-135501.csv","User 1130947 didn\'t exist for user enrollment"]]}';
+	// util_prePrintR($curl_response);	echo "<hr />";
+
+	// put returned json into object
+	$obj_curl_response = json_decode($curl_response);
+	util_prePrintR($obj_curl_response);
+
+	// retrieve values from object for later SQL update and insert
+	$obj_processing_warnings = "";
+	foreach ($obj_curl_response as $name => $val) {
+		if ($name == "created_at") {
+			$obj_created_at = util_convert_UTC_string_to_date_object($val);
+		}
+		if ($name == "started_at") {
+			$obj_started_at = util_convert_UTC_string_to_date_object($val);
+		}
+		if ($name == "ended_at") {
+			$obj_ended_at = util_convert_UTC_string_to_date_object($val);
+		}
+		if ($name == "updated_at") {
+			$obj_updated_at = util_convert_UTC_string_to_date_object($val);
+		}
+		if ($name == "progress") {
+			$obj_progress = $val;
+		}
+		if ($name == "id") {
+			$obj_id = $val;
+		}
+		if ($name == "workflow_state") {
+			$obj_workflow_state = $val;
+		}
+		if ($name == "data") {
+			foreach ($val as $data_name => $data_val) {
+				if ($data_name == "import_type") {
+					$obj_data_import_type = $data_val;
+				}
+				if ($data_name == "supplied_batches") {
+					$obj_data_supplied_batches = implode(", ", $data_val);
+				}
+				if ($data_name == "counts") {
+					foreach ($data_val as $count_name => $count_val) {
+						if ($count_name == "accounts") {
+							$obj_data_counts_accounts = $count_val;
+						}
+						if ($count_name == "terms") {
+							$obj_data_counts_terms = $count_val;
+						}
+						if ($count_name == "abstract_courses") {
+							$obj_data_counts_abstract_courses = $count_val;
+						}
+						if ($count_name == "courses") {
+							$obj_data_counts_courses = $count_val;
+						}
+						if ($count_name == "sections") {
+							$obj_data_counts_sections = $count_val;
+						}
+						if ($count_name == "xlists") {
+							$obj_data_counts_xlists = $count_val;
+						}
+						if ($count_name == "users") {
+							$obj_data_counts_users = $count_val;
+						}
+						if ($count_name == "enrollments") {
+							$obj_data_counts_enrollments = $count_val;
+						}
+						if ($count_name == "groups") {
+							$obj_data_counts_groups = $count_val;
+						}
+						if ($count_name == "group_memberships") {
+							$obj_data_counts_group_memberships = $count_val;
+						}
+						if ($count_name == "grade_publishing_results") {
+							$obj_data_counts_grade_publishing_results = $count_val;
+						}
+					}
+				}
+			}
+		}
+		if ($name == "batch_mode") {
+			$obj_batch_mode = $val;
+		}
+		if ($name == "batch_mode_term_id") {
+			$obj_batch_mode_term_id = $val;
+		}
+		if ($name == "override_sis_stickiness") {
+			$obj_override_sis_stickiness = $val;
+		}
+		if ($name == "add_sis_stickiness") {
+			$obj_add_sis_stickiness = $val;
+		}
+		if ($name == "clear_sis_stickiness") {
+			$obj_clear_sis_stickiness = $val;
+		}
+		if ($name == "diffing_data_set_identifier") {
+			$obj_diffing_data_set_identifier = $val;
+		}
+		if ($name == "diffed_against_import_id") {
+			$obj_diffed_against_import_id = $val;
+		}
+		if ($name == "processing_warnings") {
+			foreach ($val as $warning_name => $warning_val) {
+				$obj_processing_warnings .= implode(", ", $warning_val) . "<br />";
+			}
+		}
+	}
+
+	// testing output
+	echo "import_type = " . $obj_data_import_type . "<br />";
+	echo "created_at=" . $obj_created_at . "<br />";
+	echo "created_at=" . $obj_created_at . "<br />";
+	echo "ended_at=" . $obj_ended_at . "<br />";
+	echo "data_supplied_batches= " . $obj_data_supplied_batches . "<br />";
+	echo "enrollments= " . $obj_data_counts_enrollments . "<br />";
+	echo "processing_warnings= " . $obj_processing_warnings . "<br />";
+
 	exit;
+	#------------------------------------------------#
+	# UPDATE SQL Record
+	# Curl was successful. Update Dashboard local db to reflect this action has been completed
+	# requirement: `flag_is_set_notification_preference` = 1 (set)
+	#------------------------------------------------#
+
+	$queryEditSISRaw = "
+				UPDATE
+					`dashboard_sis_imports_raw`
+				SET
+					`ended_at` = '" . mysqli_real_escape_string($connString, $obj_ended_at) . "'
+					, `curl_raw_import_status` = '" . mysqli_real_escape_string($connString, $curl_response) . "'
+				WHERE
+					`curl_import_id` = " . $obj_id . "
+			";
+
+	if ($debug) {
+		echo "<pre>queryEditSISRaw = " . $queryEditSISRaw . "</pre>";
+	}
+	else {
+		$resultsEditSISRaw = mysqli_query($connString, $queryEditSISRaw) or
+		die(mysqli_error($connString));
+	}
+
+	#------------------------------------------------#
+	# SQL: insert captured data into `dashboard_sis_imports_raw`
+	#------------------------------------------------#
+	$queryCaptureResults = "
+			INSERT INTO
+				`dashboard_sis_imports_parsed`
+				(
+					`created_at`
+					,`ended_at`
+					,`file_prep_status`
+					,`curl_raw_return_code`
+					,`curl_parsed_import_id`
+					,`curl_raw_import_status`
+				)
+				VALUES
+				(
+					  NULL
+					, NULL
+					, NULL
+					, NULL
+					, 123456
+					, '" . mysqli_real_escape_string($connString, $curl_response) . "'
+				)
+		";
+
+	if ($debug) {
+		echo "<pre>queryCaptureResults = " . $queryCaptureResults . "</pre>";
+	}
+	else {
+		$resultsCaptureResults = mysqli_query($connString, $queryCaptureResults) or
+		die(mysqli_error($connString));
+	}
+	echo "still more to develop. exiting now.";
+	exit;
+	# END-TEST
+	# //////////////////////////////////////////////////
+
 
 	#------------------------------------------------#
 	# Constants: Initialize counters
 	#------------------------------------------------#
-	$file_path         = "/var/log/";				// server: canvas-images:/var/log/
-	$file_name         = "get_onecard_data.log";	// file: get_onecard_data.log
+	$file_path        = "/var/log/";                // server: canvas-images:/var/log/
+	$file_name        = "get_onecard_data.log";    // file: get_onecard_data.log
 	$str_delimiter_01 = "====================================";
 	$str_delimiter_02 = "Return Code:";
 	$str_delimiter_03 = '"created_at":';

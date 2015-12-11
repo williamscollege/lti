@@ -145,7 +145,7 @@
 				SET
 					`flag_is_set_notification_preference` = TRUE
 				WHERE
-					dash_id = " . $local_usr["dash_id"] . "
+					`dash_id` = " . $local_usr["dash_id"] . "
 			";
 
 			if ($debug) {

@@ -68,7 +68,7 @@
 		// create DateTime object and explicitly set timezone as UTC to match expected UTC string value
 		$dt = new DateTime($utc, new DateTimeZone('UTC'));
 
-		// convert DateTimeZone to our local time; this will change UTC value to local time value
+		// convert DateTimeZone to convert UTC value to local time value
 		$dt->setTimeZone(new DateTimeZone("America/New_York"));
 
 		//util_prePrintR($dt); exit;
