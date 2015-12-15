@@ -16,11 +16,11 @@
 
 $ECHO "shell begin first php script:"
 $ECHO ""
-php record_status_stage_1.php
+php shell_1_get_curl_status.php
 $ECHO "shell end first php script."
 
-$ECHO "shell begin second php script:"
-php record_status_stage_2.php
-$ECHO "shell end second php script."
+# $ECHO "shell begin second php script:"
+# php shell_2_get_curl_status.php
+# $ECHO "shell end second php script."
 
 $ECHO "shell is all done."

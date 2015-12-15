@@ -30,17 +30,13 @@
 	#------------------------------------------------#
 	# Constants: Initialize counters
 	#------------------------------------------------#
-	$file_path         = "/var/log/";				// server: canvas-images:/var/log/
-	$file_name         = "get_onecard_data.log";	// file: get_onecard_data.log
+	$file_path        = "/var/log/";                // server: canvas-images:/var/log/
+	$file_name        = "get_onecard_data.log";    // file: get_onecard_data.log
 	$str_delimiter_01 = "====================================";
 	$str_delimiter_02 = "Return Code:";
 	$str_delimiter_03 = '"created_at":';
 	$str_delimiter_04 = '"id":';
 
-
-	if ($debug) {
-		echo "php script #1 begins...<br />\n";
-	}
 
 	if (!file($file_path . $file_name)) {
 		echo "Requested log file not found! Exiting now...";
@@ -98,49 +94,77 @@
 		echo "parsed_import_id:<br />" . $parsed_import_id . "<hr />";
 	}
 
-
 	#------------------------------------------------#
-	# SQL: insert captured data into `dashboard_sis_imports_raw`
+	# SQL: Check if this `curl_import_id` already exists
 	#------------------------------------------------#
-	$queryCaptureResults = "
-				INSERT INTO
-					`dashboard_sis_imports_raw`
-					(
-						`created_at`
-						,`ended_at`
-						,`file_prep_status`
-						,`curl_raw_return_code`
-						,`curl_parsed_import_id`
-						,`curl_raw_import_status`
-					)
-					VALUES
-					(
-						'" . mysqli_real_escape_string($connString, $parsed_created_at) . "'
-						, NULL
-						, '" . mysqli_real_escape_string($connString, $log_last_file_prep_status) . "'
-						, '" . mysqli_real_escape_string($connString, $log_last_return_code) . "'
-						, " . $parsed_import_id . "
-						, NULL
-					)
-			";
+	$queryCheckExists = "
+		SELECT * FROM `dashboard_sis_imports_raw` WHERE `curl_import_id` = " . $parsed_import_id . ";
+	";
+	$resultsCheckExists = mysqli_query($connString, $queryCheckExists) or
+	die(mysqli_error($connString));
 
-	if ($debug) {
-		echo "<pre>queryCaptureResults = " . $queryCaptureResults . "</pre>";
+	$check_existence = mysqli_num_rows($resultsCheckExists);
+
+	if ($check_existence) {
+		#------------------------------------------------#
+		# SQL: UPDATE existing record using captured data
+		#------------------------------------------------#
+		$queryEditData = "
+			UPDATE
+				`dashboard_sis_imports_raw`
+			SET
+				`cronjob_datetime` = now()
+				,`created_at` = '" . mysqli_real_escape_string($connString, $parsed_created_at) . "'
+				-- ,`ended_at` =
+				,`file_prep_status` = '" . mysqli_real_escape_string($connString, $log_last_file_prep_status) . "'
+				,`curl_return_code` = '" . mysqli_real_escape_string($connString, $log_last_return_code) . "'
+				-- ,`curl_import_id` =
+				-- ,`curl_final_import_status` =
+			WHERE
+				`curl_import_id` = " . $parsed_import_id . "
+		";
+
+		if ($debug) {
+			echo "<pre>queryEditData = " . $queryEditData . "</pre>";
+		}
+		else {
+			$resultsEditData = mysqli_query($connString, $queryEditData) or
+			die(mysqli_error($connString));
+		}
 	}
 	else {
-		$resultsCaptureResults = mysqli_query($connString, $queryCaptureResults) or
-		die(mysqli_error($connString));
+		#------------------------------------------------#
+		# SQL: INSERT new record using captured data
+		#------------------------------------------------#
+		$queryInsertData = "
+		INSERT INTO
+			`dashboard_sis_imports_raw`
+			(
+				`cronjob_datetime`
+				,`created_at`
+				,`ended_at`
+				,`file_prep_status`
+				,`curl_return_code`
+				,`curl_import_id`
+				,`curl_final_import_status`
+			)
+			VALUES
+			(
+				now()
+				,'" . mysqli_real_escape_string($connString, $parsed_created_at) . "'
+				, NULL
+				, '" . mysqli_real_escape_string($connString, $log_last_file_prep_status) . "'
+				, '" . mysqli_real_escape_string($connString, $log_last_return_code) . "'
+				, " . $parsed_import_id . "
+				, NULL
+			)
+		";
+
+		if ($debug) {
+			echo "<pre>queryInsertData = " . $queryInsertData . "</pre>";
+		}
+		else {
+			$resultsInsertData = mysqli_query($connString, $queryInsertData) or
+			die(mysqli_error($connString));
+		}
 	}
-
-	/* notes:
-	//if ($debug) {
-		// array: get known file (from filepath) into an array using optional flags parameters
-		// $trimmed_lines = file($file_name, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
-		// loop through our array, show HTML source as HTML source; and line numbers too.
-		//foreach ($trimmed_lines as $line_num => $line) {
-		//	echo "Line #<b>{$line_num}</b> :" . htmlspecialchars($line) . "<br />\n";
-		//}
-		//echo "<hr />";
-	//}
-	*/

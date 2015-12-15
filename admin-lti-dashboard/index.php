@@ -156,7 +156,7 @@
 						<tbody>
 						<tr>
 							<th class="small">Count</th>
-							<td><code><?php echo number_format($cnt_lti_consumer_enabled); ?></code>
+							<td><code title="Count: live, enabled LTI applications"><?php echo number_format($cnt_lti_consumer_enabled); ?></code>
 								<small>(LTI applications)</small>
 							</td>
 						</tr>
@@ -202,7 +202,7 @@
 						<tbody>
 						<tr>
 							<th class="small">Count</th>
-							<td><code><?php #echo number_format($cnt_dashboard_users) . " / " . number_format($log_sync_canvas_num_items); ?></code>
+							<td><code title=""><?php #echo number_format($cnt_dashboard_users) . " / " . number_format($log_sync_canvas_num_items); ?></code>
 								<small>(Williams SIS data to Canvas)</small>
 							</td>
 						</tr>
@@ -221,7 +221,7 @@
 						<tr>
 							<th class="small">Tools</th>
 							<td>
-								<small><a href="<?php echo APP_ROOT_PATH; ?>/app_code/abc.php" title="Run now" target="_blank">Run now</a>&nbsp;&#124;
+								<small><a href="<?php echo APP_ROOT_PATH; ?>/app_code/verify_sis_uploads_to_canvas.php" title="Run now" target="_blank">Run now</a>&nbsp;&#124;
 									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/view_logs.php?action=XYZ" title="View logs">View logs
 										(<?php #echo $cnt_logs_sync_canvas_users; ?>)</a></small>
 							<td>
@@ -243,7 +243,7 @@
 						<tbody>
 						<tr>
 							<th class="small">Count</th>
-							<td><code><?php echo number_format($cnt_dashboard_users) . " / " . number_format($log_sync_canvas_num_items); ?></code>
+							<td><code title="Counts: Dashboard users / Total # Canvas users"><?php echo number_format($cnt_dashboard_users) . " / " . number_format($log_sync_canvas_num_items); ?></code>
 								<small>(users: Dashboard / Canvas)</small>
 							</td>
 						</tr>
@@ -286,7 +286,7 @@
 						<tbody>
 						<tr>
 							<th class="small">Count</th>
-							<td><code><?php echo number_format($cnt_avatars_exist) . " / " . number_format($log_sync_canvas_num_items); ?></code>
+							<td><code title="Counts: Canvas users with AWS Avatars / Total # Canvas users"><?php echo number_format($cnt_avatars_exist) . " / " . number_format($log_sync_canvas_num_items); ?></code>
 								<small>(users: image to AWS Cloud)</small>
 							</td>
 						</tr>
@@ -327,7 +327,7 @@
 						<tbody>
 						<tr>
 							<th class="small">Total</th>
-							<td><code><?php echo number_format($cnt_notif_pref_exist) . " / " . number_format($log_sync_canvas_num_items); ?></code>
+							<td><code title="Counts: Canvas users with Notif Pref set / Total # Canvas users"><?php echo number_format($cnt_notif_pref_exist) . " / " . number_format($log_sync_canvas_num_items); ?></code>
 								<small>(set custom user notif pref's)</small>
 							</td>
 						</tr>

@@ -74,3 +74,48 @@
 		//util_prePrintR($dt); exit;
 		return util_dateTimeObject_asMySQL($dt);
 	}
+
+	function create_eventlog($connString, $debug, $str_event_action = "", $str_log_file_path = "", $str_action_file_path = "", $items = 0, $changes = 0, $errors = 0, $str_event_dataset_brief = "", $str_event_dataset_full = "", $flag_success = 0, $flag_is_cron_job = 0) {
+		#------------------------------------------------#
+		# Record Event Log
+		#------------------------------------------------#
+		$queryEventLog = "
+			INSERT INTO
+				`dashboard_eventlogs`
+				(
+					`event_action`
+					, `event_datetime`
+					, `event_log_filepath`
+					, `event_action_filepath`
+					, `num_items`
+					, `num_changes`
+					, `num_errors`
+					, `event_dataset_brief`
+					, `event_dataset_full`
+					, `flag_success`
+					, `flag_cron_job`
+				)
+				VALUES
+				(
+					'" . mysqli_real_escape_string($connString, $str_event_action) . "'
+					, now()
+					, '" . mysqli_real_escape_string($connString, $str_log_file_path) . "'
+					, '" . mysqli_real_escape_string($connString, $str_action_file_path) . "'
+					, " . $items . "
+					, " . $changes . "
+					, " . $errors . "
+					, '" . mysqli_real_escape_string($connString, $str_event_dataset_brief) . "'
+					, '" . mysqli_real_escape_string($connString, $str_event_dataset_full) . "'
+					, $flag_success
+					, $flag_is_cron_job
+				)
+		";
+
+		if ($debug) {
+			echo "<pre>queryEventLog = " . $queryEventLog . "</pre>";
+		}
+		else {
+			$resultsEventLog = mysqli_query($connString, $queryEventLog) or
+			die(mysqli_error($connString));
+		}
+	}

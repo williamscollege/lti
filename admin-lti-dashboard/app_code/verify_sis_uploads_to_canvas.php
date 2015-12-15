@@ -2,32 +2,21 @@
 	/***********************************************
 	 ** Project:    Sync Canvas Users to Dashboard
 	 ** Author:     Williams College, OIT, David Keiser-Clark
-	 ** Purpose:    Regularly Sync Canvas Users (Amazon AWS) to Dashboard to create local database of users to make other operations more convenient
+	 ** Purpose:    Verify Integrity of SIS Uploads to Canvas
 	 ** Requirements:
-	 **  - Requires admin token to make curl requests against Canvas LMS API
+	 **  - Requires populated database tables containing parsed data for analysis in this file
 	 **  - Must enable write-access to "logs/" folder
 	 **  - Lock down folder contain these scripts to prevent any non-Williams admin from accessing files
-	 **  - delay execution to not exceed Canvas limit of 3000 API requests per hour (http://www.instructure.com/policies/api-policy)
-	 **  - extend the typical "max_execution_time" to require as much time as the script requires (without timing out)
-	 **  - Run daily using cron job
+	 **  - Run every two hours using cron job
 	 ** Current features:
-	 **  - fetch all Canvas user accounts using paged curl calls
-	 **  - fetch all local Dashboard users
-	 **  - compare Canvas to Dashboard and sync live users to local (insert, update, or skip)
-	 **  - compare Dashboard to Canvas and sync live users to local (remove only)
-	 **  - show script start and end times to help document that this script is keeping within Canvas number of API requests/hour
+	 **  - verify integrity of data by checking recorded values with expected values or ranges
 	 **  - report: Log Summary output to browser and written to text file
+	 **  - error reporting: send notification to admin upon finding of any soft or hard errors
 	 ** Dependencies:
 	 **  - Install: Apache, PHP 5.2 (or higher)
 	 **  - Enable PHP modules: PDO, curl, mbyte, dom
 	 ***********************************************/
 
-	# Extend default script timeout to be unlimited (typically default is 300 seconds, from php.ini settings)
-	ini_set('MAX_EXECUTION_TIME', -1);
-	ini_set('MAX_INPUT_TIME', -1);
-	if (ob_get_level() == 0) {
-		ob_start();
-	}
 
 	require_once(dirname(__FILE__) . '/../institution.cfg.php');
 	require_once(dirname(__FILE__) . '/../include/connDB.php');
@@ -41,13 +30,157 @@
 	# PHP File currently at: https://apps.williams.edu/admin-lti-dashboard
 
 	# Set and show debugging browser output (on=TRUE, off=FALSE)
-	$debug = FALSE;
+	$debug = TRUE;
 
 	#------------------------------------------------#
 	# Constants: Initialize counters
 	#------------------------------------------------#
-	$str_project_name        = "Sync Canvas Users to Dashboard";
-	$str_event_action        = "sync_canvas_users_to_dashboard";
+	$str_project_name  = "Verify Integrity of SIS Uploads";
+	$str_event_action  = "verify_sis_uploads_to_canvas";
+	$flag_hard_error   = FALSE;
+	$flag_soft_error   = FALSE;
+	$now_datetime      = new DateTime();
+	$cronjob_frequency = 7200; // 2 hours = 7200 seconds
+	$cronjob_buffer    = 800; // allow buffer of 800 seconds (@13 minutes)
+	$error_msg_brief   = "";
+	$error_msg_full    = "";
+
+	// set values dynamically
+	if (array_key_exists('SERVER_NAME', $_SERVER)) {
+		// script ran as web application
+		$str_action_file_path = $_SERVER['PHP_SELF'];
+		$flag_is_cron_job     = 0; // FALSE
+	}
+	else {
+		// script ran as cron job (triggered from server, not web app)
+		$str_action_file_path = __FILE__;
+		$flag_is_cron_job     = 1; // TRUE
+	}
+
+	# ---------------------------------------------------------------------------
+
+	#------------------------------------------------#
+	# SQL: fetch the top 1 record from `dashboard_sis_imports_raw`
+	#------------------------------------------------#
+	$queryRawMostRecent = "
+		SELECT * FROM `dashboard_sis_imports_raw` ORDER BY `created_at` DESC LIMIT 1;
+	";
+	$resultsRawMostRecent = mysqli_query($connString, $queryRawMostRecent) or
+	die(mysqli_error($connString));
+
+	# Store all in permanent array
+	$arrayRawMostRecent = [];
+	while ($row = mysqli_fetch_assoc($resultsRawMostRecent)) {
+		array_push($arrayRawMostRecent, $row);
+	}
+	if ($debug) {
+		echo "<hr/>arrayRawMostRecent: (example: arrayRawMostRecent[0][\"created_at\"] is: " . $arrayRawMostRecent[0]["created_at"] . ")";
+		util_prePrintR($arrayRawMostRecent);
+	}
+
+	#------------------------------------------------#
+	# SQL: fetch the top 1 record from `dashboard_sis_imports_parsed`
+	#------------------------------------------------#
+	$queryParsedMostRecent = "
+		SELECT * FROM `dashboard_sis_imports_parsed` ORDER BY `created_at` DESC LIMIT 1;
+	";
+	$resultsParsedMostRecent = mysqli_query($connString, $queryParsedMostRecent) or
+	die(mysqli_error($connString));
+
+	# Store all in permanent array
+	$arrayParsedMostRecent = [];
+	while ($row = mysqli_fetch_assoc($resultsParsedMostRecent)) {
+		array_push($arrayParsedMostRecent, $row);
+	}
+	if ($debug) {
+		echo "<hr/>arrayParsedMostRecent: (example: arrayParsedMostRecent[0][\"created_at\"] is: " . $arrayParsedMostRecent[0]["created_at"] . ")<br />";
+		util_prePrintR($arrayParsedMostRecent);
+	}
+
+
+	#------------------------------------------------#
+	# logical checks
+	#------------------------------------------------#
+
+	// 1. Error (cronjob_frequency): now - most_recent_parsed > 2 hours
+	$parsed_created_at = new DateTime($arrayParsedMostRecent[0]["created_at"]);
+	if (($now_datetime->getTimestamp() - $parsed_created_at->getTimestamp()) > ($cronjob_frequency + $cronjob_buffer)) {
+		// set error values
+		$error_msg_brief = "Error (cronjob_frequency): now - most_recent_parsed > 2 hours";
+		$flag_hard_error = TRUE;
+
+		// create event log
+		create_eventlog(
+			$connString,
+			$debug,
+			$str_event_action,
+			$str_log_file_path = "n/a",
+			$str_action_file_path,
+			$items = 0,
+			$changes = 0,
+			$errors = 0,
+			$error_msg_brief,
+			$error_msg_full,
+			$flag_success = 0,
+			$flag_is_cron_job);
+		// TODO send notification
+		// queuemail() or sendmail();
+	}
+
+	// 2. Error (cronjob_frequency): now - most_recent_raw > 2 hours
+	$raw_created_at    = new DateTime($arrayRawMostRecent[0]["created_at"]);
+	if (($now_datetime->getTimestamp() - $raw_created_at->getTimestamp()) > ($cronjob_frequency + $cronjob_buffer)) {
+		// set error values
+		$error_msg_brief = "Error (cronjob_frequency): now - most_recent_raw > 2 hours";
+		$flag_hard_error = TRUE;
+
+		// create event log
+		create_eventlog(
+				$connString,
+				$debug,
+				$str_event_action,
+				$str_log_file_path = "n/a",
+				$str_action_file_path,
+				$items = 0,
+				$changes = 0,
+				$errors = 0,
+				$error_msg_brief,
+				$error_msg_full,
+				$flag_success = 0,
+				$flag_is_cron_job);
+		// TODO send notification
+		// queuemail() or sendmail();
+	}
+
+	// 3. last_insert_parsed: last parsed id has match of corresponding raw id?
+
+
+
+
+//	$raw_ended_at      = new DateTime($arrayRawMostRecent[0]["ended_at"]);
+//	$parsed_ended_at   = new DateTime($arrayParsedMostRecent[0]["ended_at"]);
+	// last_insert_raw: parsed id matches corresponding raw id?
+
+	//	$diff_seconds_raw    = $raw_ended_at->getTimestamp() - $raw_created_at->getTimestamp();
+	//	$diff_seconds_parsed = $parsed_ended_at->getTimestamp() - $parsed_created_at->getTimestamp();
+	//	if ($debug) {
+	//		echo "diff_seconds_raw: " . $diff_seconds_raw . "<br />";
+	//		echo "diff_seconds_parsed: " . $diff_seconds_parsed . "<br />";
+	//	}
+	//	$parsed_time_range = date_diff($parsed_ended_at, $parsed_created_at, TRUE);
+	//	$parsed_created_at = date_format(new DateTime($arrayParsedMostRecent[0]["created_at"]), "Y-m-d H:i:s");
+	//	$parsed_ended_at = date_format(new DateTime($arrayParsedMostRecent[0]["ended_at"]), "Y-m-d H:i:s");
+	# If all you care about is seconds then you can use timestamp:
+	//	$then = new DateTime('2000-01-01');
+	//	$now = new DateTime('now');
+	//	$diffInSeconds = $now->getTimestamp() - $then->getTimestamp();
+	//	echo $diffInSeconds . "<br />";
+
+
+	exit;
+	# ---------------------------------------------------------------------------
+
+	# TODO -- finish
 	$arrayCanvasUsers        = [];
 	$arrayLocalUsers         = [];
 	$arrayRevisedLocalUsers  = [];
@@ -72,18 +205,6 @@
 	# Create new archival log file
 	$str_log_file_path = "/logs/" . date("Ymd-His") . "-log-report.txt";
 	$myLogFile = fopen(".." . $str_log_file_path, "w") or die("Unable to open file!");
-
-	// set values dynamically
-	if (array_key_exists('SERVER_NAME', $_SERVER)) {
-		// script ran as web application
-		$str_action_file_path = $_SERVER['PHP_SELF'];
-		$flag_is_cron_job     = 0; // FALSE
-	}
-	else {
-		// script ran as cron job (triggered from server, not web app)
-		$str_action_file_path = __FILE__;
-		$flag_is_cron_job     = 1; // TRUE
-	}
 
 	#------------------------------------------------#
 	# Fetch all Canvas user accounts using paged curl calls
@@ -222,8 +343,8 @@
 					$intCountUsersUpdated += 1;
 
 					# Output to browser and txt file
-					echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Updated local user (synced newer Canvas to local)<br />";
-					fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Updated local user (synced newer Canvas to local)\n");
+					echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Updated User (synced newer Canvas to local)<br />";
+					fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Updated User (synced newer Canvas to local)\n");
 				}
 				else {
 					# increment counter
@@ -289,8 +410,8 @@
 			$intCountUsersInserted += 1;
 
 			# Output to browser and txt file
-			echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Inserted local user (synced newer Canvas to local)<br />";
-			fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Inserted local user (synced newer Canvas to local)\n");
+			echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Inserted User (synced newer Canvas to local)<br />";
+			fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Inserted User (synced newer Canvas to local)\n");
 		}
 	}
 
@@ -357,8 +478,8 @@
 			$intCountUsersRemoved += 1;
 
 			# Output to browser and txt file
-			echo $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Removed local user (synced newer Canvas to local)<br />";
-			fwrite($myLogFile, $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Removed local user (synced newer Canvas to local)\n");
+			echo $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Removed Local User (synced newer Canvas to local)<br />";
+			fwrite($myLogFile, $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Removed Local User (synced newer Canvas to local)\n");
 		}
 	}
 
@@ -421,7 +542,19 @@
 	#------------------------------------------------#
 	# Record Event Log
 	#------------------------------------------------#
-	// create value
+
+	// set values dynamically
+	if (array_key_exists('SERVER_NAME', $_SERVER)) {
+		// script ran as web application
+		$str_action_file_path = $_SERVER['PHP_SELF'];
+		$flag_is_cron_job     = 0; // FALSE
+	}
+	else {
+		// script ran as cron job (triggered from server, not web app)
+		$str_action_file_path = __FILE__;
+		$flag_is_cron_job     = 1; // TRUE
+	}
+
 	$str_event_dataset_brief = $intCountUsersInserted . " inserts, " . $intCountUsersUpdated . " updates, " . $intCountUsersRemoved . " deletes";
 
 	$flag_success = 0; // FALSE
@@ -469,8 +602,3 @@
 		die(mysqli_error($connString));
 	}
 
-
-	#------------------------------------------------#
-	# End: Avoid hitting the default script timeout of 300 or 720 seconds (depending on default php.ini settings)
-	#------------------------------------------------#
-	ob_end_flush();

@@ -38,7 +38,7 @@
 	# IMPORTANT STEPS TO REMEMBER
 	#------------------------------------------------#
 	# Run PHP file: (1) daily from server via cron job, or (2) manually from browser as web application
-	# PHP File currently at: https://apps.williams.edu/admin-lti-dashboard/app_code/set_canvas_notification_preferences.php
+	# PHP File currently at: https://apps.williams.edu/admin-lti-dashboard
 
 	# Set and show debugging browser output (on=TRUE, off=FALSE)
 	$debug = FALSE;
@@ -256,36 +256,36 @@
 	$flag_success = 1; // TRUE
 
 	$queryEventLog = "
-				INSERT INTO
-					`dashboard_eventlogs`
-					(
-						`event_action`
-						, `event_datetime`
-						, `event_log_filepath`
-						, `event_action_filepath`
-						, `num_items`
-						, `num_changes`
-						, `num_errors`
-						, `event_dataset_brief`
-						, `event_dataset_full`
-						, `flag_success`
-						, `flag_cron_job`
-					)
-					VALUES
-					(
-						'" . mysqli_real_escape_string($connString, $str_event_action) . "'
-						, now()
-						, '" . mysqli_real_escape_string($connString, $str_log_file_path) . "'
-						, '" . mysqli_real_escape_string($connString, $str_action_file_path) . "'
-						, " . ($intCountUsersCanvas) . "
-						, " . ($intCountUsersUpdated) . "
-						, " . ($intCountUsersSkipped) . "
-						, '" . mysqli_real_escape_string($connString, $str_event_dataset_brief) . "'
-						, '" . mysqli_real_escape_string($connString, $str_event_dataset_full) . "'
-						, $flag_success
-						, $flag_is_cron_job
-					)
-			";
+		INSERT INTO
+			`dashboard_eventlogs`
+			(
+				`event_action`
+				, `event_datetime`
+				, `event_log_filepath`
+				, `event_action_filepath`
+				, `num_items`
+				, `num_changes`
+				, `num_errors`
+				, `event_dataset_brief`
+				, `event_dataset_full`
+				, `flag_success`
+				, `flag_cron_job`
+			)
+			VALUES
+			(
+				'" . mysqli_real_escape_string($connString, $str_event_action) . "'
+				, now()
+				, '" . mysqli_real_escape_string($connString, $str_log_file_path) . "'
+				, '" . mysqli_real_escape_string($connString, $str_action_file_path) . "'
+				, " . ($intCountUsersCanvas) . "
+				, " . ($intCountUsersUpdated) . "
+				, " . ($intCountUsersSkipped) . "
+				, '" . mysqli_real_escape_string($connString, $str_event_dataset_brief) . "'
+				, '" . mysqli_real_escape_string($connString, $str_event_dataset_full) . "'
+				, $flag_success
+				, $flag_is_cron_job
+			)
+	";
 
 	if ($debug) {
 		echo "<pre>queryEventLog = " . $queryEventLog . "</pre>";
