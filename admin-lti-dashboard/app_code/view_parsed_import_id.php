@@ -19,23 +19,21 @@
 	#------------------------------------------------#
 	# fetch variables for later use
 	#------------------------------------------------#
-	$limit_records    = 250;
-	$sanitized_action = mysqli_real_escape_string($connString, $_REQUEST["action"]);
+	$sanitized_id = is_numeric($_REQUEST["id"]) ? mysqli_real_escape_string($connString, $_REQUEST["id"]) : 0;
 
 
 	#------------------------------------------------#
 	# SQL: fetch log file summaries for requested "event_action"
 	#------------------------------------------------#
-
 	$queryFetchLogs = "
 		SELECT
 			*
 		FROM
-			`dashboard_eventlogs`
+			`dashboard_sis_imports_parsed`
 		WHERE
-			`event_action` = '" . $sanitized_action . "'
+			`id` = '" . $sanitized_id . "'
 		ORDER BY
-			`event_datetime` DESC LIMIT " . $limit_records . ";
+			`cronjob_datetime` DESC LIMIT 1;
 	";
 
 	$resultsFetchLogs = mysqli_query($connString, $queryFetchLogs) or
@@ -67,28 +65,27 @@
 	<div class="row">
 		<div class="page-header">
 			<h1><?php echo LTI_APP_NAME; ?></h1>
-			<h5><?php echo LANG_INSTITUTION_NAME . ": View top " . $limit_records . " log records"; ?></h5>
+			<h5><?php echo LANG_INSTITUTION_NAME . ": View one parsed import id"; ?></h5>
 
 			<div id="breadCrumbs" class="small"><?php require_once(dirname(__FILE__) . '/../include/breadcrumbs.php'); ?></div>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-12 col-sm-12">
-			<h3>Log Summary: &quot;<?php echo $sanitized_action ?>&quot;</h3><br />
+			<h3>SIS Import id: <?php echo $sanitized_id; ?></h3>
 
 			<?php
-				// iterate and show log results
+				// show link to Canvas (requires admin authentication via live login session)
+				echo "<p class=\"small wms_indent\"><a href=\"https://glow.williams.edu/api/v1/accounts/98616/sis_imports/" . $sanitized_id . "\" title=\"Canvas: View import id\" target=\"_blank\"><span class=\"glyphicon glyphicon-new-window\" aria-hidden=\"true\"></span>&nbsp;Canvas: View import id: " . $sanitized_id . "</a></p>";
+				echo "<p class=\"small wms_indent\"><a href=\"https://glow.williams.edu/api/v1/accounts/98616/sis_imports\" title=\"Canvas: View most current 10 import id reports\" target=\"_blank\"><span class=\"glyphicon glyphicon-new-window\" aria-hidden=\"true\"></span>&nbsp;Canvas: View most current 10 import id reports</a></p>";
+
 				while ($row = mysqli_fetch_assoc($resultsFetchLogs)) {
-					echo "<p class=\"small\">";
-					echo $row["event_dataset_full"];
-					echo "<strong>Status: " . $row["event_dataset_brief"] . "</strong><br />";
-					if ($sanitized_action == "verify_sis_imports_into_canvas") {
-						echo "<a href=\"" . APP_ROOT_PATH . "/app_code/view_parsed_import_id.php?id=" . $row["num_items"] . "\" title=\"View parsed import id\" target=\"_blank\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span>&nbsp;View parsed import id: " . $row["num_items"] . "</a>";
-					}
-					else {
-						echo "<a href=\"" . APP_ROOT_PATH . $row["event_log_filepath"] . "\" title=\"View complete log file\" target=\"_blank\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span>&nbsp;View complete log file</a>";
-					}
-					echo "</p><br />";
+					util_prePrintR($row);
+					// echo "<table><tbody>";
+					// foreach ($row as $field => $value) {
+					// 	 echo "<tr><th>" . $field . "</th><td>" . $value . "</td></tr>";
+					// }
+					// echo "</tbody></table>";
 				}
 			?>
 		</div>

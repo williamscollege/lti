@@ -1,6 +1,6 @@
 <?php
 	/***********************************************
-	 ** Project:    Monitor SIS Uploads: Tracking Williams SIS data to Canvas
+	 ** Project:    Monitor Williams SIS Imports into Canvas LMS
 	 ** Author:     Williams College, OIT, David Keiser-Clark
 	 ***********************************************/
 

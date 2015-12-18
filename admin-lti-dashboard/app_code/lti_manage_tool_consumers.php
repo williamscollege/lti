@@ -146,7 +146,7 @@
 		<div class="col-xs-12">
 			<div class="page-header">
 				<h1><?php echo LTI_APP_NAME; ?></h1>
-				<h5><?php echo LANG_INSTITUTION_NAME; ?>: Manage LTI tool consumers</h5>
+				<h5><?php echo LANG_INSTITUTION_NAME; ?>: Manage LTI tool consumers (LTI = Learning Tools Interoperability)</h5>
 
 				<div id="breadCrumbs" class="small"><?php require_once(dirname(__FILE__) . '/../include/breadcrumbs.php'); ?></div>
 			</div>

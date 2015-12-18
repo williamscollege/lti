@@ -5,6 +5,9 @@ Custom CSS: Global CSS Tweaks that are NOT an extension / modification of the bo
 .wmsPurple {
 	color: #543192;
 }
+.wms_indent {
+	margin-left: 40px;
+}
 
 .wmsBoxFull {
 	border: 1px solid #5C6266;
