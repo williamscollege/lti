@@ -17,7 +17,7 @@
 	# LTI application settings
 	define('LTI_APP_NAME',     'LTI Your App Name');
 	define('LTI_FOLDER',       'lti/');
-	define('TOOL_CONSUMER_URL', 'https://williams.test.instructure.com/');
+	define('TOOL_CONSUMER_URL', 'https://test.acme.com/');
 	define('TOOL_CONSUMER_AUTH_TOKEN', 'none');
 	define('PUBLIC_IMAGES_FOLDER', 'http://placekitten.com.s3.amazonaws.com/homepage-samples/200/');
 	define('DEFAULT_TIMEZONE', 'America/New_York'); // set timezone to keep php from complaining
@@ -44,7 +44,7 @@
 	# ***** Google CDN: https://developers.google.com/speed/libraries/devguide#jquery
 	define('PATH_JQUERY_JS', '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
 	define('PATH_JQUERYUI_JS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js');
-	define('PATH_JQUERYUI_CSS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/dot-luv/jquery-ui.min.css');
+	define('PATH_JQUERYUI_CSS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css');
 
 	# ---------------------------
 	# Local File Paths
