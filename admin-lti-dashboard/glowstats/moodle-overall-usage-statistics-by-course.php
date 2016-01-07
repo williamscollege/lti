@@ -312,14 +312,14 @@ LIMIT 0 , 2000
 	<div class="row">
 		<div class="col-md-12 col-sm-12">
 			<form name="frmFilterResults" id="frmFilterResults" action="moodle-overall-usage-statistics-by-course.php" method="post">
-				<table class="table table-condensed small">
+				<table class="table table-bordered table-condensed small">
 					<caption>
 						<a href="#" class="show-sql-statement" title="Show SQL query" data-sql-statement="<?php echo $queryListOfSemesters; ?>">Show SQL
 							query</a>
 					</caption>
 					<tr>
-						<td>
-							<h3>Filter Semester(s)</h3>
+						<td style="text-align: right;">
+							<h4>Filter Semester(s)</h4>
 							<label>
 								<select name="filterRange[]" id="filterRange" multiple="multiple" size="<?php echo mysqli_num_rows($resultsListOfSemesters); ?>">
 									<?php
@@ -335,28 +335,28 @@ LIMIT 0 , 2000
 										}
 									?>
 								</select>
-							</label><br />
-							<input type="button" id="frmSubmit" name="frmSubmit" class="btn btn-xs btn-success" value="Submit" />
+							</label>
 						</td>
-						<td class="pull-left">
-							<h3>Filter Field(s)</h3>
+						<td style="text-align: left;">
+							<h4>Filter Field(s)</h4>
 							<?php
 								// Split array into two halves, to create two tables for key
 								$len            = count($courseOutputColumnStructure);
 								$ocs_firstHalf  = array_slice($courseOutputColumnStructure, 0, $len / 2);
 								$ocs_secondHalf = array_slice($courseOutputColumnStructure, $len / 2);
 
-								echo "<table class=\"table table-bordered table-striped table-condensed small\">";
+								echo "<table class=\"table table-striped table-condensed small\">";
 								// output first half of "terms key"
 								$flag_first_time = TRUE;
 								foreach ($ocs_firstHalf as $ocs) {
 									// Create string to hold optional bold tag
-									$strBold   = ($ocs[2] == 1) ? " wms_bold " : "";
+									$strBold = ($ocs[2] == 1) ? " wms_bold " : "";
 									//$strIndent = ($ocs[2] == 0) ? " wms_indent " : "";
 									if ($flag_first_time && $strBold) {
 										echo "<tr>";
 										$flag_first_time = FALSE;
-									} elseif ($strBold){
+									}
+									elseif ($strBold) {
 										echo "</tr><tr>";
 									}
 									echo "<td class=\"wms_nowrap " . $strBold . " \"><input type=\"checkbox\" name=\"ck" . $ocs[0] . " value=\"1\"/>&nbsp;" . $ocs[1] . "</td>";
@@ -367,18 +367,24 @@ LIMIT 0 , 2000
 								$flag_first_time = TRUE;
 								foreach ($ocs_secondHalf as $ocs) {
 									// Create string to hold optional bold tag
-									$strBold   = ($ocs[2] == 1) ? " wms_bold " : "";
+									$strBold = ($ocs[2] == 1) ? " wms_bold " : "";
 									//$strIndent = ($ocs[2] == 0) ? " wms_indent " : "";
 									if ($flag_first_time && $strBold) {
 										echo "<tr>";
 										$flag_first_time = FALSE;
-									} elseif ($strBold){
+									}
+									elseif ($strBold) {
 										echo "</tr><tr>";
 									}
 									echo "<td class=\"wms_nowrap " . $strBold . " \"><input type=\"checkbox\" name=\"ck" . $ocs[0] . " value=\"1\"/>&nbsp;" . $ocs[1] . "</td>";
 								}
 								echo "</tr></table>";
 							?>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" class="center">
+							<input type="button" id="frmSubmit" name="frmSubmit" class="btn btn-small btn-success" value="Filter Results" />
 						</td>
 					</tr>
 				</table>
