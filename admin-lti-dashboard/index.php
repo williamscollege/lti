@@ -14,7 +14,7 @@
 	 **  - something
 	 ** Dependencies:
 	 **  - Install: Apache, PHP 5.2 (or higher)
-	 **  - Enable PHP modules: PDO, curl, mbyte, dom
+	 **  - Enable PHP modules: PDO, mysqli, curl, mbyte, dom
 	 ***********************************************/
 
 	require_once(dirname(__FILE__) . '/institution.cfg.php');
@@ -77,32 +77,33 @@
 	# end debugging
 
 	# Convert recordset to variables
-	$rowCounts = mysqli_fetch_array($resultsUserFieldCounts);
-	if ($rowCounts) {
-		$cnt_dashboard_users         = $rowCounts["cnt_dashboard_users"];
-		$cnt_avatars_exist           = $rowCounts["cnt_avatars_exist"];
-		$cnt_avatars_missing         = $rowCounts["cnt_avatars_missing"];
-		$cnt_notif_pref_exist        = $rowCounts["cnt_notif_pref_exist"];
-		$cnt_notif_pref_missing      = $rowCounts["cnt_notif_pref_missing"];
-		$cnt_lti_consumer_enabled    = $rowCounts["cnt_lti_consumer_enabled"];
-		$cnt_lti_consumer_disabled   = $rowCounts["cnt_lti_consumer_disabled"];
-		$cnt_logs_verify_sis_imports = $rowCounts["cnt_logs_verify_sis_imports"];
-		$cnt_logs_sync_canvas_users  = $rowCounts["cnt_logs_sync_canvas_users"];
-		$cnt_logs_notif_pref_users   = $rowCounts["cnt_logs_notif_pref_users"];
+	$rows = mysqli_fetch_array($resultsUserFieldCounts);
+	if ($rows) {
+		$cnt_dashboard_users         = $rows["cnt_dashboard_users"];
+		$cnt_avatars_exist           = $rows["cnt_avatars_exist"];
+		$cnt_avatars_missing         = $rows["cnt_avatars_missing"];
+		$cnt_notif_pref_exist        = $rows["cnt_notif_pref_exist"];
+		$cnt_notif_pref_missing      = $rows["cnt_notif_pref_missing"];
+		$cnt_lti_consumer_enabled    = $rows["cnt_lti_consumer_enabled"];
+		$cnt_lti_consumer_disabled   = $rows["cnt_lti_consumer_disabled"];
+		$cnt_logs_verify_sis_imports = $rows["cnt_logs_verify_sis_imports"];
+		$cnt_logs_sync_canvas_users  = $rows["cnt_logs_sync_canvas_users"];
+		$cnt_logs_notif_pref_users   = $rows["cnt_logs_notif_pref_users"];
 
 		// avoid null values
-		$log_verify_sis_imports_datetime      = empty($rowCounts["log_verify_sis_imports_datetime"]) ? 'n/a' : $rowCounts["log_verify_sis_imports_datetime"];
-		$log_verify_sis_imports_num_items     = empty($rowCounts["log_verify_sis_imports_num_items"]) ? 0 : $rowCounts["log_verify_sis_imports_num_items"];
-		$log_verify_sis_imports_num_changes   = empty($rowCounts["log_verify_sis_imports_num_changes"]) ? 0 : $rowCounts["log_verify_sis_imports_num_changes"];
-		$log_verify_sis_imports_num_errors    = empty($rowCounts["log_verify_sis_imports_num_errors"]) ? 0 : $rowCounts["log_verify_sis_imports_num_errors"];
-		$log_verify_sis_imports_dataset_brief = empty($rowCounts["log_verify_sis_imports_dataset_brief"]) ? 0 : $rowCounts["log_verify_sis_imports_dataset_brief"];
-		$log_sync_canvas_datetime             = empty($rowCounts["log_sync_canvas_datetime"]) ? 'n/a' : $rowCounts["log_sync_canvas_datetime"];
-		$log_sync_canvas_num_items            = empty($rowCounts["log_sync_canvas_num_items"]) ? 0 : $rowCounts["log_sync_canvas_num_items"];
-		$log_sync_canvas_dataset_brief        = empty($rowCounts["log_sync_canvas_dataset_brief"]) ? 0 : $rowCounts["log_sync_canvas_dataset_brief"];
-		$log_notif_pref_datetime              = empty($rowCounts["log_notif_pref_datetime"]) ? 'n/a' : $rowCounts["log_notif_pref_datetime"];
-		$log_notif_pref_num_items             = empty($rowCounts["log_notif_pref_num_items"]) ? 0 : $rowCounts["log_notif_pref_num_items"];
-		$log_notif_pref_dataset_brief         = empty($rowCounts["log_notif_pref_dataset_brief"]) ? 0 : $rowCounts["log_notif_pref_dataset_brief"];
-		$lti_context_datetime                 = empty($rowCounts["lti_context_datetime"]) ? 'n/a' : $rowCounts["lti_context_datetime"];
+		//$log_verify_sis_imports_datetime      = empty($rows["log_verify_sis_imports_datetime"]) ? 'n/a' : $rows["log_verify_sis_imports_datetime"];
+		$log_verify_sis_imports_datetime      = empty($rows["log_verify_sis_imports_datetime"]) ? 'n/a' : date_format(new DateTime($rows["log_verify_sis_imports_datetime"]), "M d, Y h:i:s a");
+		$log_verify_sis_imports_num_items     = empty($rows["log_verify_sis_imports_num_items"]) ? 0 : $rows["log_verify_sis_imports_num_items"];
+		$log_verify_sis_imports_num_changes   = empty($rows["log_verify_sis_imports_num_changes"]) ? 0 : $rows["log_verify_sis_imports_num_changes"];
+		$log_verify_sis_imports_num_errors    = empty($rows["log_verify_sis_imports_num_errors"]) ? 0 : $rows["log_verify_sis_imports_num_errors"];
+		$log_verify_sis_imports_dataset_brief = empty($rows["log_verify_sis_imports_dataset_brief"]) ? 0 : $rows["log_verify_sis_imports_dataset_brief"];
+		$log_sync_canvas_datetime             = empty($rows["log_sync_canvas_datetime"]) ? 'n/a' : date_format(new DateTime($rows["log_sync_canvas_datetime"]), "M d, Y h:i:s a");
+		$log_sync_canvas_num_items            = empty($rows["log_sync_canvas_num_items"]) ? 0 : $rows["log_sync_canvas_num_items"];
+		$log_sync_canvas_dataset_brief        = empty($rows["log_sync_canvas_dataset_brief"]) ? 0 : $rows["log_sync_canvas_dataset_brief"];
+		$log_notif_pref_datetime              = empty($rows["log_notif_pref_datetime"]) ? 'n/a' : date_format(new DateTime($rows["log_notif_pref_datetime"]), "M d, Y h:i:s a");
+		$log_notif_pref_num_items             = empty($rows["log_notif_pref_num_items"]) ? 0 : $rows["log_notif_pref_num_items"];
+		$log_notif_pref_dataset_brief         = empty($rows["log_notif_pref_dataset_brief"]) ? 0 : $rows["log_notif_pref_dataset_brief"];
+		$lti_context_datetime                 = empty($rows["lti_context_datetime"]) ? 'n/a' : date_format(new DateTime($rows["lti_context_datetime"]), "M d, Y h:i:s a");
 
 		// calculations (avoid division by zero or null values)
 		// note for percentVerifySISImports: it is impossible to obtain a true percent for the complex action of SIS imports; instead create a convincing yet artificial percent
@@ -490,6 +491,51 @@
 										(<?php #echo $cnt_logs_sync_canvas_users; ?>)</a>&nbsp;&#124;
 									<a href="https://glow.williams.edu/courses/1549176" title="Glow: Faculty Funding Resources" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;Glow
 										Course</a></small>
+							<td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4 col-sm-4">
+			<div class="wmsBoxFull col-md-12 col-sm-12">
+				<h3>Glow Statistics</h3>
+
+				<div class="wmsStatistics col-md-9 col-sm-9">
+					<!-- wmsStatistics class contains background image -->
+				</div>
+				<div class="wms-after-circle">
+					<table class="table-hover">
+						<tbody>
+						<tr>
+							<th class="small">LMS's</th>
+							<td>
+								<code title="LMS's represented: Canvas, Moodle, Blackboard"><?php echo  "3 (Canvas, Moodle, Blackboard)"; ?></code>
+							</td>
+						</tr>
+						<tr>
+							<th class="small">Canvas</th>
+							<td><code>2013-present</code></td>
+						</tr>
+						<tr>
+							<th class="small">Moodle</th>
+							<td><code>2010-2013</code></td>
+						</tr>
+						<tr>
+							<th class="small">Blackboard</th>
+							<td><code>2003-2010</code></td>
+						</tr>
+						<tr>
+							<th class="small">Tools</th>
+							<td>
+								<small>
+									<a href="https://glow.williams.edu/accounts/98616/statistics" title="Instructure Canvas Statistics and Analytics"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;Canvas</a>&nbsp;&#124;
+									<a href="<?php echo APP_ROOT_PATH; ?>/glowstats/index.php" title="Moodle Statistics" target="_blank"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;Moodle</a>&nbsp;&#124;
+									<a href="<?php echo APP_ROOT_PATH; ?>/glowstats/blackboard-statistics/index.htm" title="Blackboard Statistics" target="_blank"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;Blackboard</a>
+								</small>
 							<td>
 						</tr>
 						</tbody>

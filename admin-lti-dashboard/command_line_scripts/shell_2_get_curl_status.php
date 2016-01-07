@@ -11,7 +11,7 @@
 	 **  - parse and record the final "import status" and insert into database records
 	 ** Dependencies:
 	 **  - Install: Apache, PHP 5.2 (or higher)
-	 **  - Enable PHP modules: PDO, curl, mbyte, dom
+	 **  - Enable PHP modules: PDO, mysqli, curl, mbyte, dom
 	 ***********************************************/
 
 

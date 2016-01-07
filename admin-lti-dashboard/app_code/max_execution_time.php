@@ -20,8 +20,8 @@
 	$startDateTimePretty = date('Y-m-d H:i:s');
 
 	# Create new log file (including datetime stamp) as archival record
-	$newFileName = "/logs/" . date("Ymd-His") . "-log-report.txt";
-	$myLogFile = fopen(".." . $newFileName, "w") or die("Unable to open file!");
+	$newFileName = dirname(__FILE__) . '/../logs/' . date("Ymd-His") . "-log-report.txt";
+	$myLogFile = fopen($newFileName, "w") or die("Unable to open file!");
 
 	# 21,600 seconds = 6 hours
 	// ... do long running stuff

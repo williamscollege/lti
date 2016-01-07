@@ -11,7 +11,7 @@
 	 **  - fetch, parse and record the final "import status" (occurs after Canvas processing of sent files is completed)
 	 ** Dependencies:
 	 **  - Install: Apache, PHP 5.2 (or higher)
-	 **  - Enable PHP modules: PDO, curl, mbyte, dom
+	 **  - Enable PHP modules: PDO, mysqli, curl, mbyte, dom
 	 ***********************************************/
 
 

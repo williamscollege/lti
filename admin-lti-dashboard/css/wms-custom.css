@@ -6,7 +6,15 @@ Custom CSS: Global CSS Tweaks that are NOT an extension / modification of the bo
 	color: #543192;
 }
 .wms_indent {
-	margin-left: 40px;
+	padding-left: 40px;
+}
+
+.wms_bold {
+	font-weight: bold;
+}
+
+.wms_nowrap {
+	white-space: nowrap;
 }
 
 .wmsBoxFull {
@@ -16,6 +24,14 @@ Custom CSS: Global CSS Tweaks that are NOT an extension / modification of the bo
 
 .wmsBoxFull:hover {
 	background-color: #F9F9F9;
+}
+
+.wmsStatistics {
+	background-image: url('../img/statistics2.png');
+	background-color: transparent;
+	height: 180px;
+	width: 190px;
+	margin: 20px 0 23px 35px;
 }
 
 .center {

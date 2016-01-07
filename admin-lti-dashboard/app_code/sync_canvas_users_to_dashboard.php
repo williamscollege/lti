@@ -19,7 +19,7 @@
 	 **  - report: Log Summary output to browser and written to text file
 	 ** Dependencies:
 	 **  - Install: Apache, PHP 5.2 (or higher)
-	 **  - Enable PHP modules: PDO, curl, mbyte, dom
+	 **  - Enable PHP modules: PDO, mysqli, curl, mbyte, dom
 	 ***********************************************/
 
 	# Extend default script timeout to be unlimited (typically default is 300 seconds, from php.ini settings)
@@ -70,8 +70,8 @@
 	$beginDateTimePretty = date('Y-m-d H:i:s');
 
 	# Create new archival log file
-	$str_log_file_path = "/logs/" . date("Ymd-His") . "-log-report.txt";
-	$myLogFile = fopen(".." . $str_log_file_path, "w") or die("Unable to open file!");
+	$str_log_file_path = dirname(__FILE__) . '/../logs/' . date("Ymd-His") . "-log-report.txt";
+	$myLogFile = fopen($str_log_file_path, "w") or die("Unable to open file!");
 
 	// set values dynamically
 	if (array_key_exists('SERVER_NAME', $_SERVER)) {
@@ -149,11 +149,15 @@
 
 		// set normalized values
 		// (new Canvas users are created with sis_user_id having a varchar value; for our local dashboard db purposes, force the varchar to an integer 0)
-		$canvas_u_id             = empty($canvas_usr["id"]) ? 0 : $canvas_usr["id"];
-		$canvas_u_name           = empty($canvas_usr["name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["name"]);
-		$canvas_u_sortable_name  = empty($canvas_usr["sortable_name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["sortable_name"]);
-		$canvas_u_short_name     = empty($canvas_usr["short_name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["short_name"]);
-		$canvas_u_sis_user_id    = (!is_numeric($canvas_usr["sis_user_id"]) | (empty($canvas_usr["sis_user_id"]))) ? 0 : $canvas_usr["sis_user_id"];
+		$canvas_u_id            = empty($canvas_usr["id"]) ? 0 : $canvas_usr["id"];
+		$canvas_u_name          = empty($canvas_usr["name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["name"]);
+		$canvas_u_sortable_name = empty($canvas_usr["sortable_name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["sortable_name"]);
+		$canvas_u_short_name    = empty($canvas_usr["short_name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["short_name"]);
+		// check for undefined index and convert to integer before checking is_numeric (avoids PHP warnings when running via commandline)
+		$canvas_u_sis_user_id = empty($canvas_usr["sis_user_id"]) ? 0 : $canvas_usr["sis_user_id"];
+		if (!is_numeric($canvas_u_sis_user_id)) {
+			$canvas_u_sis_user_id = 0;
+		}
 		$canvas_u_integration_id = empty($canvas_usr["integration_id"]) ? 0 : $canvas_usr["integration_id"];
 		$canvas_u_sis_login_id   = empty($canvas_usr["sis_login_id"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["sis_login_id"]);
 		$canvas_u_sis_import_id  = empty($canvas_usr["sis_import_id"]) ? 0 : $canvas_usr["sis_import_id"];
@@ -172,7 +176,9 @@
 
 				// user already exists! now check if it needs updating (local user record matches live Canvas user record)
 				// and if local user was deleted previously but now matches Canvas user, then restore that local user
-				// compare like values (do not compare local varchar values with Canvas mysqli_real_escape_string values)
+				// convert possible null values to empty string value to enable later string comparisons
+				$local_usr_sis_login_id = empty($local_usr["sis_login_id"]) ? '' : mysqli_real_escape_string($connString, $local_usr["sis_login_id"]);
+
 				if (
 					$local_usr["canvas_user_id"] != $canvas_u_id
 					|| $local_usr["name"] != $canvas_usr["name"]
@@ -180,7 +186,7 @@
 					|| $local_usr["short_name"] != $canvas_usr["short_name"]
 					|| $local_usr["sis_user_id"] != $canvas_u_sis_user_id
 					// || $local_usr["integration_id"] != $canvas_u_integration_id // ignore if changes exist
-					|| $local_usr["sis_login_id"] != $canvas_usr["sis_login_id"]
+					|| $local_usr_sis_login_id != $canvas_u_sis_login_id
 					// || $local_usr["sis_import_id"] != $canvas_u_sis_import_id // ignore if changes exist
 					|| $local_usr["username"] != $canvas_usr["login_id"]
 					|| $local_usr["flag_delete"] == 1
@@ -222,7 +228,9 @@
 					$intCountUsersUpdated += 1;
 
 					# Output to browser and txt file
-					echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Updated local user (synced newer Canvas to local)<br />";
+					if ($debug) {
+						echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Updated local user (synced newer Canvas to local)<br />";
+					}
 					fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Updated local user (synced newer Canvas to local)\n");
 				}
 				else {
@@ -231,7 +239,9 @@
 
 					# Output to browser and txt file
 					// decided to omit skipped output, as there is no need to fill log files daily with 500kb of skipped user info
+					// if ($debug) {
 					// echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Skipped User (Canvas matches local)<br />";
+					// }
 					// fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Skipped User (Canvas matches local)\n");
 				}
 
@@ -289,7 +299,9 @@
 			$intCountUsersInserted += 1;
 
 			# Output to browser and txt file
-			echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Inserted local user (synced newer Canvas to local)<br />";
+			if ($debug) {
+				echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Inserted local user (synced newer Canvas to local)<br />";
+			}
 			fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Inserted local user (synced newer Canvas to local)\n");
 		}
 	}
@@ -315,7 +327,9 @@
 	}
 
 	# formatting (last iteration)
-	echo "<hr />";
+	if ($debug) {
+		echo "<hr />";
+	}
 	fwrite($myLogFile, "\n------------------------------\n\n");
 
 	// iterate all Local Users, looking for local Users not found in Canvas User array
@@ -357,7 +371,9 @@
 			$intCountUsersRemoved += 1;
 
 			# Output to browser and txt file
-			echo $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Removed local user (synced newer Canvas to local)<br />";
+			if ($debug) {
+				echo $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Removed local user (synced newer Canvas to local)<br />";
+			}
 			fwrite($myLogFile, $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Removed local user (synced newer Canvas to local)\n");
 		}
 	}
@@ -367,7 +383,9 @@
 	# Report: LOG SUMMARY
 	#------------------------------------------------#
 	// formatting
-	echo "<br /><hr />";
+	if ($debug) {
+		echo "<br /><hr />";
+	}
 
 	# Store values
 	$endDateTime       = date('YmdHis');
@@ -392,7 +410,9 @@
 	foreach ($finalReport as $obj) {
 		if ($firstTimeFlag) {
 			# formatting (first iteration)
-			echo "LOG SUMMARY<br />";
+			if ($debug) {
+				echo "LOG SUMMARY<br />";
+			}
 			fwrite($myLogFile, "\n\n------------------------------\nLOG SUMMARY\n\n");
 
 			# formatting: first row of db entry will be bolded for later web use
@@ -408,11 +428,15 @@
 		$firstTimeFlag = FALSE;
 	}
 	# formatting (last iteration)
-	echo "<hr />";
+	if ($debug) {
+		echo "<hr />";
+	}
 	fwrite($myLogFile, "\n------------------------------\n\n");
 
 	# Output for browser
-	echo $str_event_dataset_full;
+	if ($debug) {
+		echo $str_event_dataset_full;
+	}
 
 	# Close log file
 	fclose($myLogFile);
@@ -484,6 +508,8 @@
 			die(mysqli_error($connString));
 		}*/
 
+	// final script status
+	echo "done!";
 
 	#------------------------------------------------#
 	# End: Avoid hitting the default script timeout of 300 or 720 seconds (depending on default php.ini settings)

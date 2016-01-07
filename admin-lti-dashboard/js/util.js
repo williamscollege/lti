@@ -31,6 +31,26 @@ $(document).ready(function () {
 		$("div." + print_this_area).printArea(options);
 		$("#openings-list-container, #container-my-signups, #container-others-signups").removeClass("printareaPatch");
 	});
+
+	// For "Glowstats:" Show Dialog Box with title and message
+	$(document).on("click", ".show-sql-statement", function () {
+		$("#dialog-message").html('<pre>' + $(this).data("sql-statement") + '</pre>');
+		// console.log($("#dialog-message").html());
+		$(function () {
+			$("#dialog-alert").dialog({
+				title: "SQL Query",
+				modal: true,
+				option: "show",
+				width: 850,
+				buttons: {
+					"Close": function () {
+						$("#dialog-message").html('');
+						$(this).dialog("close");
+					}
+				}
+			});
+		});
+	});
 });
 
 

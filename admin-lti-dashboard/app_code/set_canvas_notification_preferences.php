@@ -18,7 +18,7 @@
 	 **  - report: Log Summary output to browser and written to text file
 	 ** Dependencies:
 	 **  - Install: Apache, PHP 5.2 (or higher)
-	 **  - Enable PHP modules: PDO, curl, mbyte, dom
+	 **  - Enable PHP modules: PDO, mysqli, curl, mbyte, dom
 	 ***********************************************/
 
 	# Extend default script timeout to be unlimited (typically default is 300 seconds, from php.ini settings)
@@ -64,8 +64,8 @@
 	$beginDateTimePretty = date('Y-m-d H:i:s');
 
 	# Create new archival log file
-	$str_log_file_path = "/logs/" . date("Ymd-His") . "-log-report.txt";
-	$myLogFile = fopen(".." . $str_log_file_path, "w") or die("Unable to open file!");
+	$str_log_file_path = dirname(__FILE__) . '/../logs/' . date("Ymd-His") . "-log-report.txt";
+	$myLogFile = fopen($str_log_file_path, "w") or die("Unable to open file!");
 
 
 	#------------------------------------------------#
@@ -160,7 +160,9 @@
 			$intCountUsersUpdated += 1;
 
 			# Output to browser and txt file
-			echo $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Updated notification preferences (reset Canvas LMS values)<br />";
+			if ($debug) {
+				echo $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Updated notification preferences (reset Canvas LMS values)<br />";
+			}
 			fwrite($myLogFile, $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Updated notification preferences (reset Canvas LMS values)\n");
 		}
 		else {
@@ -171,13 +173,17 @@
 			$intCountUsersSkipped += 1;
 
 			# Output to browser and txt file
-			echo $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Skipped: lacks institutional email (unable to match username with expected Canvas profile primary_email)<br />";
+			if ($debug) {
+				echo $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Skipped: lacks institutional email (unable to match username with expected Canvas profile primary_email)<br />";
+			}
 			fwrite($myLogFile, $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Skipped: lacks institutional email (unable to match username with expected Canvas profile primary_email)\n");
 		}
 	}
 
 	# formatting (last iteration)
-	echo "<hr />";
+	if ($debug) {
+		echo "<hr />";
+	}
 	fwrite($myLogFile, "\n------------------------------\n\n");
 
 
@@ -185,7 +191,9 @@
 	# Report: LOG SUMMARY
 	#------------------------------------------------#
 	// formatting
-	echo "<br /><hr />";
+	if ($debug) {
+		echo "<br /><hr />";
+	}
 
 	# Store values
 	$endDateTime       = date('YmdHis');
@@ -208,7 +216,9 @@
 	foreach ($finalReport as $obj) {
 		if ($firstTimeFlag) {
 			# formatting (first iteration)
-			echo "LOG SUMMARY<br />";
+			if ($debug) {
+				echo "LOG SUMMARY<br />";
+			}
 			fwrite($myLogFile, "\n\n------------------------------\nLOG SUMMARY\n\n");
 
 			# formatting: first row of db entry will be bolded for later web use
@@ -224,11 +234,15 @@
 		$firstTimeFlag = FALSE;
 	}
 	# formatting (last iteration)
-	echo "<hr />";
+	if ($debug) {
+		echo "<hr />";
+	}
 	fwrite($myLogFile, "\n------------------------------\n\n");
 
 	# Output for browser
-	echo $str_event_dataset_full;
+	if ($debug) {
+		echo $str_event_dataset_full;
+	}
 
 	# Close log file
 	fclose($myLogFile);
@@ -311,6 +325,8 @@
 			die(mysqli_error($connString));
 		}*/
 
+	// final script status
+	echo "done!";
 
 	#------------------------------------------------#
 	# End: Avoid hitting the default script timeout of 300 or 720 seconds (depending on default php.ini settings)

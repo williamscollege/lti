@@ -8,7 +8,7 @@
 	 **  - something
 	 ** Dependencies:
 	 **  - Install: Apache, PHP 5.2 (or higher)
-	 **  - Enable PHP modules: PDO, curl, mbyte, dom
+	 **  - Enable PHP modules: PDO, mysqli, curl, mbyte, dom
 	 ***********************************************/
 
 	require_once(dirname(__FILE__) . '/../institution.cfg.php');

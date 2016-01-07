@@ -1,0 +1,83 @@
+/*DKC MODIFICATIONS FOR:
+FILE: /css/blueprint/screen.css*/
+CAPTION {
+	padding: 0px 10px 4px 2px;
+	background-color: transparent;
+}
+
+.hidden {
+	display: none;
+}
+
+/*PLUGIN: mottie-tablesorter
+SEE UPDATES HERE: https://github.com/Mottie/tablesorter/issues/61
+FILE: mottie-tablesorter/addons/pager/jquery.tablesorter.pager.css
+pager output text*/
+.pager SELECT.pagesize {
+	font-size: 11px;
+}
+
+.pager IMG {
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
+}
+
+/*the pager itself gets a disabled class when the number of rows is less than the size*/
+.pager.disabled {
+	display: block;
+}
+
+/*hide or fade out pager arrows when the first or last row is visible*/
+.pager IMG.disabled {
+	cursor: default;
+}
+
+/*FILE: mottie-tablesorter/css/theme.blue.css*/
+TABLE.tablesorter, TABLE.tablesorter TH, TABLE.tablesorter TD {
+	background-color: #E1E1E1;
+	border: 1px solid #C8C8C8;
+}
+
+TABLE.tablesorter TH {
+	white-space: nowrap;
+	font-size: inherit;
+}
+
+TABLE.tablesorter TBODY TD {
+	color: #000000;
+}
+
+/*Zebra Widget - row alternating colors*/
+TABLE.tablesorter TR.odd TD {
+	background-color: #F5F7FA;
+}
+
+TABLE.tablesorter TR.even TD {
+	background-color: #FFF;
+}
+
+/*Column Widget - column sort colors*/
+TABLE.tablesorter TD.primary, TABLE.tablesorter TR.odd TD.primary {
+	background-color: #FBF896;
+}
+
+TABLE.tablesorter TR.even TD.primary {
+	background-color: #FBF896;
+}
+
+TABLE.tablesorter TD.secondary, TABLE.tablesorter TR.odd TD.secondary {
+	background-color: #FCFABB;
+}
+
+TABLE.tablesorter TR.even TD.secondary {
+	background-color: #FCFABB;
+}
+
+TABLE.tablesorter TD.tertiary, TABLE.tablesorter TR.odd TD.tertiary {
+	background-color: #FEFDE0;
+}
+
+TABLE.tablesorter TR.even TD.tertiary {
+	background-color: #FEFDE0;
+}

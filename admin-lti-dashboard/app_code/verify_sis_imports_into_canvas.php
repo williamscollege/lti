@@ -14,7 +14,7 @@
 	 **  - error reporting: send notification to admin upon finding of any soft or hard errors
 	 ** Dependencies:
 	 **  - Install: Apache, PHP 5.2 (or higher)
-	 **  - Enable PHP modules: PDO, curl, mbyte, dom
+	 **  - Enable PHP modules: PDO, mysqli, curl, mbyte, dom
 	 ***********************************************/
 
 
@@ -262,7 +262,7 @@
 
 
 	#------------------------------------------------#
-	# got error messages? send notifications
+	# prepare values for eventlog (and also for notifications, if errors exist)
 	#------------------------------------------------#
 	$event_dataset_brief = "Success. (import id: " . $arrayParsed[0]["id"] . ")";
 	$event_dataset_full  = "<strong>Date created_at: " . $arrayParsed[0]["created_at"] . "</strong><br />";
@@ -274,14 +274,23 @@
 		}
 		$event_dataset_brief = count($error_messages) . " Error" . $plural_letter . "! (import id: " . $arrayParsed[0]["id"] . ")";
 		$event_dataset_full .= "Error messages:<br />" . implode("\n<br />", $error_messages) . "<br />";
+
+		#------------------------------------------------#
+		// send notifications
+		#------------------------------------------------#
+		$to      = "dwk2@williams.edu,david@psychdata.com"; // avoid using spaces
+		$subject = "Dashboard Alert: " . $event_dataset_brief . " (\"$str_event_action\")";
+		$message = "Application: " . LTI_APP_NAME . "\nScript: $str_project_name (\"$str_event_action\")\n\nReports SIS Import Errors:\n" . implode("\n", $error_messages) . "\n\nMore information:\n" . APP_FOLDER;
+		$headers = "From: dashboard-no-reply@williams.edu" . "\r\n" .
+			"Reply-To: dashboard-no-reply@williams.edu" . "\r\n" .
+			"X-Mailer: PHP/" . phpversion();
+
+		mail($to, $subject, $message, $headers);
 	}
 
 	if ($debug) {
 		echo "error_messages:<br />" . $event_dataset_full;
 	}
-
-	// TODO send notification
-	// queuemail() or sendmail();
 
 
 	#------------------------------------------------#
@@ -302,7 +311,7 @@
 		$flag_is_cron_job
 	);
 
-	// script status
+	// final script status
 	echo "done!";
 
 	// notes

@@ -22,13 +22,21 @@
 	define('PUBLIC_IMAGES_FOLDER', 'http://placekitten.com.s3.amazonaws.com/homepage-samples/200/');
 	define('DEFAULT_TIMEZONE', 'America/New_York'); // set timezone to keep php from complaining
 
-	# LTI database connection
+	# LTI (default) database connection
 	define('LTI_DB_PDO_STRING', 'mysql:host=localhost;dbname=your_name_of_db');
 	define('LTI_DB_HOST', 'yourserver');
 	define('LTI_DB_NAME', 'your_name_of_db');
 	define('LTI_DB_USERNAME', 'yourusername');
 	define('LTI_DB_PASSWORD', 'yourfancypassword');
 	define('LTI_DB_TABLENAME_PREFIX', '');
+
+	# Moodle database connection
+	define('MOODLE_DB_PDO_STRING', 'mysql:host=localhost;dbname=your_name_of_db');
+	define('MOODLE_DB_HOST', 'yourserver');
+	define('MOODLE_DB_NAME', 'your_name_of_db');
+	define('MOODLE_DB_USERNAME', 'yourusername');
+	define('MOODLE_DB_PASSWORD', 'yourfancypassword');
+	define('MOODLE_DB_TABLENAME_PREFIX', '');
 
 	# ---------------------------
 	# External Content Delivery Network
