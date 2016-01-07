@@ -13,6 +13,11 @@ Custom CSS: Global CSS Tweaks that are NOT an extension / modification of the bo
 	font-weight: bold;
 }
 
+a.wms_bold_nav_link {
+	font-weight: bold;
+	color: Black;
+}
+
 .wms_nowrap {
 	white-space: nowrap;
 }

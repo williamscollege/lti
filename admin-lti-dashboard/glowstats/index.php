@@ -12,4 +12,4 @@
 
 	require_once(dirname(__FILE__) . '/../institution.cfg.php');
 
-	header("Location: " . APP_ROOT_PATH . "/glowstats/moodle-student-use-of-glow.php");
+	header("Location: " . APP_ROOT_PATH . "/glowstats/moodle-courses-per-semester.php");

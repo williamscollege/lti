@@ -91,7 +91,6 @@
 		$cnt_logs_notif_pref_users   = $rows["cnt_logs_notif_pref_users"];
 
 		// avoid null values
-		//$log_verify_sis_imports_datetime      = empty($rows["log_verify_sis_imports_datetime"]) ? 'n/a' : $rows["log_verify_sis_imports_datetime"];
 		$log_verify_sis_imports_datetime      = empty($rows["log_verify_sis_imports_datetime"]) ? 'n/a' : date_format(new DateTime($rows["log_verify_sis_imports_datetime"]), "M d, Y h:i:s a");
 		$log_verify_sis_imports_num_items     = empty($rows["log_verify_sis_imports_num_items"]) ? 0 : $rows["log_verify_sis_imports_num_items"];
 		$log_verify_sis_imports_num_changes   = empty($rows["log_verify_sis_imports_num_changes"]) ? 0 : $rows["log_verify_sis_imports_num_changes"];
@@ -151,12 +150,15 @@
 		<p class="small">
 			This dashboard steadily monitors critical systems that support and customize our Glow LMS.
 			Error notifications are sent automatically, providing staff with an early opportunity to inspect and manually intervene.
-			Each time a component of our SIS updating fails, we learn something and attempt to improve our data transfer processes and these monitoring tools.<br />
+			Each time a component of our SIS updating fails, we learn something and attempt to improve our data transfer processes and these monitoring
+			tools.<br />
 			What is monitored?
 		</p>
 		<ol class="small">
 			<li>Hourly: data integrity checks of all SIS data imports into Instructure from PeopleSoft</li>
-			<li>Daily: run custom scripts that create a custom and uniform default environment for all Glow users (includes: uploading profile images, setting notification preferences, and some auto-enrollments)</li>
+			<li>Daily: run custom scripts that create a custom and uniform default environment for all Glow users (includes: uploading profile images, setting
+				notification preferences, and some auto-enrollments)
+			</li>
 			<li>LTI Management Console necessary for Glow applications such as &quot;Signup Sheets,&quot; and &quot;Course Email.&quot;</li>
 		</ol>
 	</div>
@@ -192,7 +194,8 @@
 							<th class="small">Commits</th>
 							<td>
 								<small>
-									<a href="https://github.com/williamscollege/lti" title="github (commits)" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;github repository</a></small>
+									<a href="https://github.com/williamscollege/lti" title="github (commits)" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;github
+										repository</a></small>
 							</td>
 						</tr>
 						<tr>
@@ -298,7 +301,7 @@
 						<tr>
 							<th class="small">Users</th>
 							<td>
-								<code title="Counts: Dashboard users / Total # Canvas users"><?php echo  "Canvas: ". number_format($log_sync_canvas_num_items). ", " . "Dashboard: ". number_format($cnt_dashboard_users); ?></code>
+								<code title="Counts: Dashboard users / Total # Canvas users"><?php echo "Canvas: " . number_format($log_sync_canvas_num_items) . ", " . "Dashboard: " . number_format($cnt_dashboard_users); ?></code>
 							</td>
 						</tr>
 						<tr>
@@ -355,7 +358,7 @@
 						<tr>
 							<th class="small">AWS Cloud</th>
 							<td>
-								<code title="Canvas users with AWS Avatars / Total # Canvas users"><?php echo  "Avatars: ". number_format($cnt_avatars_exist). ", " . "Users: ". number_format($log_sync_canvas_num_items); ?></code>
+								<code title="Canvas users with AWS Avatars / Total # Canvas users"><?php echo "Avatars: " . number_format($cnt_avatars_exist) . ", " . "Users: " . number_format($log_sync_canvas_num_items); ?></code>
 							</td>
 						</tr>
 						<tr>
@@ -504,16 +507,19 @@
 			<div class="wmsBoxFull col-md-12 col-sm-12">
 				<h3>Glow Statistics</h3>
 
-				<div class="wmsStatistics col-md-9 col-sm-9">
-					<!-- wmsStatistics class contains background image -->
-				</div>
+				<!-- wmsStatistics class contains background image -->
+				<a href="<?php echo APP_ROOT_PATH; ?>/glowstats/index.php" title="Glow Statistics">
+					<div class="wmsStatistics col-md-9 col-sm-9">
+					</div>
+				</a>
+
 				<div class="wms-after-circle">
 					<table class="table-hover">
 						<tbody>
 						<tr>
 							<th class="small">LMS's</th>
 							<td>
-								<code title="LMS's represented: Canvas, Moodle, Blackboard"><?php echo  "3 (Canvas, Moodle, Blackboard)"; ?></code>
+								<code title="LMS's represented: Canvas, Moodle, Blackboard"><?php echo "3 (Canvas, Moodle, Blackboard)"; ?></code>
 							</td>
 						</tr>
 						<tr>
