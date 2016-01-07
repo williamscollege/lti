@@ -62,11 +62,7 @@ FROM
 	mdl_role r ON ra.roleid = r.id
 		JOIN
 	wms_tmp_course_access AS wmsca ON wmsca.course = c.id
-
-
-/*		JOIN
-	(SELECT COUNT(userid) AS accessCount FROM mdl_log GROUP BY course HAVING COUNT(userid) >=$intSUG*/
-
+/* JOIN (SELECT COUNT(userid) AS accessCount FROM mdl_log GROUP BY course HAVING COUNT(userid) >=$intSUG */
 --	AND accessCount >= $intSUG
 WHERE
 	con.contextlevel = 50 AND r.id IN (5) AND c.idnumber REGEXP '^[0-9]{2}[A-Z]{1}-'
@@ -213,7 +209,7 @@ ORDER BY semesterIdentifier DESC;
 		<div class="col-md-12 col-sm-12">
 			<form action="moodle-ajax-actions.php" id="frmSUG" name="frmSUG" method="post">
 				<p>Change <strong><em>X</em></strong>:
-					<input type="input" id="inputSUG" name="inputSUG" maxlength="4" value="<?php echo $intSUG ?>" />
+					<input disabled type="input" id="inputSUG" name="inputSUG" maxlength="4" value="<?php #echo $intSUG ?>" />
 					<img id="spinner_1" src="../img/spinner.gif" class="hidden" style="margin-bottom: -15px;" alt="working..." />
 				</p>
 
