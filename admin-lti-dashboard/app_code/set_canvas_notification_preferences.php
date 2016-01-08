@@ -284,47 +284,6 @@
 		$flag_is_cron_job
 	);
 
-	/*
-		$queryEventLog = "
-			INSERT INTO
-				`dashboard_eventlogs`
-				(
-					`event_action`
-					, `event_datetime`
-					, `event_log_filepath`
-					, `event_action_filepath`
-					, `num_items`
-					, `num_changes`
-					, `num_errors`
-					, `event_dataset_brief`
-					, `event_dataset_full`
-					, `flag_success`
-					, `flag_cron_job`
-				)
-				VALUES
-				(
-					'" . mysqli_real_escape_string($connString, $str_event_action) . "'
-					, now()
-					, '" . mysqli_real_escape_string($connString, $str_log_file_path) . "'
-					, '" . mysqli_real_escape_string($connString, $str_action_file_path) . "'
-					, " . ($intCountUsersCanvas) . "
-					, " . ($intCountUsersUpdated) . "
-					, " . ($intCountUsersSkipped) . "
-					, '" . mysqli_real_escape_string($connString, $str_event_dataset_brief) . "'
-					, '" . mysqli_real_escape_string($connString, $str_event_dataset_full) . "'
-					, $flag_success
-					, $flag_is_cron_job
-				)
-		";
-
-		if ($debug) {
-			echo "<pre>queryEventLog = " . $queryEventLog . "</pre>";
-		}
-		else {
-			$resultsEventLog = mysqli_query($connString, $queryEventLog) or
-			die(mysqli_error($connString));
-		}*/
-
 	// final script status
 	echo "done!";
 

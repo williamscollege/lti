@@ -209,7 +209,7 @@ ORDER BY semesterIdentifier DESC;
 		<div class="col-md-12 col-sm-12">
 			<form action="moodle-ajax-actions.php" id="frmSUG" name="frmSUG" method="post">
 				<p>Change <strong><em>X</em></strong>:
-					<input disabled type="input" id="inputSUG" name="inputSUG" maxlength="4" value="<?php #echo $intSUG ?>" />
+					<input disabled="disabled" class="text-muted" type="input" id="inputSUG" name="inputSUG" maxlength="4" value="1<?php #echo $intSUG ?>" />
 					<img id="spinner_1" src="../img/spinner.gif" class="hidden" style="margin-bottom: -15px;" alt="working..." />
 				</p>
 

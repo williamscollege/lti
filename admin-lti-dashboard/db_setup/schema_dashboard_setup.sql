@@ -19,6 +19,7 @@ FOR TESTING ONLY:
 	SELECT * FROM `dashboard_eventlogs`;
 	SELECT * FROM `dashboard_sis_imports_raw`;
 	SELECT * FROM `dashboard_sis_imports_parsed`;
+	SELECT * FROM `dashboard_faculty_current`;
 */
 
 # ----------------------------
@@ -147,6 +148,15 @@ CREATE TABLE IF NOT EXISTS `dashboard_sis_imports_parsed` (
 	INDEX `data_counts_enrollments` (`data_counts_enrollments`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Log sanitized import results from curl call with Instructure Canvas LMS';
 /* dashboard_sis_imports_parsed table logs sanitized import results from curl call with Instructure Canvas LMS */
+
+CREATE TABLE IF NOT EXISTS `dashboard_faculty_current` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`faculty_id` INT UNSIGNED NOT NULL DEFAULT 0,
+	`created_at` TIMESTAMP NULL,
+	INDEX `faculty_id` (`faculty_id`),
+	INDEX `created_at` (`created_at`)
+)  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Maintain current list of faculty according to institutional records';
+/* dashboard_faculty_current table maintains a current list of faculty according to institutional records */
 
 -- Set Initial Data
 UPDATE `dashboard_users` SET `flag_is_set_notification_preference` = 1 WHERE canvas_user_id <= 6540605;

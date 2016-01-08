@@ -46,8 +46,8 @@
 	#------------------------------------------------#
 	# Constants: Initialize counters
 	#------------------------------------------------#
-	$str_project_name        = "Sync Canvas Users to Dashboard";
-	$str_event_action        = "sync_canvas_users_to_dashboard";
+	$str_project_name        = "Auto Enroll Faculty in Canvas Course";
+	$str_event_action        = "auto_enroll_faculty_in_canvas_course";
 	$arrayCanvasUsers        = [];
 	$arrayLocalUsers         = [];
 	$arrayRevisedLocalUsers  = [];
@@ -69,6 +69,8 @@
 	$beginDateTime       = date('YmdHis');
 	$beginDateTimePretty = date('Y-m-d H:i:s');
 
+	echo 'whoa - in development. exiting.';
+	exit;
 	# Create new archival log file
 	$str_log_file_path = dirname(__FILE__) . '/../logs/' . date("Ymd-His") . "-log-report.txt";
 	$myLogFile = fopen($str_log_file_path, "w") or die("Unable to open file!");
