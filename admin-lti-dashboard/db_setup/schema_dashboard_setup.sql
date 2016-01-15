@@ -9,11 +9,13 @@ FOR TESTING ONLY:
 	DROP TABLE `dashboard_eventlogs`;
 	DROP TABLE `dashboard_sis_imports_raw`;
 	DROP TABLE `dashboard_sis_imports_parsed`;
+	DROP TABLE `dashboard_faculty_current`;
 
 	DELETE FROM `dashboard_users`;
 	DELETE FROM `dashboard_eventlogs`;
 	DELETE FROM `dashboard_sis_imports_raw`;
 	DELETE FROM `dashboard_sis_imports_parsed`;
+	DELETE FROM `dashboard_faculty_current`;
 
 	SELECT * FROM `dashboard_users`;
 	SELECT * FROM `dashboard_eventlogs`;
@@ -50,9 +52,9 @@ CREATE TABLE IF NOT EXISTS `dashboard_users` (
 	`username` VARCHAR(255) NULL DEFAULT '',
 	`created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` TIMESTAMP NULL,
-	`flag_is_set_avatar_image` tinyint(1) unsigned NOT NULL default 0,
-	`flag_is_set_notification_preference` tinyint(1) unsigned NOT NULL DEFAULT 0,
-	`flag_delete` tinyint(1) unsigned NOT NULL DEFAULT 0,
+	`flag_is_set_avatar_image` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+	`flag_is_set_notification_preference` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+	`flag_delete` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
 	INDEX `canvas_user_id` (`canvas_user_id`),
 	INDEX `name` (`name`),
 	INDEX `sortable_name` (`sortable_name`),
@@ -81,8 +83,8 @@ CREATE TABLE IF NOT EXISTS `dashboard_eventlogs` (
 	`num_errors` INT NULL DEFAULT 0,
 	`event_dataset_brief` varchar(255) DEFAULT NULL,
 	`event_dataset_full` varchar(2000) DEFAULT NULL,
-	`flag_success` tinyint(1) unsigned NOT NULL DEFAULT 0,
-	`flag_cron_job` tinyint(1) unsigned NOT NULL DEFAULT 0,
+	`flag_success` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+	`flag_cron_job` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
 	INDEX `eventlog_id` (`eventlog_id`),
 	INDEX `event_action` (`event_action`),
 	INDEX `event_datetime` (`event_datetime`)
@@ -151,10 +153,18 @@ CREATE TABLE IF NOT EXISTS `dashboard_sis_imports_parsed` (
 
 CREATE TABLE IF NOT EXISTS `dashboard_faculty_current` (
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`faculty_id` INT UNSIGNED NOT NULL DEFAULT 0,
-	`created_at` TIMESTAMP NULL,
-	INDEX `faculty_id` (`faculty_id`),
-	INDEX `created_at` (`created_at`)
+	`wms_user_id` INT UNSIGNED NOT NULL DEFAULT 0,
+	`username` VARCHAR(255) NULL DEFAULT '',
+	`first_name` VARCHAR(255) NULL DEFAULT '',
+	`last_name` VARCHAR(255) NULL DEFAULT '',
+	`email` VARCHAR(255) NULL DEFAULT '',
+	`created_datetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	INDEX `wms_user_id` (`wms_user_id`),
+	INDEX `username` (`username`),
+	INDEX `first_name` (`first_name`),
+	INDEX `last_name` (`last_name`),
+	INDEX `email` (`email`),
+	INDEX `created_datetime` (`created_datetime`)
 )  ENGINE=innodb DEFAULT CHARACTER SET=utf8 COLLATE utf8_general_ci COMMENT='Maintain current list of faculty according to institutional records';
 /* dashboard_faculty_current table maintains a current list of faculty according to institutional records */
 

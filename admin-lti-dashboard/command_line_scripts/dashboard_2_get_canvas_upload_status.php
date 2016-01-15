@@ -2,30 +2,49 @@
 	/***********************************************
 	 ** Project:    Monitor Williams SIS Imports into Canvas LMS
 	 ** Author:     Williams College, OIT, David Keiser-Clark
-	 ** Purpose:    Monitor the SIS data that Williams sends to populate Instructure Canvas LMS
-	 ** Requirements:
-	 **  - Requires commandline php
-	 **  - This file is triggered at conclusion of already existing perl file (which is called by a shell script on a cron job)
-	 ** Current features:
-	 **  - use existing perl file to send fetched final "import status" to this php file
-	 **  - parse and record the final "import status" and insert into database records
+	 ** Access:     Commandline access only on internal server without web directory
+	 ** Purpose:    Monitor the SIS data that Williams sends to Instructure Canvas LMS [cronjob: every 2 hours]
+	 **  1. The shell script "get_canvas_report_for_last_upload.sh" runs the perl file "get_canvas_report_for_id.pl" every other hour via cron job
+	 **  - the perl file "get_canvas_report_for_id.pl" does the following:
+	 **  - executes a curl call that retrieves the full Canvas report ("import status") for the given upload id
+	 **  - sends an email with report status to relevant staff
+	 **  - executes this php file, and passes the full Canvas report ("import status") as a commandline argument
+	 **  2. This php file receives a commandline argument containing the full Canvas report ("import status"), and does the following:
+	 **  - parses and records the final "import status" and inserts into db (`dashboard_sis_imports_raw.curl_final_import_status`)
+	 **  - parses and records all pertinent fields and inserts into db (`dashboard_sis_imports_parsed.[many]`)
 	 ** Dependencies:
 	 **  - Install: Apache, PHP 5.2 (or higher)
+	 **  - Requires commandline php
 	 **  - Enable PHP modules: PDO, mysqli, curl, mbyte, dom
 	 ***********************************************/
 
 
-	require_once(dirname(__FILE__) . '/shell_institution.cfg.php');
-	require_once(dirname(__FILE__) . '/shell_connDB.php');
-	require_once(dirname(__FILE__) . '/shell_util.php');
+	require_once(dirname(__FILE__) . '/dashboard_institution.cfg.php');
+	require_once(dirname(__FILE__) . '/dashboard_connDB.php');
+	require_once(dirname(__FILE__) . '/dashboard_util.php');
 
-	// TODO - Add additional security here?
+	// TODO - Add additional security: Disable abiltiy to hit this via web (excluding localhost for testing?)
 
 	#------------------------------------------------#
 	# IMPORTANT STEPS TO REMEMBER
 	#------------------------------------------------#
 	# Set and show debugging browser output (on=TRUE, off=FALSE)
 	$debug = FALSE;
+
+
+	#------------------------------------------------#
+	# Security: Prevent web access to this file
+	#------------------------------------------------#
+	if (array_key_exists('SERVER_NAME', $_SERVER)) {
+		// script ran as web application
+		$flag_is_cron_job = 0; // FALSE
+		exit;
+	}
+	else {
+		// script ran via server commandline, not as web application
+		$flag_is_cron_job = 1; // TRUE
+	}
+
 
 	#------------------------------------------------#
 	# Fetch commandline argument passed from shell script
@@ -40,15 +59,15 @@
 			$connString,
 			$debug,
 			$str_event_action = "error_commandline_stage_2",
-			$str_log_file_path = "n/a",
-			$str_action_file_path = "shell_2_get_curl_status.php",
+			$str_log_path_simple = "n/a",
+			$str_action_path_simple = "dashboard_2_get_canvas_upload_status.php",
 			$items = 0,
 			$changes = 0,
 			$errors = 1,
-			$str_event_dataset_brief = "argument failed to pass correctly from from shell script",
-			$str_event_dataset_full = "argument failed to pass correctly from from shell script",
+			$str_event_dataset_brief = "argument failed to pass correctly from from perl file",
+			$str_event_dataset_full = "argument failed to pass correctly from from perl file",
 			$flag_success = 0,
-			$flag_is_cron_job = 0);
+			$flag_is_cron_job);
 		exit;
 	}
 
@@ -299,7 +318,7 @@
 				VALUES
 				(
 					now()
-					'" . mysqli_real_escape_string($connString, $obj_created_at) . "'
+					,'" . mysqli_real_escape_string($connString, $obj_created_at) . "'
 					,'" . mysqli_real_escape_string($connString, $obj_started_at) . "'
 					,'" . mysqli_real_escape_string($connString, $obj_ended_at) . "'
 					,'" . mysqli_real_escape_string($connString, $obj_updated_at) . "'

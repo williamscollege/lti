@@ -1,8 +1,8 @@
 <?php
 	/***********************************************
-	 ** Project:    Sync Canvas Users to Dashboard
+	 ** Project:    Auto Enroll: Canvas Course FFR (do both adds and drops)
 	 ** Author:     Williams College, OIT, David Keiser-Clark
-	 ** Purpose:    Regularly Sync Canvas Users (Amazon AWS) to Dashboard to create local database of users to make other operations more convenient
+	 ** Purpose:    Daily add/drop all entering/leaving faculty status employees into one specific Canvas course
 	 ** Requirements:
 	 **  - Requires admin token to make curl requests against Canvas LMS API
 	 **  - Must enable write-access to "logs/" folder
@@ -11,11 +11,14 @@
 	 **  - extend the typical "max_execution_time" to require as much time as the script requires (without timing out)
 	 **  - Run daily using cron job
 	 ** Current features:
-	 **  - fetch all Canvas user accounts using paged curl calls
-	 **  - fetch all local Dashboard users
-	 **  - compare Canvas to Dashboard and sync live users to local (insert, update, or skip)
-	 **  - compare Dashboard to Canvas and sync live users to local (remove only)
-	 **  - show script start and end times to help document that this script is keeping within Canvas number of API requests/hour
+	 **  - auto enroll (add/drop) all faculty in course "Faculty Funding Resources"
+	 **  - fetch today's current list of faculty from ephemeral Dashboard db table (`dashboard_faculty_current`)
+	 **  - compare `dashboard_faculty_current` with `users.flag_is_teacher`
+	 **  - for faculty adds: do curl calls to Canvas API to add to course
+	 **  - for faculty drops: do curl calls to Canvas API to remove from course
+	 **  - update users table: `users.flag_is_teacher`, `users.flag_is_enrolled_course_FFR`
+	 **  - for admins: send email with list of adds and drops
+	 **  - for newly added faculty: send email with brief introduction and explanation of course
 	 **  - report: Log Summary output to browser and written to text file
 	 ** Dependencies:
 	 **  - Install: Apache, PHP 5.2 (or higher)
@@ -46,10 +49,11 @@
 	#------------------------------------------------#
 	# Constants: Initialize counters
 	#------------------------------------------------#
-	$str_project_name        = "Auto Enroll Faculty in Canvas Course";
-	$str_event_action        = "auto_enroll_faculty_in_canvas_course";
+	$str_project_name        = "Auto Enroll: Canvas Course FFR";
+	$str_event_action        = "auto_enroll_canvas_course_ffr";
 	$arrayCanvasUsers        = [];
 	$arrayLocalUsers         = [];
+
 	$arrayRevisedLocalUsers  = [];
 	$boolValidResult         = TRUE;
 	$boolUserMatchExists     = FALSE;
@@ -71,20 +75,23 @@
 
 	echo 'whoa - in development. exiting.';
 	exit;
+
 	# Create new archival log file
-	$str_log_file_path = dirname(__FILE__) . '/../logs/' . date("Ymd-His") . "-log-report.txt";
-	$myLogFile = fopen($str_log_file_path, "w") or die("Unable to open file!");
+	$str_log_file        = date("Ymd-His") . "-log-report.txt";
+	$str_log_path_simple = '/logs/' . $str_log_file;
+	$str_log_path_full   = dirname(__FILE__) . '/../logs/' . $str_log_file;
+	$myLogFile = fopen($str_log_path_full, "w") or die("Unable to open file!");
 
 	// set values dynamically
 	if (array_key_exists('SERVER_NAME', $_SERVER)) {
 		// script ran as web application
-		$str_action_file_path = $_SERVER['PHP_SELF'];
-		$flag_is_cron_job     = 0; // FALSE
+		$str_action_path_simple = '/app_code/' . basename($_SERVER['PHP_SELF']);
+		$flag_is_cron_job       = 0; // FALSE
 	}
 	else {
-		// script ran as cron job (triggered from server, not web app)
-		$str_action_file_path = __FILE__;
-		$flag_is_cron_job     = 1; // TRUE
+		// script ran via server commandline, not as web application
+		$str_action_path_simple = '/app_code/' . basename(__FILE__);
+		$flag_is_cron_job       = 1; // TRUE
 	}
 
 	#------------------------------------------------#
@@ -403,7 +410,7 @@
 	array_push($finalReport, "Count: Users Updated in Dashboard: " . $intCountUsersUpdated);
 	array_push($finalReport, "Count: Users Skipped in Dashboard: " . $intCountUsersSkipped);
 	array_push($finalReport, "Count: Users Removed in Dashboard: " . $intCountUsersRemoved);
-	array_push($finalReport, "Archived file: " . $str_log_file_path);
+	array_push($finalReport, "Archived file: " . $str_log_path_simple);
 	array_push($finalReport, "Project: " . $str_project_name);
 
 	# Stringify for browser, output to txt file
@@ -459,8 +466,8 @@
 		$connString,
 		$debug,
 		mysqli_real_escape_string($connString, $str_event_action),
-		mysqli_real_escape_string($connString, $str_log_file_path),
-		mysqli_real_escape_string($connString, $str_action_file_path),
+		mysqli_real_escape_string($connString, $str_log_path_simple),
+		mysqli_real_escape_string($connString, $str_action_path_simple),
 		count($arrayCanvasUsers),
 		($intCountUsersUpdated + $intCountUsersInserted + $intCountUsersRemoved),
 		$intCountUsersErrors,

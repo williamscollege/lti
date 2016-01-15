@@ -53,12 +53,12 @@
 	// set values dynamically
 	if (array_key_exists('SERVER_NAME', $_SERVER)) {
 		// script ran as web application
-		$str_action_file_path = $_SERVER['PHP_SELF'];
+		$str_action_path_simple = '/app_code/' . basename($_SERVER['PHP_SELF']);
 		$flag_is_cron_job     = 0; // FALSE
 	}
 	else {
-		// script ran as cron job (triggered from server, not web app)
-		$str_action_file_path = __FILE__;
+		// script ran via server commandline, not as web application
+		$str_action_path_simple = '/app_code/' . basename(__FILE__);
 		$flag_is_cron_job     = 1; // TRUE
 	}
 
@@ -119,10 +119,11 @@
 	if ($seconds_elapsed > ($cron_frequency + $curl_duration)) {
 		$count_checks += 1;
 		if ($seconds_elapsed > $huge_ten_year_duration) {
-			array_push($error_messages, "Server failure: Missing or null value for import id " . $arrayRaw[0]["curl_import_id"] . " (`dashboard_sis_imports_raw.created_at`).");
+			array_push($error_messages, "Server failure (error 101): Missing or null value for import id " . $arrayRaw[0]["curl_import_id"] . " (`dashboard_sis_imports_raw.created_at`).");
 		}
 		else {
-			array_push($error_messages, "Server failure: " . number_format($seconds_elapsed / 60, 0) . " minutes elapsed since import id " . $arrayRaw[0]["curl_import_id"] . " (`dashboard_sis_imports_raw.created_at`).");
+			$count_checks += 1;
+			array_push($error_messages, "Server failure (error 102): " . number_format($seconds_elapsed / 60, 0) . " minutes elapsed since import id " . $arrayRaw[0]["curl_import_id"] . " (`dashboard_sis_imports_raw.created_at`).");
 		}
 	}
 
@@ -131,10 +132,11 @@
 	if ($seconds_elapsed > ($cron_frequency + $cron_frequency_offset + $curl_duration)) {
 		$count_checks += 1;
 		if ($seconds_elapsed > $huge_ten_year_duration) {
-			array_push($error_messages, "Server failure: Missing or null value for import id " . $arrayRaw[1]["curl_import_id"] . " (`dashboard_sis_imports_raw.ended_at`).");
+			array_push($error_messages, "Server failure (error 103): Missing or null value for import id " . $arrayRaw[1]["curl_import_id"] . " (`dashboard_sis_imports_raw.ended_at`).");
 		}
 		else {
-			array_push($error_messages, "Server failure: " . number_format($seconds_elapsed / 60, 0) . " minutes elapsed since import id " . $arrayRaw[1]["curl_import_id"] . " (`dashboard_sis_imports_raw.ended_at`).");
+			$count_checks += 1;
+			array_push($error_messages, "Server failure (error 104): " . number_format($seconds_elapsed / 60, 0) . " minutes elapsed since import id " . $arrayRaw[1]["curl_import_id"] . " (`dashboard_sis_imports_raw.ended_at`).");
 		}
 	}
 
@@ -144,10 +146,11 @@
 	if ($seconds_elapsed > ($cron_frequency + $cron_frequency_offset + $curl_duration)) {
 		$count_checks += 1;
 		if ($seconds_elapsed > $huge_ten_year_duration) {
-			array_push($error_messages, "Server failure: Missing or null value for import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed.created_at`).");
+			array_push($error_messages, "Server failure (error 105): Missing or null value for import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed.created_at`).");
 		}
 		else {
-			array_push($error_messages, "Server failure: " . number_format($seconds_elapsed / 60, 0) . " minutes elapsed since import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed.created_at`).");
+			$count_checks += 1;
+			array_push($error_messages, "Server failure (error 106): " . number_format($seconds_elapsed / 60, 0) . " minutes elapsed since import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed.created_at`).");
 		}
 	}
 
@@ -156,10 +159,11 @@
 	if ($seconds_elapsed > ($cron_frequency + $cron_frequency_offset + $curl_duration)) {
 		$count_checks += 1;
 		if ($seconds_elapsed > $huge_ten_year_duration) {
-			array_push($error_messages, "Server failure: Missing or null value for import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed.ended_at`).");
+			array_push($error_messages, "Server failure (error 107): Missing or null value for import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed.ended_at`).");
 		}
 		else {
-			array_push($error_messages, "Server failure: " . number_format($seconds_elapsed / 60, 0) . " minutes elapsed since import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed.ended_at`).");
+			$count_checks += 1;
+			array_push($error_messages, "Server failure (error 108): " . number_format($seconds_elapsed / 60, 0) . " minutes elapsed since import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed.ended_at`).");
 		}
 	}
 
@@ -172,7 +176,7 @@
 	}
 	$count_checks += 1;
 	if (!$flag_match_found) {
-		array_push($error_messages, "Match missing: Corresponding import `dashboard_sis_imports_parsed.id` (" . $arrayParsed[0]["id"] . ") not found in `dashboard_sis_imports_raw.curl_import_id`.");
+		array_push($error_messages, "Match missing (error 109): Corresponding import `dashboard_sis_imports_parsed.id` (" . $arrayParsed[0]["id"] . ") not found in `dashboard_sis_imports_raw.curl_import_id`.");
 		$flag_match_found = FALSE; // reset flag
 	}
 
@@ -183,7 +187,7 @@
 		$seconds_elapsed = $raw_0_ended_at->getTimestamp() - $raw_0_created_at->getTimestamp();
 		$count_checks += 1;
 		if ($seconds_elapsed > $curl_duration) {
-			array_push($error_messages, "Curl timeout: " . number_format($seconds_elapsed / 60, 0) . " minutes elapsed between `created_at` and `ended_at` for import id " . $arrayRaw[0]["curl_import_id"] . " (`dashboard_sis_imports_raw`).");
+			array_push($error_messages, "Curl timeout (error 110): " . number_format($seconds_elapsed / 60, 0) . " minutes elapsed between `created_at` and `ended_at` for import id " . $arrayRaw[0]["curl_import_id"] . " (`dashboard_sis_imports_raw`).");
 		}
 	}
 	else {
@@ -191,7 +195,7 @@
 		$seconds_elapsed = $raw_1_ended_at->getTimestamp() - $raw_1_created_at->getTimestamp();
 		$count_checks += 1;
 		if ($seconds_elapsed > $curl_duration) {
-			array_push($error_messages, "Curl timeout: " . number_format($seconds_elapsed / 60, 0) . " minutes elapsed between `created_at` and `ended_at` for import id " . $arrayRaw[1]["curl_import_id"] . " (`dashboard_sis_imports_raw`).");
+			array_push($error_messages, "Curl timeout (error 111): " . number_format($seconds_elapsed / 60, 0) . " minutes elapsed between `created_at` and `ended_at` for import id " . $arrayRaw[1]["curl_import_id"] . " (`dashboard_sis_imports_raw`).");
 		}
 	}
 
@@ -199,65 +203,65 @@
 	$seconds_elapsed = $parsed_0_ended_at->getTimestamp() - $parsed_0_created_at->getTimestamp();
 	$count_checks += 1;
 	if ($seconds_elapsed > $curl_duration) {
-		array_push($error_messages, "Curl timeout: " . number_format($seconds_elapsed / 60, 0) . " minutes elapsed between `created_at` and `ended_at` for import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed`).");
+		array_push($error_messages, "Curl timeout (error 112): " . number_format($seconds_elapsed / 60, 0) . " minutes elapsed between `created_at` and `ended_at` for import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed`).");
 	}
 
 	# 6. Check Failure Indicators: missing or null values (`dashboard_sis_imports_raw`)
 	$count_checks += 1;
 	if (!isset($arrayRaw[0]["curl_import_id"]) || $arrayRaw[0]["curl_import_id"] == 0) {
-		array_push($error_messages, "Failure: `curl_import_id` value is zero or null for import id " . $arrayRaw[0]["curl_import_id"] . " (`dashboard_sis_imports_raw`).");
+		array_push($error_messages, "Failure (error 113): `curl_import_id` value is zero or null for import id " . $arrayRaw[0]["curl_import_id"] . " (`dashboard_sis_imports_raw`).");
 	}
 
 	$count_checks += 1;
 	if (!isset($arrayRaw[0]["curl_return_code"]) || $arrayRaw[0]["curl_return_code"] == "") {
-		array_push($error_messages, "Failure: `curl_return_code` value is missing or null for import id " . $arrayRaw[0]["curl_import_id"] . " (`dashboard_sis_imports_raw`).");
+		array_push($error_messages, "Failure (error 114): `curl_return_code` value is missing or null for import id " . $arrayRaw[0]["curl_import_id"] . " (`dashboard_sis_imports_raw`).");
 	}
 
 	# 7. Check for unexpected values (`dashboard_sis_imports_parsed`)
 	$count_checks += 1;
 	if ($arrayParsed[0]["progress"] < 100) {
-		array_push($error_messages, "Failure: `Progress` value should be 100, but instead is " . $arrayParsed[0]["progress"] . " for import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed`).");
+		array_push($error_messages, "Failure (error 115): `Progress` value should be 100, but instead is " . $arrayParsed[0]["progress"] . " for import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed`).");
 	}
 
 	$count_checks += 1;
 	if (strpos($arrayParsed[0]["workflow_state"], "fail") === TRUE) {
-		array_push($error_messages, "Failure: `workflow_state` contains the word: `fail` for import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed`).");
+		array_push($error_messages, "Failure (error 116): `workflow_state` contains the word: `fail` for import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed`).");
 	}
 
 	$count_checks += 1;
 	if (strpos($arrayParsed[0]["workflow_state"], "imported") === FALSE) {
-		array_push($error_messages, "Failure: `workflow_state` does not contain the word: `imported` for import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed`).");
+		array_push($error_messages, "Failure (error 117): `workflow_state` does not contain the word: `imported` for import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed`).");
 	}
 
 	$count_checks += 1;
 	if ($arrayParsed[0]["data_supplied_batches"] != "term, course, section, user, enrollment") {
-		array_push($error_messages, "Failure: `data_supplied_batches` does not match the file words: `term, course, section, user, enrollment` for import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed`).");
+		array_push($error_messages, "Failure (error 118): `data_supplied_batches` does not match the file words: `term, course, section, user, enrollment` for import id " . $arrayParsed[0]["id"] . " (`dashboard_sis_imports_parsed`).");
 	}
 
 	# 8. Check for unexpected value comparisons/ranges (`dashboard_sis_imports_parsed`)
 	$count_checks += 1;
 	if ($arrayParsed[0]["data_counts_terms"] < $arrayParsed[1]["data_counts_terms"]) {
-		array_push($error_messages, "Failure: `data_counts_terms` for import id " . $arrayParsed[0]["id"] . " has lower value (" . $arrayParsed[0]["data_counts_terms"] . ") than previous SIS import (" . $arrayParsed[1]["data_counts_terms"] . ") (`dashboard_sis_imports_parsed`).");
+		array_push($error_messages, "Failure (error 119): `data_counts_terms` for import id " . $arrayParsed[0]["id"] . " has lower value (" . $arrayParsed[0]["data_counts_terms"] . ") than previous SIS import (" . $arrayParsed[1]["data_counts_terms"] . ") (`dashboard_sis_imports_parsed`).");
 	}
 
 	$count_checks += 1;
 	if ($arrayParsed[0]["data_counts_courses"] < ($arrayParsed[1]["data_counts_courses"] - $arrayParsed[1]["data_counts_courses"] * $float_range)) {
-		array_push($error_messages, "Failure: `data_counts_courses` for import id " . $arrayParsed[0]["id"] . " has significantly lower value (" . $arrayParsed[0]["data_counts_courses"] . ") than previous SIS import (" . $arrayParsed[1]["data_counts_courses"] . ") (`dashboard_sis_imports_parsed`).");
+		array_push($error_messages, "Failure (error 120): `data_counts_courses` for import id " . $arrayParsed[0]["id"] . " has significantly lower value (" . $arrayParsed[0]["data_counts_courses"] . ") than previous SIS import (" . $arrayParsed[1]["data_counts_courses"] . ") (`dashboard_sis_imports_parsed`).");
 	}
 
 	$count_checks += 1;
 	if ($arrayParsed[0]["data_counts_sections"] < ($arrayParsed[1]["data_counts_sections"] - $arrayParsed[1]["data_counts_sections"] * $float_range)) {
-		array_push($error_messages, "Failure: `data_counts_sections` for import id " . $arrayParsed[0]["id"] . " has significantly lower value (" . $arrayParsed[0]["data_counts_sections"] . ") than previous SIS import (" . $arrayParsed[1]["data_counts_sections"] . ") (`dashboard_sis_imports_parsed`).");
+		array_push($error_messages, "Failure (error 121): `data_counts_sections` for import id " . $arrayParsed[0]["id"] . " has significantly lower value (" . $arrayParsed[0]["data_counts_sections"] . ") than previous SIS import (" . $arrayParsed[1]["data_counts_sections"] . ") (`dashboard_sis_imports_parsed`).");
 	}
 
 	$count_checks += 1;
 	if ($arrayParsed[0]["data_counts_users"] < ($arrayParsed[1]["data_counts_users"] - $arrayParsed[1]["data_counts_users"] * $float_range)) {
-		array_push($error_messages, "Failure: `data_counts_users` for import id " . $arrayParsed[0]["id"] . " has significantly lower value (" . $arrayParsed[0]["data_counts_users"] . ") than previous SIS import (" . $arrayParsed[1]["data_counts_users"] . ") (`dashboard_sis_imports_parsed`).");
+		array_push($error_messages, "Failure (error 122): `data_counts_users` for import id " . $arrayParsed[0]["id"] . " has significantly lower value (" . $arrayParsed[0]["data_counts_users"] . ") than previous SIS import (" . $arrayParsed[1]["data_counts_users"] . ") (`dashboard_sis_imports_parsed`).");
 	}
 
 	$count_checks += 1;
 	if ($arrayParsed[0]["data_counts_enrollments"] < ($arrayParsed[1]["data_counts_enrollments"] - $arrayParsed[1]["data_counts_enrollments"] * $float_range)) {
-		array_push($error_messages, "Failure: `data_counts_enrollments` for import id " . $arrayParsed[0]["id"] . " has significantly lower value (" . $arrayParsed[0]["data_counts_enrollments"] . ") than previous SIS import (" . $arrayParsed[1]["data_counts_enrollments"] . ") (`dashboard_sis_imports_parsed`).");
+		array_push($error_messages, "Failure (error 123): `data_counts_enrollments` for import id " . $arrayParsed[0]["id"] . " has significantly lower value (" . $arrayParsed[0]["data_counts_enrollments"] . ") than previous SIS import (" . $arrayParsed[1]["data_counts_enrollments"] . ") (`dashboard_sis_imports_parsed`).");
 	}
 
 
@@ -300,8 +304,8 @@
 		$connString,
 		$debug,
 		$str_event_action,
-		$str_log_file_path = "n/a",
-		$str_action_file_path,
+		$str_log_path_simple = "n/a",
+		$str_action_path_simple,
 		$arrayParsed[0]["id"],
 		$count_checks,
 		count($error_messages),

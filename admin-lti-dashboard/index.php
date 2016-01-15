@@ -162,6 +162,8 @@
 			<li>LTI Management Console necessary for Glow applications such as &quot;Signup Sheets,&quot; and &quot;Course Email.&quot;</li>
 		</ol>
 	</div>
+</div>
+<div class="container">
 	<div class="row">
 		<div class="col-md-4 col-sm-4">
 			<div class="wmsBoxFull col-md-12 col-sm-12">
@@ -468,7 +470,7 @@
 						<tr>
 							<th class="small">Count</th>
 							<td><code><?php #echo number_format($cnt_notif_pref_exist) . " / " . number_format($log_sync_canvas_num_items); ?></code>
-								<small>(Faculty in: "Faculty Funding Resources")</small>
+								<small>("Faculty Funding Resources")</small>
 							</td>
 						</tr>
 						<tr>

@@ -16,11 +16,6 @@
 
 $ECHO "shell begin first php script:"
 $ECHO ""
-php shell_1_get_curl_status.php
-$ECHO "shell end first php script."
-
-# $ECHO "shell begin second php script:"
-# php shell_2_get_curl_status.php
-# $ECHO "shell end second php script."
+# php dashboard_1_get_canvas_upload_status.php
 
 $ECHO "shell is all done."

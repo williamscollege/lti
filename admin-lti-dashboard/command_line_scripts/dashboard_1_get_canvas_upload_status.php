@@ -2,24 +2,27 @@
 	/***********************************************
 	 ** Project:    Monitor Williams SIS Imports into Canvas LMS
 	 ** Author:     Williams College, OIT, David Keiser-Clark
-	 ** Purpose:    Monitor the SIS data that Williams sends to populate Instructure Canvas LMS
-	 ** Requirements:
-	 **  - Requires commandline php
-	 **  - This file is triggered at conclusion of already existing shell script
-	 ** Current features:
-	 **  - fetch and record status of CSV files that are created, zipped and sent to Canvas
-	 **  - fetch, parse and record the final "import status" (occurs after Canvas processing of sent files is completed)
+	 ** Access:     Commandline access only on internal server without web directory
+	 ** Purpose:    Monitor the SIS data that Williams sends to Instructure Canvas LMS [cronjob: every 2 hours]
+	 **  1. The shell script "get_onecard_data.sh" runs every other hour via cron job, and it does the following:
+	 **  - executes the curl call that posts the zipped CSV files to Canvas
+	 **  - logs the Canvas "import status" (aka "Return Code") to the "get_onecard_data.log"
+	 **  - executes this php file, which then does the following:
+	 **  2. This php file opens "get_onecard_data.log", retrieves the most recent entry, and does the following:
+	 **  - parses and records the status of CSV files that were created, zipped and sent to Canvas (`dashboard_sis_imports_raw.file_prep_status`)
+	 **  - parses and records the final "import status" into discrete fields (`dashboard_sis_imports_raw.[many]`)
 	 ** Dependencies:
 	 **  - Install: Apache, PHP 5.2 (or higher)
+	 **  - Requires commandline php
 	 **  - Enable PHP modules: PDO, mysqli, curl, mbyte, dom
 	 ***********************************************/
 
 
-	require_once(dirname(__FILE__) . '/shell_institution.cfg.php');
-	require_once(dirname(__FILE__) . '/shell_connDB.php');
-	require_once(dirname(__FILE__) . '/shell_util.php');
+	require_once(dirname(__FILE__) . '/dashboard_institution.cfg.php');
+	require_once(dirname(__FILE__) . '/dashboard_connDB.php');
+	require_once(dirname(__FILE__) . '/dashboard_util.php');
 
-	// TODO - Add additional security here?
+	// TODO - Add additional security: Disable abiltiy to hit this via web (excluding localhost for testing?)
 
 	#------------------------------------------------#
 	# IMPORTANT STEPS TO REMEMBER
@@ -27,17 +30,33 @@
 	# Set and show debugging browser output (on=TRUE, off=FALSE)
 	$debug = FALSE;
 
+
+	#------------------------------------------------#
+	# Security: Prevent web access to this file
+	#------------------------------------------------#
+	if (array_key_exists('SERVER_NAME', $_SERVER)) {
+		// script ran as web application
+		// $flag_is_cron_job = 0; // FALSE
+		exit;
+	}
+	else {
+		// script ran via server commandline, not as web application
+		// $flag_is_cron_job = 1; // TRUE
+	}
+
+
 	#------------------------------------------------#
 	# Constants: Initialize counters
 	#------------------------------------------------#
-	$file_path        = "/var/log/";                // server: canvas-images:/var/log/
-	$file_name        = "get_onecard_data.log";    // file: get_onecard_data.log
+	$file_path        = "/var/log/";                // internal_server:/opt/canvas_uploads/
+	$file_name        = "get_onecard_data.log";     // file: get_onecard_data.log
 	$str_delimiter_01 = "====================================";
 	$str_delimiter_02 = "Return Code:";
 	$str_delimiter_03 = '"created_at":';
 	$str_delimiter_04 = '"id":';
 
 
+	// check for existence of file
 	if (!file($file_path . $file_name)) {
 		echo "Requested log file not found! Exiting now...";
 		exit;

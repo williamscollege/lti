@@ -75,7 +75,7 @@
 		return util_dateTimeObject_asMySQL($dt);
 	}
 
-	function create_eventlog($connString, $debug, $str_event_action = "", $str_log_file_path = "", $str_action_file_path = "", $items = 0, $changes = 0, $errors = 0, $str_event_dataset_brief = "", $str_event_dataset_full = "", $flag_success = 0, $flag_is_cron_job = 0) {
+	function create_eventlog($connString, $debug, $str_event_action = "", $str_log_path_simple = "", $str_action_path_simple = "", $items = 0, $changes = 0, $errors = 0, $str_event_dataset_brief = "", $str_event_dataset_full = "", $flag_success = 0, $flag_is_cron_job = 0) {
 		#------------------------------------------------#
 		# Record Event Log
 		#------------------------------------------------#
@@ -99,8 +99,8 @@
 				(
 					'" . mysqli_real_escape_string($connString, $str_event_action) . "'
 					, now()
-					, '" . mysqli_real_escape_string($connString, $str_log_file_path) . "'
-					, '" . mysqli_real_escape_string($connString, $str_action_file_path) . "'
+					, '" . mysqli_real_escape_string($connString, $str_log_path_simple) . "'
+					, '" . mysqli_real_escape_string($connString, $str_action_path_simple) . "'
 					, " . $items . "
 					, " . $changes . "
 					, " . $errors . "

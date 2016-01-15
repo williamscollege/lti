@@ -70,18 +70,20 @@
 	$beginDateTimePretty = date('Y-m-d H:i:s');
 
 	# Create new archival log file
-	$str_log_file_path = dirname(__FILE__) . '/../logs/' . date("Ymd-His") . "-log-report.txt";
-	$myLogFile = fopen($str_log_file_path, "w") or die("Unable to open file!");
+	$str_log_file = date("Ymd-His") . "-log-report.txt";
+	$str_log_path_simple = '/logs/' . $str_log_file;
+	$str_log_path_full = dirname(__FILE__) . '/../logs/' . $str_log_file;
+	$myLogFile = fopen($str_log_path_full, "w") or die("Unable to open file!");
 
 	// set values dynamically
 	if (array_key_exists('SERVER_NAME', $_SERVER)) {
 		// script ran as web application
-		$str_action_file_path = $_SERVER['PHP_SELF'];
+		$str_action_path_simple = '/app_code/' . basename($_SERVER['PHP_SELF']);
 		$flag_is_cron_job     = 0; // FALSE
 	}
 	else {
-		// script ran as cron job (triggered from server, not web app)
-		$str_action_file_path = __FILE__;
+		// script ran via server commandline, not as web application
+		$str_action_path_simple = '/app_code/' . basename(__FILE__);
 		$flag_is_cron_job     = 1; // TRUE
 	}
 
@@ -401,7 +403,7 @@
 	array_push($finalReport, "Count: Users Updated in Dashboard: " . $intCountUsersUpdated);
 	array_push($finalReport, "Count: Users Skipped in Dashboard: " . $intCountUsersSkipped);
 	array_push($finalReport, "Count: Users Removed in Dashboard: " . $intCountUsersRemoved);
-	array_push($finalReport, "Archived file: " . $str_log_file_path);
+	array_push($finalReport, "Archived file: " . $str_log_path_simple);
 	array_push($finalReport, "Project: " . $str_project_name);
 
 	# Stringify for browser, output to txt file
@@ -457,8 +459,8 @@
 		$connString,
 		$debug,
 		mysqli_real_escape_string($connString, $str_event_action),
-		mysqli_real_escape_string($connString, $str_log_file_path),
-		mysqli_real_escape_string($connString, $str_action_file_path),
+		mysqli_real_escape_string($connString, $str_log_path_simple),
+		mysqli_real_escape_string($connString, $str_action_path_simple),
 		count($arrayCanvasUsers),
 		($intCountUsersUpdated + $intCountUsersInserted + $intCountUsersRemoved),
 		$intCountUsersErrors,

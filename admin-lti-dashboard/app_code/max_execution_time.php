@@ -19,9 +19,11 @@
 	$startDateTime       = date('YmdHis');
 	$startDateTimePretty = date('Y-m-d H:i:s');
 
-	# Create new log file (including datetime stamp) as archival record
-	$newFileName = dirname(__FILE__) . '/../logs/' . date("Ymd-His") . "-log-report.txt";
-	$myLogFile = fopen($newFileName, "w") or die("Unable to open file!");
+	# Create new archival log file
+	$str_log_file = date("Ymd-His") . "-log-report.txt";
+	$str_log_path_simple = '/logs/' . $str_log_file;
+	$str_log_path_full = dirname(__FILE__) . '/../logs/' . $str_log_file;
+	$myLogFile = fopen($str_log_path_full, "w") or die("Unable to open file!");
 
 	# 21,600 seconds = 6 hours
 	// ... do long running stuff
@@ -69,7 +71,7 @@
 	array_push($finalReport, "Users upload_status = 'pending': " . $intCountUploadStatusPending . " (waiting, system busy)");
 	array_push($finalReport, "Users upload_status = 'ready': " . $intCountUploadStatusReady . " (should match 'confirmed')");
 	array_push($finalReport, "Users upload_status = 'confirmed': " . $intCountUploadedAvatar . " (files uploaded)");
-	array_push($finalReport, "Archived file: " . $newFileName);
+	array_push($finalReport, "Archived file: " . $str_log_path_simple);
 
 	# Output array to browser and txt file
 	$firstTimeFlag = TRUE;
