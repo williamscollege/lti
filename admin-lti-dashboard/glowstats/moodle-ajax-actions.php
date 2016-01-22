@@ -44,7 +44,7 @@
 		case "frmNGC":
 			// Form Name: frmNGC
 			#------------------------------------------------#
-			# SQL: Fetch number of Glow courses accessed at least n times, by semester
+			# SQL Purpose: Fetch number of Glow courses accessed at least n times, by semester
 			# x = $intFilter
 			#------------------------------------------------#
 			$queryCoursesAccessedNTimes = "
@@ -103,7 +103,7 @@ ORDER BY c.idnumber;
 		case "frmSUG":
 			// Form Name: frmSUG
 			#------------------------------------------------#
-			# SQL: Fetch How many students had at least one active Glow course, by semester?
+			# SQL Purpose: Fetch How many students had at least one active Glow course, by semester?
 			# REQUIRES: temp table "wms_tmp_course_access" (TBD: benchmark this as it may not provide desired efficiency boost)
 			# x = $intFilter
 			#------------------------------------------------#

@@ -41,7 +41,7 @@
 
 
 	#------------------------------------------------#
-	# SQL: Moodle: Courses per Semester
+	# SQL Purpose: Moodle: Courses per Semester
 	// Semester
 	// Active Courses (visible=1)
 	// Inactive Courses (visible=0)

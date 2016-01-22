@@ -66,12 +66,16 @@
 			$str_log_path_simple = "n/a",
 			$str_action_path_simple = "dashboard_3_get_faculty.php",
 			$items = 0,
-			$changes = 0,
+			$adds = 0,
+			$edits = 0,
+			$removes = 0,
+			$skips = 0,
 			$errors = 1,
 			$str_event_dataset_brief = "argument failed to pass correctly from from shell script",
 			$str_event_dataset_full = "argument failed to pass correctly from from shell script",
 			$flag_success = 0,
-			$flag_is_cron_job);
+			$flag_is_cron_job
+		);
 		exit;
 	}
 
@@ -86,7 +90,7 @@
 
 
 	#------------------------------------------------#
-	# SQL: Delete table contents to clear way for new fresh data
+	# SQL Purpose: Delete table contents to clear way for new fresh data
 	#------------------------------------------------#
 	$queryDeleteFacultyData = "DELETE FROM `dashboard_faculty_current`";
 
@@ -100,7 +104,7 @@
 
 
 	#------------------------------------------------#
-	# SQL: Load data and insert into table
+	# SQL Purpose: Load data and insert into table
 	#------------------------------------------------#
 	$queryFacultyBulkInsert = "LOAD DATA LOCAL INFILE '" . $file_path . $faculty_csv_file . "'
 			INTO TABLE `dashboard_faculty_current`

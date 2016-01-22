@@ -41,7 +41,7 @@
 
 
 	#------------------------------------------------#
-	# SQL: Fetch Moodle: Student Enrollment per Semester
+	# SQL Purpose: Fetch Moodle: Student Enrollment per Semester
 	#------------------------------------------------#
 	$queryStudentsEnrolled = "
 SELECT

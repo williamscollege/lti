@@ -6,7 +6,7 @@
 	 ** Requirements:
 	 **  - Requires admin token to make curl requests against Canvas LMS API
 	 **  - Must enable write-access to "logs/" folder
-	 **  - Lock down folder contain these scripts to prevent any non-Williams admin from accessing files
+	 **  - Lock down parent releases folder to only allow administrator to access/view/run files
 	 **  - delay execution to not exceed Canvas limit of 3000 API requests per hour (http://www.instructure.com/policies/api-policy)
 	 **  - extend the typical "max_execution_time" to require as much time as the script requires (without timing out)
 	 **  - Run daily using cron job
@@ -51,10 +51,12 @@
 	$arrayLocalUsers         = [];
 	$boolValidResult         = TRUE;
 	$intCountCurlAPIRequests = 0;
-	$intCountUsersCanvas     = 0;
-	$intCountUsersSkipped    = 0;
-	$intCountUsersUpdated    = 0;
-	$intCountUsersErrors     = 0;
+	$intCountNeedsUpdate     = 0;
+	$intCountAdds            = 0;
+	$intCountEdits           = 0;
+	$intCountRemoves         = 0;
+	$intCountSkips           = 0;
+	$intCountErrors          = 0;
 
 	# Set timezone to keep php from complaining
 	date_default_timezone_set(DEFAULT_TIMEZONE);
@@ -64,19 +66,23 @@
 	$beginDateTimePretty = date('Y-m-d H:i:s');
 
 	# Create new archival log file
-	$str_log_file = date("Ymd-His") . "-log-report.txt";
+	$str_log_file        = date("Ymd-His") . "-log-report.txt";
 	$str_log_path_simple = '/logs/' . $str_log_file;
-	$str_log_path_full = dirname(__FILE__) . '/../logs/' . $str_log_file;
+	$str_log_path_full   = dirname(__FILE__) . '/../logs/' . $str_log_file;
 	$myLogFile = fopen($str_log_path_full, "w") or die("Unable to open file!");
 
 
 	#------------------------------------------------#
-	# SQL: fetch all local `dashboard_users`
+	# SQL Purpose: fetch all local `dashboard_users`
 	# requirement: flag_is_set_notification_preference = 0 (not set)
 	# requirement: flag_delete = 0 (active)
 	#------------------------------------------------#
 	$queryLocalUsers = "
-		SELECT * FROM `dashboard_users` WHERE `flag_is_set_notification_preference` = FALSE AND `flag_delete` = FALSE ORDER BY `canvas_user_id` ASC;
+		SELECT *
+		FROM `dashboard_users`
+		WHERE
+			`flag_is_set_notification_preference` = FALSE
+			AND `flag_delete` = FALSE ORDER BY `canvas_user_id` ASC;
 	";
 	$resultsLocalUsers = mysqli_query($connString, $queryLocalUsers) or
 	die(mysqli_error($connString));
@@ -87,13 +93,13 @@
 	}
 	if ($debug) {
 		echo "<hr/>arrayLocalUsers:<br />";
-		echo "(example: arrayLocalUsers[1][\"canvas_user_id\"] is: " . $arrayLocalUsers[1]["canvas_user_id"] . ")<br />";
+		echo "(example: arrayLocalUsers[0][\"canvas_user_id\"] is: " . $arrayLocalUsers[0]["canvas_user_id"] . ")<br />";
 		util_prePrintR($arrayLocalUsers);
 		echo "<hr/>";
 	}
 
 	# count users needing notification preferences updated
-	$intCountUsersCanvas = count($arrayLocalUsers);
+	$intCountNeedsUpdate = count($arrayLocalUsers);
 
 	// iterate all Local Users, reset notification_preference for each Canvas User
 	foreach ($arrayLocalUsers as $local_usr) {
@@ -115,11 +121,16 @@
 		#------------------------------------------------#
 
 		# Set Canvas "Notification Preferences" values for one "Account User" using curl call
-		$arrayCurlPutResult = curlSetUserNotificationPreferences($local_usr["canvas_user_id"], $local_usr["username"], $apiPathPrefix = "api/v1/users/self/communication_channels/email/", $apiPathEndpoint = "/notification_preferences?as_user_id=");
+		$arrayCurlResult = curlSetUserNotificationPreferences(
+			$local_usr["canvas_user_id"],
+			$local_usr["username"],
+			$apiPathPrefix = "api/v1/users/self/communication_channels/email/",
+			$apiPathEndpoint = "/notification_preferences?as_user_id="
+		);
 
 		if ($debug) {
 			echo "<hr/>";
-			util_prePrintR($arrayCurlPutResult);
+			util_prePrintR($arrayCurlResult);
 		}
 
 		# increment counter
@@ -128,7 +139,7 @@
 		# Store all in permanent array
 
 		// check for curl error
-		foreach ($arrayCurlPutResult as $item => $value) {
+		foreach ($arrayCurlResult as $item => $value) {
 			if ($item == "errors") {
 				$boolValidResult = FALSE;
 			}
@@ -136,8 +147,7 @@
 
 		if ($boolValidResult) {
 			#------------------------------------------------#
-			# UPDATE SQL Record
-			# Curl was successful. Update Dashboard local db to reflect this action has been completed
+			# SQL Purpose: Curl was successful. Update Dashboard local db to reflect this action has been completed
 			# requirement: `flag_is_set_notification_preference` = 1 (set)
 			#------------------------------------------------#
 
@@ -159,20 +169,21 @@
 			}
 
 			# increment counter
-			$intCountUsersUpdated += 1;
+			$intCountEdits += 1;
 
 			# Output to browser and txt file
 			if ($debug) {
-				echo $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Updated notification preferences (reset Canvas LMS values)<br />";
+				echo $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Updated notification preferences (updated Canvas)<br />";
 			}
-			fwrite($myLogFile, $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Updated notification preferences (reset Canvas LMS values)\n");
+			fwrite($myLogFile, $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Updated notification preferences (updated Canvas)\n");
 		}
 		else {
 			# note: any non-williams primary_email address values will fail; there are very few of these.
 			# consider doing a curl call to get profile, capture primary_email, then re-do the above curl PUT but to the non-williams email address
 
 			# increment counter
-			$intCountUsersSkipped += 1;
+			$intCountSkips += 1;
+			$intCountErrors += 1;
 
 			# Output to browser and txt file
 			if ($debug) {
@@ -206,9 +217,9 @@
 	array_push($finalReport, "Date end: " . $endDateTimePretty);
 	array_push($finalReport, "Duration: " . convertSecondsToHMSFormat(strtotime($endDateTime) - strtotime($beginDateTime)) . " (hh:mm:ss)");
 	array_push($finalReport, "Curl API Requests: " . $intCountCurlAPIRequests);
-	array_push($finalReport, "Count: Canvas LMS Users needing updates: " . $intCountUsersCanvas);
-	array_push($finalReport, "Count: Users Updated in Dashboard: " . $intCountUsersUpdated);
-	array_push($finalReport, "Count: Users Skipped in Dashboard: " . $intCountUsersSkipped);
+	array_push($finalReport, "Count: Canvas users needing updates: " . $intCountNeedsUpdate);
+	array_push($finalReport, "Count: Canvas users updated: " . $intCountEdits);
+	array_push($finalReport, "Count: Canvas users skipped due to errors: " . $intCountSkips);
 	array_push($finalReport, "Archived file: " . $str_log_path_simple);
 	array_push($finalReport, "Project: " . $str_project_name);
 
@@ -258,18 +269,15 @@
 	if (array_key_exists('SERVER_NAME', $_SERVER)) {
 		// script ran as web application
 		$str_action_path_simple = '/app_code/' . basename($_SERVER['PHP_SELF']);
-		$flag_is_cron_job     = 0; // FALSE
+		$flag_is_cron_job       = 0; // FALSE
 	}
 	else {
 		// script ran via server commandline, not as web application
 		$str_action_path_simple = '/app_code/' . basename(__FILE__);
-		$flag_is_cron_job     = 1; // TRUE
+		$flag_is_cron_job       = 1; // TRUE
 	}
 
-	$str_event_dataset_brief = $intCountUsersCanvas . " users: " . $intCountUsersUpdated . " updates, " . $intCountUsersSkipped . " skips";
-
-	// $flag_success = 0; // FALSE
-	$flag_success = 1; // TRUE
+	$str_event_dataset_brief = $intCountNeedsUpdate . " users: " . $intCountEdits . " updates, " . $intCountSkips . " skips";
 
 	create_eventlog(
 		$connString,
@@ -277,12 +285,15 @@
 		mysqli_real_escape_string($connString, $str_event_action),
 		mysqli_real_escape_string($connString, $str_log_path_simple),
 		mysqli_real_escape_string($connString, $str_action_path_simple),
-		$intCountUsersCanvas,
-		$intCountUsersUpdated,
-		$intCountUsersSkipped,
+		$intCountNeedsUpdate,
+		$intCountAdds,
+		$intCountEdits,
+		$intCountRemoves,
+		$intCountSkips,
+		$intCountErrors,
 		mysqli_real_escape_string($connString, $str_event_dataset_brief),
 		mysqli_real_escape_string($connString, $str_event_dataset_full),
-		$flag_success,
+		$flag_success = ($intCountErrors == 0) ? 1 : 0,
 		$flag_is_cron_job
 	);
 

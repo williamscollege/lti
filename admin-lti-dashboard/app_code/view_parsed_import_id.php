@@ -23,7 +23,7 @@
 
 
 	#------------------------------------------------#
-	# SQL: fetch log file summaries for requested "event_action"
+	# SQL Purpose: fetch log file summaries for requested "event_action"
 	#------------------------------------------------#
 	$queryFetchLogs = "
 		SELECT

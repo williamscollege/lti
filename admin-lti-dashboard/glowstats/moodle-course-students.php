@@ -30,7 +30,7 @@
 
 
 	#------------------------------------------------#
-	# SQL: Fetch all students per this one course
+	# SQL Purpose: Fetch all students per this one course
 	#------------------------------------------------#
 	$queryStudents = "
 SELECT

@@ -41,7 +41,7 @@
 
 
 	#------------------------------------------------#
-	# SQL: Fetch number of Glow courses accessed at least n times, by semester
+	# SQL Purpose: Fetch number of Glow courses accessed at least n times, by semester
 	# x = $intFilter
 	#------------------------------------------------#
 	$queryCoursesAccessedNTimes = "

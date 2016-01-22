@@ -114,7 +114,7 @@
 	}
 
 	#------------------------------------------------#
-	# SQL: Check if this `curl_import_id` already exists
+	# SQL Purpose: Check if this `curl_import_id` already exists
 	#------------------------------------------------#
 	$queryCheckExists = "
 		SELECT * FROM `dashboard_sis_imports_raw` WHERE `curl_import_id` = " . $parsed_import_id . ";
@@ -126,7 +126,7 @@
 
 	if ($check_existence) {
 		#------------------------------------------------#
-		# SQL: UPDATE existing record using captured data
+		# SQL Purpose: Update existing record using captured data
 		#------------------------------------------------#
 		$queryEditData = "
 			UPDATE
@@ -153,7 +153,7 @@
 	}
 	else {
 		#------------------------------------------------#
-		# SQL: INSERT new record using captured data
+		# SQL Purpose: Insert new record using captured data
 		#------------------------------------------------#
 		$queryInsertData = "
 		INSERT INTO

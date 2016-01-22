@@ -66,7 +66,7 @@
 	array_push($finalReport, "Duration (hh:mm:ss): " . convertSecondsToHMSFormat(strtotime($endDateTime) - strtotime($startDateTime)));
 	array_push($finalReport, "Curl API Requests: " . $intCountCurlAPIRequests);
 	array_push($finalReport, "User Count: " . $intCountUsers);
-	array_push($finalReport, "Users skipped (error): " . $intCountErrors);
+	array_push($finalReport, "Users skipped due to errors: " . $intCountErrors);
 	array_push($finalReport, "Users skipped (pre-existing avatar): " . $intCountAvatarExists);
 	array_push($finalReport, "Users upload_status = 'pending': " . $intCountUploadStatusPending . " (waiting, system busy)");
 	array_push($finalReport, "Users upload_status = 'ready': " . $intCountUploadStatusReady . " (should match 'confirmed')");

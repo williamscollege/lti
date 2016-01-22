@@ -6,7 +6,7 @@
 	 ** Requirements:
 	 **  - Requires admin token to make curl requests against Canvas LMS API
 	 **  - Must enable write-access to "logs/" folder
-	 **  - Lock down folder contain these scripts to prevent any non-Williams admin from accessing files
+	 **  - Lock down parent releases folder to only allow administrator to access/view/run files
 	 **  - delay execution to not exceed Canvas limit of 3000 API requests per hour (http://www.instructure.com/policies/api-policy)
 	 **  - extend the typical "max_execution_time" to require as much time as the script requires (without timing out)
 	 **  - Run daily using cron job
@@ -56,11 +56,11 @@
 	$intCountCurlAPIRequests = 0;
 	$intCountPages           = 0; // CAREFUL! for debugging, set to 63. otherwise, set to 0 for live use
 	$intCountUsersCanvas     = 0;
-	$intCountUsersSkipped    = 0;
-	$intCountUsersUpdated    = 0;
-	$intCountUsersInserted   = 0;
-	$intCountUsersRemoved    = 0;
-	$intCountUsersErrors     = 0;
+	$intCountAdds            = 0;
+	$intCountEdits           = 0;
+	$intCountRemoves         = 0;
+	$intCountSkips           = 0;
+	$intCountErrors          = 0;
 
 	# Set timezone to keep php from complaining
 	date_default_timezone_set(DEFAULT_TIMEZONE);
@@ -70,21 +70,21 @@
 	$beginDateTimePretty = date('Y-m-d H:i:s');
 
 	# Create new archival log file
-	$str_log_file = date("Ymd-His") . "-log-report.txt";
+	$str_log_file        = date("Ymd-His") . "-log-report.txt";
 	$str_log_path_simple = '/logs/' . $str_log_file;
-	$str_log_path_full = dirname(__FILE__) . '/../logs/' . $str_log_file;
+	$str_log_path_full   = dirname(__FILE__) . '/../logs/' . $str_log_file;
 	$myLogFile = fopen($str_log_path_full, "w") or die("Unable to open file!");
 
 	// set values dynamically
 	if (array_key_exists('SERVER_NAME', $_SERVER)) {
 		// script ran as web application
 		$str_action_path_simple = '/app_code/' . basename($_SERVER['PHP_SELF']);
-		$flag_is_cron_job     = 0; // FALSE
+		$flag_is_cron_job       = 0; // FALSE
 	}
 	else {
 		// script ran via server commandline, not as web application
 		$str_action_path_simple = '/app_code/' . basename(__FILE__);
-		$flag_is_cron_job     = 1; // TRUE
+		$flag_is_cron_job       = 1; // TRUE
 	}
 
 	#------------------------------------------------#
@@ -99,7 +99,11 @@
 		$intCountPages += 1;
 
 		# Fetch all "Account Users" (store in temporary array)
-		$arrayPagedResults = curlFetchUsers($intCountPages, $apiPathPrefix = "api/v1/accounts/98616/", $apiPathEndpoint = "users");
+		$arrayPagedResults = curlFetchUsers(
+			$intCountPages,
+			$apiPathPrefix = "api/v1/accounts/98616/",
+			$apiPathEndpoint = "users"
+		);
 
 		# increment counter
 		$intCountCurlAPIRequests += 1;
@@ -124,7 +128,7 @@
 
 
 	#------------------------------------------------#
-	# SQL: fetch all local `dashboard_users`
+	# SQL Purpose: fetch all local `dashboard_users`
 	# flag_delete: include all users (deleted or active)
 	#------------------------------------------------#
 	$queryLocalUsers = "
@@ -139,7 +143,7 @@
 	}
 	if ($debug) {
 		echo "<hr/>arrayLocalUsers:<br />";
-		echo "(example: arrayLocalUsers[1][\"canvas_user_id\"] is: " . $arrayLocalUsers[1]["canvas_user_id"] . ")<br />";
+		echo "(example: arrayLocalUsers[0][\"canvas_user_id\"] is: " . $arrayLocalUsers[0]["canvas_user_id"] . ")<br />";
 		util_prePrintR($arrayLocalUsers);
 		echo "<hr/>";
 	}
@@ -194,8 +198,7 @@
 					|| $local_usr["flag_delete"] == 1
 				) {
 					#------------------------------------------------#
-					# UPDATE SQL Record
-					# new values exist: update Local User with newer Canvas User values
+					# SQL Purpose: new values exist: update Local User with newer Canvas User values
 					# explicitly set: `flag_delete` = FALSE
 					#------------------------------------------------#
 
@@ -227,7 +230,7 @@
 					}
 
 					# increment counter
-					$intCountUsersUpdated += 1;
+					$intCountEdits += 1;
 
 					# Output to browser and txt file
 					if ($debug) {
@@ -237,7 +240,7 @@
 				}
 				else {
 					# increment counter
-					$intCountUsersSkipped += 1;
+					$intCountSkips += 1;
 
 					# Output to browser and txt file
 					// decided to omit skipped output, as there is no need to fill log files daily with 500kb of skipped user info
@@ -253,8 +256,7 @@
 		}
 		if (!$boolUserMatchExists) {
 			#------------------------------------------------#
-			# INSERT SQL Record
-			# no match exists. insert new record into db
+			# SQL Purpose: no match exists. insert new record into db
 			#------------------------------------------------#
 
 			$queryAddLocalUser = "
@@ -298,7 +300,7 @@
 			}
 
 			# increment counter
-			$intCountUsersInserted += 1;
+			$intCountAdds += 1;
 
 			# Output to browser and txt file
 			if ($debug) {
@@ -309,7 +311,7 @@
 	}
 
 	#------------------------------------------------#
-	# SQL: fetch `dashboard_users` (newly updated!)
+	# SQL Purpose: fetch `dashboard_users` (newly updated!)
 	#	flag_delete (only fetch active users: `flag_delete` = FALSE)
 	#------------------------------------------------#
 	$queryRevisedLocalUsers = "
@@ -347,8 +349,7 @@
 		}
 		if (!$boolUserMatchExists) {
 			#------------------------------------------------#
-			# UPDATE SQL Record
-			# no match exists
+			# SQL Purpose: no match exists
 			# explicitly set: `flag_delete` = TRUE
 			#------------------------------------------------#
 			$queryRemoveLocalUser = "
@@ -370,7 +371,7 @@
 			}
 
 			# increment counter
-			$intCountUsersRemoved += 1;
+			$intCountRemoves += 1;
 
 			# Output to browser and txt file
 			if ($debug) {
@@ -398,11 +399,11 @@
 	array_push($finalReport, "Date end: " . $endDateTimePretty);
 	array_push($finalReport, "Duration: " . convertSecondsToHMSFormat(strtotime($endDateTime) - strtotime($beginDateTime)) . " (hh:mm:ss)");
 	array_push($finalReport, "Curl API Requests: " . $intCountCurlAPIRequests);
-	array_push($finalReport, "Count: Canvas LMS Users: " . $intCountUsersCanvas);
-	array_push($finalReport, "Count: Users Inserted in Dashboard: " . $intCountUsersInserted);
-	array_push($finalReport, "Count: Users Updated in Dashboard: " . $intCountUsersUpdated);
-	array_push($finalReport, "Count: Users Skipped in Dashboard: " . $intCountUsersSkipped);
-	array_push($finalReport, "Count: Users Removed in Dashboard: " . $intCountUsersRemoved);
+	array_push($finalReport, "Count: Canvas users: " . $intCountUsersCanvas);
+	array_push($finalReport, "Count: Users added to Dashboard: " . $intCountAdds);
+	array_push($finalReport, "Count: Users updated in Dashboard: " . $intCountEdits);
+	array_push($finalReport, "Count: Users skipped in Dashboard: " . $intCountSkips);
+	array_push($finalReport, "Count: Users removed from Dashboard: " . $intCountRemoves);
 	array_push($finalReport, "Archived file: " . $str_log_path_simple);
 	array_push($finalReport, "Project: " . $str_project_name);
 
@@ -445,16 +446,14 @@
 
 
 	#------------------------------------------------#
+	# prepare values for eventlog (and also for notifications, if enrollments or drops exist)
+	#------------------------------------------------#
+	$str_event_dataset_brief = $intCountAdds . " inserts, " . $intCountEdits . " updates, " . $intCountRemoves . " deletes";
+
+
+	#------------------------------------------------#
 	# Record Event Log
 	#------------------------------------------------#
-	// create value
-	$str_event_dataset_brief = $intCountUsersInserted . " inserts, " . $intCountUsersUpdated . " updates, " . $intCountUsersRemoved . " deletes";
-
-	$flag_success = 0; // FALSE
-	if ($intCountUsersCanvas > 0) {
-		$flag_success = 1; // TRUE
-	}
-
 	create_eventlog(
 		$connString,
 		$debug,
@@ -462,11 +461,14 @@
 		mysqli_real_escape_string($connString, $str_log_path_simple),
 		mysqli_real_escape_string($connString, $str_action_path_simple),
 		count($arrayCanvasUsers),
-		($intCountUsersUpdated + $intCountUsersInserted + $intCountUsersRemoved),
-		$intCountUsersErrors,
+		$intCountAdds,
+		$intCountEdits,
+		$intCountRemoves,
+		$intCountSkips,
+		$intCountErrors,
 		mysqli_real_escape_string($connString, $str_event_dataset_brief),
 		mysqli_real_escape_string($connString, $str_event_dataset_full),
-		$flag_success,
+		$flag_success = ($intCountUsersCanvas > 0) ? 1 : 0,
 		$flag_is_cron_job
 	);
 

@@ -62,12 +62,16 @@
 			$str_log_path_simple = "n/a",
 			$str_action_path_simple = "dashboard_2_get_canvas_upload_status.php",
 			$items = 0,
-			$changes = 0,
+			$adds = 0,
+			$edits = 0,
+			$removes = 0,
+			$skips = 0,
 			$errors = 1,
 			$str_event_dataset_brief = "argument failed to pass correctly from from perl file",
 			$str_event_dataset_full = "argument failed to pass correctly from from perl file",
 			$flag_success = 0,
-			$flag_is_cron_job);
+			$flag_is_cron_job
+		);
 		exit;
 	}
 
@@ -197,7 +201,7 @@
 
 
 	#------------------------------------------------#
-	# SQL: UPDATE to reflect retrieval of Curl final response
+	# SQL Purpose: Update to reflect retrieval of Curl final response
 	#------------------------------------------------#
 	$queryEditRawData = "
 		UPDATE
@@ -218,7 +222,7 @@
 	}
 
 	#------------------------------------------------#
-	# SQL: Check if this `curl_import_id` already exists
+	# SQL Purpose: Check if this `curl_import_id` already exists
 	#------------------------------------------------#
 	$queryCheckExists = "
 		SELECT * FROM `dashboard_sis_imports_parsed` WHERE `id` = " . $obj_id . ";
@@ -230,7 +234,7 @@
 
 	if ($check_existence) {
 		#------------------------------------------------#
-		# SQL: UPDATE existing record using captured data
+		# SQL Purpose: Update existing record using captured data
 		#------------------------------------------------#
 		$queryEditData = "
 			UPDATE
@@ -279,7 +283,7 @@
 	}
 	else {
 		#------------------------------------------------#
-		# SQL: INSERT captured data into `dashboard_sis_imports_parsed`
+		# SQL Purpose: Insert captured data into `dashboard_sis_imports_parsed`
 		#------------------------------------------------#
 		$queryCaptureParsedData = "
 			INSERT INTO

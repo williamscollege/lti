@@ -62,7 +62,23 @@
 		return $dt->format('Y-m-d H:i:s');
 	}
 
-	function create_eventlog($connString, $debug, $str_event_action = "", $str_log_path_simple = "", $str_action_path_simple = "", $items = 0, $changes = 0, $errors = 0, $str_event_dataset_brief = "", $str_event_dataset_full = "", $flag_success = 0, $flag_is_cron_job = 0) {
+	function create_eventlog(
+		$connString,
+		$debug,
+		$str_event_action = "",
+		$str_log_path_simple = "",
+		$str_action_path_simple = "",
+		$items = 0,
+		$adds = 0,
+		$edits = 0,
+		$removes = 0,
+		$skips = 0,
+		$errors = 0,
+		$str_event_dataset_brief = "",
+		$str_event_dataset_full = "",
+		$flag_success = 0,
+		$flag_is_cron_job = 0
+	) {
 		#------------------------------------------------#
 		# Record Event Log
 		#------------------------------------------------#
@@ -75,7 +91,10 @@
 					, `event_log_filepath`
 					, `event_action_filepath`
 					, `num_items`
-					, `num_changes`
+					, `num_adds`
+					, `num_edits`
+					, `num_removes`
+					, `num_skips`
 					, `num_errors`
 					, `event_dataset_brief`
 					, `event_dataset_full`
@@ -89,7 +108,10 @@
 					, '" . mysqli_real_escape_string($connString, $str_log_path_simple) . "'
 					, '" . mysqli_real_escape_string($connString, $str_action_path_simple) . "'
 					, " . $items . "
-					, " . $changes . "
+					, " . $adds . "
+					, " . $edits . "
+					, " . $removes . "
+					, " . $skips . "
 					, " . $errors . "
 					, '" . mysqli_real_escape_string($connString, $str_event_dataset_brief) . "'
 					, '" . mysqli_real_escape_string($connString, $str_event_dataset_full) . "'

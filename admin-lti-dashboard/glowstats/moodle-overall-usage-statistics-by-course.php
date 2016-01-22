@@ -68,7 +68,7 @@
 
 
 	#------------------------------------------------#
-	# SQL: Fetch summary of all courses grouped by year (for dropdown menu)
+	# SQL Purpose: Fetch summary of all courses grouped by year (for dropdown menu)
 	#------------------------------------------------#
 	$queryListOfSemesters = "
 SELECT
@@ -91,7 +91,7 @@ ORDER BY orderingyear DESC , orderingsem DESC
 	die(mysqli_error($moodle_connString));
 
 
-	# SQL: Fetch all courses per desired semester
+	# SQL Purpose: Fetch all courses per desired semester
 	$queryCourses = "
 SELECT
 	u.firstname

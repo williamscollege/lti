@@ -1,24 +1,22 @@
 <?php
 	/***********************************************
-	 ** Project:    Auto Enroll: Canvas Course FFR (do both adds and drops)
+	 ** Project:    Auto Enrollments: Canvas Course FFR (do both adds and drops)
 	 ** Author:     Williams College, OIT, David Keiser-Clark
 	 ** Purpose:    Daily add/drop all entering/leaving faculty status employees into one specific Canvas course
 	 ** Requirements:
 	 **  - Requires admin token to make curl requests against Canvas LMS API
 	 **  - Must enable write-access to "logs/" folder
-	 **  - Lock down folder contain these scripts to prevent any non-Williams admin from accessing files
+	 **  - Lock down parent releases folder to only allow administrator to access/view/run files
 	 **  - delay execution to not exceed Canvas limit of 3000 API requests per hour (http://www.instructure.com/policies/api-policy)
 	 **  - extend the typical "max_execution_time" to require as much time as the script requires (without timing out)
 	 **  - Run daily using cron job
 	 ** Current features:
-	 **  - auto enroll (add/drop) all faculty in course "Faculty Funding Resources"
-	 **  - fetch today's current list of faculty from ephemeral Dashboard db table (`dashboard_faculty_current`)
-	 **  - compare `dashboard_faculty_current` with `users.flag_is_teacher`
-	 **  - for faculty adds: do curl calls to Canvas API to add to course
-	 **  - for faculty drops: do curl calls to Canvas API to remove from course
-	 **  - update users table: `users.flag_is_teacher`, `users.flag_is_enrolled_course_FFR`
-	 **  - for admins: send email with list of adds and drops
-	 **  - for newly added faculty: send email with brief introduction and explanation of course
+	 **  - enroll users who are faculty members to course "Faculty Funding Resources"
+	 **  - remove users who no longer are faculty members from course "Faculty Funding Resources"
+	 **  - maintain updated Dashboard records of who are teachers and members of the above course
+	 **        by doing diff of current list of faculty (`dashboard_faculty_current`) vs users listed as teachers (`dashboard_users`)
+	 **  - send mail: for admins, send list of course adds and drops
+	 **  - send mail: for newly added faculty, send brief introduction and explanation of course
 	 **  - report: Log Summary output to browser and written to text file
 	 ** Dependencies:
 	 **  - Install: Apache, PHP 5.2 (or higher)
@@ -49,22 +47,28 @@
 	#------------------------------------------------#
 	# Constants: Initialize counters
 	#------------------------------------------------#
-	$str_project_name        = "Auto Enroll: Canvas Course FFR";
-	$str_event_action        = "auto_enroll_canvas_course_ffr";
-	$arrayCanvasUsers        = [];
-	$arrayLocalUsers         = [];
-
-	$arrayRevisedLocalUsers  = [];
-	$boolValidResult         = TRUE;
-	$boolUserMatchExists     = FALSE;
-	$intCountCurlAPIRequests = 0;
-	$intCountPages           = 0; // CAREFUL! for debugging, set to 63. otherwise, set to 0 for live use
-	$intCountUsersCanvas     = 0;
-	$intCountUsersSkipped    = 0;
-	$intCountUsersUpdated    = 0;
-	$intCountUsersInserted   = 0;
-	$intCountUsersRemoved    = 0;
-	$intCountUsersErrors     = 0;
+	$str_project_name          = "Auto Enrollments: Canvas Course FFR";
+	$str_event_action          = "auto_enroll_canvas_course_ffr";
+	$intCourseID               = 1549176;
+	$intSectionID              = 1749748;
+	$strCourseTitle            = "Faculty Funding Resources";
+	$arrayNotifyAdminIDs       = [3755519, 5328092, 5328216]; // canvas_user_id: David, Mary Ellen, Patti
+	$arrayNotifyAdminUserNames = [];
+	$arrayEnrollments          = [];
+	$arrayDrops                = [];
+	$boolValidResult           = TRUE;
+	$intCountCurlAPIRequests   = 0;
+	$intCountFacultyCurrent    = 0;
+	$intCountAdds              = 0;
+	$intCountEdits             = 0;
+	$intCountRemoves           = 0;
+	$intCountSkips             = 0;
+	$intCountErrors            = 0;
+	$strAdminEmails            = "";
+	$strEnrolledEmails         = "";
+	$strEnrollments            = "";
+	$strDrops                  = "";
+	$strErrors                 = "";
 
 	# Set timezone to keep php from complaining
 	date_default_timezone_set(DEFAULT_TIMEZONE);
@@ -72,9 +76,6 @@
 	# Save initial values for "LOG SUMMARY"
 	$beginDateTime       = date('YmdHis');
 	$beginDateTimePretty = date('Y-m-d H:i:s');
-
-	echo 'whoa - in development. exiting.';
-	exit;
 
 	# Create new archival log file
 	$str_log_file        = date("Ymd-His") . "-log-report.txt";
@@ -94,245 +95,201 @@
 		$flag_is_cron_job       = 1; // TRUE
 	}
 
-	#------------------------------------------------#
-	# Fetch all Canvas user accounts using paged curl calls
-	#------------------------------------------------#
-	if ($debug) {
-		// for testing, always set artificially high initial page count for fewer curl calls (total pages = approx 67)
-		$intCountPages = 65;
-	}
-	while ($boolValidResult) {
-		# increment counter
-		$intCountPages += 1;
 
-		# Fetch all "Account Users" (store in temporary array)
-		$arrayPagedResults = curlFetchUsers($intCountPages, $apiPathPrefix = "api/v1/accounts/98616/", $apiPathEndpoint = "users");
+	#------------------------------------------------#
+	# SQL Purpose: Fetch email usernames of admins who should be notified
+	#------------------------------------------------#
+	$queryNotifyAdmins = "
+		SELECT usr.username
+		FROM `dashboard_users` as usr
+		WHERE
+			usr.canvas_user_id IN (" . implode(',', $arrayNotifyAdminIDs) . ")
+		ORDER BY usr.username;
+	";
+	if ($debug) {
+		echo "<pre>queryNotifyAdmins = " . $queryNotifyAdmins . "</pre>";
+	}
+	$resultsNotifyAdmins = mysqli_query($connString, $queryNotifyAdmins) or
+	die(mysqli_error($connString));
+
+	# Store all in permanent array
+	while ($usr = mysqli_fetch_assoc($resultsNotifyAdmins)) {
+		array_push($arrayNotifyAdminUserNames, $usr);
+	}
+	if ($debug) {
+		echo "<hr />arrayNotifyAdmins:<br />";
+		echo "(example: arrayNotifyAdmins[0][\"username\"] is: " . $arrayNotifyAdminUserNames[0]["username"] . ")<br />";
+		util_prePrintR($arrayNotifyAdminUserNames);
+	}
+
+
+	#------------------------------------------------#
+	# SQL Purpose: Fetch users to enroll into course
+	# Condition: Must be listed as teacher in `dashboard_faculty_current`
+	# Condition: Must exist in `dashboard_users` as not yet enrolled in course
+	#------------------------------------------------#
+	$queryEnrollments = "
+		SELECT usr.*
+		FROM `dashboard_users` as usr
+		INNER JOIN `dashboard_faculty_current` as fac_cur
+		ON usr.sis_user_id = fac_cur.wms_user_id
+		WHERE
+			usr.flag_is_enrolled_course_ffr = 0
+		ORDER BY usr.sortable_name ASC;
+	";
+	if ($debug) {
+		echo "<hr /><pre>queryEnrollments = " . $queryEnrollments . "</pre>";
+	}
+	$resultsEnrollments = mysqli_query($connString, $queryEnrollments) or
+	die(mysqli_error($connString));
+
+	# Store all in permanent array
+	while ($usr = mysqli_fetch_assoc($resultsEnrollments)) {
+		array_push($arrayEnrollments, $usr);
+	}
+	if ($debug) {
+		echo "<hr />arrayEnrollments:<br />";
+		echo "(example: arrayEnrollments[0][\"sis_user_id\"] is: " . $arrayEnrollments[0]["sis_user_id"] . ")<br />";
+		util_prePrintR($arrayEnrollments);
+	}
+
+
+	#------------------------------------------------#
+	# SQL Purpose: Fetch users to drop from course
+	# Condition: Teacher does not exist in `dashboard_faculty_current`
+	# Condition: User exists in `dashboard_users` and is listed as a teacher
+	#------------------------------------------------#
+	$queryDrops = "
+		SELECT usr.*
+		FROM `dashboard_users` AS usr
+		LEFT JOIN `dashboard_faculty_current` AS fac_cur
+		ON usr.sis_user_id = fac_cur.wms_user_id
+		WHERE
+			usr.flag_is_teacher = 1
+			AND fac_cur.wms_user_id IS NULL
+		ORDER BY usr.sortable_name ASC;
+	";
+	if ($debug) {
+		echo "<hr /><pre>queryDrops = " . $queryDrops . "</pre>";
+	}
+	else {
+		$resultsDrops = mysqli_query($connString, $queryDrops) or
+		die(mysqli_error($connString));
+	}
+
+	# Store all in permanent array
+	while ($usr = mysqli_fetch_assoc($resultsDrops)) {
+		array_push($arrayDrops, $usr);
+	}
+	if ($debug) {
+		echo "<hr />arrayDrops:<br />";
+		echo "(example: arrayDrops[0][\"sis_user_id\"] is: " . $arrayDrops[0]["sis_user_id"] . ")<br />";
+		util_prePrintR($arrayDrops);
+	}
+
+
+	#------------------------------------------------#
+	# SQL Purpose: Fetch simple count of faculty in `dashboard_faculty_current`
+	#------------------------------------------------#
+	$queryItems = "
+		SELECT fac_cur.*
+		FROM `dashboard_faculty_current` AS fac_cur;
+	";
+	if ($debug) {
+		echo "<hr /><pre>queryItems = " . $queryItems . "</pre>";
+	}
+	$resultsItems = mysqli_query($connString, $queryItems) or
+	die(mysqli_error($connString));
+
+	# Store value
+	$intCountFacultyCurrent = mysqli_num_rows($resultsItems);
+	if ($debug) {
+		echo "<hr />intCountItems = " . $intCountFacultyCurrent . "<br />";
+	}
+
+
+	#------------------------------------------------#
+	# Iterate Enrollments: add each user to course with curl
+	#------------------------------------------------#
+	foreach ($arrayEnrollments as $usr) {
+
+		// reset flag for each user
+		$boolValidResult = TRUE;
+
+		# Auto enroll user into Canvas course section using curl call
+		$arrayCurlResult = curlEnrollUserInCourse(
+			$intCourseID,
+			$intSectionID,
+			$userID = $usr["canvas_user_id"],
+			$type = "StudentEnrollment",
+			$enrollment_state = "active",
+			$limit_privileges_to_course_section = "true",
+			$notify = "false",
+			$apiPathPrefix = "api/v1/courses/",
+			$apiPathEndpoint = "/enrollments"
+		);
+
+		if ($debug) {
+			echo "<hr />curlEnrollUserInCourse results = ";
+			util_prePrintR($arrayCurlResult);
+		}
 
 		# increment counter
 		$intCountCurlAPIRequests += 1;
 
-		# Store all in permanent array
-		foreach ($arrayPagedResults as $usr) {
-			array_push($arrayCanvasUsers, $usr);
-
-			# increment counter
-			$intCountUsersCanvas += 1;
-		}
-
-		// paged results contain values; abort upon reaching the first empty results page (no more pages exist)
-		if (count($arrayPagedResults) == 0) {
-			$boolValidResult = FALSE;
-		}
-	}
-	if ($debug) {
-		util_prePrintR($arrayCanvasUsers);
-		echo "<hr/>";
-	}
-
-
-	#------------------------------------------------#
-	# SQL: fetch all local `dashboard_users`
-	# flag_delete: include all users (deleted or active)
-	#------------------------------------------------#
-	$queryLocalUsers = "
-		SELECT * FROM `dashboard_users`;
-	";
-	$resultsLocalUsers = mysqli_query($connString, $queryLocalUsers) or
-	die(mysqli_error($connString));
-
-	# Store all in permanent array
-	while ($usr = mysqli_fetch_assoc($resultsLocalUsers)) {
-		array_push($arrayLocalUsers, $usr);
-	}
-	if ($debug) {
-		echo "<hr/>arrayLocalUsers:<br />";
-		echo "(example: arrayLocalUsers[1][\"canvas_user_id\"] is: " . $arrayLocalUsers[1]["canvas_user_id"] . ")<br />";
-		util_prePrintR($arrayLocalUsers);
-		echo "<hr/>";
-	}
-
-	foreach ($arrayCanvasUsers as $canvas_usr) {
-
-		// reset boolean flag
-		$boolUserMatchExists = FALSE;
-
-		// set normalized values
-		// (new Canvas users are created with sis_user_id having a varchar value; for our local dashboard db purposes, force the varchar to an integer 0)
-		$canvas_u_id            = empty($canvas_usr["id"]) ? 0 : $canvas_usr["id"];
-		$canvas_u_name          = empty($canvas_usr["name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["name"]);
-		$canvas_u_sortable_name = empty($canvas_usr["sortable_name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["sortable_name"]);
-		$canvas_u_short_name    = empty($canvas_usr["short_name"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["short_name"]);
-		// check for undefined index and convert to integer before checking is_numeric (avoids PHP warnings when running via commandline)
-		$canvas_u_sis_user_id = empty($canvas_usr["sis_user_id"]) ? 0 : $canvas_usr["sis_user_id"];
-		if (!is_numeric($canvas_u_sis_user_id)) {
-			$canvas_u_sis_user_id = 0;
-		}
-		$canvas_u_integration_id = empty($canvas_usr["integration_id"]) ? 0 : $canvas_usr["integration_id"];
-		$canvas_u_sis_login_id   = empty($canvas_usr["sis_login_id"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["sis_login_id"]);
-		$canvas_u_sis_import_id  = empty($canvas_usr["sis_import_id"]) ? 0 : $canvas_usr["sis_import_id"];
-		$canvas_u_login_id       = empty($canvas_usr["login_id"]) ? '' : mysqli_real_escape_string($connString, $canvas_usr["login_id"]);
-
-		// iterate all Local Users, looking for existence of specific Canvas User
-		foreach ($arrayLocalUsers as $local_usr) {
-			if ($local_usr["canvas_user_id"] == $canvas_u_id) {
-
-				// reset boolean flag
-				$boolUserMatchExists = TRUE;
-
-				if ($debug) {
-					echo "local_usr[\"canvas_user_id\"]" . $local_usr["canvas_user_id"] . " MATCHES canvas_usr[\"id\"]: " . $canvas_u_id . "<br />";
-				}
-
-				// user already exists! now check if it needs updating (local user record matches live Canvas user record)
-				// and if local user was deleted previously but now matches Canvas user, then restore that local user
-				// convert possible null values to empty string value to enable later string comparisons
-				$local_usr_sis_login_id = empty($local_usr["sis_login_id"]) ? '' : mysqli_real_escape_string($connString, $local_usr["sis_login_id"]);
-
-				if (
-					$local_usr["canvas_user_id"] != $canvas_u_id
-					|| $local_usr["name"] != $canvas_usr["name"]
-					|| $local_usr["sortable_name"] != $canvas_usr["sortable_name"]
-					|| $local_usr["short_name"] != $canvas_usr["short_name"]
-					|| $local_usr["sis_user_id"] != $canvas_u_sis_user_id
-					// || $local_usr["integration_id"] != $canvas_u_integration_id // ignore if changes exist
-					|| $local_usr_sis_login_id != $canvas_u_sis_login_id
-					// || $local_usr["sis_import_id"] != $canvas_u_sis_import_id // ignore if changes exist
-					|| $local_usr["username"] != $canvas_usr["login_id"]
-					|| $local_usr["flag_delete"] == 1
-				) {
-					#------------------------------------------------#
-					# UPDATE SQL Record
-					# new values exist: update Local User with newer Canvas User values
-					# explicitly set: `flag_delete` = FALSE
-					#------------------------------------------------#
-
-					$queryEditLocalUser = "
-						UPDATE
-							`dashboard_users`
-						SET
-							`canvas_user_id`	= " . $canvas_u_id . "
-							,`name`				= '" . $canvas_u_name . "'
-							,`sortable_name`	= '" . $canvas_u_sortable_name . "'
-							,`short_name`		= '" . $canvas_u_short_name . "'
-							,`sis_user_id`		= " . $canvas_u_sis_user_id . "
-							,`integration_id`	= " . $canvas_u_integration_id . "
-							,`sis_login_id`		= '" . $canvas_u_sis_login_id . "'
-							,`sis_import_id`	= " . $canvas_u_sis_import_id . "
-							,`username`			= '" . $canvas_u_login_id . "'
-							,`updated_at`		= now()
-							,`flag_delete`		= FALSE
-						WHERE
-							dash_id				= " . $local_usr["dash_id"] . "
-					";
-
-					if ($debug) {
-						echo "<pre>queryEditLocalUser = " . $queryEditLocalUser . "</pre>";
-					}
-					else {
-						$resultsEditLocalUser = mysqli_query($connString, $queryEditLocalUser) or
-						die(mysqli_error($connString));
-					}
-
-					# increment counter
-					$intCountUsersUpdated += 1;
-
-					# Output to browser and txt file
-					if ($debug) {
-						echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Updated local user (synced newer Canvas to local)<br />";
-					}
-					fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Updated local user (synced newer Canvas to local)\n");
-				}
-				else {
-					# increment counter
-					$intCountUsersSkipped += 1;
-
-					# Output to browser and txt file
-					// decided to omit skipped output, as there is no need to fill log files daily with 500kb of skipped user info
-					// if ($debug) {
-					// echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Skipped User (Canvas matches local)<br />";
-					// }
-					// fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Skipped User (Canvas matches local)\n");
-				}
-
-				// skip to next Canvas User
-				break;
+		// check for curl error
+		foreach ($arrayCurlResult as $item => $value) {
+			if ($item == "errors") {
+				$boolValidResult = FALSE;
 			}
 		}
-		if (!$boolUserMatchExists) {
+
+		if ($boolValidResult) {
 			#------------------------------------------------#
-			# INSERT SQL Record
-			# no match exists. insert new record into db
+			# SQL Purpose: This user is a teacher: add teacher status and show is enrolled in course
+			# Curl was successful. Update Dashboard db to reflect this action has been completed
 			#------------------------------------------------#
 
-			$queryAddLocalUser = "
-				INSERT INTO
+			$queryEditUser = "
+				UPDATE
 					`dashboard_users`
-					(
-						`canvas_user_id`
-						, `name`
-						, `sortable_name`
-						, `short_name`
-						, `sis_user_id`
-						, `integration_id`
-						, `sis_login_id`
-						, `sis_import_id`
-						, `username`
-						, `updated_at`
-						, `flag_delete`
-					)
-					VALUES
-					(
-						" . $canvas_u_id . "
-						, '" . $canvas_u_name . "'
-						, '" . $canvas_u_sortable_name . "'
-						, '" . $canvas_u_short_name . "'
-						, " . $canvas_u_sis_user_id . "
-						, " . $canvas_u_integration_id . "
-						, '" . $canvas_u_sis_login_id . "'
-						, " . $canvas_u_sis_import_id . "
-						, '" . $canvas_u_login_id . "'
-						, now()
-						, FALSE
-					)
+				SET
+					`flag_is_teacher` = TRUE,
+					`flag_is_enrolled_course_ffr` = TRUE
+				WHERE
+					`canvas_user_id` = " . $usr["canvas_user_id"] . "
 			";
 
 			if ($debug) {
-				echo "<pre>queryAddLocalUser = " . $queryAddLocalUser . "</pre>";
+				echo "<pre>queryEditUser = " . $queryEditUser . "</pre>";
 			}
 			else {
-				$resultsAddLocalUser = mysqli_query($connString, $queryAddLocalUser) or
+				$resultsEditUser = mysqli_query($connString, $queryEditUser) or
 				die(mysqli_error($connString));
 			}
 
 			# increment counter
-			$intCountUsersInserted += 1;
+			$intCountAdds += 1;
 
 			# Output to browser and txt file
 			if ($debug) {
-				echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Inserted local user (synced newer Canvas to local)<br />";
+				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Resources (FFR) course (updated Canvas)<br />";
 			}
-			fwrite($myLogFile, $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Inserted local user (synced newer Canvas to local)\n");
+			$strEnrollments .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Resources (FFR) course (updated Canvas)\n";
+			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Resources (FFR) course (updated Canvas)\n");
 		}
-	}
+		else {
+			# increment counter
+			$intCountSkips += 1;
+			$intCountErrors += 1;
 
-	#------------------------------------------------#
-	# SQL: fetch `dashboard_users` (newly updated!)
-	#	flag_delete (only fetch active users: `flag_delete` = FALSE)
-	#------------------------------------------------#
-	$queryRevisedLocalUsers = "
-		SELECT * FROM `dashboard_users` WHERE `flag_delete` = FALSE;
-	";
-	$resultsRevisedLocalUsers = mysqli_query($connString, $queryRevisedLocalUsers) or
-	die(mysqli_error($connString));
-
-	# Store all in permanent array
-	while ($usr = mysqli_fetch_assoc($resultsRevisedLocalUsers)) {
-		array_push($arrayRevisedLocalUsers, $usr);
-	}
-
-	if ($debug) {
-		echo "<hr/>arrayRevisedLocalUsers:<br />";
-		util_prePrintR($arrayRevisedLocalUsers);
+			# Output to browser and txt file
+			if ($debug) {
+				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Funding Resources (FFR) course (unable to update Canvas)<br />";
+			}
+			$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Funding Resources (FFR) course (unable to update Canvas)\n";
+			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Funding Resources (FFR) course (unable to update Canvas)\n");
+		}
 	}
 
 	# formatting (last iteration)
@@ -341,50 +298,215 @@
 	}
 	fwrite($myLogFile, "\n------------------------------\n\n");
 
-	// iterate all Local Users, looking for local Users not found in Canvas User array
-	foreach ($arrayRevisedLocalUsers as $local_usr) {
-		// reset boolean flag
-		$boolUserMatchExists = FALSE;
 
-		foreach ($arrayCanvasUsers as $canvas_usr) {
-			if ($canvas_usr["id"] == $local_usr["canvas_user_id"]) {
-				// reset boolean flag
-				$boolUserMatchExists = TRUE;
+	#------------------------------------------------#
+	# Iterate Drops: add each user to course with curl
+	#------------------------------------------------#
+	foreach ($arrayDrops as $usr) {
+
+		// reset flag for each user
+		$boolValidResult = TRUE;
+
+		# Fetch user enrollment_id from Canvas (filter by user_id, role, state) using curl call
+		$arrayCurlResult = curlFetchUserEnrollmentID(
+			$intSectionID,
+			$userID = $usr["canvas_user_id"],
+			$type = "StudentEnrollment",
+			$role = "StudentEnrollment",
+			$apiPathPrefix = "api/v1/sections/",
+			$apiPathEndpoint = "/enrollments"
+		);
+
+		if ($debug) {
+			echo "<hr />curlFetchUserEnrollmentID results = ";
+			util_prePrintR($arrayCurlResult);
+		}
+
+		# increment counter
+		$intCountCurlAPIRequests += 1;
+
+		// check for curl error (must look inside the nested array)
+		foreach ($arrayCurlResult as $item => $value) {
+			foreach ($itm as $val) {
+				if ($itm == "errors") {
+					print_r($itm);
+					echo "<br />val = " . $val . "<br />";
+					$boolValidResult = FALSE;
+				}
 			}
 		}
-		if (!$boolUserMatchExists) {
-			#------------------------------------------------#
-			# UPDATE SQL Record
-			# no match exists
-			# explicitly set: `flag_delete` = TRUE
-			#------------------------------------------------#
-			$queryRemoveLocalUser = "
-				UPDATE
-					`dashboard_users`
-				SET
-					`updated_at`		= now()
-					,`flag_delete`		= TRUE
-				WHERE
-					`dash_id`			= " . $local_usr["dash_id"] . "
-			";
+
+		if ($boolValidResult) {
+			# fetch enrollment_id from returned curl output
+			$intEnrollmentID = $arrayCurlResult[0]["id"]; // tease the id value out of array
 
 			if ($debug) {
-				echo "<pre>queryRemoveLocalUser = " . $queryRemoveLocalUser . "</pre>";
+				echo "<br />intEnrollmentID = " . $intEnrollmentID . "<br />";
 			}
-			else {
-				$resultsRemoveLocalUser = mysqli_query($connString, $queryRemoveLocalUser) or
-				die(mysqli_error($connString));
+
+			# Auto drop user into Canvas course section using curl call
+			$arrayCurlResult = curlDropUserFromCourse(
+				$intCourseID,
+				$intEnrollmentID,
+				$task = "delete",
+				$apiPathPrefix = "api/v1/courses/",
+				$apiPathEndpoint = "/enrollments/"
+			);
+
+			if ($debug) {
+				echo "<hr />curlDropUserFromCourse results = ";
+				util_prePrintR($arrayCurlResult);
 			}
 
 			# increment counter
-			$intCountUsersRemoved += 1;
+			$intCountCurlAPIRequests += 1;
+
+			// check for curl error
+			foreach ($arrayCurlResult as $item => $value) {
+				if ($item == "errors") {
+					$boolValidResult = FALSE;
+				}
+			}
+
+			if ($boolValidResult) {
+				#------------------------------------------------#
+				# SQL Purpose: This user is no longer a teacher: remove teacher status and show is not in course
+				# Curl was successful. Update Dashboard db to reflect this action has been completed
+				#------------------------------------------------#
+
+				$queryEditUser = "
+					UPDATE
+						`dashboard_users`
+					SET
+						`flag_is_teacher` = FALSE,
+						`flag_is_enrolled_course_ffr` = FALSE
+					WHERE
+						`canvas_user_id` = " . $usr["canvas_user_id"] . "
+				";
+
+				if ($debug) {
+					echo "<pre>queryEditUser = " . $queryEditUser . "</pre>";
+				}
+				else {
+					$resultsEditUser = mysqli_query($connString, $queryEditUser) or
+					die(mysqli_error($connString));
+				}
+
+				# increment counter
+				$intCountRemoves += 1;
+
+				# Output to browser and txt file
+				if ($debug) {
+					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Resources (FFR) course (updated Canvas)<br />";
+				}
+				$strDrops .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Resources (FFR) course (updated Canvas)\n";
+				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Resources (FFR) course (updated Canvas)\n");
+			}
+			else {
+				# increment counter
+				$intCountSkips += 1;
+				$intCountErrors += 1;
+
+				# Output to browser and txt file
+				if ($debug) {
+					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Funding Resources (FFR) course (unable to update Canvas)<br />";
+				}
+				$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Funding Resources (FFR) course (unable to update Canvas)\n";
+				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Funding Resources (FFR) course (unable to update Canvas)\n");
+			}
+		}
+		else {
+			# increment counter
+			$intCountSkips += 1;
+			$intCountErrors += 1;
 
 			# Output to browser and txt file
 			if ($debug) {
-				echo $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Removed local user (synced newer Canvas to local)<br />";
+				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Funding Resources (FFR) course (unable to update Canvas)<br />";
 			}
-			fwrite($myLogFile, $local_usr["canvas_user_id"] . " - " . $local_usr["sortable_name"] . " - Removed local user (synced newer Canvas to local)\n");
+			$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Funding Resources (FFR) course (unable to update Canvas)\n";
+			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Funding Resources (FFR) course (unable to update Canvas)\n");
 		}
+	}
+
+	# formatting (last iteration)
+	if ($debug) {
+		echo "<hr />";
+	}
+	fwrite($myLogFile, "\n------------------------------\n\n");
+
+
+	#------------------------------------------------#
+	# prepare values for eventlog (and also for notifications, if enrollments or drops exist)
+	#------------------------------------------------#
+	$str_event_dataset_brief = $intCountAdds . " enrolls, " . $intCountRemoves . " drops, " . $intCountErrors . " errors";
+	$str_event_dataset_full  = "<strong>Date completed: " . $beginDateTimePretty . "</strong><br />";
+
+	// prettify for output
+	$strEnrollments = empty($strEnrollments) ? "none\n" : $strEnrollments;
+	$strDrops       = empty($strDrops) ? "none\n" : $strDrops;
+	$strErrors      = empty($strErrors) ? "none\n" : $strErrors;
+
+
+	#------------------------------------------------#
+	# for admins: notification of changes
+	#------------------------------------------------#
+	if ($intCountAdds > 1 || $intCountRemoves > 1 || $intCountErrors > 1) {
+		// create string of email addresses
+		foreach ($arrayNotifyAdminUserNames as $admin) {
+			if ($strAdminEmails) {
+				$strAdminEmails .= ",";
+			}
+			if (!stripos($admin["username"], "@")) {
+				$strAdminEmails .= $admin["username"] . "@williams.edu";
+			}
+		}
+
+		if ($debug) {
+			echo "<hr />strAdminEmails = " . $strAdminEmails . "<br />";
+		}
+
+		// send mail: for admins, send list of course adds and drops
+		$to      = $strAdminEmails; // avoid using spaces
+		$subject = "Dashboard Auto Enroll (FFR): " . $str_event_dataset_brief . " (\"$str_event_action\")";
+		$message = "Application: " . LTI_APP_NAME . "\nScript: $str_project_name (\"$str_event_action\")\n\nFaculty enrolled:\n" . $strEnrollments . "\nFaculty dropped:\n" . $strDrops . "\nErrors (skipped users):\n" . $strErrors . "\nMore information:\n" . APP_FOLDER;
+		$headers = "From: dashboard-no-reply@williams.edu" . "\r\n" .
+			"Reply-To: dashboard-no-reply@williams.edu" . "\r\n" .
+			"X-Mailer: PHP/" . phpversion();
+
+		mail($to, $subject, $message, $headers);
+	}
+
+	#------------------------------------------------#
+	# for faculty: introductory email
+	#------------------------------------------------#
+	if ($intCountAdds > 1) {
+		// create string of email addresses
+		foreach ($arrayEnrollments as $usr) {
+			if ($strEnrolledEmails) {
+				$strEnrolledEmails .= ",";
+			}
+			if (!stripos($usr["username"], "@")) {
+				$strEnrolledEmails .= $usr["username"] . "@williams.edu";
+			}
+		}
+
+		// quality assurance: remove when satisfied
+		$strEnrolledEmails .= ",dwk2@williams.edu";
+
+		if ($debug) {
+			echo "<hr />strEnrolledEmails = " . $strEnrolledEmails . "<br />";
+		}
+
+		// send mail: for newly added faculty, send brief introduction and explanation of course
+		$to      = $strEnrolledEmails; // avoid using spaces
+		$subject = "Glow Resource: " . $strCourseTitle;
+		$message = "You have been added to the Glow course:\n\"" . $strCourseTitle . "\".\n\nIntroduction:\nWelcome to the Williams College digital archive of faculty funding resources. This Glow course contains sample grant proposal documents shared by your fellow faculty members to which you can refer as you undertake the proposal-writing process.\n\nQuestions?\nIf you have any questions about this course, or about the types of support available for your funding search, please contact Assistant Director of Corporate and Foundation Relations Jennifer Hermanski at jhermans@williams.edu or x5053.";
+		$headers = "From: dashboard-no-reply@williams.edu" . "\r\n" .
+			"Reply-To: dashboard-no-reply@williams.edu" . "\r\n" .
+			"X-Mailer: PHP/" . phpversion();
+
+		mail($to, $subject, $message, $headers);
 	}
 
 
@@ -405,11 +527,9 @@
 	array_push($finalReport, "Date end: " . $endDateTimePretty);
 	array_push($finalReport, "Duration: " . convertSecondsToHMSFormat(strtotime($endDateTime) - strtotime($beginDateTime)) . " (hh:mm:ss)");
 	array_push($finalReport, "Curl API Requests: " . $intCountCurlAPIRequests);
-	array_push($finalReport, "Count: Canvas LMS Users: " . $intCountUsersCanvas);
-	array_push($finalReport, "Count: Users Inserted in Dashboard: " . $intCountUsersInserted);
-	array_push($finalReport, "Count: Users Updated in Dashboard: " . $intCountUsersUpdated);
-	array_push($finalReport, "Count: Users Skipped in Dashboard: " . $intCountUsersSkipped);
-	array_push($finalReport, "Count: Users Removed in Dashboard: " . $intCountUsersRemoved);
+	array_push($finalReport, "Count: Faculty enrolled in FFR: " . $intCountAdds);
+	array_push($finalReport, "Count: Faculty dropped from FFR: " . $intCountRemoves);
+	array_push($finalReport, "Count: Faculty skipped due to errors: " . $intCountErrors);
 	array_push($finalReport, "Archived file: " . $str_log_path_simple);
 	array_push($finalReport, "Project: " . $str_project_name);
 
@@ -454,28 +574,24 @@
 	#------------------------------------------------#
 	# Record Event Log
 	#------------------------------------------------#
-	// create value
-	$str_event_dataset_brief = $intCountUsersInserted . " inserts, " . $intCountUsersUpdated . " updates, " . $intCountUsersRemoved . " deletes";
-
-	$flag_success = 0; // FALSE
-	if ($intCountUsersCanvas > 0) {
-		$flag_success = 1; // TRUE
-	}
-
 	create_eventlog(
 		$connString,
 		$debug,
 		mysqli_real_escape_string($connString, $str_event_action),
 		mysqli_real_escape_string($connString, $str_log_path_simple),
 		mysqli_real_escape_string($connString, $str_action_path_simple),
-		count($arrayCanvasUsers),
-		($intCountUsersUpdated + $intCountUsersInserted + $intCountUsersRemoved),
-		$intCountUsersErrors,
+		$intCountFacultyCurrent,
+		$intCountAdds,
+		$intCountEdits,
+		$intCountRemoves,
+		$intCountSkips,
+		$intCountErrors,
 		mysqli_real_escape_string($connString, $str_event_dataset_brief),
 		mysqli_real_escape_string($connString, $str_event_dataset_full),
-		$flag_success,
+		$flag_success = ($intCountErrors == 0) ? 1 : 0,
 		$flag_is_cron_job
 	);
+
 
 	// final script status
 	echo "done!";

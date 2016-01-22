@@ -34,7 +34,7 @@
 
 
 	#------------------------------------------------#
-	# SQL: Fetch summary of all courses grouped by year (for dropdown menu)
+	# SQL Purpose: Fetch summary of all courses grouped by year (for dropdown menu)
 	#------------------------------------------------#
 	$queryListOfSemesters = "
 		SELECT
@@ -58,7 +58,7 @@
 
 
 	#------------------------------------------------#
-	# SQL: Moodle: Courses per Semester
+	# SQL Purpose: Moodle: Courses per Semester
 	#------------------------------------------------#
 
 	# Iterate through ListOfSemesters; for each, fetch SQL results, append results to associate array hash. output hash into table at bottom.
