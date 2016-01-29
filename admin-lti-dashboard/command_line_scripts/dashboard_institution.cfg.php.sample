@@ -4,6 +4,14 @@
 	# configuration settings file (for command_line_scripts)
 	# ---------------------------
 
+	# LTI application settings
+	define('LTI_APP_NAME',     'LTI Your App Name');
+	define('LTI_FOLDER',       'lti/');
+	define('TOOL_CONSUMER_URL', 'https://test.acme.com/');
+	define('TOOL_CONSUMER_AUTH_TOKEN', 'none');
+	define('PUBLIC_IMAGES_FOLDER', 'http://placekitten.com.s3.amazonaws.com/homepage-samples/200/');
+	define('DEFAULT_TIMEZONE', 'America/New_York'); // set timezone to keep php from complaining
+
 	# LTI database connection
 	define('LTI_DB_PDO_STRING', 'mysql:host=localhost;dbname=your_name_of_db');
 	define('LTI_DB_HOST', 'yourserver');

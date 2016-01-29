@@ -38,8 +38,6 @@
 	# IMPORTANT STEPS TO REMEMBER
 	#------------------------------------------------#
 	# Run PHP file: (1) daily from server via cron job, or (2) manually from browser as web application
-	# PHP File currently at: https://apps.williams.edu/admin-lti-dashboard
-
 	# Set and show debugging browser output (on=TRUE, off=FALSE)
 	$debug = FALSE;
 
@@ -53,6 +51,9 @@
 	$arrayRevisedLocalUsers  = [];
 	$boolValidResult         = TRUE;
 	$boolUserMatchExists     = FALSE;
+	$strUIDsAdded            = "";
+	$strUIDsUpdated          = "";
+	$strUIDsRemoved          = "";
 	$intCountCurlAPIRequests = 0;
 	$intCountPages           = 0; // CAREFUL! for debugging, set to 63. otherwise, set to 0 for live use
 	$intCountUsersCanvas     = 0;
@@ -218,7 +219,7 @@
 							,`updated_at`		= now()
 							,`flag_delete`		= FALSE
 						WHERE
-							dash_id				= " . $local_usr["dash_id"] . "
+							`canvas_user_id` 	= " . $local_usr["canvas_user_id"] . "
 					";
 
 					if ($debug) {
@@ -231,6 +232,9 @@
 
 					# increment counter
 					$intCountEdits += 1;
+
+					# Store list
+					$strUIDsUpdated .= empty($strUIDsUpdated) ? $canvas_usr["canvas_user_id"] : ", " . $canvas_usr["canvas_user_id"];
 
 					# Output to browser and txt file
 					if ($debug) {
@@ -302,6 +306,9 @@
 			# increment counter
 			$intCountAdds += 1;
 
+			# Store list
+			$strUIDsAdded .= empty($strUIDsAdded) ? $canvas_usr["canvas_user_id"] : ", " . $canvas_usr["canvas_user_id"];
+
 			# Output to browser and txt file
 			if ($debug) {
 				echo $canvas_u_id . " - " . $canvas_usr["sortable_name"] . " - Inserted local user (synced newer Canvas to local)<br />";
@@ -359,7 +366,7 @@
 					`updated_at`		= now()
 					,`flag_delete`		= TRUE
 				WHERE
-					`dash_id`			= " . $local_usr["dash_id"] . "
+					`canvas_user_id` 	= " . $local_usr["canvas_user_id"] . "
 			";
 
 			if ($debug) {
@@ -372,6 +379,9 @@
 
 			# increment counter
 			$intCountRemoves += 1;
+
+			# Store list
+			$strUIDsRemoved .= empty($strUIDsRemoved) ? $local_usr["canvas_user_id"] : ", " . $local_usr["canvas_user_id"];
 
 			# Output to browser and txt file
 			if ($debug) {
@@ -390,7 +400,7 @@
 		echo "<br /><hr />";
 	}
 
-	# Store values
+	# store values
 	$endDateTime       = date('YmdHis');
 	$endDateTimePretty = date('Y-m-d H:i:s');
 
@@ -404,6 +414,9 @@
 	array_push($finalReport, "Count: Users updated in Dashboard: " . $intCountEdits);
 	array_push($finalReport, "Count: Users skipped in Dashboard: " . $intCountSkips);
 	array_push($finalReport, "Count: Users removed from Dashboard: " . $intCountRemoves);
+	array_push($finalReport, "List Canvas UIDs: Users added: " . $strUIDsAdded);
+	array_push($finalReport, "List Canvas UIDs: Users updated: " . $strUIDsUpdated);
+	array_push($finalReport, "List Canvas UIDs: Users removed: " . $strUIDsRemoved);
 	array_push($finalReport, "Archived file: " . $str_log_path_simple);
 	array_push($finalReport, "Project: " . $str_project_name);
 

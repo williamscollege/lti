@@ -22,7 +22,18 @@
 	require_once(dirname(__FILE__) . '/dashboard_connDB.php');
 	require_once(dirname(__FILE__) . '/dashboard_util.php');
 
-	// TODO - Add additional security: Disable abiltiy to hit this via web (excluding localhost for testing?)
+
+	#------------------------------------------------#
+	# Security: Prevent web access to this file
+	#------------------------------------------------#
+	if (array_key_exists('SERVER_NAME', $_SERVER)) {
+		exit;        // prevent script from running as a web application
+	}
+	else {
+		// script ran via server commandline, not as web application
+		// $flag_is_cron_job = 1; // TRUE
+	}
+
 
 	#------------------------------------------------#
 	# IMPORTANT STEPS TO REMEMBER
@@ -32,28 +43,17 @@
 
 
 	#------------------------------------------------#
-	# Security: Prevent web access to this file
-	#------------------------------------------------#
-	if (array_key_exists('SERVER_NAME', $_SERVER)) {
-		// script ran as web application
-		// $flag_is_cron_job = 0; // FALSE
-		exit;
-	}
-	else {
-		// script ran via server commandline, not as web application
-		// $flag_is_cron_job = 1; // TRUE
-	}
-
-
-	#------------------------------------------------#
 	# Constants: Initialize counters
 	#------------------------------------------------#
-	$file_path        = "/var/log/";                // internal_server:/opt/canvas_uploads/
-	$file_name        = "get_onecard_data.log";     // file: get_onecard_data.log
-	$str_delimiter_01 = "====================================";
-	$str_delimiter_02 = "Return Code:";
-	$str_delimiter_03 = '"created_at":';
-	$str_delimiter_04 = '"id":';
+	$str_project_name    = "Commandline: Dashboard Fetch SIS Upload Initial Status";
+	$str_event_action    = "error_dashboard_1_get_canvas_lacks_arg";
+	$str_log_path_simple = 'n/a';
+	$file_path           = "/var/log/";                // internal_server:/opt/canvas_uploads/
+	$file_name           = "get_onecard_data.log";     // file: get_onecard_data.log
+	$str_delimiter_01    = "====================================";
+	$str_delimiter_02    = "Return Code:";
+	$str_delimiter_03    = '"created_at":';
+	$str_delimiter_04    = '"id":';
 
 
 	// check for existence of file

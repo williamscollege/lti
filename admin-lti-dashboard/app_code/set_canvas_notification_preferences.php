@@ -2,7 +2,7 @@
 	/***********************************************
 	 ** Project:    Set Canvas Notification Preferences
 	 ** Author:     Williams College, OIT, David Keiser-Clark
-	 ** Purpose:    Reset Canvas User "Notification Preferences" with custom values using curl PUT calls (do only once per user account)
+	 ** Purpose:    Reset Canvas User "Notification Preferences" with custom values using curl calls
 	 ** Requirements:
 	 **  - Requires admin token to make curl requests against Canvas LMS API
 	 **  - Must enable write-access to "logs/" folder
@@ -38,8 +38,6 @@
 	# IMPORTANT STEPS TO REMEMBER
 	#------------------------------------------------#
 	# Run PHP file: (1) daily from server via cron job, or (2) manually from browser as web application
-	# PHP File currently at: https://apps.williams.edu/admin-lti-dashboard
-
 	# Set and show debugging browser output (on=TRUE, off=FALSE)
 	$debug = FALSE;
 
@@ -50,6 +48,7 @@
 	$str_event_action        = "set_canvas_notification_preferences";
 	$arrayLocalUsers         = [];
 	$boolValidResult         = TRUE;
+	$strUIDsUpdated          = "";
 	$intCountCurlAPIRequests = 0;
 	$intCountNeedsUpdate     = 0;
 	$intCountAdds            = 0;
@@ -82,7 +81,8 @@
 		FROM `dashboard_users`
 		WHERE
 			`flag_is_set_notification_preference` = FALSE
-			AND `flag_delete` = FALSE ORDER BY `canvas_user_id` ASC;
+		AND `flag_delete` = FALSE
+		ORDER BY `canvas_user_id` ASC;
 	";
 	$resultsLocalUsers = mysqli_query($connString, $queryLocalUsers) or
 	die(mysqli_error($connString));
@@ -98,12 +98,8 @@
 		echo "<hr/>";
 	}
 
-	# count users needing notification preferences updated
-	$intCountNeedsUpdate = count($arrayLocalUsers);
-
 	// iterate all Local Users, reset notification_preference for each Canvas User
 	foreach ($arrayLocalUsers as $local_usr) {
-
 		// reset flag for each user
 		$boolValidResult = TRUE;
 
@@ -119,8 +115,6 @@
 		#------------------------------------------------#
 		# Set Canvas "Notification Preferences" values for one "Account User" using curl call
 		#------------------------------------------------#
-
-		# Set Canvas "Notification Preferences" values for one "Account User" using curl call
 		$arrayCurlResult = curlSetUserNotificationPreferences(
 			$local_usr["canvas_user_id"],
 			$local_usr["username"],
@@ -136,11 +130,9 @@
 		# increment counter
 		$intCountCurlAPIRequests += 1;
 
-		# Store all in permanent array
-
 		// check for curl error
 		foreach ($arrayCurlResult as $item => $value) {
-			if ($item == "errors") {
+			if ($item == "errors" || $item == "unauthorized") {
 				$boolValidResult = FALSE;
 			}
 		}
@@ -157,7 +149,7 @@
 				SET
 					`flag_is_set_notification_preference` = TRUE
 				WHERE
-					`dash_id` = " . $local_usr["dash_id"] . "
+					`canvas_user_id` = " . $local_usr["canvas_user_id"] . "
 			";
 
 			if ($debug) {
@@ -170,6 +162,9 @@
 
 			# increment counter
 			$intCountEdits += 1;
+
+			# Store list
+			$strUIDsUpdated .= empty($strUIDsUpdated) ? $local_usr["canvas_user_id"] : ", " . $local_usr["canvas_user_id"];
 
 			# Output to browser and txt file
 			if ($debug) {
@@ -208,9 +203,10 @@
 		echo "<br /><hr />";
 	}
 
-	# Store values
-	$endDateTime       = date('YmdHis');
-	$endDateTimePretty = date('Y-m-d H:i:s');
+	# store values
+	$endDateTime         = date('YmdHis');
+	$endDateTimePretty   = date('Y-m-d H:i:s');
+	$intCountNeedsUpdate = count($arrayLocalUsers);
 
 	$finalReport = array();
 	array_push($finalReport, "Date begin: " . $beginDateTimePretty);
@@ -220,6 +216,7 @@
 	array_push($finalReport, "Count: Canvas users needing updates: " . $intCountNeedsUpdate);
 	array_push($finalReport, "Count: Canvas users updated: " . $intCountEdits);
 	array_push($finalReport, "Count: Canvas users skipped due to errors: " . $intCountSkips);
+	array_push($finalReport, "List Canvas UIDs: Updated preferences: " . $strUIDsUpdated);
 	array_push($finalReport, "Archived file: " . $str_log_path_simple);
 	array_push($finalReport, "Project: " . $str_project_name);
 
@@ -277,7 +274,7 @@
 		$flag_is_cron_job       = 1; // TRUE
 	}
 
-	$str_event_dataset_brief = $intCountNeedsUpdate . " users: " . $intCountEdits . " updates, " . $intCountSkips . " skips";
+	$str_event_dataset_brief = $intCountEdits . " updates, " . $intCountSkips . " skips";
 
 	create_eventlog(
 		$connString,

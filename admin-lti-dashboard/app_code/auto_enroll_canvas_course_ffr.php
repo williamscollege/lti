@@ -39,8 +39,6 @@
 	# IMPORTANT STEPS TO REMEMBER
 	#------------------------------------------------#
 	# Run PHP file: (1) daily from server via cron job, or (2) manually from browser as web application
-	# PHP File currently at: https://apps.williams.edu/admin-lti-dashboard
-
 	# Set and show debugging browser output (on=TRUE, off=FALSE)
 	$debug = FALSE;
 
@@ -57,6 +55,8 @@
 	$arrayEnrollments          = [];
 	$arrayDrops                = [];
 	$boolValidResult           = TRUE;
+	$strUIDsEnrolled           = "";
+	$strUIDsDropped            = "";
 	$intCountCurlAPIRequests   = 0;
 	$intCountFacultyCurrent    = 0;
 	$intCountAdds              = 0;
@@ -204,7 +204,7 @@
 	# Store value
 	$intCountFacultyCurrent = mysqli_num_rows($resultsItems);
 	if ($debug) {
-		echo "<hr />intCountItems = " . $intCountFacultyCurrent . "<br />";
+		echo "<hr />intCountFacultyCurrent = " . $intCountFacultyCurrent . "<br />";
 	}
 
 
@@ -239,7 +239,7 @@
 
 		// check for curl error
 		foreach ($arrayCurlResult as $item => $value) {
-			if ($item == "errors") {
+			if ($item == "errors" || $item == "unauthorized") {
 				$boolValidResult = FALSE;
 			}
 		}
@@ -275,6 +275,9 @@
 			if ($debug) {
 				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Resources (FFR) course (updated Canvas)<br />";
 			}
+
+			# Store list
+			$strUIDsEnrolled .= empty($strUIDsEnrolled) ? $usr["canvas_user_id"] : ", " . $usr["canvas_user_id"];
 			$strEnrollments .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Resources (FFR) course (updated Canvas)\n";
 			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Resources (FFR) course (updated Canvas)\n");
 		}
@@ -363,7 +366,7 @@
 
 			// check for curl error
 			foreach ($arrayCurlResult as $item => $value) {
-				if ($item == "errors") {
+				if ($item == "errors" || $item == "unauthorized") {
 					$boolValidResult = FALSE;
 				}
 			}
@@ -399,6 +402,9 @@
 				if ($debug) {
 					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Resources (FFR) course (updated Canvas)<br />";
 				}
+
+				# Store list
+				$strUIDsDropped .= empty($strUIDsDropped) ? $usr["canvas_user_id"] : ", " . $usr["canvas_user_id"];
 				$strDrops .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Resources (FFR) course (updated Canvas)\n";
 				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Resources (FFR) course (updated Canvas)\n");
 			}
@@ -501,7 +507,7 @@
 		// send mail: for newly added faculty, send brief introduction and explanation of course
 		$to      = $strEnrolledEmails; // avoid using spaces
 		$subject = "Glow Resource: " . $strCourseTitle;
-		$message = "You have been added to the Glow course:\n\"" . $strCourseTitle . "\".\n\nIntroduction:\nWelcome to the Williams College digital archive of faculty funding resources. This Glow course contains sample grant proposal documents shared by your fellow faculty members to which you can refer as you undertake the proposal-writing process.\n\nQuestions?\nIf you have any questions about this course, or about the types of support available for your funding search, please contact Assistant Director of Corporate and Foundation Relations Jennifer Hermanski at jhermans@williams.edu or x5053.";
+		$message = "You have been added to the Glow course:\n\"" . $strCourseTitle . "\".\n\nIntroduction:\nWelcome to the Williams College digital archive of faculty funding resources. This Glow course contains sample grant proposal documents shared by your fellow faculty members to which you can refer as you undertake the proposal-writing process.\n\nQuestions?\nIf you have any questions about this course, or about the types of support available for your funding search, please contact Director of Corporate and Foundation Relations Mary Ellen Czerniak (mczernia@williams.edu, x4025) or Grant Coordinator Patti Exster (pexster@williams.edu, x4071).";
 		$headers = "From: dashboard-no-reply@williams.edu" . "\r\n" .
 			"Reply-To: dashboard-no-reply@williams.edu" . "\r\n" .
 			"X-Mailer: PHP/" . phpversion();
@@ -518,7 +524,7 @@
 		echo "<br /><hr />";
 	}
 
-	# Store values
+	# store values
 	$endDateTime       = date('YmdHis');
 	$endDateTimePretty = date('Y-m-d H:i:s');
 
@@ -530,6 +536,8 @@
 	array_push($finalReport, "Count: Faculty enrolled in FFR: " . $intCountAdds);
 	array_push($finalReport, "Count: Faculty dropped from FFR: " . $intCountRemoves);
 	array_push($finalReport, "Count: Faculty skipped due to errors: " . $intCountErrors);
+	array_push($finalReport, "List Canvas UIDs: Faculty enrolled: " . $strUIDsEnrolled);
+	array_push($finalReport, "List Canvas UIDs: Faculty dropped: " . $strUIDsDropped);
 	array_push($finalReport, "Archived file: " . $str_log_path_simple);
 	array_push($finalReport, "Project: " . $str_project_name);
 

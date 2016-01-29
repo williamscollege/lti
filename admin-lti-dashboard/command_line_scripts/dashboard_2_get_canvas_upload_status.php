@@ -23,7 +23,19 @@
 	require_once(dirname(__FILE__) . '/dashboard_connDB.php');
 	require_once(dirname(__FILE__) . '/dashboard_util.php');
 
-	// TODO - Add additional security: Disable abiltiy to hit this via web (excluding localhost for testing?)
+
+	#------------------------------------------------#
+	# Security: Prevent web access to this file
+	#------------------------------------------------#
+	if (array_key_exists('SERVER_NAME', $_SERVER)) {
+		exit;        // prevent script from running as a web application
+	}
+	else {
+		// script ran via server commandline, not as web application
+		$str_action_path_simple = dirname(__FILE__) . "/" . basename(__FILE__);
+		$flag_is_cron_job       = 1; // TRUE
+	}
+
 
 	#------------------------------------------------#
 	# IMPORTANT STEPS TO REMEMBER
@@ -33,17 +45,11 @@
 
 
 	#------------------------------------------------#
-	# Security: Prevent web access to this file
+	# Constants: Initialize counters
 	#------------------------------------------------#
-	if (array_key_exists('SERVER_NAME', $_SERVER)) {
-		// script ran as web application
-		$flag_is_cron_job = 0; // FALSE
-		exit;
-	}
-	else {
-		// script ran via server commandline, not as web application
-		$flag_is_cron_job = 1; // TRUE
-	}
+	$str_project_name    = "Commandline: Dashboard Fetch SIS Upload Completion Status";
+	$str_event_action    = "error_dashboard_2_get_canvas_lacks_arg";
+	$str_log_path_simple = 'n/a';
 
 
 	#------------------------------------------------#
@@ -58,9 +64,9 @@
 		create_eventlog(
 			$connString,
 			$debug,
-			$str_event_action = "error_commandline_stage_2",
-			$str_log_path_simple = "n/a",
-			$str_action_path_simple = "dashboard_2_get_canvas_upload_status.php",
+			mysqli_real_escape_string($connString, $str_event_action),
+			mysqli_real_escape_string($connString, $str_log_path_simple),
+			mysqli_real_escape_string($connString, $str_action_path_simple),
 			$items = 0,
 			$adds = 0,
 			$edits = 0,

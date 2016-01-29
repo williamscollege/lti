@@ -5,6 +5,7 @@ Custom CSS: Global CSS Tweaks that are NOT an extension / modification of the bo
 .wmsPurple {
 	color: #543192;
 }
+
 .wms_indent {
 	padding-left: 40px;
 }
@@ -22,21 +23,29 @@ a.wms_bold_nav_link {
 	white-space: nowrap;
 }
 
-.wmsBoxFull {
+.wmsBoxBorder {
 	border: 1px solid #5C6266;
-	margin: 0 5px 25px 5px;
+	min-height: 185px;
+	margin: 0 0px 15px 0px;
 }
 
-.wmsBoxFull:hover {
+.wmsBoxBorder:hover {
 	background-color: #F9F9F9;
 }
 
-.wmsStatistics {
-	background-image: url('../img/statistics2.png');
-	background-color: transparent;
-	height: 180px;
-	width: 190px;
-	margin: 20px 0 23px 35px;
+.wmsBoxLeft {
+	min-width: 140px;
+	width: 25%;
+	border: 1px solid orange;
+	margin: 20px 0px 0px -15px;
+	float: left;
+}
+
+.wmsBoxRight {
+	border: 1px solid green;
+	min-height: 160px;
+	margin: 0 0px 0px 0px;
+	float: left;
 }
 
 .center {
@@ -61,6 +70,16 @@ canvas {
 	padding-right: 5px;
 }
 
-.circleIntegerValue {
-	display: none;
+.squareExterior {
+	border: 7px solid #00B233;
+	width: 80px;
+	height: 80px;
+	margin: 0 0 0 11px;
+}
+
+.squareInterior {
+	color: #00B233;
+	font-family: fantasy;
+	font-size: 28px;
+	padding: 13px 0 0 26px;
 }

@@ -23,6 +23,19 @@
 
 
 	#------------------------------------------------#
+	# Security: Prevent web access to this file
+	#------------------------------------------------#
+	if (array_key_exists('SERVER_NAME', $_SERVER)) {
+		exit;        // prevent script from running as a web application
+	}
+	else {
+		// script ran via server commandline, not as web application
+		$str_action_path_simple = dirname(__FILE__) . "/" . basename(__FILE__);
+		$flag_is_cron_job       = 1; // TRUE
+	}
+
+
+	#------------------------------------------------#
 	# IMPORTANT STEPS TO REMEMBER
 	#------------------------------------------------#
 	# Set and show debugging browser output (on=TRUE, off=FALSE)
@@ -32,22 +45,10 @@
 	#------------------------------------------------#
 	# Constants: Initialize counters
 	#------------------------------------------------#
-	$file_path = "/opt/canvas_uploads/";            // internal_server:/opt/canvas_uploads/
-
-
-	#------------------------------------------------#
-	# Security: Prevent web access to this file
-	#------------------------------------------------#
-	if (array_key_exists('SERVER_NAME', $_SERVER)) {
-		// script ran as web application
-		$flag_is_cron_job = 0; // FALSE
-		// $faculty_csv_file = "faculty_20160108-091045.csv"; // for localhost testing only!!!
-		exit;
-	}
-	else {
-		// script ran via server commandline, not as web application
-		$flag_is_cron_job = 1; // TRUE
-	}
+	$str_project_name    = "Commandline: Dashboard Update Faculty Table";
+	$str_event_action    = "error_dashboard_3_get_faculty_lacks_arg";
+	$str_log_path_simple = 'n/a';
+	$file_path           = "/opt/canvas_uploads/";         // internal_server:/opt/canvas_uploads/
 
 
 	#------------------------------------------------#
@@ -62,9 +63,9 @@
 		create_eventlog(
 			$connString,
 			$debug,
-			$str_event_action = "error_commandline_faculty",
-			$str_log_path_simple = "n/a",
-			$str_action_path_simple = "dashboard_3_get_faculty.php",
+			mysqli_real_escape_string($connString, $str_event_action),
+			mysqli_real_escape_string($connString, $str_log_path_simple),
+			mysqli_real_escape_string($connString, $str_action_path_simple),
 			$items = 0,
 			$adds = 0,
 			$edits = 0,

@@ -84,6 +84,9 @@
 					if ($sanitized_action == "verify_sis_imports_into_canvas") {
 						echo "<a href=\"" . APP_ROOT_PATH . "/app_code/view_parsed_import_id.php?id=" . $row["num_items"] . "\" title=\"View parsed import id\" target=\"_blank\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span>&nbsp;View parsed import id: " . $row["num_items"] . "</a>";
 					}
+					elseif ($sanitized_action == "upload_avatars_to_canvas_aws_cloud") {
+						// provide no additional link
+					}
 					else {
 						echo "<a href=\"" . APP_ROOT_PATH . $row["event_log_filepath"] . "\" title=\"View complete log file\" target=\"_blank\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span>&nbsp;View complete log file</a>";
 					}

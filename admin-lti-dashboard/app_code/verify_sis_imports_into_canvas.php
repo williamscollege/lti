@@ -27,8 +27,6 @@
 	# IMPORTANT STEPS TO REMEMBER
 	#------------------------------------------------#
 	# Run PHP file: (1) daily from server via cron job, or (2) manually from browser as web application
-	# PHP File currently at: https://apps.williams.edu/admin-lti-dashboard
-
 	# Set and show debugging browser output (on=TRUE, off=FALSE)
 	$debug = FALSE;
 
@@ -276,7 +274,7 @@
 	#------------------------------------------------#
 	# prepare values for eventlog (and also for notifications, if errors exist)
 	#------------------------------------------------#
-	$str_event_dataset_brief = "Success. (import id: " . $arrayParsed[0]["id"] . ")";
+	$str_event_dataset_brief = "Success: SIS Import id " . $arrayParsed[0]["id"];
 	$str_event_dataset_full  = "<strong>Date created_at: " . $arrayParsed[0]["created_at"] . "</strong><br />";
 
 	if ($arrayErrorMessages) {
