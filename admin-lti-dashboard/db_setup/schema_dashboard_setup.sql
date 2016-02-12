@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `dashboard_eventlogs` (
 	`num_skips` INT NULL DEFAULT 0,
 	`num_errors` INT NULL DEFAULT 0,
 	`event_dataset_brief` varchar(255) DEFAULT NULL,
-	`event_dataset_full` varchar(2000) DEFAULT NULL,
+	`event_dataset_full` varchar(6000) DEFAULT NULL,
 	`flag_success` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
 	`flag_cron_job` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
 	INDEX `eventlog_id` (`eventlog_id`),

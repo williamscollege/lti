@@ -167,7 +167,7 @@
 			</li>
 			<li>
 				<strong>Actions:</strong> Verify completion of SIS data imports, update user accounts, auto-enroll custom courses, provide usage statistics,
-				administer the "LTI Management Console" for custom Glow apps
+				administer "LTI Management Console" for custom apps
 			</li>
 			<li>
 				<strong>Notifications:</strong> Automatically send near-realtime error notifications to staff to enable the earliest opportunity for issue
@@ -180,7 +180,7 @@
 	<div class="row">
 		<div class="col-md-6 col-md-6">
 			<div class="wmsBoxBorder col-md-12 col-xs-12">
-				<h3>Verify SIS Imports</h3>
+				<h3>Verify SIS Imports to Canvas</h3>
 
 				<div class="circleGraphic1 col-md-3 col-xs-3">
 					<?php
@@ -237,7 +237,7 @@
 		</div>
 		<div class="col-md-6 col-md-6">
 			<div class="wmsBoxBorder col-md-12 col-xs-12">
-				<h3>Sync Canvas to Dashboard</h3>
+				<h3>Sync Canvas to Dashboard database</h3>
 
 				<div class="circleGraphic2 col-md-3 col-xs-3">
 					<?php
@@ -290,7 +290,7 @@
 		</div>
 		<div class="col-md-6 col-md-6">
 			<div class="wmsBoxBorder col-md-12 col-xs-12">
-				<h3>Set Notification Preferences</h3>
+				<h3>Set User Notification Preferences</h3>
 
 				<div class="circleGraphic3 col-md-3 col-xs-3">
 					<?php
@@ -343,7 +343,7 @@
 		</div>
 		<div class="col-md-6 col-md-6">
 			<div class="wmsBoxBorder col-md-12 col-xs-12">
-				<h3>Auto-Enroll: Course #1549176</h3>
+				<h3>Enroll Faculty: &quot;Faculty Funding Resources&quot;</h3>
 
 				<div class="circleGraphic4 col-md-3 col-xs-3">
 					<?php
@@ -397,7 +397,7 @@
 		</div>
 		<div class="col-md-6 col-md-6">
 			<div class="wmsBoxBorder col-md-12 col-xs-12">
-				<h3>Avatars to AWS Cloud</h3>
+				<h3>Upload Avatars to AWS Cloud</h3>
 
 				<div class="circleGraphic5 col-md-3 col-xs-3">
 					<?php
@@ -449,7 +449,7 @@
 		</div>
 		<div class="col-md-6 col-md-6">
 			<div class="wmsBoxBorder col-md-12 col-xs-12">
-				<h3>LTI Tool Consumers</h3>
+				<h3>Manage LTI Tool Consumers</h3>
 
 				<div class="col-md-3 col-xs-3">
 					<div class="squareExterior">
@@ -557,12 +557,8 @@
 	<?php require_once(dirname(__FILE__) . '/include/foot.php'); ?>
 </div> <!-- /.container -->
 <script>
-	$(window).load(function () {
-		// Colors: rainbow roygbiv: #CC0000, #ED5F21, #FAE300, #5B9C0A, #0A0D9C, #500A9C, #990A9C
-		// Colors: original green #00B233, red #E53238, orange #FF9900
-		// Colors: williams purple #543192
-		<?php echo $circleGraphic_js_builder; ?>
-	});
+	// Colors: green #00B233, red #E53238, orange #FF9900; wms purple #543192, ROYGBIV: #CC0000, #ED5F21, #FAE300, #5B9C0A, #0A0D9C, #500A9C, #990A9C
+	<?php echo $circleGraphic_js_builder; ?>
 </script>
 </body>
 </html>

@@ -473,7 +473,7 @@
 		}
 
 		// send mail: for admins, send list of course adds and drops
-		$to      = $strAdminEmails; // avoid using spaces
+		$to      = $strAdminEmails; // separate with commas, avoid spaces
 		$subject = "Dashboard Auto Enroll (FFR): " . $str_event_dataset_brief . " (\"$str_event_action\")";
 		$message = "Application: " . LTI_APP_NAME . "\nScript: $str_project_name (\"$str_event_action\")\n\nFaculty enrolled:\n" . $strEnrollments . "\nFaculty dropped:\n" . $strDrops . "\nErrors (skipped users):\n" . $strErrors . "\nMore information:\n" . APP_FOLDER;
 		$headers = "From: dashboard-no-reply@williams.edu" . "\r\n" .
@@ -505,7 +505,7 @@
 		}
 
 		// send mail: for newly added faculty, send brief introduction and explanation of course
-		$to      = $strEnrolledEmails; // avoid using spaces
+		$to      = $strEnrolledEmails; // separate with commas, avoid spaces
 		$subject = "Glow Resource: " . $strCourseTitle;
 		$message = "You have been added to the Glow course:\n\"" . $strCourseTitle . "\".\n\nIntroduction:\nWelcome to the Williams College digital archive of faculty funding resources. This Glow course contains sample grant proposal documents shared by your fellow faculty members to which you can refer as you undertake the proposal-writing process.\n\nQuestions?\nIf you have any questions about this course, or about the types of support available for your funding search, please contact Director of Corporate and Foundation Relations Mary Ellen Czerniak (mczernia@williams.edu, x4025) or Grant Coordinator Patti Exster (pexster@williams.edu, x4071).";
 		$headers = "From: dashboard-no-reply@williams.edu" . "\r\n" .
