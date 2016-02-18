@@ -89,7 +89,7 @@
 			$li_elt .= ' ' . htmlentities($this->fieldsAsDataAttribs(), ENT_QUOTES, 'UTF-8') . $actions_attribs . '>';
 			$li_elt .= '<a href="' . APP_ROOT_PATH . '/app_code/notebook.php?notebook_id=' . htmlentities($this->notebook_id, ENT_QUOTES, 'UTF-8') . '">' . htmlentities($this->name, ENT_QUOTES, 'UTF-8') . '</a>';
 			if ($is_editable) {
-				$li_elt .= '<span class="glyphicon glyphicon-pencil"></span>';
+				$li_elt .= '<span class="glyphicon glyphicon-wrench"></span>';
 			}
 			$li_elt .= ' ' . util_lang('attribution') . ' ' . $owner->renderMinimal(TRUE);
 			$li_elt .= '</li>';
