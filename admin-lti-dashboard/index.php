@@ -32,6 +32,7 @@
 		SELECT
 			(SELECT COUNT(*) FROM `dashboard_users` WHERE `flag_delete` = 0) AS cnt_dashboard_users
 			, (SELECT COUNT(*) FROM `dashboard_users` WHERE `flag_delete` = 0 AND `flag_is_enrolled_course_ffr` = 1) AS cnt_dashboard_users_course_ffr
+			, (SELECT COUNT(*) FROM `dashboard_users` WHERE `flag_delete` = 0 AND `flag_is_enrolled_course_oc` = 1) AS cnt_dashboard_users_course_oc
 			, (SELECT COUNT(*) FROM `dashboard_users` WHERE `flag_delete` = 0 AND `flag_is_set_avatar_image` = 1) AS cnt_dashboard_users_with_avatars
 			, (SELECT COUNT(*) FROM `dashboard_users` WHERE `flag_delete` = 0 AND `flag_is_set_notification_preference` = 1) AS cnt_notif_pref_exist
 			, (SELECT COUNT(*) FROM `dashboard_faculty_current`) AS cnt_dashboard_faculty_current
@@ -58,6 +59,10 @@
 			, (SELECT COUNT(*) FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_ffr') AS cnt_logs_auto_enroll_ffr
 			, (SELECT `event_datetime` FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_ffr' ORDER BY `event_datetime` DESC LIMIT 1) AS log_auto_enroll_ffr_datetime
 			, (SELECT `event_dataset_brief` FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_ffr' ORDER BY `event_datetime` DESC LIMIT 1) AS log_auto_enroll_ffr_dataset_brief
+
+			, (SELECT COUNT(*) FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_oc') AS cnt_logs_auto_enroll_oc
+			, (SELECT `event_datetime` FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_oc' ORDER BY `event_datetime` DESC LIMIT 1) AS log_auto_enroll_oc_datetime
+			, (SELECT `event_dataset_brief` FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_oc' ORDER BY `event_datetime` DESC LIMIT 1) AS log_auto_enroll_oc_dataset_brief
 
 			, (SELECT COUNT(*) FROM `dashboard_eventlogs` WHERE `event_action` = 'set_canvas_notification_preferences') AS cnt_logs_notif_pref
 			, (SELECT `event_datetime` FROM `dashboard_eventlogs` WHERE `event_action` = 'set_canvas_notification_preferences' ORDER BY `event_datetime` DESC LIMIT 1) AS log_notif_pref_datetime
@@ -87,6 +92,7 @@
 	if ($rows) {
 		$cnt_dashboard_users              = $rows["cnt_dashboard_users"];
 		$cnt_dashboard_users_course_ffr   = $rows["cnt_dashboard_users_course_ffr"];
+		$cnt_dashboard_users_course_oc   = $rows["cnt_dashboard_users_course_oc"];
 		$cnt_dashboard_faculty_current    = $rows["cnt_dashboard_faculty_current"];
 		$cnt_dashboard_users_with_avatars = $rows["cnt_dashboard_users_with_avatars"];
 		$cnt_notif_pref_exist             = $rows["cnt_notif_pref_exist"];
@@ -96,6 +102,7 @@
 		$cnt_logs_avatars                 = $rows["cnt_logs_avatars"];
 		$cnt_logs_sync_canvas_users       = $rows["cnt_logs_sync_canvas_users"];
 		$cnt_logs_auto_enroll_ffr         = $rows["cnt_logs_auto_enroll_ffr"];
+		$cnt_logs_auto_enroll_oc         = $rows["cnt_logs_auto_enroll_oc"];
 		$cnt_logs_notif_pref              = $rows["cnt_logs_notif_pref"];
 
 		// avoid null values
@@ -112,6 +119,8 @@
 		$log_sync_canvas_dataset_brief        = empty($rows["log_sync_canvas_dataset_brief"]) ? 0 : $rows["log_sync_canvas_dataset_brief"];
 		$log_auto_enroll_ffr_datetime         = empty($rows["log_auto_enroll_ffr_datetime"]) ? 'n/a' : date_format(new DateTime($rows["log_auto_enroll_ffr_datetime"]), "M d, Y h:i:s a");
 		$log_auto_enroll_ffr_dataset_brief    = empty($rows["log_auto_enroll_ffr_dataset_brief"]) ? 0 : $rows["log_auto_enroll_ffr_dataset_brief"];
+		$log_auto_enroll_oc_datetime         = empty($rows["log_auto_enroll_oc_datetime"]) ? 'n/a' : date_format(new DateTime($rows["log_auto_enroll_oc_datetime"]), "M d, Y h:i:s a");
+		$log_auto_enroll_oc_dataset_brief    = empty($rows["log_auto_enroll_oc_dataset_brief"]) ? 0 : $rows["log_auto_enroll_oc_dataset_brief"];
 		$log_notif_pref_datetime              = empty($rows["log_notif_pref_datetime"]) ? 'n/a' : date_format(new DateTime($rows["log_notif_pref_datetime"]), "M d, Y h:i:s a");
 		$log_notif_pref_dataset_brief         = empty($rows["log_notif_pref_dataset_brief"]) ? 0 : $rows["log_notif_pref_dataset_brief"];
 		$lti_context_datetime                 = empty($rows["lti_context_datetime"]) ? 'n/a' : date_format(new DateTime($rows["lti_context_datetime"]), "M d, Y h:i:s a");
@@ -121,6 +130,7 @@
 		$progressVerifySISImports  = ($log_verify_sis_imports_num_errors == 0) ? 100 : round(90 / $log_verify_sis_imports_num_errors, PHP_ROUND_HALF_UP); // why 90? because 100% / 1 error = 100% :)
 		$progressSyncCanvasUsers   = ($cnt_dashboard_users == 0) ? 0 : round($cnt_dashboard_users / $cnt_dashboard_users * 100, PHP_ROUND_HALF_UP);
 		$progressAutoEnrollFFR     = ($cnt_dashboard_users_course_ffr == 0) ? 0 : round($cnt_dashboard_users_course_ffr / $cnt_dashboard_faculty_current * 100, PHP_ROUND_HALF_UP);
+		$progressAutoEnrollOC     = ($cnt_dashboard_users_course_oc == 0) ? 0 : round($cnt_dashboard_users_course_oc / $cnt_dashboard_faculty_current * 100, PHP_ROUND_HALF_UP);
 		$progressPushAvatarUploads = ($cnt_dashboard_users == 0) ? 0 : round($cnt_dashboard_users_with_avatars / $cnt_dashboard_users * 100, PHP_ROUND_HALF_UP);
 		$progressSetNotifPrefs     = ($cnt_dashboard_users == 0) ? 0 : round($cnt_notif_pref_exist / $cnt_dashboard_users * 100, PHP_ROUND_HALF_UP);
 		$progressLTIConsumers      = ($cnt_lti_consumer_enabled == 0) ? 0 : round($cnt_lti_consumer_enabled / ($cnt_lti_consumer_enabled) * 100, PHP_ROUND_HALF_UP);
@@ -343,16 +353,68 @@
 		</div>
 		<div class="col-md-6 col-md-6">
 			<div class="wmsBoxBorder col-md-12 col-xs-12">
-				<h3>Enroll Faculty: &quot;Faculty Funding Resources&quot;</h3>
+				<h3>Upload Avatars to AWS Cloud</h3>
 
 				<div class="circleGraphic4 col-md-3 col-xs-3">
 					<?php
 						// build jQuery string for later $(window).load
-						if ($progressAutoEnrollFFR == 100) {
-							$circleGraphic_js_builder .= "$('.circleGraphic4').circleGraphic({'color': '#00B233','progressvalue': " . $progressAutoEnrollFFR . "});"; // green
+						if ($progressPushAvatarUploads > 85) {
+							$circleGraphic_js_builder .= "$('.circleGraphic4').circleGraphic({'color': '#00B233','progressvalue': " . $progressPushAvatarUploads . "});"; // green
 						}
 						else {
-							$circleGraphic_js_builder .= "$('.circleGraphic4').circleGraphic({'color': '#E53238','progressvalue': " . $progressAutoEnrollFFR . "});"; // red
+							$circleGraphic_js_builder .= "$('.circleGraphic4').circleGraphic({'color': '#E53238','progressvalue': " . $progressPushAvatarUploads . "});"; // red
+						}
+					?>
+				</div>
+				<div class="col-md-9 col-xs-9">
+					<table class="table-hover">
+						<tbody>
+						<tr>
+							<th class="small">AWS Cloud</th>
+							<td>
+								<code title="Canvas users with AWS Avatars"><?php echo number_format($cnt_dashboard_users_with_avatars) . " of " . number_format($log_sync_canvas_num_items) . " users have avatars"; ?></code>
+							</td>
+						</tr>
+						<tr>
+							<th class="small">Changes</th>
+							<td><code><?php echo $log_avatars_dataset_brief; ?></code></td>
+						</tr>
+						<tr>
+							<th class="small">Last run</th>
+							<td><code><?php echo $log_avatars_datetime; ?></code></td>
+						</tr>
+						<tr>
+							<th class="small">Schedule</th>
+							<td><code>cron: 05:45 am daily</code></td>
+						</tr>
+						<tr>
+							<th class="small">Tools</th>
+							<td>
+								<small>
+									<span class="text-muted" title="Run via command line only"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;Run command line</span>&nbsp;&#124;
+									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/view_logs.php?action=upload_avatars_to_canvas_aws_cloud" title="View logs" target="_blank"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;View
+										logs
+										(<?php echo $cnt_logs_avatars; ?>)</a>
+								</small>
+							<td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 col-md-6">
+			<div class="wmsBoxBorder col-md-12 col-xs-12">
+				<h3>Enroll Faculty: &quot;Faculty Funding Resources&quot;</h3>
+
+				<div class="circleGraphic5 col-md-3 col-xs-3">
+					<?php
+						// build jQuery string for later $(window).load
+						if ($progressAutoEnrollFFR == 100) {
+							$circleGraphic_js_builder .= "$('.circleGraphic5').circleGraphic({'color': '#00B233','progressvalue': " . $progressAutoEnrollFFR . "});"; // green
+						}
+						else {
+							$circleGraphic_js_builder .= "$('.circleGraphic5').circleGraphic({'color': '#E53238','progressvalue': " . $progressAutoEnrollFFR . "});"; // red
 						}
 					?>
 				</div>
@@ -397,16 +459,16 @@
 		</div>
 		<div class="col-md-6 col-md-6">
 			<div class="wmsBoxBorder col-md-12 col-xs-12">
-				<h3>Upload Avatars to AWS Cloud</h3>
+				<h3>Enroll Faculty: &quot;Open Classroom&quot;</h3>
 
-				<div class="circleGraphic5 col-md-3 col-xs-3">
+				<div class="circleGraphic6 col-md-3 col-xs-3">
 					<?php
 						// build jQuery string for later $(window).load
-						if ($progressPushAvatarUploads > 85) {
-							$circleGraphic_js_builder .= "$('.circleGraphic5').circleGraphic({'color': '#00B233','progressvalue': " . $progressPushAvatarUploads . "});"; // green
+						if ($progressAutoEnrollOC == 100) {
+							$circleGraphic_js_builder .= "$('.circleGraphic6').circleGraphic({'color': '#00B233','progressvalue': " . $progressAutoEnrollOC . "});"; // green
 						}
 						else {
-							$circleGraphic_js_builder .= "$('.circleGraphic5').circleGraphic({'color': '#E53238','progressvalue': " . $progressPushAvatarUploads . "});"; // red
+							$circleGraphic_js_builder .= "$('.circleGraphic6').circleGraphic({'color': '#E53238','progressvalue': " . $progressAutoEnrollOC . "});"; // red
 						}
 					?>
 				</div>
@@ -414,31 +476,33 @@
 					<table class="table-hover">
 						<tbody>
 						<tr>
-							<th class="small">AWS Cloud</th>
-							<td>
-								<code title="Canvas users with AWS Avatars"><?php echo number_format($cnt_dashboard_users_with_avatars) . " of " . number_format($log_sync_canvas_num_items) . " users have avatars"; ?></code>
+							<th class="small">Enrolled</th>
+							<td><code><?php echo number_format($cnt_dashboard_users_course_oc); ?>: Open Classroom</code>
 							</td>
 						</tr>
 						<tr>
 							<th class="small">Changes</th>
-							<td><code><?php echo $log_avatars_dataset_brief; ?></code></td>
+							<td><code><?php echo $log_auto_enroll_oc_dataset_brief; ?></code></td>
 						</tr>
 						<tr>
 							<th class="small">Last run</th>
-							<td><code><?php echo $log_avatars_datetime; ?></code></td>
+							<td><code><?php echo $log_auto_enroll_oc_datetime; ?></code></td>
 						</tr>
 						<tr>
 							<th class="small">Schedule</th>
-							<td><code>cron: 05:45 am daily</code></td>
+							<td><code>cron: 05:30 am daily</code></td>
 						</tr>
 						<tr>
 							<th class="small">Tools</th>
 							<td>
 								<small>
-									<span class="text-muted" title="Run via command line only"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;Run command line</span>&nbsp;&#124;
-									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/view_logs.php?action=upload_avatars_to_canvas_aws_cloud" title="View logs" target="_blank"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;View
+									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/auto_enroll_canvas_course_oc.php" title="Run now" target="_blank"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;Run
+										now</a>&nbsp;&#124;
+									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/view_logs.php?action=auto_enroll_canvas_course_oc" title="View logs" target="_blank"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;View
 										logs
-										(<?php echo $cnt_logs_avatars; ?>)</a>
+										(<?php echo $cnt_logs_auto_enroll_oc; ?>)</a>&nbsp;&#124;
+									<a href="https://glow.williams.edu/courses/1434076" title="Glow: Open Classroom" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;Glow
+										Course</a>
 								</small>
 							<td>
 						</tr>

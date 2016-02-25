@@ -19,6 +19,10 @@
 	opacity: .5 !important;
 }
 
+.wms-indent {
+	margin-left: 17px;
+}
+
 .wms-validation-box {
 	/*background-color: #eeeeee;*/
 	height: 130px !important;

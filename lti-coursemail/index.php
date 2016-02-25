@@ -5,7 +5,7 @@
 	 ** Author: David Keiser-Clark, Williams College
 	 ** Current features:
 	 **  - Global selector: select/deselect all course participants
-	 **  - Roles: select/deselect everyone, students, TA's, or teachers
+	 **  - Filters: Everyone, Students, TA's, Grading-TA's, Grader-Homework's, Teachers, Designers, Observers
 	 **  - Sections: select/deselect everyone within a section (this displays only when > 1 section exists)
 	 **  - Add or remove the selectors or manually click checkboxes to get desired list
 	 **  - Compose Email: send all selected addresses as recipients to your default email client
@@ -105,36 +105,80 @@
 					</div>
 					<div class="row form-group">
 						<div class="col-sm-1">
-							<a href="#" id="btn_add_students" class="btn btn-success btn-xs" title="Select all students">
+							<a href="#" id="btn_add_student_enrollments" class="btn btn-success btn-xs" title="Select all students">
 								&nbsp;<i class="glyphicon glyphicon-plus"></i>&nbsp;</a>
 						</div>
 						<div class="col-sm-1">
-							<a href="#" id="btn_remove_students" class="btn btn-danger btn-xs" title="Deselect all students">
+							<a href="#" id="btn_remove_student_enrollments" class="btn btn-danger btn-xs" title="Deselect all students">
 								&nbsp;<i class="glyphicon glyphicon-minus"></i>&nbsp;</a>
 						</div>
-						<div class="col-sm-10 small"><strong>Students</strong><span id="numStudents" class="text-muted small"></span></div>
+						<div class="col-sm-10 small"><strong>Students</strong><span id="numStudentEnrollments" class="text-muted small"></span></div>
 					</div>
 					<div class="row form-group">
 						<div class="col-sm-1">
-							<a href="#" id="btn_add_tas" class="btn btn-success btn-xs" title="Select all TA's">
+							<a href="#" id="btn_add_ta_enrollments" class="btn btn-success btn-xs" title="Select all TA's">
 								&nbsp;<i class="glyphicon glyphicon-plus"></i>&nbsp;</a>
 						</div>
 						<div class="col-sm-1">
-							<a href="#" id="btn_remove_tas" class="btn btn-danger btn-xs" title="Deselect all TA's">
+							<a href="#" id="btn_remove_ta_enrollments" class="btn btn-danger btn-xs" title="Deselect all TA's">
 								&nbsp;<i class="glyphicon glyphicon-minus"></i>&nbsp;</a>
 						</div>
-						<div class="col-sm-10 small"><strong>TA's</strong><span id="numTas" class="text-muted small"></span></div>
+						<div class="col-sm-10 small"><strong>TA's</strong><span id="numTaEnrollments" class="text-muted small"></span></div>
 					</div>
 					<div class="row form-group">
 						<div class="col-sm-1">
-							<a href="#" id="btn_add_teachers" class="btn btn-success btn-xs" title="Select all teachers">
+							<a href="#" id="btn_add_grading_tas" class="btn btn-success btn-xs" title="Select all Grading-TA's">
 								&nbsp;<i class="glyphicon glyphicon-plus"></i>&nbsp;</a>
 						</div>
 						<div class="col-sm-1">
-							<a href="#" id="btn_remove_teachers" class="btn btn-danger btn-xs" title="Deselect all teachers">
+							<a href="#" id="btn_remove_grading_tas" class="btn btn-danger btn-xs" title="Deselect all Grading-TA's">
 								&nbsp;<i class="glyphicon glyphicon-minus"></i>&nbsp;</a>
 						</div>
-						<div class="col-sm-10 small"><strong>Teachers</strong><span id="numTeachers" class="text-muted small"></span></div>
+						<div class="col-sm-10 small"><strong>Grading-TA's</strong><span id="numGradingTAs" class="text-muted small"></span></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-sm-1">
+							<a href="#" id="btn_add_grader_homeworks" class="btn btn-success btn-xs" title="Select all Grader-Homework">
+								&nbsp;<i class="glyphicon glyphicon-plus"></i>&nbsp;</a>
+						</div>
+						<div class="col-sm-1">
+							<a href="#" id="btn_remove_grader_homeworks" class="btn btn-danger btn-xs" title="Deselect all Grader-Homework">
+								&nbsp;<i class="glyphicon glyphicon-minus"></i>&nbsp;</a>
+						</div>
+						<div class="col-sm-10 small"><strong>Grader-Homework's</strong><span id="numGraderHomeworks" class="text-muted small"></span></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-sm-1">
+							<a href="#" id="btn_add_teacher_enrollments" class="btn btn-success btn-xs" title="Select all teachers">
+								&nbsp;<i class="glyphicon glyphicon-plus"></i>&nbsp;</a>
+						</div>
+						<div class="col-sm-1">
+							<a href="#" id="btn_remove_teacher_enrollments" class="btn btn-danger btn-xs" title="Deselect all teachers">
+								&nbsp;<i class="glyphicon glyphicon-minus"></i>&nbsp;</a>
+						</div>
+						<div class="col-sm-10 small"><strong>Teachers</strong><span id="numTeacherEnrollments" class="text-muted small"></span></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-sm-1">
+							<a href="#" id="btn_add_designers" class="btn btn-success btn-xs" title="Select all Designers">
+								&nbsp;<i class="glyphicon glyphicon-plus"></i>&nbsp;</a>
+						</div>
+						<div class="col-sm-1">
+							<a href="#" id="btn_remove_designers" class="btn btn-danger btn-xs" title="Deselect all Designers">
+								&nbsp;<i class="glyphicon glyphicon-minus"></i>&nbsp;</a>
+						</div>
+						<div class="col-sm-10 small"><strong>Designers</strong><span id="numDesigners" class="text-muted small"></span></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-sm-1">
+							<a href="#" id="btn_add_observer_enrollments" class="btn btn-success btn-xs" title="Select all Observers">
+								&nbsp;<i class="glyphicon glyphicon-plus"></i>&nbsp;</a>
+						</div>
+						<div class="col-sm-1">
+							<a href="#" id="btn_remove_observer_enrollments" class="btn btn-danger btn-xs" title="Deselect all Observers">
+								&nbsp;<i class="glyphicon glyphicon-minus"></i>&nbsp;</a>
+						</div>
+						<div class="col-sm-10 small"><strong>Observers</strong><span id="numObserverEnrollments" class="text-muted small"></span></div>
 					</div>
 
 					<!-- dynamically created section buttons would go here (if > 1 sections exist) -->
@@ -190,13 +234,13 @@
 					</div>
 				</div>
 
-				<label class="small">Need Help?</label>
+				<label class="small">Helpful Tips</label>
 
 				<p class="small text-muted">
 					<a href="http://oit.williams.edu/files/2014/03/Set-Chrome-to-be-the-Default-Mail-Handler.pdf" title="Instructions: How to set Chrome to be your default email client" target="_blank"><i class="glyphicon glyphicon-new-window"></i>&nbsp;
-						Works best if you set Chrome as default email client</a><br />
+						For best results: set Chrome as default email client</a><br />
 					<a href="http://oit.williams.edu/itech/glow/how-can-i-email-my-class-using-course-email-tool/" title="Recipient Limit: 99 for Mac Mail/Outlook/Thunderbird; 2,000 for Chrome Gmail" target="_blank"><i class="glyphicon glyphicon-new-window"></i>&nbsp;
-						Not sending? Maximum email addresses is 99 for Mac Mail, Outlook, Thunderbird (Chrome Gmail is 2,000)</a><br /><br />
+						Chrome Gmail allows 2,000 email addresses.<br /><span class="wms-indent">Mail, Outlook, Thunderbird allow only 99 email addresses.</span></a><br /><br />
 				</p>
 
 				<!-- modal dialogue: start -->
@@ -253,7 +297,34 @@
 						for (var key in data) {
 							// build checkbox list (exclude Canvas' undocumented and mostly-hidden hack that silently includes a "Test Student, type=StudentViewEnrollment" in every section to enable the standard "StudentView" for course participants)
 							if (data[key]["type"] != "StudentViewEnrollment") {
-								populateCheckboxList += '<tr><td><label for="' + data[key]["user_id"] + '"><input type="checkbox" name="email_ckbox" id="' + data[key]["user_id"] + '" value="' + data[key]["email"] + '" data-role="' + data[key]["role"] + '" data-section-ids="' + data[key]["section_id"] + '" />&nbsp;' + data[key]["full_name"] + '<span class="text-muted small"> (' + data[key]["email"] + ')</span></label></td></tr>';
+								// create pretty output describing this user's role (within context of this course)
+								var santized_role = "";
+								switch(data[key]["role"]) {
+									case "StudentEnrollment":
+										santized_role = "Student";
+										break;
+									case "TaEnrollment":
+										santized_role = "TA";
+										break;
+									case "Grading-TA":
+										santized_role = "Grading-TA";
+										break;
+									case "Grader-Homework":
+										santized_role = "Grader-Homework";
+										break;
+									case "TeacherEnrollment":
+										santized_role = "Teacher";
+										break;
+									case "Designer":
+										santized_role = "Designer";
+										break;
+									case "ObserverEnrollment":
+										santized_role = "Observer";
+										break;
+									default:
+										santized_role = "UNKNOWN: Ask ITech!";
+								}
+								populateCheckboxList += '<tr><td><label for="' + data[key]["user_id"] + '"><input type="checkbox" name="email_ckbox" id="' + data[key]["user_id"] + '" value="' + data[key]["email"] + '" data-role="' + data[key]["role"] + '" data-section-ids="' + data[key]["section_id"] + '" />&nbsp;' + data[key]["full_name"] + '<span class="text-muted small"> (' + data[key]["email"] + ', ' + santized_role + ')</span></label></td></tr>';
 							}
 						}
 
@@ -384,9 +455,13 @@
 
 						// provide static count of each category
 						$("#numEveryone").text(" (" + $("INPUT[name='email_ckbox']").length + ")");
-						$("#numStudents").text(" (" + $("INPUT[data-role=StudentEnrollment]").length + ")");
-						$("#numTas").text(" (" + $("INPUT[data-role=TaEnrollment]").length + ")");
-						$("#numTeachers").text(" (" + $("INPUT[data-role=TeacherEnrollment]").length + ")");
+						$("#numStudentEnrollments").text(" (" + $("INPUT[data-role=StudentEnrollment]").length + ")");
+						$("#numTaEnrollments").text(" (" + $("INPUT[data-role=TaEnrollment]").length + ")");
+						$("#numGradingTAs").text(" (" + $("INPUT[data-role=Grading-TA]").length + ")");
+						$("#numGraderHomeworks").text(" (" + $("INPUT[data-role=Grader-Homework]").length + ")");
+						$("#numTeacherEnrollments").text(" (" + $("INPUT[data-role=TeacherEnrollment]").length + ")");
+						$("#numDesigners").text(" (" + $("INPUT[data-role=Designer]").length + ")");
+						$("#numObserverEnrollments").text(" (" + $("INPUT[data-role=ObserverEnrollment]").length + ")");
 
 						/* Debugging
 						 var data_str = "data is:\n";

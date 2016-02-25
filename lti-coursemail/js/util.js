@@ -14,34 +14,66 @@ $(document).ready(function () {
 	$("#btn_add_all").click(function () {
 		$("INPUT[name=email_ckbox]").prop("checked", true);
 	});
-	$("#btn_add_students").click(function () {
+	$("#btn_add_student_enrollments").click(function () {
 		checkForZeroMatches("StudentEnrollment");
 		$("INPUT[data-role=StudentEnrollment]").prop("checked", true);
 	});
-	$("#btn_add_tas").click(function () {
+	$("#btn_add_ta_enrollments").click(function () {
 		checkForZeroMatches("TaEnrollment");
 		$("INPUT[data-role=TaEnrollment]").prop("checked", true);
 	});
-	$("#btn_add_teachers").click(function () {
+	$("#btn_add_grading_tas").click(function () {
+		checkForZeroMatches("Grading-TA");
+		$("INPUT[data-role=Grading-TA]").prop("checked", true);
+	});
+	$("#btn_add_grader_homeworks").click(function () {
+		checkForZeroMatches("Grader-Homework");
+		$("INPUT[data-role=Grader-Homework]").prop("checked", true);
+	});
+	$("#btn_add_teacher_enrollments").click(function () {
 		checkForZeroMatches("TeacherEnrollment");
 		$("INPUT[data-role=TeacherEnrollment]").prop("checked", true);
+	});
+	$("#btn_add_designers").click(function () {
+		checkForZeroMatches("Designer");
+		$("INPUT[data-role=Designer]").prop("checked", true);
+	});
+	$("#btn_add_observer_enrollments").click(function () {
+		checkForZeroMatches("ObserverEnrollment");
+		$("INPUT[data-role=ObserverEnrollment]").prop("checked", true);
 	});
 
 	// Roles: Deselect checkboxes
 	$("#btn_remove_all").click(function () {
 		$("INPUT[name=email_ckbox]").prop("checked", false);
 	});
-	$("#btn_remove_students").click(function () {
+	$("#btn_remove_student_enrollments").click(function () {
 		checkForZeroMatches("StudentEnrollment");
 		$("INPUT[data-role=StudentEnrollment]").prop("checked", false);
 	});
-	$("#btn_remove_tas").click(function () {
+	$("#btn_remove_ta_enrollments").click(function () {
 		checkForZeroMatches("TaEnrollment");
 		$("INPUT[data-role=TaEnrollment]").prop("checked", false);
 	});
-	$("#btn_remove_teachers").click(function () {
+	$("#btn_remove_grading_tas").click(function () {
+		checkForZeroMatches("Grading-TA");
+		$("INPUT[data-role=Grading-TA]").prop("checked", false);
+	});
+	$("#btn_remove_grader_homeworks").click(function () {
+		checkForZeroMatches("Grader-Homework");
+		$("INPUT[data-role=Grader-Homework]").prop("checked", false);
+	});
+	$("#btn_remove_teacher_enrollments").click(function () {
 		checkForZeroMatches("TeacherEnrollment");
 		$("INPUT[data-role=TeacherEnrollment]").prop("checked", false);
+	});
+	$("#btn_remove_designers").click(function () {
+		checkForZeroMatches("Designer");
+		$("INPUT[data-role=Designer]").prop("checked", false);
+	});
+	$("#btn_remove_observer_enrollments").click(function () {
+		checkForZeroMatches("ObserverEnrollment");
+		$("INPUT[data-role=ObserverEnrollment]").prop("checked", false);
 	});
 
 	// Sections: Add listeners for dynamically added action buttons to select/deselect sections (note: section buttons were dynamically added to the DOM via ajax)
