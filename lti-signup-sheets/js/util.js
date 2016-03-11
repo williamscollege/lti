@@ -38,6 +38,13 @@ $(document).ready(function () {
 // BootBox jQuery confirm box (helper function)
 function showConfirmBox(ary) {
 	// console.dir(ary); // debugging
+
+	// issue: showConfirmBox dialog naturally removes scrollbar from the layer below; if that layer is also a dialog, this can be bad for UI
+	// solution: reintroduce scrollbar to modal
+	// alert("debugging: breakpoint before");
+	$("#modal-edit-opening").css("cssText", "overflow-x: hidden !important; overflow-y: auto !important; display: block !important;");
+	// alert("debugging: breakpoint after");
+
 	if (ary['ajax_action'] == 'sus-delete-opening') {
 		var custom_data = $("input[name='custom_user_value']:checked").val();
 	}
@@ -53,6 +60,10 @@ function showConfirmBox(ary) {
 				label: ary['label'],
 				className: ary['class'],
 				callback: function () {
+					if (ary['ajax_action'] == 'send-email-to-participants-for-opening-id') {
+						// show button loading text (bootstrap) only after clicking "Send" button
+						$("#notifyParticipantsButton").button('loading');
+					}
 					// show status
 					susUtil_setTransientAlert('progress', 'Working...');
 					$.ajax({

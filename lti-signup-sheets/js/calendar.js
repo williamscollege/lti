@@ -39,9 +39,6 @@ $(document).ready(function () {
 
 	// Send email to participants for opening
 	$(document).on('click', '#notifyParticipantsButton', function () {
-		// show button loading text (bootstrap)
-		$("#notifyParticipantsButton").button('loading');
-
 		GLOBAL_confirmHandlerData = $("#edit_OpeningID").val();
 		GLOBAL_confirmHandlerReference = {
 			notifyParticipantsSubject: $("#notifyParticipantsSubject").val(),

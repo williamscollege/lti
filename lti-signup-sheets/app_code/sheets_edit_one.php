@@ -415,11 +415,13 @@
 
 											<div class="form-group">
 												<?php
+													/*
 													// debugging only
 													$USER->cacheEnrollments();
 													$s->cacheAccess();
 													util_prePrintR($USER->enrollments);
 													util_prePrintR($s->access);
+													*/
 												?>
 												<strong>Who can sign up?</strong><br />
 
