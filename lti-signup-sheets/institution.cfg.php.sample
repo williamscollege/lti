@@ -63,8 +63,8 @@
 	# Local File Paths
 	# ---------------------------
 	# ***** Bootstrap: http://getbootstrap.com/
-	define('PATH_BOOTSTRAP_JS', APP_ROOT_PATH . '/js/bootstrap/js/bootstrap.min.js?rel=3.3.5');
-	define('PATH_BOOTSTRAP_CSS', APP_ROOT_PATH . '/js/bootstrap/css/bootstrap.min.css?rel=3.3.5');
+	define('PATH_BOOTSTRAP_JS', APP_ROOT_PATH . '/js/bootstrap/js/bootstrap.min.js?rel=3.3.6');
+	define('PATH_BOOTSTRAP_CSS', APP_ROOT_PATH . '/js/bootstrap/css/bootstrap.min.css?rel=3.3.6');
 	# ***** Bootstrap-Bootbox: http://bootboxjs.com/ (GitHub: https://github.com/makeusabrew/bootbox/releases)
 	define('PATH_BOOTSTRAP_BOOTBOX_JS', APP_ROOT_PATH . '/js/jquery/plugins/bootstrap-bootbox/bootbox.min.js?rel=4.4.0');
 	# ***** Bootstrap-Calendar: https://github.com/Serhioromano/bootstrap-calendar/releases (http://bootstrap-calendar.azurewebsites.net/)

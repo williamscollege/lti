@@ -38,18 +38,16 @@ $(document).ready(function () {
 // BootBox jQuery confirm box (helper function)
 function showConfirmBox(ary) {
 	// console.dir(ary); // debugging
-
-	// issue: showConfirmBox dialog naturally removes scrollbar from the layer below; if that layer is also a dialog, this can be bad for UI
-	// solution: reintroduce scrollbar to modal
-	// alert("debugging: breakpoint before");
-	$("#modal-edit-opening").css("cssText", "overflow-x: hidden !important; overflow-y: auto !important; display: block !important;");
-	// alert("debugging: breakpoint after");
-
 	if (ary['ajax_action'] == 'sus-delete-opening') {
 		var custom_data = $("input[name='custom_user_value']:checked").val();
 	}
 	else if (ary['ajax_action'] == 'send-email-to-participants-for-opening-id') {
 		var custom_data = ary['subject_message_json'];
+		// issue: showConfirmBox dialog naturally removes scrollbar from the layer below; if that layer is also a dialog, this can be bad for UI
+		// solution: reintroduce scrollbar to modal
+		// alert("debugging: breakpoint before");
+		$("#modal-edit-opening").css("cssText", "overflow-x: hidden !important; overflow-y: auto !important; display: block !important;");
+		// alert("debugging: breakpoint after");
 	}
 	// console.log("custom_data = "+custom_data);
 	bootbox.dialog({
