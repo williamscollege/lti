@@ -12,12 +12,12 @@
 
 		<p>&nbsp;</p>
 <p>
-	<strong>Q:</strong> <a href="http://oit.williams.edu/help/glow/how-do-i-create-signup-sheet/" target="_blank">How do I create a new signup sheet?</a><br>
-	<strong>Q:</strong> <a href="http://oit.williams.edu/help/glow/how-do-i-delete-and-edit-openings/" target="_blank">How do I delete and edit openings?</a><br>
-	<strong>Q:</strong> <a href="http://oit.williams.edu/help/glow/how-do-i-sign-up-others/" target="_blank">How do I sign up others?</a><br>
-	<strong>Q:</strong> <a href="http://oit.williams.edu/help/glow/how-do-i-print-a-signup-list/" target="_blank">How do I print a signup list?</a><br>
-	<strong>Q:</strong> <a href="http://oit.williams.edu/help/glow/how-do-i-delete-a-signup-sheet/" target="_blank">How do I delete a signup sheet that I created?</a><br>
-	<strong>Q:</strong> <a href="http://oit.williams.edu/help/glow/how-to-sign-up/" target="_blank">How do my students sign up for openings?</a>
+	<strong>Q:</strong> <a href="http://oit.williams.edu/itech/glow/how-do-i-create-signup-sheet/" target="_blank">How do I create a new signup sheet?</a><br>
+	<strong>Q:</strong> <a href="http://oit.williams.edu/itech/glow/how-do-i-delete-and-edit-openings/" target="_blank">How do I delete and edit openings?</a><br>
+	<strong>Q:</strong> <a href="http://oit.williams.edu/itech/glow/how-do-i-sign-up-others/" target="_blank">How do I sign up others?</a><br>
+	<strong>Q:</strong> <a href="http://oit.williams.edu/itech/glow/how-do-i-print-a-signup-list/" target="_blank">How do I print a signup list?</a><br>
+	<strong>Q:</strong> <a href="http://oit.williams.edu/itech/glow/how-do-i-delete-a-signup-sheet/" target="_blank">How do I delete a signup sheet that I created?</a><br>
+	<strong>Q:</strong> <a href="http://oit.williams.edu/itech/glow/how-to-sign-up/" target="_blank">How do my students sign up for openings?</a>
 </p>
 
 		<p>&nbsp;</p>
