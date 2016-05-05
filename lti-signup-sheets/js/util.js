@@ -73,10 +73,11 @@ function showConfirmBox(ary) {
 						},
 						dataType: 'json',
 						error: function (data) {
+							// console.log("error section"); console.dir(data);
 							updateDOM(ary, false, data);
 						},
 						success: function (data) {
-							// console.dir(data);
+							// console.log("success section"); console.dir(data);
 							if (data.status == 'success') {
 								// remove element
 								updateDOM(ary, true, data);
