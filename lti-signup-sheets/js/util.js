@@ -28,6 +28,26 @@ $(document).ready(function () {
 		$("div." + print_this_area).printArea(options);
 		$("#openings-list-container, #container-my-signups, #container-others-signups").removeClass("printareaPatch");
 	});
+
+	// CSV output: download file
+	function exportTableToCSV(csvText, filename) {
+		csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvText);
+		$(this)
+			.attr({
+				'download': filename,
+				'href': csvData,
+				'target': '_blank'
+			});
+	}
+	// This must be a hyperlink
+	$(".wmsExportCSV").on('click', function (event) {
+		//csv = '"sample1","sample2","cat","dog"';
+		csv = $(".wms_export_CSV").text();
+		//console.log(csv);
+		// IF CSV, don't do event.preventDefault() or return false (we actually need this to be a typical hyperlink)
+		exportTableToCSV.apply(this, [csv, 'export.csv']);
+	});
+
 });
 
 

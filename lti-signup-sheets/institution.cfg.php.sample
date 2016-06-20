@@ -74,7 +74,7 @@
 	# ***** jQuery-Validation: http://jqueryvalidation.org/
 	define('PATH_JQUERY_VALIDATION_JS', APP_ROOT_PATH . '/js/jquery/plugins/jquery-validation/dist/jquery.validate.min.js?rel=1.14.0');
 	# ***** jquery-printarea: https://github.com/RitsC/PrintArea, http://plugins.jquery.com/PrintArea/
-	define('PATH_JQUERY_PRINTAREA_JS', APP_ROOT_PATH . '/js/jquery/plugins/jquery-printarea/demo/jquery.PrintArea.js?rel=2.4.0&github_commit_date=20141210');
+	define('PATH_JQUERY_PRINTAREA_JS', APP_ROOT_PATH . '/js/jquery/plugins/jquery-printarea/demo/jquery.PrintArea.js?rel=2.4.1&github_commit_date=20141210');
 
 	# ---------------------------
 	# Additional Classes

@@ -158,6 +158,8 @@
 										<!-- TOGGLE LINK: Show optional history -->
 										<a href="#" id="link_for_history_openings" type="button" class="btn btn-link btn-xs" title="toggle history">show
 											history</a>
+										<!-- Download as CSV file -->
+										<a href="#" id="" class="btn btn-link btn-xs wmsExportCSV" title="Download CSV file (includes all history)"><i class="glyphicon glyphicon-save"></i>csv</a>
 									</div>
 
 									<div id="openings-list-container">
@@ -167,6 +169,8 @@
 											$lastOpeningDate         = '';
 											$daysOpenings            = [];
 											$todayYmd                = explode(' ', util_currentDateTimeString())[0];
+											// CSV output: set headers manually
+											$csv_string_builder = '"Opening Date","Opening Time","Name","Username","Date Signed Up"' . "\n";
 
 											foreach ($s->openings as $opening) {
 												$curOpeningDate = explode(' ', $opening->begin_datetime)[0];
@@ -176,6 +180,8 @@
 														// determine if signups are public/private, and which, if any, controls or text should be displayed
 														$op->cacheSignups();
 														echo $op->renderAsHtmlOpeningWithLimitedControls($USER->user_id) . "\n";
+														// CSV output: build string with openings and any user signups
+														$csv_string_builder .= $op->renderAsCSV();
 													}
 
 													if ($lastOpeningDate) {
@@ -205,6 +211,8 @@
 												// determine if signups are public/private, and which, if any, controls or text should be displayed
 												$op->cacheSignups();
 												echo $op->renderAsHtmlOpeningWithLimitedControls($USER->user_id) . "\n";
+												// CSV output: build string with openings and any user signups (this is the last array element)
+												$csv_string_builder .= $op->renderAsCSV();
 											}
 											echo '</div>' . "\n";
 
@@ -212,6 +220,9 @@
 											if (!$flagFutureOpeningSignup) {
 												echo '<div class="opening-list-for-date in-the-future"><br /><em>There are no openings for future dates.</em></div>';
 											}
+
+											// CSV output: store in DOM as hidden content
+											echo "<div class=\"hidden wms_export_CSV\">" . $csv_string_builder . "</div>" . "\n";;
 										?>
 
 									</div>

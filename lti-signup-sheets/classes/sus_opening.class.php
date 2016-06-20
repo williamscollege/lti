@@ -185,6 +185,53 @@
 			return $rendered;
 		}
 
+		// CSV output: for admin or managers of this sheet
+		public function renderAsCSV() {
+			$render_datetime = '';
+			$render_user     = '';
+			$render_csv      = '';
+
+			// CSV output: notes regarding CSV requirements
+			// $colBegin = '"';
+			// $colDelim = '","';
+			// $rowDelim = '"\r\n"';
+			// escape double quotes (do once prior to returning output value)
+
+			$this->cacheSignups();
+
+			// create hash of signup_user_id's
+			$signedupUserIds = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
+
+			$render_datetime = '"' . date_format(new DateTime($this->begin_datetime), "m/d/Y") . '","';
+			$render_datetime .= date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A") . '","';
+
+			// display all signup users for this opening
+			if ($signedupUserIds) {
+
+				$signedupUsers = User::getAllFromDb(['user_id' => $signedupUserIds], $this->dbConnection);
+				if ($signedupUsers) {
+					foreach ($signedupUsers as $u) {
+						$render_user = htmlentities($u->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($u->last_name, ENT_QUOTES, 'UTF-8') . '","';
+						// display date signup created
+						foreach ($this->signups as $signup) {
+							if ($signup->signup_user_id == $u->user_id) {
+								$render_user .= htmlentities($u->username, ENT_QUOTES, 'UTF-8') . '","' . util_datetimeFormatted($signup->created_at) . '"';
+								$render_csv .= $render_datetime . $render_user . "\n";
+							}
+						}
+					}
+				}
+				else {
+					$render_csv .= $render_datetime . '","' . '","' . '""'. "\n";
+				}
+			}
+			else {
+				$render_csv .= $render_datetime . '","' . '",' . '""'. "\n";
+			}
+
+			return $render_csv;
+		}
+
 		// usage: ordinary users with permission to signup on this sheet
 		public function renderAsHtmlOpeningWithLimitedControls($UserId = 0) {
 			$this->cacheSignups();
