@@ -215,18 +215,22 @@
 						// display date signup created
 						foreach ($this->signups as $signup) {
 							if ($signup->signup_user_id == $u->user_id) {
-								$render_user .= htmlentities($u->username, ENT_QUOTES, 'UTF-8') . '","' . util_datetimeFormatted($signup->created_at) . '"';
+								// fetch this user's sis_user_id for correlating with Canvas gradebook
+								$usr = User::getOneFromDb(['user_id' => $signup->signup_user_id], $this->dbConnection);
+								// build user info
+								$render_user .= htmlentities($u->username, ENT_QUOTES, 'UTF-8') . '","' . util_datetimeFormatted($signup->created_at) . '","' . $usr->sis_user_id . '"';
+								// build csv string: date and user info
 								$render_csv .= $render_datetime . $render_user . "\n";
 							}
 						}
 					}
 				}
 				else {
-					$render_csv .= $render_datetime . '","' . '","' . '""'. "\n";
+					$render_csv .= $render_datetime . '","' . '","' . '","' . '""' . "\n";
 				}
 			}
 			else {
-				$render_csv .= $render_datetime . '","' . '",' . '""'. "\n";
+				$render_csv .= $render_datetime . '","' . '","' . '",' . '""' . "\n";
 			}
 
 			return $render_csv;
