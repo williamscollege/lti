@@ -6,8 +6,9 @@ $CFG{'DB_USER'} = 'someusernamewithinsertupdateanddeleteprivs';
 $CFG{'DB_PASS'} = 'somepassword';
 
 $CFG{'CANVAS_ACCOUNT'} = '99999';							# main institutional account
-$CFG{'CANVAS_SUBACCOUNTS'}->{'ORGANIZATIONS'} =  '1111111';	# institutional Sub-Account
-$CFG{'CANVAS_SUBACCOUNTS'}->{'SUMMER_COURSES'} = '1111112';	# institutional Sub-Account
+$CFG{'CANVAS_SUBACCOUNTS'}->{'COURSES'} = '1111111';		# institutional Sub-Account
+$CFG{'CANVAS_SUBACCOUNTS'}->{'ORGANIZATIONS'} =  '1111112';	# institutional Sub-Account
+
 
 $CFG{'CURL_TARGET_HOST'} = 'institution.instructure.com';
 $CFG{'CURL_AUTH_TOKEN'} = 'Authorization: Bearer yourauthorizationbearertokenstring';
