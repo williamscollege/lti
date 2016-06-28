@@ -684,7 +684,7 @@
 													$daysOpenings            = [];
 													$todayYmd                = explode(' ', util_currentDateTimeString())[0];
 													// CSV output: set headers manually
-													$csv_string_builder = '"SIS_ID","Full_Name","Username","Date_User_Signed_Up","Opening_Date","Opening_Time"' . "\n";
+													$csv_string_builder = '"SIS_ID","Full_Name","Username","Opening_Date","Opening_Time","Date_User_Signed_Up"' . "\n";
 
 													foreach ($s->openings as $opening) {
 														$curOpeningDate = explode(' ', $opening->begin_datetime)[0];

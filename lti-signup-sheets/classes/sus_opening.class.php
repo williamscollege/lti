@@ -187,6 +187,10 @@
 
 		// CSV output: for admin or managers of this sheet
 		public function renderAsCSV() {
+			// variables
+			$render_datetime = "";
+			$render_user     = "";
+			$render_csv      = "";
 			// CSV output: notes regarding CSV requirements
 			// $colBegin = '"';
 			// $colDelim = '","';
@@ -197,7 +201,7 @@
 
 			// create hash of signup_user_id's
 			$signedupUserIds = Db_Linked::arrayOfAttrValues($this->signups, 'signup_user_id');
-
+			// util_prePrintR($signedupUserIds);
 			$render_datetime = date_format(new DateTime($this->begin_datetime), "m/d/Y") . '","';
 			$render_datetime .= date_format(new DateTime($this->begin_datetime), "h:i A") . ' - ' . date_format(new DateTime($this->end_datetime), "h:i A");
 
@@ -208,23 +212,23 @@
 				if ($signedupUsers) {
 					foreach ($signedupUsers as $u) {
 						$render_user = htmlentities($u->first_name, ENT_QUOTES, 'UTF-8') . " " . htmlentities($u->last_name, ENT_QUOTES, 'UTF-8');
-						// display date signup created
+						// util_prePrintR($render_user);
+						// iterate through signups to match each signup with their correct associated user information
 						foreach ($this->signups as $signup) {
 							if ($signup->signup_user_id == $u->user_id) {
-								// fetch this user's sis_user_id for correlating with Canvas gradebook
-								$usr = User::getOneFromDb(['user_id' => $signup->signup_user_id], $this->dbConnection);
+								// display this user's sis_user_id for correlating with Canvas gradebook
 								// build csv string: user info and opening info
-								$render_csv = '"' . $usr->sis_user_id . '","' . $render_user . '","' . htmlentities($u->username, ENT_QUOTES, 'UTF-8') . '","' . util_datetimeFormatted($signup->created_at) . '","' . $render_datetime . '"' . "\n";
+								$render_csv .= '"' . $u->sis_user_id . '","' . $render_user . '","' . htmlentities($u->username, ENT_QUOTES, 'UTF-8') . '","' . $render_datetime . '","' . util_datetimeFormatted($signup->created_at) . '"' . "\n";
 							}
 						}
 					}
 				}
 				else {
-					$render_csv = '"' . '","' . '","' . '","'. '","' . $render_datetime . '"' . "\n";
+					$render_csv = '"' . '","' . '","' . '","' . $render_datetime . '","' . '"' . "\n";
 				}
 			}
 			else {
-				$render_csv = '"' . '","' . '","' . '","'. '","' . $render_datetime . '"' . "\n";
+				$render_csv = '"' . '","' . '","' . '","' . $render_datetime . '","' . '"' . "\n";
 			}
 
 			return $render_csv;
