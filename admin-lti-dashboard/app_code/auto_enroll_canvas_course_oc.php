@@ -52,7 +52,8 @@
 	$intCourseID               = 1434076;
 	$intSectionID              = 1642651;
 	$strCourseTitle            = "Open Classroom";
-	$arrayNotifyAdminIDs       = [3755519, 2369101, 5086649]; // canvas_user_id: David K, Adam W, Janneke S
+	# NOTE: if updating primary contacts: update Canvas User ID in array at top of file AND text message at bottom of file
+	$arrayNotifyAdminIDs       = [3755519, 2369101, 5086658]; // canvas_user_id: David K, Adam W, Sarah G
 	$arrayNotifyAdminUserNames = [];
 	$arrayEnrollments          = [];
 	$arrayDrops                = [];
@@ -498,6 +499,7 @@
 		// configure mail settings (if multiple recipients: separate with commas, avoid spaces)
 		$subject = "Glow Resource: " . $strCourseTitle;
 		$message = "You have been invited to join the Glow course:\n\"" . $strCourseTitle . "\"\n\nYou may accept this enrollment within Glow:\nhttps://glow.williams.edu/\n\nGuidelines:\nWelcome to the NFD Open Classroom, an initiative that invites Williams College faculty members at any rank to visit a variety of classrooms on campus. A number of generous colleagues have made their courses available to us and there are ten different pedagogical settings from which to choose. Whether you are new to the college, about to teach in an unfamiliar classroom setting, looking to expand your horizons as an instructor, or simply curious about the myriad approaches to teaching on our campus, feel free to browse the list of options, consult the course syllabi, and to use the Google sign-up sheet to reserve any slots that suit your schedule.\n\nQuestions?\nIf you have any questions about this opportunity, please contact Adam Wang of OIT (jwang@williams.edu, x4534) or Sarah Goh (sgoh@williams.edu, x4223).";
+		# NOTE: if updating primary contacts: update Canvas User ID in array at top of file AND text message at bottom of file
 		$headers = "From: glow-no-reply@williams.edu" . "\r\n" .
 			"Reply-To: glow-no-reply@williams.edu" . "\r\n" .
 			"X-Mailer: PHP/" . phpversion();
