@@ -427,7 +427,8 @@
 
 												<div class="wms_indent_tiny">
 													<!-- List: My (current) Courses and/or (all) Organizations (within Canvas LMS, these are specified as sub-accounts)-->
-													<span class="small"><strong>People in my <em>published</em> courses or organizations</strong><br /></span>
+													<span class="small"><strong>People in my <em>published</em> courses or organizations</strong><br />
+													 (This list updates every 12 hours)<br /></span>
 
 													<div id="access_by_course_enr_list" class="cb_list">
 														<div class="checkbox small col-sm-12">
