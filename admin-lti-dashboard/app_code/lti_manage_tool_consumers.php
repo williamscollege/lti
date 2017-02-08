@@ -139,6 +139,8 @@
 	<!-- jQuery: Plugins -->
 	<!-- local JS -->
 	<script src="<?php echo APP_ROOT_PATH; ?>/js/util.js"></script>
+	<!-- Favicons -->
+	<link rel="shortcut icon" href="<?php echo APP_ROOT_PATH; ?>/img/institution-favicon.ico" />
 </head>
 <body>
 <div class="container">
