@@ -106,7 +106,7 @@
 	#------------------------------------------------#
 	# Project:		"Auto Enrollments: Canvas Course"
 	# Purpose:		POST: Enroll single user into specified course using curl calls
-	# Parent file:	/app_code/auto_enroll_canvas_course_ffr.php
+	# Parent files:	/app_code/auto_enroll_canvas_course_fft.php, auto_enroll_canvas_course_oc.php, auto_enroll_canvas_course_adl.php
 	# Notes:		Make API call to Instructure Canvas using curl command
 	#------------------------------------------------#
 	function curlEnrollUserInCourse($intCourseID, $intSectionID, $userID, $type, $enrollment_state, $limit_privileges_to_course_section, $notify, $apiPathPrefix, $apiPathEndpoint) {
@@ -172,7 +172,7 @@
 	#------------------------------------------------#
 	# Project:		"Auto Enrollments: Canvas Course"
 	# Purpose:		GET: Fetch enrollment id single user from specified course using curl calls
-	# Parent file:	/app_code/auto_enroll_canvas_course_ffr.php
+	# Parent files:	/app_code/auto_enroll_canvas_course_fft.php, auto_enroll_canvas_course_oc.php, auto_enroll_canvas_course_adl.php
 	# Notes:		Make API call to Instructure Canvas using curl command
 	#------------------------------------------------#
 	function curlFetchUserEnrollmentID($intSectionID, $userID, $type, $role, $apiPathPrefix, $apiPathEndpoint) {
@@ -231,7 +231,7 @@
 	#------------------------------------------------#
 	# Project:		"Auto Enrollments: Canvas Course"
 	# Purpose:		DELETE: Drop (remove) single user from specified course using curl calls
-	# Parent file:	/app_code/auto_enroll_canvas_course_ffr.php
+	# Parent files:	/app_code/auto_enroll_canvas_course_fft.php, auto_enroll_canvas_course_oc.php, auto_enroll_canvas_course_adl.php
 	# Project:		"Auto Enrollments: Canvas Course"
 	#------------------------------------------------#
 	function curlDropUserFromCourse($intCourseID, $intEnrollmentID, $task, $apiPathPrefix, $apiPathEndpoint) {

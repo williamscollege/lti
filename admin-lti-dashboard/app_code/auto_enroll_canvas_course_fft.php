@@ -1,6 +1,6 @@
 <?php
 	/***********************************************
-	 ** Project:    Auto Enrollments: Canvas Course FFR (do both adds and drops)
+	 ** Project:    Auto Enrollments: Canvas Course FFT (do both adds and drops)
 	 ** Author:     Williams College, OIT, David Keiser-Clark
 	 ** Purpose:    Daily add/drop all entering/leaving faculty status employees into one specific Canvas course
 	 ** Requirements:
@@ -11,8 +11,8 @@
 	 **  - extend the typical "max_execution_time" to require as much time as the script requires (without timing out)
 	 **  - Run daily using cron job
 	 ** Current features:
-	 **  - enroll users who are faculty members to course "Faculty Funding Resources"
-	 **  - remove users who no longer are faculty members from course "Faculty Funding Resources"
+	 **  - enroll users who are faculty members to course "Faculty Funding Toolkit"
+	 **  - remove users who no longer are faculty members from course "Faculty Funding Toolkit"
 	 **  - maintain updated Dashboard records of who are teachers and members of the above course
 	 **        by doing diff of current list of faculty (`dashboard_faculty_current`) vs users listed as teachers (`dashboard_users`)
 	 **  - send mail: for admins, send list of course adds and drops
@@ -47,12 +47,13 @@
 	#------------------------------------------------#
 	# Constants: Initialize counters
 	#------------------------------------------------#
-	$str_project_name          = "Auto Enrollments: Canvas Course FFR";
-	$str_event_action          = "auto_enroll_canvas_course_ffr";
+	$str_project_name          = "Auto Enrollments: Canvas Course FFT";
+	$str_event_action          = "auto_enroll_canvas_course_fft";
 	$intCourseID               = 1549176;
 	$intSectionID              = 1749748;
-	$strCourseTitle            = "Faculty Funding Resources";
-	$arrayNotifyAdminIDs       = [3755519, 5328092, 5328216]; // canvas_user_id: David, Mary Ellen, Patti
+	$strCourseTitle            = "Faculty Funding Toolkit";
+	# NOTE: if updating primary contacts: update Canvas User ID in array at top of file AND text message at bottom of file
+	$arrayNotifyAdminIDs       = [3755519, 5328092, 5328216]; // canvas_user_id: David Keiser-Clark, Mary Ellen Czerniak, Patti Exster
 	$arrayNotifyAdminUserNames = [];
 	$arrayEnrollments          = [];
 	$arrayDrops                = [];
@@ -136,7 +137,7 @@
 		INNER JOIN `dashboard_faculty_current` as fac_cur
 		ON usr.sis_user_id = fac_cur.wms_user_id
 		WHERE
-			usr.flag_is_enrolled_course_ffr = 0
+			usr.flag_is_enrolled_course_fft = 0
 		ORDER BY usr.sortable_name ASC;
 	";
 	if ($debug) {
@@ -257,7 +258,7 @@
 					`dashboard_users`
 				SET
 					`flag_is_teacher` = TRUE,
-					`flag_is_enrolled_course_ffr` = TRUE
+					`flag_is_enrolled_course_fft` = TRUE
 				WHERE
 					`canvas_user_id` = " . $usr["canvas_user_id"] . "
 			";
@@ -275,13 +276,13 @@
 
 			# Output to browser and txt file
 			if ($debug) {
-				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Resources (FFR) course (updated Canvas)<br />";
+				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Toolkit (FFT) course (updated Canvas)<br />";
 			}
 
 			# Store list
 			$strUIDsEnrolled .= empty($strUIDsEnrolled) ? $usr["canvas_user_id"] : ", " . $usr["canvas_user_id"];
-			$strEnrollments .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Resources (FFR) course (updated Canvas)\n";
-			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Resources (FFR) course (updated Canvas)\n");
+			$strEnrollments .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Toolkit (FFT) course (updated Canvas)\n";
+			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Toolkit (FFT) course (updated Canvas)\n");
 		}
 		else {
 			# increment counter
@@ -290,10 +291,10 @@
 
 			# Output to browser and txt file
 			if ($debug) {
-				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Funding Resources (FFR) course (unable to update Canvas)<br />";
+				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Funding Toolkit (FFT) course (unable to update Canvas)<br />";
 			}
-			$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Funding Resources (FFR) course (unable to update Canvas)\n";
-			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Funding Resources (FFR) course (unable to update Canvas)\n");
+			$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Funding Toolkit (FFT) course (unable to update Canvas)\n";
+			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Funding Toolkit (FFT) course (unable to update Canvas)\n");
 		}
 	}
 
@@ -384,7 +385,7 @@
 						`dashboard_users`
 					SET
 						`flag_is_teacher` = FALSE,
-						`flag_is_enrolled_course_ffr` = FALSE
+						`flag_is_enrolled_course_fft` = FALSE
 					WHERE
 						`canvas_user_id` = " . $usr["canvas_user_id"] . "
 				";
@@ -402,13 +403,13 @@
 
 				# Output to browser and txt file
 				if ($debug) {
-					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Resources (FFR) course (updated Canvas)<br />";
+					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Toolkit (FFT) course (updated Canvas)<br />";
 				}
 
 				# Store list
 				$strUIDsDropped .= empty($strUIDsDropped) ? $usr["canvas_user_id"] : ", " . $usr["canvas_user_id"];
-				$strDrops .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Resources (FFR) course (updated Canvas)\n";
-				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Resources (FFR) course (updated Canvas)\n");
+				$strDrops .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Toolkit (FFT) course (updated Canvas)\n";
+				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Toolkit (FFT) course (updated Canvas)\n");
 			}
 			else {
 				# increment counter
@@ -417,10 +418,10 @@
 
 				# Output to browser and txt file
 				if ($debug) {
-					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Funding Resources (FFR) course (unable to update Canvas)<br />";
+					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Funding Toolkit (FFT) course (unable to update Canvas)<br />";
 				}
-				$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Funding Resources (FFR) course (unable to update Canvas)\n";
-				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Funding Resources (FFR) course (unable to update Canvas)\n");
+				$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Funding Toolkit (FFT) course (unable to update Canvas)\n";
+				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Funding Toolkit (FFT) course (unable to update Canvas)\n");
 			}
 		}
 		else {
@@ -430,10 +431,10 @@
 
 			# Output to browser and txt file
 			if ($debug) {
-				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Funding Resources (FFR) course (unable to update Canvas)<br />";
+				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Funding Toolkit (FFT) course (unable to update Canvas)<br />";
 			}
-			$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Funding Resources (FFR) course (unable to update Canvas)\n";
-			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Funding Resources (FFR) course (unable to update Canvas)\n");
+			$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Funding Toolkit (FFT) course (unable to update Canvas)\n";
+			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Funding Toolkit (FFT) course (unable to update Canvas)\n");
 		}
 	}
 
@@ -462,7 +463,7 @@
 	if ($intCountAdds >= 1 || $intCountRemoves >= 1 || $intCountErrors >= 1) {
 
 		// configure mail settings (if multiple recipients: separate with commas, avoid spaces)
-		$subject = "Dashboard Auto Enroll (FFR): " . $str_event_dataset_brief . " (\"$str_event_action\")";
+		$subject = "Dashboard Auto Enroll (FFT): " . $str_event_dataset_brief . " (\"$str_event_action\")";
 		$message = "Application: " . LTI_APP_NAME . "\nScript: $str_project_name (\"$str_event_action\")\n\nFaculty enrolled:\n" . $strEnrollments . "\nFaculty dropped:\n" . $strDrops . "\nErrors (skipped users):\n" . $strErrors . "\nMore information:\n" . APP_FOLDER;
 		$headers = "From: dashboard-no-reply@williams.edu" . "\r\n" .
 			"Reply-To: dashboard-no-reply@williams.edu" . "\r\n" .
@@ -497,7 +498,7 @@
 
 		// configure mail settings (if multiple recipients: separate with commas, avoid spaces)
 		$subject = "Glow Resource: " . $strCourseTitle;
-		$message = "You have been invited to join the Glow course:\n\"" . $strCourseTitle . "\"\n\nYou may accept this enrollment within Glow:\nhttps://glow.williams.edu/\n\nIntroduction:\nWelcome to the Williams College digital archive of faculty funding resources. This Glow course contains sample grant proposal documents shared by your fellow faculty members to which you can refer as you undertake the proposal-writing process.\n\nQuestions?\nIf you have any questions about this course, or about the types of support available for your funding search, please contact Director of Corporate and Foundation Relations Mary Ellen Czerniak (mczernia@williams.edu, x4025) or Grant Coordinator Patti Exster (pexster@williams.edu, x4071).";
+		$message = "You have been invited to join the Glow course:\n\"" . $strCourseTitle . "\"\n\nYou may accept this enrollment within Glow:\nhttps://glow.williams.edu/\n\nIntroduction:\nWelcome to the Williams College digital archive of Faculty Funding Toolkit. This Glow course contains sample grant proposal documents shared by your fellow faculty members to which you can refer as you undertake the proposal-writing process.\n\nQuestions?\nIf you have any questions about this course, or about the types of support available for your funding search, please contact Director of Corporate and Foundation Relations Mary Ellen Czerniak (mczernia@williams.edu, x4025) or Grant Coordinator Patti Exster (pexster@williams.edu, x4071).";
 		$headers = "From: glow-no-reply@williams.edu" . "\r\n" .
 			"Reply-To: glow-no-reply@williams.edu" . "\r\n" .
 			"X-Mailer: PHP/" . phpversion();
@@ -548,8 +549,8 @@
 	array_push($finalReport, "Date end: " . $endDateTimePretty);
 	array_push($finalReport, "Duration: " . convertSecondsToHMSFormat(strtotime($endDateTime) - strtotime($beginDateTime)) . " (hh:mm:ss)");
 	array_push($finalReport, "Curl API Requests: " . $intCountCurlAPIRequests);
-	array_push($finalReport, "Count: Faculty enrolled in FFR: " . $intCountAdds);
-	array_push($finalReport, "Count: Faculty dropped from FFR: " . $intCountRemoves);
+	array_push($finalReport, "Count: Faculty enrolled in FFT: " . $intCountAdds);
+	array_push($finalReport, "Count: Faculty dropped from FFT: " . $intCountRemoves);
 	array_push($finalReport, "Count: Faculty skipped due to errors: " . $intCountErrors);
 	array_push($finalReport, "List Canvas UIDs: Faculty enrolled: " . $strUIDsEnrolled);
 	array_push($finalReport, "List Canvas UIDs: Faculty dropped: " . $strUIDsDropped);

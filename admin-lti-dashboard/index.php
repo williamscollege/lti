@@ -31,7 +31,8 @@
 	$queryUserFieldCounts = "
 		SELECT
 			(SELECT COUNT(*) FROM `dashboard_users` WHERE `flag_delete` = 0) AS cnt_dashboard_users
-			, (SELECT COUNT(*) FROM `dashboard_users` WHERE `flag_delete` = 0 AND `flag_is_enrolled_course_ffr` = 1) AS cnt_dashboard_users_course_ffr
+			, (SELECT COUNT(*) FROM `dashboard_users` WHERE `flag_delete` = 0 AND `flag_is_enrolled_course_adl` = 1) AS cnt_dashboard_users_course_adl
+			, (SELECT COUNT(*) FROM `dashboard_users` WHERE `flag_delete` = 0 AND `flag_is_enrolled_course_fft` = 1) AS cnt_dashboard_users_course_fft
 			, (SELECT COUNT(*) FROM `dashboard_users` WHERE `flag_delete` = 0 AND `flag_is_enrolled_course_oc` = 1) AS cnt_dashboard_users_course_oc
 			, (SELECT COUNT(*) FROM `dashboard_users` WHERE `flag_delete` = 0 AND `flag_is_set_avatar_image` = 1) AS cnt_dashboard_users_with_avatars
 			, (SELECT COUNT(*) FROM `dashboard_users` WHERE `flag_delete` = 0 AND `flag_is_set_notification_preference` = 1) AS cnt_notif_pref_exist
@@ -56,9 +57,13 @@
 			, (SELECT `num_items` FROM `dashboard_eventlogs` WHERE `event_action` = 'sync_canvas_users_to_dashboard' ORDER BY `event_datetime` DESC LIMIT 1) AS log_sync_canvas_num_items
 			, (SELECT `event_dataset_brief` FROM `dashboard_eventlogs` WHERE `event_action` = 'sync_canvas_users_to_dashboard' ORDER BY `event_datetime` DESC LIMIT 1) AS log_sync_canvas_dataset_brief
 
-			, (SELECT COUNT(*) FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_ffr') AS cnt_logs_auto_enroll_ffr
-			, (SELECT `event_datetime` FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_ffr' ORDER BY `event_datetime` DESC LIMIT 1) AS log_auto_enroll_ffr_datetime
-			, (SELECT `event_dataset_brief` FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_ffr' ORDER BY `event_datetime` DESC LIMIT 1) AS log_auto_enroll_ffr_dataset_brief
+			, (SELECT COUNT(*) FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_adl') AS cnt_logs_auto_enroll_adl
+			, (SELECT `event_datetime` FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_adl' ORDER BY `event_datetime` DESC LIMIT 1) AS log_auto_enroll_adl_datetime
+			, (SELECT `event_dataset_brief` FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_adl' ORDER BY `event_datetime` DESC LIMIT 1) AS log_auto_enroll_adl_dataset_brief
+
+			, (SELECT COUNT(*) FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_fft') AS cnt_logs_auto_enroll_fft
+			, (SELECT `event_datetime` FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_fft' ORDER BY `event_datetime` DESC LIMIT 1) AS log_auto_enroll_fft_datetime
+			, (SELECT `event_dataset_brief` FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_fft' ORDER BY `event_datetime` DESC LIMIT 1) AS log_auto_enroll_fft_dataset_brief
 
 			, (SELECT COUNT(*) FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_oc') AS cnt_logs_auto_enroll_oc
 			, (SELECT `event_datetime` FROM `dashboard_eventlogs` WHERE `event_action` = 'auto_enroll_canvas_course_oc' ORDER BY `event_datetime` DESC LIMIT 1) AS log_auto_enroll_oc_datetime
@@ -91,7 +96,8 @@
 	$rows = mysqli_fetch_array($resultsUserFieldCounts);
 	if ($rows) {
 		$cnt_dashboard_users              = $rows["cnt_dashboard_users"];
-		$cnt_dashboard_users_course_ffr   = $rows["cnt_dashboard_users_course_ffr"];
+		$cnt_dashboard_users_course_adl   = $rows["cnt_dashboard_users_course_adl"];
+		$cnt_dashboard_users_course_fft   = $rows["cnt_dashboard_users_course_fft"];
 		$cnt_dashboard_users_course_oc   = $rows["cnt_dashboard_users_course_oc"];
 		$cnt_dashboard_faculty_current    = $rows["cnt_dashboard_faculty_current"];
 		$cnt_dashboard_users_with_avatars = $rows["cnt_dashboard_users_with_avatars"];
@@ -101,7 +107,8 @@
 		$cnt_logs_verify_sis_imports      = $rows["cnt_logs_verify_sis_imports"];
 		$cnt_logs_avatars                 = $rows["cnt_logs_avatars"];
 		$cnt_logs_sync_canvas_users       = $rows["cnt_logs_sync_canvas_users"];
-		$cnt_logs_auto_enroll_ffr         = $rows["cnt_logs_auto_enroll_ffr"];
+		$cnt_logs_auto_enroll_adl         = $rows["cnt_logs_auto_enroll_adl"];
+		$cnt_logs_auto_enroll_fft         = $rows["cnt_logs_auto_enroll_fft"];
 		$cnt_logs_auto_enroll_oc         = $rows["cnt_logs_auto_enroll_oc"];
 		$cnt_logs_notif_pref              = $rows["cnt_logs_notif_pref"];
 
@@ -117,8 +124,10 @@
 		$log_sync_canvas_datetime             = empty($rows["log_sync_canvas_datetime"]) ? 'n/a' : date_format(new DateTime($rows["log_sync_canvas_datetime"]), "M d, Y h:i:s a");
 		$log_sync_canvas_num_items            = empty($rows["log_sync_canvas_num_items"]) ? 0 : $rows["log_sync_canvas_num_items"];
 		$log_sync_canvas_dataset_brief        = empty($rows["log_sync_canvas_dataset_brief"]) ? 0 : $rows["log_sync_canvas_dataset_brief"];
-		$log_auto_enroll_ffr_datetime         = empty($rows["log_auto_enroll_ffr_datetime"]) ? 'n/a' : date_format(new DateTime($rows["log_auto_enroll_ffr_datetime"]), "M d, Y h:i:s a");
-		$log_auto_enroll_ffr_dataset_brief    = empty($rows["log_auto_enroll_ffr_dataset_brief"]) ? 0 : $rows["log_auto_enroll_ffr_dataset_brief"];
+		$log_auto_enroll_adl_datetime         = empty($rows["log_auto_enroll_adl_datetime"]) ? 'n/a' : date_format(new DateTime($rows["log_auto_enroll_adl_datetime"]), "M d, Y h:i:s a");
+		$log_auto_enroll_adl_dataset_brief    = empty($rows["log_auto_enroll_adl_dataset_brief"]) ? 0 : $rows["log_auto_enroll_adl_dataset_brief"];
+		$log_auto_enroll_fft_datetime         = empty($rows["log_auto_enroll_fft_datetime"]) ? 'n/a' : date_format(new DateTime($rows["log_auto_enroll_fft_datetime"]), "M d, Y h:i:s a");
+		$log_auto_enroll_fft_dataset_brief    = empty($rows["log_auto_enroll_fft_dataset_brief"]) ? 0 : $rows["log_auto_enroll_fft_dataset_brief"];
 		$log_auto_enroll_oc_datetime         = empty($rows["log_auto_enroll_oc_datetime"]) ? 'n/a' : date_format(new DateTime($rows["log_auto_enroll_oc_datetime"]), "M d, Y h:i:s a");
 		$log_auto_enroll_oc_dataset_brief    = empty($rows["log_auto_enroll_oc_dataset_brief"]) ? 0 : $rows["log_auto_enroll_oc_dataset_brief"];
 		$log_notif_pref_datetime              = empty($rows["log_notif_pref_datetime"]) ? 'n/a' : date_format(new DateTime($rows["log_notif_pref_datetime"]), "M d, Y h:i:s a");
@@ -129,7 +138,8 @@
 		// note for percentVerifySISImports: it is impossible to obtain a true percent for the complex action of SIS imports; instead create a convincing yet artificial percent
 		$progressVerifySISImports  = ($log_verify_sis_imports_num_errors == 0) ? 100 : round(90 / $log_verify_sis_imports_num_errors, PHP_ROUND_HALF_UP); // why 90? because 100% / 1 error = 100% :)
 		$progressSyncCanvasUsers   = ($cnt_dashboard_users == 0) ? 0 : round($cnt_dashboard_users / $cnt_dashboard_users * 100, PHP_ROUND_HALF_UP);
-		$progressAutoEnrollFFR     = ($cnt_dashboard_users_course_ffr == 0) ? 0 : round($cnt_dashboard_users_course_ffr / $cnt_dashboard_faculty_current * 100, PHP_ROUND_HALF_UP);
+		$progressAutoEnrollADL     = ($cnt_dashboard_users_course_adl == 0) ? 0 : round($cnt_dashboard_users_course_adl / $cnt_dashboard_faculty_current * 100, PHP_ROUND_HALF_UP);
+		$progressAutoEnrollFFT     = ($cnt_dashboard_users_course_fft == 0) ? 0 : round($cnt_dashboard_users_course_fft / $cnt_dashboard_faculty_current * 100, PHP_ROUND_HALF_UP);
 		$progressAutoEnrollOC     = ($cnt_dashboard_users_course_oc == 0) ? 0 : round($cnt_dashboard_users_course_oc / $cnt_dashboard_faculty_current * 100, PHP_ROUND_HALF_UP);
 		$progressPushAvatarUploads = ($cnt_dashboard_users == 0) ? 0 : round($cnt_dashboard_users_with_avatars / $cnt_dashboard_users * 100, PHP_ROUND_HALF_UP);
 		$progressSetNotifPrefs     = ($cnt_dashboard_users == 0) ? 0 : round($cnt_notif_pref_exist / $cnt_dashboard_users * 100, PHP_ROUND_HALF_UP);
@@ -405,16 +415,16 @@
 		</div>
 		<div class="col-md-6 col-md-6">
 			<div class="wmsBoxBorder col-md-12 col-xs-12">
-				<h3>Enroll Faculty: &quot;Faculty Funding Resources&quot;</h3>
+				<h3>Enroll Faculty: &quot;Associate Deans' Lunch&quot;</h3>
 
 				<div class="circleGraphic5 col-md-3 col-xs-3">
 					<?php
 						// build jQuery string for later $(window).load
-						if ($progressAutoEnrollFFR == 100) {
-							$circleGraphic_js_builder .= "$('.circleGraphic5').circleGraphic({'color': '#00B233','progressvalue': " . $progressAutoEnrollFFR . "});"; // green
+						if ($progressAutoEnrollADL == 100) {
+							$circleGraphic_js_builder .= "$('.circleGraphic5').circleGraphic({'color': '#00B233','progressvalue': " . $progressAutoEnrollADL . "});"; // green
 						}
 						else {
-							$circleGraphic_js_builder .= "$('.circleGraphic5').circleGraphic({'color': '#E53238','progressvalue': " . $progressAutoEnrollFFR . "});"; // red
+							$circleGraphic_js_builder .= "$('.circleGraphic5').circleGraphic({'color': '#E53238','progressvalue': " . $progressAutoEnrollADL . "});"; // red
 						}
 					?>
 				</div>
@@ -423,16 +433,16 @@
 						<tbody>
 						<tr>
 							<th class="small">Enrolled</th>
-							<td><code><?php echo number_format($cnt_dashboard_users_course_ffr); ?>: Faculty Funding Resources</code>
+							<td><code><?php echo number_format($cnt_dashboard_users_course_adl); ?>: Associate Deans' Lunch</code>
 							</td>
 						</tr>
 						<tr>
 							<th class="small">Changes</th>
-							<td><code><?php echo $log_auto_enroll_ffr_dataset_brief; ?></code></td>
+							<td><code><?php echo $log_auto_enroll_adl_dataset_brief; ?></code></td>
 						</tr>
 						<tr>
 							<th class="small">Last run</th>
-							<td><code><?php echo $log_auto_enroll_ffr_datetime; ?></code></td>
+							<td><code><?php echo $log_auto_enroll_adl_datetime; ?></code></td>
 						</tr>
 						<tr>
 							<th class="small">Schedule</th>
@@ -442,12 +452,66 @@
 							<th class="small">Tools</th>
 							<td>
 								<small>
-									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/auto_enroll_canvas_course_ffr.php" title="Run now" target="_blank"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;Run
+									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/auto_enroll_canvas_course_adl.php" title="Run now" target="_blank"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;Run
 										now</a>&nbsp;&#124;
-									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/view_logs.php?action=auto_enroll_canvas_course_ffr" title="View logs" target="_blank"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;View
+									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/view_logs.php?action=auto_enroll_canvas_course_adl" title="View logs" target="_blank"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;View
 										logs
-										(<?php echo $cnt_logs_auto_enroll_ffr; ?>)</a>&nbsp;&#124;
-									<a href="https://glow.williams.edu/courses/1549176" title="Glow: Faculty Funding Resources" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;Glow
+										(<?php echo $cnt_logs_auto_enroll_adl; ?>)</a>&nbsp;&#124;
+									<a href="https://glow.williams.edu/courses/2013617" title="Glow: Associate Deans' Lunch" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;Glow
+										Course</a>
+								</small>
+							<td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 col-md-6">
+			<div class="wmsBoxBorder col-md-12 col-xs-12">
+				<h3>Enroll Faculty: &quot;Faculty Funding Toolkit&quot;</h3>
+
+				<div class="circleGraphic6 col-md-3 col-xs-3">
+					<?php
+						// build jQuery string for later $(window).load
+						if ($progressAutoEnrollFFT == 100) {
+							$circleGraphic_js_builder .= "$('.circleGraphic6').circleGraphic({'color': '#00B233','progressvalue': " . $progressAutoEnrollFFT . "});"; // green
+						}
+						else {
+							$circleGraphic_js_builder .= "$('.circleGraphic6').circleGraphic({'color': '#E53238','progressvalue': " . $progressAutoEnrollFFT . "});"; // red
+						}
+					?>
+				</div>
+				<div class="col-md-9 col-xs-9">
+					<table class="table-hover">
+						<tbody>
+						<tr>
+							<th class="small">Enrolled</th>
+							<td><code><?php echo number_format($cnt_dashboard_users_course_fft); ?>: Faculty Funding Toolkit</code>
+							</td>
+						</tr>
+						<tr>
+							<th class="small">Changes</th>
+							<td><code><?php echo $log_auto_enroll_fft_dataset_brief; ?></code></td>
+						</tr>
+						<tr>
+							<th class="small">Last run</th>
+							<td><code><?php echo $log_auto_enroll_fft_datetime; ?></code></td>
+						</tr>
+						<tr>
+							<th class="small">Schedule</th>
+							<td><code>cron: 05:30 am daily</code></td>
+						</tr>
+						<tr>
+							<th class="small">Tools</th>
+							<td>
+								<small>
+									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/auto_enroll_canvas_course_fft.php" title="Run now" target="_blank"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;Run
+										now</a>&nbsp;&#124;
+									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/view_logs.php?action=auto_enroll_canvas_course_fft" title="View logs" target="_blank"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;View
+										logs
+										(<?php echo $cnt_logs_auto_enroll_fft; ?>)</a>&nbsp;&#124;
+									<a href="https://glow.williams.edu/courses/1549176" title="Glow: Faculty Funding Toolkit" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;Glow
 										Course</a>
 								</small>
 							<td>
@@ -461,14 +525,14 @@
 			<div class="wmsBoxBorder col-md-12 col-xs-12">
 				<h3>Enroll Faculty: &quot;Open Classroom&quot;</h3>
 
-				<div class="circleGraphic6 col-md-3 col-xs-3">
+				<div class="circleGraphic7 col-md-3 col-xs-3">
 					<?php
 						// build jQuery string for later $(window).load
-						if ($progressAutoEnrollOC == 100) {
-							$circleGraphic_js_builder .= "$('.circleGraphic6').circleGraphic({'color': '#00B233','progressvalue': " . $progressAutoEnrollOC . "});"; // green
+						if ($progressAutoEnrollOC >= 100) {
+							$circleGraphic_js_builder .= "$('.circleGraphic7').circleGraphic({'color': '#00B233','progressvalue': " . $progressAutoEnrollOC . "});"; // green
 						}
 						else {
-							$circleGraphic_js_builder .= "$('.circleGraphic6').circleGraphic({'color': '#E53238','progressvalue': " . $progressAutoEnrollOC . "});"; // red
+							$circleGraphic_js_builder .= "$('.circleGraphic7').circleGraphic({'color': '#E53238','progressvalue': " . $progressAutoEnrollOC . "});"; // red
 						}
 					?>
 				</div>

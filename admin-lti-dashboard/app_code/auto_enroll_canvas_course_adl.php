@@ -1,6 +1,6 @@
 <?php
 	/***********************************************
-	 ** Project:    Auto Enrollments: Canvas Course OC (do both adds and drops)
+	 ** Project:    Auto Enrollments: Canvas Course ADL (do both adds and drops)
 	 ** Author:     Williams College, OIT, David Keiser-Clark
 	 ** Purpose:    Daily add/drop all entering/leaving faculty status employees into one specific Canvas course
 	 ** Requirements:
@@ -11,8 +11,8 @@
 	 **  - extend the typical "max_execution_time" to require as much time as the script requires (without timing out)
 	 **  - Run daily using cron job
 	 ** Current features:
-	 **  - enroll users who are faculty members to course "Open Classroom"
-	 **  - remove users who no longer are faculty members from course "Open Classroom"
+	 **  - enroll users who are faculty members to course "Associate Deans' Lunch"
+	 **  - remove users who no longer are faculty members from course "Associate Deans' Lunch"
 	 **  - maintain updated Dashboard records of who are teachers and members of the above course
 	 **        by doing diff of current list of faculty (`dashboard_faculty_current`) vs users listed as teachers (`dashboard_users`)
 	 **  - send mail: for admins, send list of course adds and drops
@@ -47,13 +47,13 @@
 	#------------------------------------------------#
 	# Constants: Initialize counters
 	#------------------------------------------------#
-	$str_project_name          = "Auto Enrollments: Canvas Course OC";
-	$str_event_action          = "auto_enroll_canvas_course_oc";
-	$intCourseID               = 1434076;
-	$intSectionID              = 1642651;
-	$strCourseTitle            = "Open Classroom";
+	$str_project_name          = "Auto Enrollments: Canvas Course ADL";
+	$str_event_action          = "auto_enroll_canvas_course_adl";
+	$intCourseID               = 2013617;
+	$intSectionID              = 2234243;
+	$strCourseTitle            = "Associate Deans' Lunch";
 	# NOTE: if updating primary contacts: update Canvas User ID in array at top of file AND text message at bottom of file
-	$arrayNotifyAdminIDs       = [3755519, 2369101, 5086658]; // canvas_user_id: David Keiser-Clark, Adam Wang, Sarah Goh
+	$arrayNotifyAdminIDs       = [3755519, 5086663]; // canvas_user_id: David Keiser-Clark, Rhon Manigault-Bryant
 	$arrayNotifyAdminUserNames = [];
 	$arrayEnrollments          = [];
 	$arrayDrops                = [];
@@ -137,7 +137,7 @@
 		INNER JOIN `dashboard_faculty_current` as fac_cur
 		ON usr.sis_user_id = fac_cur.wms_user_id
 		WHERE
-			usr.flag_is_enrolled_course_oc = 0
+			usr.flag_is_enrolled_course_adl = 0
 		ORDER BY usr.sortable_name ASC;
 	";
 	if ($debug) {
@@ -258,7 +258,7 @@
 					`dashboard_users`
 				SET
 					`flag_is_teacher` = TRUE,
-					`flag_is_enrolled_course_oc` = TRUE
+					`flag_is_enrolled_course_adl` = TRUE
 				WHERE
 					`canvas_user_id` = " . $usr["canvas_user_id"] . "
 			";
@@ -276,13 +276,13 @@
 
 			# Output to browser and txt file
 			if ($debug) {
-				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Open Classroom (OC) course (updated Canvas)<br />";
+				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Associate Deans' Lunch (ADL) course (updated Canvas)<br />";
 			}
 
 			# Store list
 			$strUIDsEnrolled .= empty($strUIDsEnrolled) ? $usr["canvas_user_id"] : ", " . $usr["canvas_user_id"];
-			$strEnrollments .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Open Classroom (OC) course (updated Canvas)\n";
-			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Open Classroom (OC) course (updated Canvas)\n");
+			$strEnrollments .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Associate Deans' Lunch (ADL) course (updated Canvas)\n";
+			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Associate Deans' Lunch (ADL) course (updated Canvas)\n");
 		}
 		else {
 			# increment counter
@@ -291,10 +291,10 @@
 
 			# Output to browser and txt file
 			if ($debug) {
-				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Open Classroom (OC) course (unable to update Canvas)<br />";
+				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Associate Deans' Lunch (ADL) course (unable to update Canvas)<br />";
 			}
-			$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Open Classroom (OC) course (unable to update Canvas)\n";
-			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Open Classroom (OC) course (unable to update Canvas)\n");
+			$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Associate Deans' Lunch (ADL) course (unable to update Canvas)\n";
+			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Associate Deans' Lunch (ADL) course (unable to update Canvas)\n");
 		}
 	}
 
@@ -385,7 +385,7 @@
 						`dashboard_users`
 					SET
 						`flag_is_teacher` = FALSE,
-						`flag_is_enrolled_course_oc` = FALSE
+						`flag_is_enrolled_course_adl` = FALSE
 					WHERE
 						`canvas_user_id` = " . $usr["canvas_user_id"] . "
 				";
@@ -403,13 +403,13 @@
 
 				# Output to browser and txt file
 				if ($debug) {
-					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Open Classroom (OC) course (updated Canvas)<br />";
+					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Associate Deans' Lunch (ADL) course (updated Canvas)<br />";
 				}
 
 				# Store list
 				$strUIDsDropped .= empty($strUIDsDropped) ? $usr["canvas_user_id"] : ", " . $usr["canvas_user_id"];
-				$strDrops .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Open Classroom (OC) course (updated Canvas)\n";
-				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Open Classroom (OC) course (updated Canvas)\n");
+				$strDrops .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Associate Deans' Lunch (ADL) course (updated Canvas)\n";
+				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Associate Deans' Lunch (ADL) course (updated Canvas)\n");
 			}
 			else {
 				# increment counter
@@ -418,10 +418,10 @@
 
 				# Output to browser and txt file
 				if ($debug) {
-					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Open Classroom (OC) course (unable to update Canvas)<br />";
+					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Associate Deans' Lunch (ADL) course (unable to update Canvas)<br />";
 				}
-				$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Open Classroom (OC) course (unable to update Canvas)\n";
-				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Open Classroom (OC) course (unable to update Canvas)\n");
+				$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Associate Deans' Lunch (ADL) course (unable to update Canvas)\n";
+				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Associate Deans' Lunch (ADL) course (unable to update Canvas)\n");
 			}
 		}
 		else {
@@ -431,10 +431,10 @@
 
 			# Output to browser and txt file
 			if ($debug) {
-				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Open Classroom (OC) course (unable to update Canvas)<br />";
+				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Associate Deans' Lunch (ADL) course (unable to update Canvas)<br />";
 			}
-			$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Open Classroom (OC) course (unable to update Canvas)\n";
-			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Open Classroom (OC) course (unable to update Canvas)\n");
+			$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Associate Deans' Lunch (ADL) course (unable to update Canvas)\n";
+			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Associate Deans' Lunch (ADL) course (unable to update Canvas)\n");
 		}
 	}
 
@@ -463,7 +463,7 @@
 	if ($intCountAdds >= 1 || $intCountRemoves >= 1 || $intCountErrors >= 1) {
 
 		// configure mail settings (if multiple recipients: separate with commas, avoid spaces)
-		$subject = "Dashboard Auto Enroll (OC): " . $str_event_dataset_brief . " (\"$str_event_action\")";
+		$subject = "Dashboard Auto Enroll (ADL): " . $str_event_dataset_brief . " (\"$str_event_action\")";
 		$message = "Application: " . LTI_APP_NAME . "\nScript: $str_project_name (\"$str_event_action\")\n\nFaculty enrolled:\n" . $strEnrollments . "\nFaculty dropped:\n" . $strDrops . "\nErrors (skipped users):\n" . $strErrors . "\nMore information:\n" . APP_FOLDER;
 		$headers = "From: dashboard-no-reply@williams.edu" . "\r\n" .
 			"Reply-To: dashboard-no-reply@williams.edu" . "\r\n" .
@@ -498,8 +498,7 @@
 
 		// configure mail settings (if multiple recipients: separate with commas, avoid spaces)
 		$subject = "Glow Resource: " . $strCourseTitle;
-		$message = "You have been invited to join the Glow course:\n\"" . $strCourseTitle . "\"\n\nYou may accept this enrollment within Glow:\nhttps://glow.williams.edu/\n\nGuidelines:\nWelcome to the NFD Open Classroom, an initiative that invites Williams College faculty members at any rank to visit a variety of classrooms on campus. A number of generous colleagues have made their courses available to us and there are ten different pedagogical settings from which to choose. Whether you are new to the college, about to teach in an unfamiliar classroom setting, looking to expand your horizons as an instructor, or simply curious about the myriad approaches to teaching on our campus, feel free to browse the list of options, consult the course syllabi, and to use the Google sign-up sheet to reserve any slots that suit your schedule.\n\nQuestions?\nIf you have any questions about this opportunity, please contact Adam Wang of OIT (jwang@williams.edu, x4534) or Sarah Goh (sgoh@williams.edu, x4223).";
-		# NOTE: if updating primary contacts: update Canvas User ID in array at top of file AND text message at bottom of file
+		$message = "You have been invited to join the Glow course:\n\"" . $strCourseTitle . "\"\n\nYou may accept this enrollment within Glow:\nhttps://glow.williams.edu/\n\nIntroduction:\nWelcome to the Williams College digital archive of materials related to the Associate Deans' Lunch. This Glow course contains materials and sources relevant to our various lunch discussions.\n\nThe Associate Deans' lunches are held on Wednesdays at noon at the Faculty House. They are occasions for faculty to get together and talk—across ranks and disciplines—on topics of mutual interest.\n\nQuestions?\nIf you have any questions about this course please contact Associate Dean of the Faculty Rhon Manigault-Bryant (rmanigau@williams.edu, x2217).";
 		$headers = "From: glow-no-reply@williams.edu" . "\r\n" .
 			"Reply-To: glow-no-reply@williams.edu" . "\r\n" .
 			"X-Mailer: PHP/" . phpversion();
@@ -550,8 +549,8 @@
 	array_push($finalReport, "Date end: " . $endDateTimePretty);
 	array_push($finalReport, "Duration: " . convertSecondsToHMSFormat(strtotime($endDateTime) - strtotime($beginDateTime)) . " (hh:mm:ss)");
 	array_push($finalReport, "Curl API Requests: " . $intCountCurlAPIRequests);
-	array_push($finalReport, "Count: Faculty enrolled in OC: " . $intCountAdds);
-	array_push($finalReport, "Count: Faculty dropped from OC: " . $intCountRemoves);
+	array_push($finalReport, "Count: Faculty enrolled in ADL: " . $intCountAdds);
+	array_push($finalReport, "Count: Faculty dropped from ADL: " . $intCountRemoves);
 	array_push($finalReport, "Count: Faculty skipped due to errors: " . $intCountErrors);
 	array_push($finalReport, "List Canvas UIDs: Faculty enrolled: " . $strUIDsEnrolled);
 	array_push($finalReport, "List Canvas UIDs: Faculty dropped: " . $strUIDsDropped);
