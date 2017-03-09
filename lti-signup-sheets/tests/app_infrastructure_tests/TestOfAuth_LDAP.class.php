@@ -1,7 +1,9 @@
 <?php
 
-	//require_once(dirname(__FILE__) . '/../../classes/auth_LDAP.class.php');
+    require_once(dirname(__FILE__) . '/../../institution.cfg.php');
+    require_once(dirname(__FILE__) . '/../../classes/auth_LDAP.class.php');
 	require_once(dirname(__FILE__) . '/../../auth.cfg.php');
+    require_once(dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php');
 
 	class TestOfAuth_LDAP extends UnitTestCase {
 

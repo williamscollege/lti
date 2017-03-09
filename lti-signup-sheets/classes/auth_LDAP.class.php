@@ -135,7 +135,17 @@
 				return FALSE;
 			}
 
-			$res_id = 0;
+            // Non-anonymous search required
+            if (AUTH_LDAP_DENY_ANON_BIND) {
+                //Bind with an authorized user for search
+                if (ldap_bind($this->ldap_link, AUTH_LDAP_RDN_USER, AUTH_LDAP_RDN_PASS) == FALSE) {
+                    //Figure out the proper error reporting
+                    return FALSE;
+                };
+            };
+
+
+            $res_id = 0;
 			if ($attrList) {
 				$res_id = @ldap_search($this->ldap_link, AUTH_LDAP_SEARCH_DN, $filterString, $attrList);
 			}
@@ -177,14 +187,20 @@
 
 			// try to Sign in NOTE: this is the actual auth check!
 			$this->connectToLDAP();
-			//            echo $found_user[AUTH_LDAP_USER_DN_ATTR_LABEL];
-			$authed_ldap_link = ldap_bind($this->ldap_link, $found_user['auth_identifier'], $pass);
-			ldap_close($this->ldap_link);
-			if ($authed_ldap_link == FALSE) {
-				$this->msg = "The username and password don't match."; //: $user_dn";
-				return FALSE;
-			}
-			ldap_close($authed_ldap_link);
+            $bindRDN = $found_user['auth_identifier'];
+
+            // Authenticate with the newly found DN and user-provided password
+            // Suppressing errors from the bind as we are providing custom error messages.
+            $auth_status = @ldap_bind($this->ldap_link, $bindRDN, $pass);
+            ldap_close($this->ldap_link);
+            if ($auth_status == FALSE) {
+                $this->msg = "The username and password don't match."; //: $user_dn";
+                return FALSE;
+            }
+
+            // This is commented out since the bind does not return a link just a boolean.
+            //ldap_close($authed_ldap_link);
+
 
 
 			//            echo '<pre>';

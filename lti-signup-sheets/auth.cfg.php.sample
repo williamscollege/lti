@@ -37,8 +37,16 @@
 		define('AUTH_LDAP_EMAIL_ATTR_LABEL',            'mail');
 		define('AUTH_LDAP_GROUPMEMBERSHIP_ATTR_LABEL',  'groups');    // institutional groups
 
-		// note: the $AUTH object will be set (in app_setup.php) using the appropriate auth class defined here
-		$AUTH = new Auth_LDAP();
+	// If this is TRUE, be sure to set the additional constants below
+	// Active Directory will typically require this to be true
+    define('AUTH_LDAP_DENY_ANON_BIND',              FALSE);
+
+    // These define these identifiers for non-anonymous search/bind
+    define('AUTH_LDAP_RDN_USER',                    'rdnuser');
+    define('AUTH_LDAP_RDN_PASS',                    'rdnpass');
+
+
+	$AUTH = new Auth_LDAP();
 	*/
 
 
