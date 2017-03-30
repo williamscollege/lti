@@ -286,7 +286,7 @@
 		$str_event_dataset_full .= "Error messages:<br />" . implode("\n<br />", $arrayErrorMessages) . "<br />";
 
 		// send mail: for admins, send error notifications
-		$to      = "dwk2@williams.edu"; // separate with commas, avoid spaces
+		$to      = "dwk2@williams.edu,cph2@williams.edu"; // separate with commas, avoid spaces
 		$subject = "Dashboard Alert: " . $str_event_dataset_brief . " (\"$str_event_action\")";
 		$message = "Application: " . LTI_APP_NAME . "\nScript: $str_project_name (\"$str_event_action\")\n\nReports SIS Import Errors:\n" . implode("\n", $arrayErrorMessages) . "\n\nMore information:\n" . APP_FOLDER;
 		$headers = "From: dashboard-no-reply@williams.edu" . "\r\n" .

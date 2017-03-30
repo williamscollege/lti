@@ -526,7 +526,7 @@
 		}
 		else {
 			// quality assurance: send email to developer (remove when satisfied)
-			$to = "dwk2@williams.edu";
+			$to = "dwk2@williams.edu,cph2@williams.edu";
 			mail($to, $subject, $message, $headers);
 			sleep(2); // delay execution (prevent overwhelming mail fxn)
 		}
