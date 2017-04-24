@@ -57,11 +57,13 @@ $(document).ready(function () {
 
 // BootBox jQuery confirm box (helper function)
 function showConfirmBox(ary) {
+	// CPH: Moved this code to the callback function below.
 	// console.dir(ary); // debugging
-	if (ary['ajax_action'] == 'sus-delete-opening') {
-		var custom_data = $("input[name='custom_user_value']:checked").val();
-	}
-	else if (ary['ajax_action'] == 'send-email-to-participants-for-opening-id') {
+	//if (ary['ajax_action'] == 'sus-delete-opening') {
+	//	var custom_data = $("input[name='custom_user_value']:checked").val();
+	// }
+	// else
+	if (ary['ajax_action'] == 'send-email-to-participants-for-opening-id') {
 		var custom_data = ary['subject_message_json'];
 		// issue: showConfirmBox dialog naturally removes scrollbar from the layer below; if that layer is also a dialog, this can be bad for UI
 		// solution: reintroduce scrollbar to modal
@@ -76,6 +78,16 @@ function showConfirmBox(ary) {
 				label: ary['label'],
 				className: ary['class'],
 				callback: function () {
+
+                    if (ary['ajax_action'] == 'delete-opening') {
+                        // console.log("callback function array is delete-opening");
+
+						var custom_data = $("input[name='custom_user_value']:checked").val();
+                        // console.log("callback function = "+ custom_data);
+
+                    }
+
+
 					if (ary['ajax_action'] == 'send-email-to-participants-for-opening-id') {
 						// show button loading text (bootstrap) only after clicking "Send" button
 						$("#notifyParticipantsButton").button('loading');
@@ -186,6 +198,9 @@ function updateDOM(action_ary, ret, data) {
 		}
 	}
 	else if (action_ary.ajax_action == 'delete-opening') {
+
+        // console.log('Data: ' + parseInt(data.customData));
+
 		if (ret) {
 			// show status
 			susUtil_setTransientAlert('success', 'Deleted');
