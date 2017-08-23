@@ -248,12 +248,16 @@
 	$intCountEdits += 1;
 	if ($arrayParsed[0]["data_counts_terms"] < $arrayParsed[1]["data_counts_terms"]) {
 		array_push($arrayErrorMessages, "Failure (error 119): `data_counts_terms` for import id " . $arrayParsed[0]["id"] . " has lower value (" . $arrayParsed[0]["data_counts_terms"] . ") than previous SIS import (" . $arrayParsed[1]["data_counts_terms"] . ") (`dashboard_sis_imports_parsed`).");
-	}
+	} elseif ($arrayParsed[0]["data_counts_terms"] == 0) {
+        array_push($arrayErrorMessages, "Failure (error 129): `data_counts_terms` for import id " . $arrayParsed[0]["id"] ." is 0");
+    }
 
 	$intCountEdits += 1;
 	if ($arrayParsed[0]["data_counts_courses"] < ($arrayParsed[1]["data_counts_courses"] - $arrayParsed[1]["data_counts_courses"] * $float_range)) {
 		array_push($arrayErrorMessages, "Failure (error 120): `data_counts_courses` for import id " . $arrayParsed[0]["id"] . " has significantly lower value (" . $arrayParsed[0]["data_counts_courses"] . ") than previous SIS import (" . $arrayParsed[1]["data_counts_courses"] . ") (`dashboard_sis_imports_parsed`).");
-	}
+	} elseif ($arrayParsed[0]["data_counts_courses"] == 0) {
+        array_push($arrayErrorMessages, "Failure (error 130): `data_counts_courses` for import id " . $arrayParsed[0]["id"] ." is 0");
+    }
 
 	$intCountEdits += 1;
 	if ($arrayParsed[0]["data_counts_sections"] < ($arrayParsed[1]["data_counts_sections"] - $arrayParsed[1]["data_counts_sections"] * $float_range)) {
@@ -263,12 +267,16 @@
 	$intCountEdits += 1;
 	if ($arrayParsed[0]["data_counts_users"] < ($arrayParsed[1]["data_counts_users"] - $arrayParsed[1]["data_counts_users"] * $float_range)) {
 		array_push($arrayErrorMessages, "Failure (error 122): `data_counts_users` for import id " . $arrayParsed[0]["id"] . " has significantly lower value (" . $arrayParsed[0]["data_counts_users"] . ") than previous SIS import (" . $arrayParsed[1]["data_counts_users"] . ") (`dashboard_sis_imports_parsed`).");
-	}
+	} elseif ($arrayParsed[0]["data_counts_users"] == 0) {
+        array_push($arrayErrorMessages, "Failure (error 132): `data_counts_users` for import id " . $arrayParsed[0]["id"] ." is 0");
+    }
 
 	$intCountEdits += 1;
 	if ($arrayParsed[0]["data_counts_enrollments"] < ($arrayParsed[1]["data_counts_enrollments"] - $arrayParsed[1]["data_counts_enrollments"] * $float_range)) {
 		array_push($arrayErrorMessages, "Failure (error 123): `data_counts_enrollments` for import id " . $arrayParsed[0]["id"] . " has significantly lower value (" . $arrayParsed[0]["data_counts_enrollments"] . ") than previous SIS import (" . $arrayParsed[1]["data_counts_enrollments"] . ") (`dashboard_sis_imports_parsed`).");
-	}
+	} elseif ($arrayParsed[0]["data_counts_enrollments"] == 0) {
+        array_push($arrayErrorMessages, "Failure (error 133): `data_counts_enrollments` for import id " . $arrayParsed[0]["id"] ." is 0");
+    }
 
 
 	#------------------------------------------------#
@@ -277,7 +285,17 @@
 	$str_event_dataset_brief = "Success: SIS Import id " . $arrayParsed[0]["id"];
 	$str_event_dataset_full  = "<strong>Date created_at: " . $arrayParsed[0]["created_at"] . "</strong><br />";
 
+    // Pull the last verify log item
+    // If the last one unsuccessful
+        // Query the database log for the timestamp of the last email
+        // Query the database log for the timestamp of last successful one
+        // Update success time stamp variable to include the timestamp of the last success
+   // else
+        // set the variables used to proper default values
+
+
 	if ($arrayErrorMessages) {
+
 		$plural_letter = "";
 		if (count($arrayErrorMessages) > 1) {
 			$plural_letter = "s";
@@ -285,16 +303,32 @@
 		$str_event_dataset_brief = count($arrayErrorMessages) . " Error" . $plural_letter . "! (import id: " . $arrayParsed[0]["id"] . ")";
 		$str_event_dataset_full .= "Error messages:<br />" . implode("\n<br />", $arrayErrorMessages) . "<br />";
 
-		// send mail: for admins, send error notifications
-		$to      = "dwk2@williams.edu,cph2@williams.edu"; // separate with commas, avoid spaces
+		// Evaluate, send mail: for admins, send error notifications
+
+        // if the current brief error is the same as the last log entry
+                // if the last logged error email is < 23 hours ago
+                    // Suppress the email
+        // else
+
+            // Send the mail
+
+		$to      = "dwk2@williams.edu, cph2@williams.edu"; // separate with commas, avoid spaces
 		$subject = "Dashboard Alert: " . $str_event_dataset_brief . " (\"$str_event_action\")";
+
+		// Modify the message to include the update success timestamp variable, which is defaulted to null
 		$message = "Application: " . LTI_APP_NAME . "\nScript: $str_project_name (\"$str_event_action\")\n\nReports SIS Import Errors:\n" . implode("\n", $arrayErrorMessages) . "\n\nMore information:\n" . APP_FOLDER;
 		$headers = "From: dashboard-no-reply@williams.edu" . "\r\n" .
 			"Reply-To: dashboard-no-reply@williams.edu" . "\r\n" .
 			"X-Mailer: PHP/" . phpversion();
 
 		mail($to, $subject, $message, $headers);
+
+		// log the error message
 	}
+	// else {
+	//    if success time stamp variable is set // first success after an error
+    //      Send a success message with a timestamp "Errors have been occuring since success time stamp variable"
+    // }
 
 	if ($debug) {
 		echo "error_messages:<br />" . $str_event_dataset_full;
