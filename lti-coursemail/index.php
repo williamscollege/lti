@@ -290,7 +290,6 @@
 				dataType: 'json',
 				success: function (data) {
 					if (data) {
-
 						// start: building table.html() to create checkboxes from returned json array
 						var populateCheckboxList = '<tbody>';
 
@@ -354,7 +353,7 @@
 						$("#warning_ajax_failure").fadeIn("fast").removeClass("hide");
 
 						// change initial "fetching data" message
-						$("#messageFetchingData").text("Oops, please call OIT ITech.");
+						$("#messageFetchingData").text("Oops, please call OIT ITech (1a).");
 
 						return false;
 					}
@@ -364,7 +363,7 @@
 					$("#warning_ajax_failure").fadeIn("fast").removeClass("hide");
 
 					// change initial "fetching data" message
-					$("#messageFetchingData").text("Oops... please call OIT ITech.");
+					$("#messageFetchingData").text("Oops... please call OIT ITech (1b).");
 
 					return false;
 				}
@@ -479,7 +478,7 @@
 						$("#warning_ajax_failure").fadeIn("fast").removeClass("hide");
 
 						// change initial "fetching data" message
-						$("#messageFetchingData").text("Oops, please call OIT ITech.");
+						$("#messageFetchingData").text("Oops, please call OIT ITech (2a).");
 
 						return false;
 					}
@@ -489,7 +488,7 @@
 					$("#warning_ajax_failure").fadeIn("fast").removeClass("hide");
 
 					// change initial "fetching data" message
-					$("#messageFetchingData").text("Oops... please call OIT ITech.");
+					$("#messageFetchingData").text("Oops... please call OIT ITech (2b).");
 
 					return false;
 				}
