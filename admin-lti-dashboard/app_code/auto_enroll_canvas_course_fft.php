@@ -11,8 +11,8 @@
 	 **  - extend the typical "max_execution_time" to require as much time as the script requires (without timing out)
 	 **  - Run daily using cron job
 	 ** Current features:
-	 **  - enroll users who are faculty members to course "Faculty Funding Toolkit"
-	 **  - remove users who no longer are faculty members from course "Faculty Funding Toolkit"
+	 **  - enroll users who are faculty members to course "Faculty Grant Proposal Library"
+	 **  - remove users who no longer are faculty members from course "Faculty Grant Proposal Library"
 	 **  - maintain updated Dashboard records of who are teachers and members of the above course
 	 **        by doing diff of current list of faculty (`dashboard_faculty_current`) vs users listed as teachers (`dashboard_users`)
 	 **  - send mail: for admins, send list of course adds and drops
@@ -51,7 +51,7 @@
 	$str_event_action          = "auto_enroll_canvas_course_fft";
 	$intCourseID               = 1549176;
 	$intSectionID              = 1749748;
-	$strCourseTitle            = "Faculty Funding Toolkit";
+	$strCourseTitle            = "Faculty Grant Proposal Library";
 	# NOTE: if updating primary contacts: update Canvas User ID in array at top of file AND text message at bottom of file
 	$arrayNotifyAdminIDs       = [3755519, 5328092, 5328216]; // canvas_user_id: David Keiser-Clark, Mary Ellen Czerniak, Patti Exster
 	$arrayNotifyAdminUserNames = [];
@@ -276,13 +276,13 @@
 
 			# Output to browser and txt file
 			if ($debug) {
-				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Toolkit (FFT) course (updated Canvas)<br />";
+				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Grant Proposal Library (FFT) course (updated Canvas)<br />";
 			}
 
 			# Store list
 			$strUIDsEnrolled .= empty($strUIDsEnrolled) ? $usr["canvas_user_id"] : ", " . $usr["canvas_user_id"];
-			$strEnrollments .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Toolkit (FFT) course (updated Canvas)\n";
-			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Funding Toolkit (FFT) course (updated Canvas)\n");
+			$strEnrollments .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Grant Proposal Library (FFT) course (updated Canvas)\n";
+			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Enrolled user into Faculty Grant Proposal Library (FFT) course (updated Canvas)\n");
 		}
 		else {
 			# increment counter
@@ -291,10 +291,10 @@
 
 			# Output to browser and txt file
 			if ($debug) {
-				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Funding Toolkit (FFT) course (unable to update Canvas)<br />";
+				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Grant Proposal Library (FFT) course (unable to update Canvas)<br />";
 			}
-			$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Funding Toolkit (FFT) course (unable to update Canvas)\n";
-			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Funding Toolkit (FFT) course (unable to update Canvas)\n");
+			$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Grant Proposal Library (FFT) course (unable to update Canvas)\n";
+			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to enroll this user into Faculty Grant Proposal Library (FFT) course (unable to update Canvas)\n");
 		}
 	}
 
@@ -403,13 +403,13 @@
 
 				# Output to browser and txt file
 				if ($debug) {
-					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Toolkit (FFT) course (updated Canvas)<br />";
+					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Grant Proposal Library (FFT) course (updated Canvas)<br />";
 				}
 
 				# Store list
 				$strUIDsDropped .= empty($strUIDsDropped) ? $usr["canvas_user_id"] : ", " . $usr["canvas_user_id"];
-				$strDrops .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Toolkit (FFT) course (updated Canvas)\n";
-				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Funding Toolkit (FFT) course (updated Canvas)\n");
+				$strDrops .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Grant Proposal Library (FFT) course (updated Canvas)\n";
+				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Dropped user from Faculty Grant Proposal Library (FFT) course (updated Canvas)\n");
 			}
 			else {
 				# increment counter
@@ -418,10 +418,10 @@
 
 				# Output to browser and txt file
 				if ($debug) {
-					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Funding Toolkit (FFT) course (unable to update Canvas)<br />";
+					echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Grant Proposal Library (FFT) course (unable to update Canvas)<br />";
 				}
-				$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Funding Toolkit (FFT) course (unable to update Canvas)\n";
-				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Funding Toolkit (FFT) course (unable to update Canvas)\n");
+				$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Grant Proposal Library (FFT) course (unable to update Canvas)\n";
+				fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to drop this user from Faculty Grant Proposal Library (FFT) course (unable to update Canvas)\n");
 			}
 		}
 		else {
@@ -431,10 +431,10 @@
 
 			# Output to browser and txt file
 			if ($debug) {
-				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Funding Toolkit (FFT) course (unable to update Canvas)<br />";
+				echo $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Grant Proposal Library (FFT) course (unable to update Canvas)<br />";
 			}
-			$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Funding Toolkit (FFT) course (unable to update Canvas)\n";
-			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Funding Toolkit (FFT) course (unable to update Canvas)\n");
+			$strErrors .= $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Grant Proposal Library (FFT) course (unable to update Canvas)\n";
+			fwrite($myLogFile, $usr["canvas_user_id"] . " - " . $usr["sortable_name"] . " - Skipped: curl failed to fetch enrollment_id and drop this user from Faculty Grant Proposal Library (FFT) course (unable to update Canvas)\n");
 		}
 	}
 
@@ -498,7 +498,7 @@
 
 		// configure mail settings (if multiple recipients: separate with commas, avoid spaces)
 		$subject = "Glow Resource: " . $strCourseTitle;
-		$message = "You have been invited to join the Glow course:\n\"" . $strCourseTitle . "\"\n\nYou may accept this enrollment within Glow:\nhttps://glow.williams.edu/\n\nIntroduction:\nWelcome to the Williams College digital archive of Faculty Funding Toolkit. This Glow course contains sample grant proposal documents shared by your fellow faculty members to which you can refer as you undertake the proposal-writing process.\n\nQuestions?\nIf you have any questions about this course, or about the types of support available for your funding search, please contact Director of Corporate and Foundation Relations Mary Ellen Czerniak (mczernia@williams.edu, x4025) or Grant Coordinator Patti Exster (pexster@williams.edu, x4071).";
+		$message = "You have been invited to join the Glow course:\n\"" . $strCourseTitle . "\"\n\nYou may accept this enrollment within Glow:\nhttps://glow.williams.edu/\n\nIntroduction:\nWelcome to the Williams College \"Faculty Grant Proposal Library\" course in Glow. The goal of this course is to readily provide examples of successful grant proposals, which have been prepared almost exclusively by Williams College faculty. Your colleagues have shared their work so that it can be used as a reference as you prepare your own grant applications for private foundations and government funding sources.\n\nPlease note that this library is designed to supplement the information found on the Grants and Funding section (https://faculty.williams.edu/prospect-research-2/) of the Williams College faculty website.\n\nQuestions? Contact Bridget Wiffin, Assistant Director of Corporate and Foundation Relations: bw6@williams.edu; x5053";
 		$headers = "From: glow-no-reply@williams.edu" . "\r\n" .
 			"Reply-To: glow-no-reply@williams.edu" . "\r\n" .
 			"X-Mailer: PHP/" . phpversion();

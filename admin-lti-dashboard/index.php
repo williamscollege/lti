@@ -471,7 +471,7 @@
 		</div>
 		<div class="col-md-6 col-md-6">
 			<div class="wmsBoxBorder col-md-12 col-xs-12">
-				<h3>Enroll Faculty: &quot;Faculty Funding Toolkit&quot;</h3>
+				<h3>Enroll Faculty: &quot;Faculty Grant Proposal Library&quot;</h3>
 
 				<div class="circleGraphic6 col-md-3 col-xs-3">
 					<?php
@@ -489,7 +489,7 @@
 						<tbody>
 						<tr>
 							<th class="small">Enrolled</th>
-							<td><code><?php echo number_format($cnt_dashboard_users_course_fft); ?>: Faculty Funding Toolkit</code>
+							<td><code><?php echo number_format($cnt_dashboard_users_course_fft); ?>: Faculty Grant Proposal Library</code>
 							</td>
 						</tr>
 						<tr>
@@ -513,7 +513,7 @@
 									<a href="<?php echo APP_ROOT_PATH; ?>/app_code/view_logs.php?action=auto_enroll_canvas_course_fft" title="View logs" target="_blank"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;View
 										logs
 										(<?php echo $cnt_logs_auto_enroll_fft; ?>)</a>&nbsp;&#124;
-									<a href="https://glow.williams.edu/courses/1549176" title="Glow: Faculty Funding Toolkit" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;Glow
+									<a href="https://glow.williams.edu/courses/1549176" title="Glow: Faculty Grant Proposal Library" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;Glow
 										Course</a>
 								</small>
 							<td>
