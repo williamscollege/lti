@@ -63,13 +63,15 @@ function showConfirmBox(ary) {
 	//	var custom_data = $("input[name='custom_user_value']:checked").val();
 	// }
 	// else
-	if (ary['ajax_action'] == 'send-email-to-participants-for-opening-id') {
-		var custom_data = ary['subject_message_json'];
+	// if (ary['ajax_action'] == 'send-email-to-participants-for-opening-id') {
+		//var custom_data = ary['subject_message_json'];
+        //console.log("custom_data = "+JSON.parse(custom_data));
 		// issue: showConfirmBox dialog naturally removes scrollbar from the layer below; if that layer is also a dialog, this can be bad for UI
 		// solution: reintroduce scrollbar to modal
-		$("#modal-edit-opening").css("cssText", "overflow-x: hidden !important; overflow-y: auto !important; display: block !important;");
-	}
-	// console.log("custom_data = "+custom_data);
+		//$("#modal-edit-opening").css("cssText", "overflow-x: hidden !important; overflow-y: auto !important; display: block !important;");
+	//}
+
+
 	bootbox.dialog({
 		title: ary['title'],
 		message: ary['message'],
@@ -89,9 +91,20 @@ function showConfirmBox(ary) {
 
 
 					if (ary['ajax_action'] == 'send-email-to-participants-for-opening-id') {
+
+                        var custom_data = ary['subject_message_json'];
+
+                        // issue: showConfirmBox dialog naturally removes scrollbar from the layer below; if that layer is also a dialog, this can be bad for UI
+                        // solution: reintroduce scrollbar to modal
+                        $("#modal-edit-opening").css("cssText", "overflow-x: hidden !important; overflow-y: auto !important; display: block !important;");
+
 						// show button loading text (bootstrap) only after clicking "Send" button
 						$("#notifyParticipantsButton").button('loading');
-					}
+
+                        // console.log("callback function = "+ custom_data);
+
+                    }
+
 					// show status
 					susUtil_setTransientAlert('progress', 'Working...');
 					$.ajax({

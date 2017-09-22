@@ -39,11 +39,16 @@ $(document).ready(function () {
 
 	// Send email to participants for opening
 	$(document).on('click', '#notifyParticipantsButton', function () {
-		GLOBAL_confirmHandlerData = $("#edit_OpeningID").val();
+
+
+        GLOBAL_confirmHandlerData = $("#edit_OpeningID").val();
 		GLOBAL_confirmHandlerReference = {
 			notifyParticipantsSubject: $("#notifyParticipantsSubject").val(),
 			notifyParticipantsMessage: $("#notifyParticipantsMessage").val()
 		};
+
+        // console.log(JSON.stringify(GLOBAL_confirmHandlerReference));
+
 		var params = {
 			title: "Send email to participants",
 			message: "<p>Really email participants?</p>" +
