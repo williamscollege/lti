@@ -59,6 +59,7 @@
 				$this->redirectURL = getAppUrl();
 			}
 			else {
+			    $this->message = 'User must be enrolled in the course to access Course Mail'; // CPH: Added to give a clearer error messahe
 				$this->reason = 'User has an invalid role type.';
 				$this->isOK   = FALSE;
 			}
